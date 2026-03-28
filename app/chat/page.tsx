@@ -78,7 +78,7 @@ function ChatContent() {
       </div>
 
       <div className="flex-shrink-0">
-        <ChatInput onSend={sendMessage} suggestions={topic ? [] : suggestionChips} />
+        <ChatInput onSend={sendMessage} />
       </div>
     </div>
   )
