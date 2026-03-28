@@ -99,3 +99,5 @@ export const conversationTopics: ConversationTopic[] = [
   { id: "food", emoji: "🌮", title: "Food & Cooking", spanish: "Comida y cocina" },
   { id: "sports", emoji: "⚽", title: "Sports & Fitness", spanish: "Deportes y ejercicio" },
 ]
+
+export const SURPRISE_TOPIC_ID = "surprise"

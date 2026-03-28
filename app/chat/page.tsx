@@ -9,7 +9,7 @@ import { useChat } from "@/hooks/use-chat"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, suggestionChips } from "@/lib/data"
+import { conversationTopics, suggestionChips, SURPRISE_TOPIC_ID } from "@/lib/data"
 import type { PracticeMode } from "@/lib/types"
 
 function ChatContent() {
@@ -19,6 +19,7 @@ function ChatContent() {
   // Use existing session ID if resuming, otherwise create a new one
   const sessionId = useRef(searchParams.get("session") ?? crypto.randomUUID()).current
 
+  const isSurprise = topicId === SURPRISE_TOPIC_ID
   const topic = conversationTopics.find((t) => t.id === topicId)
 
   const { upsertSession } = useSessions()
@@ -26,7 +27,7 @@ function ChatContent() {
   const { messages, isLoading, sendMessage } = useChat({
     mode,
     topicId,
-    topicTitle: topic?.title,
+    topicTitle: isSurprise ? "surprise" : topic?.title,
     sessionId,
     onSessionUpdate: (messageCount) => {
       if (!topic) return
@@ -51,7 +52,7 @@ function ChatContent() {
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col">
-      <ChatHeader mode={mode} topic={topic?.title ?? "Practice"} />
+      <ChatHeader mode={mode} topic={isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((message) => (

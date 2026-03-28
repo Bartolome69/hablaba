@@ -48,14 +48,15 @@ export async function POST(req: Request) {
 
     // Opener mode: bot asks the first question for a topic
     if (opener && topic) {
+      const openerInstruction = topic === "surprise"
+        ? `Ask the user one unexpected, fun, and engaging question in Spanish to start a conversation. It can be about anything — daily life, opinions, hypotheticals, memories, or preferences. Make it feel spontaneous and interesting. Do not correct anything — just ask the question.`
+        : `Start a conversation about the topic: "${topic}". Ask the user one engaging opening question in Spanish to kick things off. Do not correct anything — just ask the question.`
+
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          {
-            role: "user",
-            content: `Start a conversation about the topic: "${topic}". Ask the user one engaging opening question in Spanish to kick things off. Do not correct anything — just ask the question.`,
-          },
+          { role: "user", content: openerInstruction },
         ],
         response_format: { type: "json_object" },
       })

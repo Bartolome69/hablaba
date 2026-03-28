@@ -6,7 +6,7 @@ import { ContinueSession } from "@/components/home/continue-session"
 import { PhraseList } from "@/components/home/phrase-list"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, mockUser } from "@/lib/data"
+import { conversationTopics, mockUser, SURPRISE_TOPIC_ID } from "@/lib/data"
 
 export function Dashboard() {
   const router = useRouter()
@@ -35,6 +35,16 @@ export function Dashboard() {
             </button>
           ))}
         </div>
+        <button
+          onClick={() => router.push(`/chat?mode=solo&topic=${SURPRISE_TOPIC_ID}`)}
+          className="w-full mt-3 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:opacity-95 active:scale-[0.98] transition-all"
+        >
+          <span className="text-2xl">🎲</span>
+          <div className="text-left">
+            <p className="text-sm font-semibold">Surprise me</p>
+            <p className="text-xs opacity-75">Let the AI pick a random topic</p>
+          </div>
+        </button>
       </div>
 
       {/* Recent conversations */}
