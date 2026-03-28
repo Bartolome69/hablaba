@@ -9,7 +9,7 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ mode, topic }: ChatHeaderProps) {
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="flex-shrink-0 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between px-4 py-3">
         <Link
           href="/"
