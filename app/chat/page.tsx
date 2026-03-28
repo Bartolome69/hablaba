@@ -49,7 +49,7 @@ function ChatContent() {
   }, [messages, isLoading])
 
   return (
-    <div className="h-dvh bg-background flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-background flex flex-col">
       <ChatHeader mode={mode} topic={topic?.title ?? "Practice"} />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
