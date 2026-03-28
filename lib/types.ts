@@ -19,6 +19,7 @@ export interface Message {
 export interface Correction {
   original: string
   corrected: string
+  corrected_translation?: string
   explanation?: string
 }
 
@@ -34,6 +35,22 @@ export interface DailyPrompt {
   spanish: string
   english: string
   date: string
+}
+
+export interface ConversationTopic {
+  id: string
+  emoji: string
+  title: string
+  spanish: string
+}
+
+export interface StoredSession {
+  id: string
+  topicId: string
+  topicTitle: string
+  topicEmoji: string
+  messageCount: number
+  lastMessageAt: string // ISO string
 }
 
 export interface Session {

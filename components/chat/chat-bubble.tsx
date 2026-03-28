@@ -2,18 +2,54 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Bookmark, ChevronDown, Languages } from "lucide-react"
+import { Bookmark, ChevronDown, Languages, Volume2, Loader2 } from "lucide-react"
 import type { Message } from "@/lib/types"
+import type { VoiceGender } from "@/hooks/use-voice-preference"
 
 interface ChatBubbleProps {
   message: Message
+  onSavePhrase?: (spanish: string, english: string) => void
+  voiceGender?: VoiceGender
 }
 
-export function ChatBubble({ message }: ChatBubbleProps) {
+export function ChatBubble({ message, onSavePhrase, voiceGender = "female" }: ChatBubbleProps) {
   const [showCorrection, setShowCorrection] = useState(false)
   const [showTranslation, setShowTranslation] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
   const isUser = message.type === "user"
   const isBot = message.type === "bot"
+
+  const handlePlayAudio = async () => {
+    if (isPlaying) return
+    setIsPlaying(true)
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: message.text, gender: voiceGender }),
+      })
+      if (!res.ok) throw new Error("TTS failed")
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      audio.onended = () => {
+        setIsPlaying(false)
+        URL.revokeObjectURL(url)
+      }
+      audio.play()
+    } catch {
+      setIsPlaying(false)
+    }
+  }
+
+  const handleSave = () => {
+    if (!message.correction) return
+    const spanish = message.correction.corrected
+    const english = message.correction.corrected_translation ?? message.correction.explanation ?? ""
+    onSavePhrase?.(spanish, english)
+    setSaved(true)
+  }
 
   return (
     <div>
@@ -33,36 +69,54 @@ export function ChatBubble({ message }: ChatBubbleProps) {
           )}
         </div>
         {isBot && (
-          <button
-            onClick={() => setShowTranslation(!showTranslation)}
-            className={`mt-1 p-1.5 rounded-full transition-colors ${
-              showTranslation
-                ? "text-primary bg-primary/10"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-            }`}
-            aria-label="Translate"
-          >
-            <Languages className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col gap-1 ml-1">
+            <button
+              onClick={handlePlayAudio}
+              disabled={isPlaying}
+              className="p-1.5 rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary disabled:opacity-50"
+              aria-label="Play audio"
+            >
+              {isPlaying
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : <Volume2 className="w-4 h-4" />
+              }
+            </button>
+            <button
+              onClick={() => setShowTranslation(!showTranslation)}
+              className={`p-1.5 rounded-full transition-colors ${
+                showTranslation
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              }`}
+              aria-label="Translate"
+            >
+              <Languages className="w-4 h-4" />
+            </button>
+          </div>
         )}
       </div>
 
-      {message.correction && (
+      {isUser && message.correction && (
         <>
-          <div className={`flex ${isUser ? "justify-end" : "justify-start"} mt-1.5`}>
+          <div className="flex justify-end mt-1.5">
+            {(() => {
+              const hasImprovement = message.correction.original.trim().toLowerCase() !== message.correction.corrected.trim().toLowerCase()
+              return (
             <button
               onClick={() => setShowCorrection(!showCorrection)}
-              className="flex items-center gap-1 text-xs text-primary hover:underline"
+              className={`flex items-center gap-1 text-xs hover:underline ${hasImprovement ? "text-red-500" : "text-green-600"}`}
             >
               <span>See improvement</span>
               <ChevronDown
                 className={`w-3 h-3 transition-transform ${showCorrection ? "rotate-180" : ""}`}
               />
             </button>
+              )
+            })()}
           </div>
 
           {showCorrection && (
-            <div className={`flex ${isUser ? "justify-end" : "justify-start"} mt-2`}>
+            <div className="flex justify-end mt-2">
               <div className="max-w-[85%] bg-primary/5 border border-primary/20 rounded-xl p-3">
                 <div className="space-y-2">
                   <div>
@@ -76,6 +130,11 @@ export function ChatBubble({ message }: ChatBubbleProps) {
                     <p className="text-sm text-primary font-medium">
                       {message.correction.corrected}
                     </p>
+                    {message.correction.corrected_translation && (
+                      <p className="text-xs text-muted-foreground mt-0.5 italic">
+                        {message.correction.corrected_translation}
+                      </p>
+                    )}
                   </div>
                   {message.correction.explanation && (
                     <p className="text-xs text-muted-foreground italic border-t border-border pt-2 mt-2">
@@ -83,9 +142,15 @@ export function ChatBubble({ message }: ChatBubbleProps) {
                     </p>
                   )}
                 </div>
-                <Button variant="ghost" size="sm" className="mt-2 h-7 text-xs">
-                  <Bookmark className="w-3 h-3 mr-1" />
-                  Save phrase
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 h-7 text-xs"
+                  onClick={handleSave}
+                  disabled={saved}
+                >
+                  <Bookmark className={`w-3 h-3 mr-1 ${saved ? "fill-current" : ""}`} />
+                  {saved ? "Saved!" : "Save phrase"}
                 </Button>
               </div>
             </div>

@@ -16,6 +16,7 @@ export interface ChatApiRequest {
 
 export interface ChatApiResponse {
   reply: string
+  translation?: string | null
   correction?: Correction | null
 }
 

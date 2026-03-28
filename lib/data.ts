@@ -1,4 +1,4 @@
-import type { Message, SavedPhrase, DailyPrompt, Session, UserProfile } from "./types"
+import type { Message, SavedPhrase, DailyPrompt, Session, UserProfile, ConversationTopic } from "./types"
 
 export const mockUser: UserProfile = {
   id: "1",
@@ -87,4 +87,15 @@ export const suggestionChips = [
   "¿Cuántos días deberíamos quedarnos?",
   "¿Qué actividades hay?",
   "¿Cuánto cuesta?",
+]
+
+export const conversationTopics: ConversationTopic[] = [
+  { id: "restaurant", emoji: "🍽️", title: "At a Restaurant", spanish: "En el restaurante" },
+  { id: "travel", emoji: "✈️", title: "Plan a Trip", spanish: "Planifica un viaje" },
+  { id: "family", emoji: "👨‍👩‍👧", title: "Family & Friends", spanish: "Familia y amigos" },
+  { id: "work", emoji: "💼", title: "Work & Career", spanish: "Trabajo y carrera" },
+  { id: "weekend", emoji: "🎉", title: "Weekend Plans", spanish: "Planes del fin de semana" },
+  { id: "movies", emoji: "🎬", title: "Movies & Music", spanish: "Películas y música" },
+  { id: "food", emoji: "🌮", title: "Food & Cooking", spanish: "Comida y cocina" },
+  { id: "sports", emoji: "⚽", title: "Sports & Fitness", spanish: "Deportes y ejercicio" },
 ]

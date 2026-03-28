@@ -1,14 +1,15 @@
 "use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import type { Message, PracticeMode } from "@/lib/types"
 import type { HistoryMessage } from "@/lib/api"
-import { sendChatMessage } from "@/lib/api"
-import { sampleMessages } from "@/lib/data"
 
 interface UseChatOptions {
   mode: PracticeMode
-  initialMessages?: Message[]
+  topicId?: string
+  topicTitle?: string
+  sessionId?: string
+  onSessionUpdate?: (messageCount: number) => void
 }
 
 interface UseChatReturn {
@@ -19,13 +20,40 @@ interface UseChatReturn {
 
 export function useChat({
   mode: _mode,
-  initialMessages = sampleMessages,
+  topicId,
+  topicTitle,
+  onSessionUpdate,
 }: UseChatOptions): UseChatReturn {
-  // Seed messages are shown on load but are not sent to the API as history.
-  // Real history builds up as the user has an actual conversation.
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const historyRef = useRef<HistoryMessage[]>([])
+  const messageCountRef = useRef(0)
+
+  // Fetch bot opener when a topic is provided
+  useEffect(() => {
+    if (!topicId || !topicTitle) return
+
+    setIsLoading(true)
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ opener: true, topic: topicTitle, history: [] }),
+    })
+      .then((r) => r.json())
+      .then(({ reply, translation }) => {
+        const botMessage: Message = {
+          id: crypto.randomUUID(),
+          type: "bot",
+          text: reply,
+          translation: translation ?? undefined,
+          timestamp: new Date(),
+        }
+        setMessages([botMessage])
+        historyRef.current = [{ role: "assistant", content: reply }]
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [topicId, topicTitle])
 
   const sendMessage = useCallback(async (text: string) => {
     const userMessageId = crypto.randomUUID()
@@ -40,12 +68,15 @@ export function useChat({
     setIsLoading(true)
 
     try {
-      const { reply, correction } = await sendChatMessage({
-        message: text,
-        history: historyRef.current,
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: historyRef.current }),
       })
+      const { reply, translation, correction } = await res.json()
 
-      // Attach correction to the user message, if the AI flagged one
+      if (!res.ok) throw new Error("Chat API error")
+
       if (correction) {
         setMessages((prev) =>
           prev.map((m) => (m.id === userMessageId ? { ...m, correction } : m))
@@ -56,30 +87,33 @@ export function useChat({
         id: crypto.randomUUID(),
         type: "bot",
         text: reply,
+        translation: translation ?? undefined,
         timestamp: new Date(),
       }
 
       setMessages((prev) => [...prev, botMessage])
 
-      // Grow the history for the next round-trip
       historyRef.current = [
         ...historyRef.current,
         { role: "user", content: text },
         { role: "assistant", content: reply },
       ]
+
+      messageCountRef.current += 1
+      onSessionUpdate?.(messageCountRef.current)
     } catch (err) {
       console.error("[useChat]", err)
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         type: "bot",
-        text: "Something went wrong. Please try again.",
+        text: "Algo salió mal. Por favor, inténtalo de nuevo.",
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [onSessionUpdate])
 
   return { messages, isLoading, sendMessage }
 }
