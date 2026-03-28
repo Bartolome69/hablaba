@@ -14,8 +14,8 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: 'Hablaba - Spanish for Couples',
-  description: 'Practice conversational Spanish by speaking — get real-time corrections and translations as you go.',
+  title: 'Hablaba - Learn Spanish',
+  description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
   generator: 'v0.app',
   icons: {
     icon: [
