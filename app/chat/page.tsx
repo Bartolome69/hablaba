@@ -49,7 +49,7 @@ function ChatContent() {
   }, [messages, isLoading])
 
   return (
-    <div className="min-h-dvh bg-background flex flex-col">
+    <div className="h-dvh bg-background flex flex-col overflow-hidden">
       <ChatHeader mode={mode} topic={topic?.title ?? "Practice"} />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
@@ -75,7 +75,7 @@ function ChatContent() {
         <div ref={bottomRef} />
       </div>
 
-      <div className="sticky bottom-0">
+      <div className="flex-shrink-0">
         <ChatInput onSend={sendMessage} suggestions={topic ? [] : suggestionChips} />
       </div>
     </div>
