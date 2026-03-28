@@ -16,7 +16,17 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: 'Hablaba - Learn Spanish',
   description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
-  generator: 'v0.app',
+  openGraph: {
+    title: 'Hablaba - Learn Spanish',
+    description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
+    siteName: 'Hablaba',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Hablaba - Learn Spanish',
+    description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
+  },
   icons: {
     icon: [
       {
