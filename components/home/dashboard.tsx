@@ -52,7 +52,7 @@ export function Dashboard() {
                   messageCount: session.messageCount,
                   lastMessageAt: new Date(session.lastMessageAt),
                 }}
-                onContinue={() => router.push(`/chat?mode=solo&topic=${session.topicId}`)}
+                onContinue={() => router.push(`/chat?mode=solo&topic=${session.topicId}&session=${session.id}`)}
               />
             ))}
           </div>

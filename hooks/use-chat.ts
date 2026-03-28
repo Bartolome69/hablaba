@@ -3,12 +3,13 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import type { Message, PracticeMode } from "@/lib/types"
 import type { HistoryMessage } from "@/lib/api"
+import { saveChatMessages, loadChatMessages } from "@/lib/chat-cache"
 
 interface UseChatOptions {
   mode: PracticeMode
   topicId?: string
   topicTitle?: string
-  sessionId?: string
+  sessionId: string
   onSessionUpdate?: (messageCount: number) => void
 }
 
@@ -22,15 +23,33 @@ export function useChat({
   mode: _mode,
   topicId,
   topicTitle,
+  sessionId,
   onSessionUpdate,
 }: UseChatOptions): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const historyRef = useRef<HistoryMessage[]>([])
   const messageCountRef = useRef(0)
+  const initializedRef = useRef(false)
 
-  // Fetch bot opener when a topic is provided
   useEffect(() => {
+    if (initializedRef.current) return
+    initializedRef.current = true
+
+    // Try to restore cached messages first
+    const cached = loadChatMessages(sessionId)
+    if (cached && cached.length > 0) {
+      setMessages(cached)
+      messageCountRef.current = cached.filter((m) => m.type === "user").length
+      // Rebuild history from cached messages for the AI context
+      historyRef.current = cached.map((m) => ({
+        role: m.type === "user" ? "user" : "assistant",
+        content: m.text,
+      })) as HistoryMessage[]
+      return
+    }
+
+    // No cache — fetch the bot opener for this topic
     if (!topicId || !topicTitle) return
 
     setIsLoading(true)
@@ -50,10 +69,11 @@ export function useChat({
         }
         setMessages([botMessage])
         historyRef.current = [{ role: "assistant", content: reply }]
+        saveChatMessages(sessionId, [botMessage])
       })
       .catch(console.error)
       .finally(() => setIsLoading(false))
-  }, [topicId, topicTitle])
+  }, [sessionId, topicId, topicTitle])
 
   const sendMessage = useCallback(async (text: string) => {
     const userMessageId = crypto.randomUUID()
@@ -64,7 +84,11 @@ export function useChat({
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
+    setMessages((prev) => {
+      const updated = [...prev, userMessage]
+      saveChatMessages(sessionId, updated)
+      return updated
+    })
     setIsLoading(true)
 
     try {
@@ -77,11 +101,13 @@ export function useChat({
 
       if (!res.ok) throw new Error("Chat API error")
 
-      if (correction) {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === userMessageId ? { ...m, correction } : m))
-        )
-      }
+      setMessages((prev) => {
+        const withCorrection = correction
+          ? prev.map((m) => (m.id === userMessageId ? { ...m, correction } : m))
+          : prev
+        saveChatMessages(sessionId, withCorrection)
+        return withCorrection
+      })
 
       const botMessage: Message = {
         id: crypto.randomUUID(),
@@ -91,7 +117,11 @@ export function useChat({
         timestamp: new Date(),
       }
 
-      setMessages((prev) => [...prev, botMessage])
+      setMessages((prev) => {
+        const updated = [...prev, botMessage]
+        saveChatMessages(sessionId, updated)
+        return updated
+      })
 
       historyRef.current = [
         ...historyRef.current,
@@ -109,11 +139,15 @@ export function useChat({
         text: "Algo salió mal. Por favor, inténtalo de nuevo.",
         timestamp: new Date(),
       }
-      setMessages((prev) => [...prev, errorMessage])
+      setMessages((prev) => {
+        const updated = [...prev, errorMessage]
+        saveChatMessages(sessionId, updated)
+        return updated
+      })
     } finally {
       setIsLoading(false)
     }
-  }, [onSessionUpdate])
+  }, [sessionId, onSessionUpdate])
 
   return { messages, isLoading, sendMessage }
 }

@@ -70,7 +70,7 @@ export function ChatInput({ onSend, suggestions = [] }: ChatInputProps) {
         </div>
       )}
 
-      <div className="px-4 py-3 pb-safe">
+      <div className="px-4 py-3" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
         {languageError && (
           <p className="text-xs text-destructive mb-2 px-1">
             ¡Por favor escribe en español! (Please write in Spanish)

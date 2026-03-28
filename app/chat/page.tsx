@@ -16,7 +16,8 @@ function ChatContent() {
   const searchParams = useSearchParams()
   const mode = (searchParams.get("mode") as PracticeMode) || "solo"
   const topicId = searchParams.get("topic") ?? undefined
-  const sessionId = useRef(crypto.randomUUID()).current
+  // Use existing session ID if resuming, otherwise create a new one
+  const sessionId = useRef(searchParams.get("session") ?? crypto.randomUUID()).current
 
   const topic = conversationTopics.find((t) => t.id === topicId)
 
