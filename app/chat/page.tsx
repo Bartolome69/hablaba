@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { Suspense, useEffect, useRef } from "react"
+import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { ChatHeader } from "@/components/chat/chat-header"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
@@ -9,20 +9,64 @@ import { useChat } from "@/hooks/use-chat"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, suggestionChips, SURPRISE_TOPIC_ID } from "@/lib/data"
+import { conversationTopics, SURPRISE_TOPIC_ID } from "@/lib/data"
 import type { PracticeMode } from "@/lib/types"
 
 function ChatContent() {
   const searchParams = useSearchParams()
   const mode = (searchParams.get("mode") as PracticeMode) || "solo"
   const topicId = searchParams.get("topic") ?? undefined
-  // Use existing session ID if resuming, otherwise create a new one
   const sessionId = useRef(searchParams.get("session") ?? crypto.randomUUID()).current
 
   const isSurprise = topicId === SURPRISE_TOPIC_ID
   const topic = conversationTopics.find((t) => t.id === topicId)
 
   const { upsertSession } = useSessions()
+  const { savePhrase } = useSavedPhrases()
+  const { gender: voiceGender } = useVoicePreference()
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  // TTS state managed at page level
+  const [playingId, setPlayingId] = useState<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const playTTS = useCallback(async (messageId: string, text: string) => {
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+    if (playingId === messageId) {
+      setPlayingId(null)
+      return
+    }
+
+    setPlayingId(messageId)
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, gender: voiceGender }),
+      })
+      if (!res.ok) throw new Error("TTS failed")
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      audioRef.current = audio
+      audio.onended = () => {
+        setPlayingId(null)
+        URL.revokeObjectURL(url)
+        audioRef.current = null
+      }
+      audio.onerror = () => {
+        setPlayingId(null)
+        audioRef.current = null
+      }
+      audio.play()
+    } catch {
+      setPlayingId(null)
+    }
+  }, [voiceGender, playingId])
 
   const { messages, isLoading, sendMessage } = useChat({
     mode,
@@ -30,21 +74,19 @@ function ChatContent() {
     topicTitle: isSurprise ? "surprise" : topic?.title,
     sessionId,
     onSessionUpdate: (messageCount) => {
-      if (!topic) return
+      const t = isSurprise ? { id: SURPRISE_TOPIC_ID, title: "Surprise", emoji: "🎲" } : topic
+      if (!t) return
       upsertSession({
         id: sessionId,
-        topicId: topic.id,
-        topicTitle: topic.title,
-        topicEmoji: topic.emoji,
+        topicId: t.id,
+        topicTitle: t.title,
+        topicEmoji: t.emoji,
         messageCount,
         lastMessageAt: new Date().toISOString(),
       })
     },
+    onNewBotMessage: (id, text) => playTTS(id, text),
   })
-
-  const { savePhrase } = useSavedPhrases()
-  const { gender: voiceGender } = useVoicePreference()
-  const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -59,8 +101,9 @@ function ChatContent() {
           <ChatBubble
             key={message.id}
             message={message}
+            isPlaying={playingId === message.id}
+            onPlayRequest={() => playTTS(message.id, message.text)}
             onSavePhrase={savePhrase}
-            voiceGender={voiceGender}
           />
         ))}
         {isLoading && (

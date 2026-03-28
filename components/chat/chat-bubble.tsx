@@ -4,44 +4,20 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Bookmark, ChevronDown, Languages, Volume2, Loader2 } from "lucide-react"
 import type { Message } from "@/lib/types"
-import type { VoiceGender } from "@/hooks/use-voice-preference"
 
 interface ChatBubbleProps {
   message: Message
+  isPlaying?: boolean
+  onPlayRequest?: () => void
   onSavePhrase?: (spanish: string, english: string) => void
-  voiceGender?: VoiceGender
 }
 
-export function ChatBubble({ message, onSavePhrase, voiceGender = "female" }: ChatBubbleProps) {
+export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePhrase }: ChatBubbleProps) {
   const [showCorrection, setShowCorrection] = useState(false)
   const [showTranslation, setShowTranslation] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
   const isUser = message.type === "user"
   const isBot = message.type === "bot"
-
-  const handlePlayAudio = async () => {
-    if (isPlaying) return
-    setIsPlaying(true)
-    try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: message.text, gender: voiceGender }),
-      })
-      if (!res.ok) throw new Error("TTS failed")
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
-      audio.onended = () => {
-        setIsPlaying(false)
-        URL.revokeObjectURL(url)
-      }
-      audio.play()
-    } catch {
-      setIsPlaying(false)
-    }
-  }
 
   const handleSave = () => {
     if (!message.correction) return
@@ -71,7 +47,7 @@ export function ChatBubble({ message, onSavePhrase, voiceGender = "female" }: Ch
         {isBot && (
           <div className="flex flex-col gap-1 ml-1">
             <button
-              onClick={handlePlayAudio}
+              onClick={onPlayRequest}
               disabled={isPlaying}
               className="p-1.5 rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary disabled:opacity-50"
               aria-label="Play audio"
@@ -102,15 +78,13 @@ export function ChatBubble({ message, onSavePhrase, voiceGender = "female" }: Ch
             {(() => {
               const hasImprovement = message.correction.original.trim().toLowerCase() !== message.correction.corrected.trim().toLowerCase()
               return (
-            <button
-              onClick={() => setShowCorrection(!showCorrection)}
-              className={`flex items-center gap-1 text-xs hover:underline ${hasImprovement ? "text-red-500" : "text-green-600"}`}
-            >
-              <span>See improvement</span>
-              <ChevronDown
-                className={`w-3 h-3 transition-transform ${showCorrection ? "rotate-180" : ""}`}
-              />
-            </button>
+                <button
+                  onClick={() => setShowCorrection(!showCorrection)}
+                  className={`flex items-center gap-1 text-xs hover:underline ${hasImprovement ? "text-red-500" : "text-green-600"}`}
+                >
+                  <span>See improvement</span>
+                  <ChevronDown className={`w-3 h-3 transition-transform ${showCorrection ? "rotate-180" : ""}`} />
+                </button>
               )
             })()}
           </div>
@@ -142,13 +116,7 @@ export function ChatBubble({ message, onSavePhrase, voiceGender = "female" }: Ch
                     </p>
                   )}
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2 h-7 text-xs"
-                  onClick={handleSave}
-                  disabled={saved}
-                >
+                <Button variant="ghost" size="sm" className="mt-2 h-7 text-xs" onClick={handleSave} disabled={saved}>
                   <Bookmark className={`w-3 h-3 mr-1 ${saved ? "fill-current" : ""}`} />
                   {saved ? "Saved!" : "Save phrase"}
                 </Button>

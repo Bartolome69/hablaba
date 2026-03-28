@@ -11,6 +11,7 @@ interface UseChatOptions {
   topicTitle?: string
   sessionId: string
   onSessionUpdate?: (messageCount: number) => void
+  onNewBotMessage?: (id: string, text: string) => void
 }
 
 interface UseChatReturn {
@@ -25,6 +26,7 @@ export function useChat({
   topicTitle,
   sessionId,
   onSessionUpdate,
+  onNewBotMessage,
 }: UseChatOptions): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -70,6 +72,7 @@ export function useChat({
         setMessages([botMessage])
         historyRef.current = [{ role: "assistant", content: reply }]
         saveChatMessages(sessionId, [botMessage])
+        onNewBotMessage?.(botMessage.id, botMessage.text)
       })
       .catch(console.error)
       .finally(() => setIsLoading(false))
@@ -122,6 +125,8 @@ export function useChat({
         saveChatMessages(sessionId, updated)
         return updated
       })
+
+      onNewBotMessage?.(botMessage.id, botMessage.text)
 
       historyRef.current = [
         ...historyRef.current,
