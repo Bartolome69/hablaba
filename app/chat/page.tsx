@@ -9,7 +9,7 @@ import { useChat } from "@/hooks/use-chat"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, SURPRISE_TOPIC_ID } from "@/lib/data"
+import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID } from "@/lib/data"
 import type { PracticeMode } from "@/lib/types"
 
 function ChatContent() {
@@ -20,7 +20,7 @@ function ChatContent() {
 
   const isSurprise = topicId === SURPRISE_TOPIC_ID
   const surpriseTheme = searchParams.get("theme") ?? undefined
-  const topic = conversationTopics.find((t) => t.id === topicId)
+  const topic = [...conversationTopics, ...dailyTopics].find((t) => t.id === topicId)
 
   const { upsertSession } = useSessions()
   const { savePhrase } = useSavedPhrases()
