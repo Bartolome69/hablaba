@@ -50,7 +50,7 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="rounded-t-2xl pb-8">
+      <SheetContent side="bottom" className="rounded-t-2xl px-6 pb-8">
         <SheetHeader className="mb-4">
           <SheetTitle className="text-left">Choose a voice</SheetTitle>
         </SheetHeader>
