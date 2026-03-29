@@ -89,6 +89,19 @@ function ChatContent() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, isLoading])
 
+  // Scroll to bottom when the keyboard opens (iOS Safari fix)
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const handler = () => {
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+      })
+    }
+    vv.addEventListener("resize", handler)
+    return () => vv.removeEventListener("resize", handler)
+  }, [])
+
   return (
     <div className="fixed inset-0 bg-background flex flex-col">
       <ChatHeader mode={mode} topic={isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
@@ -118,7 +131,10 @@ function ChatContent() {
       </div>
 
       <div className="flex-shrink-0">
-        <ChatInput onSend={sendMessage} />
+        <ChatInput
+          onSend={sendMessage}
+          onFocus={() => bottomRef.current?.scrollIntoView({ behavior: "smooth" })}
+        />
       </div>
     </div>
   )

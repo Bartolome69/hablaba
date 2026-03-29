@@ -22,10 +22,11 @@ function looksLikeEnglish(text: string): boolean {
 
 interface ChatInputProps {
   onSend: (message: string) => void
+  onFocus?: () => void
   suggestions?: string[]
 }
 
-export function ChatInput({ onSend, suggestions = [] }: ChatInputProps) {
+export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps) {
   const [value, setValue] = useState("")
   const [languageError, setLanguageError] = useState(false)
 
@@ -82,6 +83,7 @@ export function ChatInput({ onSend, suggestions = [] }: ChatInputProps) {
             value={value}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
+            onFocus={onFocus}
             placeholder="Escribe en español..."
             lang="es"
             autoCorrect="on"
