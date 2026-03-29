@@ -24,7 +24,7 @@ function ChatContent() {
 
   const { upsertSession } = useSessions()
   const { savePhrase } = useSavedPhrases()
-  const { gender: voiceGender } = useVoicePreference()
+  const { voiceId } = useVoicePreference()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   // TTS state managed at page level
@@ -47,7 +47,7 @@ function ChatContent() {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, gender: voiceGender }),
+        body: JSON.stringify({ text, voice: voiceId }),
       })
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
@@ -67,7 +67,7 @@ function ChatContent() {
     } catch {
       setPlayingId(null)
     }
-  }, [voiceGender, playingId])
+  }, [voiceId, playingId])
 
   const { messages, isLoading, sendMessage } = useChat({
     mode,

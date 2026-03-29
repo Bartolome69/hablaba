@@ -1,23 +1,22 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { type VoiceId, defaultVoiceId } from "@/lib/voices"
 
-const STORAGE_KEY = "hablaba_voice_gender"
-
-export type VoiceGender = "male" | "female"
+const STORAGE_KEY = "hablaba_voice"
 
 export function useVoicePreference() {
-  const [gender, setGenderState] = useState<VoiceGender>("female")
+  const [voiceId, setVoiceIdState] = useState<VoiceId>(defaultVoiceId)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === "male" || stored === "female") setGenderState(stored)
+    const stored = localStorage.getItem(STORAGE_KEY) as VoiceId | null
+    if (stored) setVoiceIdState(stored)
   }, [])
 
-  const setGender = useCallback((g: VoiceGender) => {
-    setGenderState(g)
-    localStorage.setItem(STORAGE_KEY, g)
+  const setVoiceId = useCallback((id: VoiceId) => {
+    setVoiceIdState(id)
+    localStorage.setItem(STORAGE_KEY, id)
   }, [])
 
-  return { gender, setGender }
+  return { voiceId, setVoiceId }
 }

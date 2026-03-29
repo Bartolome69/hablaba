@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 
 export function useTTS() {
-  const { gender } = useVoicePreference()
+  const { voiceId } = useVoicePreference()
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -23,7 +23,7 @@ export function useTTS() {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, gender }),
+        body: JSON.stringify({ text, voice: voiceId }),
       })
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
@@ -43,7 +43,7 @@ export function useTTS() {
     } catch {
       setPlayingId(null)
     }
-  }, [gender, playingId])
+  }, [voiceId, playingId])
 
   return { play, playingId }
 }

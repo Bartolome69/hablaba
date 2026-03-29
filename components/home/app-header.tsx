@@ -1,44 +1,30 @@
 "use client"
 
+import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
+import { AudioLines } from "lucide-react"
 import { StreakBadge } from "@/components/home/streak-badge"
-import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { VoiceSheet } from "@/components/home/voice-sheet"
 import { useStreak } from "@/hooks/use-streak"
 
 export function AppHeader() {
-  const { gender, setGender } = useVoicePreference()
   const streak = useStreak()
   const pathname = usePathname()
   const router = useRouter()
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
     <header className="mb-8">
       {/* Row 1: brand + controls */}
       <div className="flex items-center justify-between mb-3">
         <h1 className="font-serif text-2xl font-semibold text-foreground">Hablaba</h1>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 bg-secondary rounded-full p-1 text-xs">
-            <button
-              onClick={() => setGender("female")}
-              className={`px-3 py-1 rounded-full transition-colors ${
-                gender === "female"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground"
-              }`}
-            >
-              ♀ Female
-            </button>
-            <button
-              onClick={() => setGender("male")}
-              className={`px-3 py-1 rounded-full transition-colors ${
-                gender === "male"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground"
-              }`}
-            >
-              ♂ Male
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <AudioLines className="w-4 h-4" />
+          </button>
           <StreakBadge count={streak} />
         </div>
       </div>
@@ -66,6 +52,8 @@ export function AppHeader() {
           Practice
         </button>
       </div>
+
+      <VoiceSheet open={sheetOpen} onOpenChange={setSheetOpen} />
     </header>
   )
 }
