@@ -89,17 +89,21 @@ function ChatContent() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, isLoading])
 
-  // Scroll to bottom when the keyboard opens (iOS Safari fix)
+  // Scroll to bottom when the keyboard opens
+  // - window resize covers Android Chrome (interactiveWidget: resizes-content shrinks the window)
+  // - visualViewport resize covers iOS Safari (layout viewport doesn't shrink there)
   useEffect(() => {
-    const vv = window.visualViewport
-    if (!vv) return
     const handler = () => {
       requestAnimationFrame(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" })
       })
     }
-    vv.addEventListener("resize", handler)
-    return () => vv.removeEventListener("resize", handler)
+    window.addEventListener("resize", handler)
+    window.visualViewport?.addEventListener("resize", handler)
+    return () => {
+      window.removeEventListener("resize", handler)
+      window.visualViewport?.removeEventListener("resize", handler)
+    }
   }, [])
 
   return (
