@@ -6,6 +6,7 @@ import { ChatHeader } from "@/components/chat/chat-header"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
 import { useChat } from "@/hooks/use-chat"
+import { playAudio } from "@/lib/audio"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { useSessions } from "@/hooks/use-sessions"
@@ -52,18 +53,13 @@ function ChatContent() {
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
+      const audio = await playAudio(url)
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
         URL.revokeObjectURL(url)
         audioRef.current = null
       }
-      audio.onerror = () => {
-        setPlayingId(null)
-        audioRef.current = null
-      }
-      audio.play()
     } catch {
       setPlayingId(null)
     }

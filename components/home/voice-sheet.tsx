@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import { Volume2, Loader2, Check } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { playAudio } from "@/lib/audio"
 import { voices, type VoiceId } from "@/lib/voices"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 
@@ -38,10 +39,9 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
       if (!res.ok) throw new Error()
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
+      const audio = await playAudio(url)
       audioRef.current = audio
       audio.onended = () => { setPreviewingId(null); URL.revokeObjectURL(url); audioRef.current = null }
-      audio.onerror = () => { setPreviewingId(null); audioRef.current = null }
       audio.play()
     } catch {
       setPreviewingId(null)

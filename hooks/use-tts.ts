@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { playAudio } from "@/lib/audio"
 
 export function useTTS() {
   const { voiceId } = useVoicePreference()
@@ -28,18 +29,13 @@ export function useTTS() {
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
+      const audio = await playAudio(url)
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
         URL.revokeObjectURL(url)
         audioRef.current = null
       }
-      audio.onerror = () => {
-        setPlayingId(null)
-        audioRef.current = null
-      }
-      audio.play()
     } catch {
       setPlayingId(null)
     }
