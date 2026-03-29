@@ -6,14 +6,12 @@ import { ContinueSession } from "@/components/home/continue-session"
 import { PhraseList } from "@/components/home/phrase-list"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, dailyTopics, mockUser, SURPRISE_TOPIC_ID, surpriseThemes } from "@/lib/data"
-import { useStreak } from "@/hooks/use-streak"
+import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID, surpriseThemes } from "@/lib/data"
 
 export function Dashboard() {
   const router = useRouter()
   const { phrases } = useSavedPhrases()
   const { sessions } = useSessions()
-  const streak = useStreak()
 
   const handleSurprise = () => {
     const theme = surpriseThemes[Math.floor(Math.random() * surpriseThemes.length)]
@@ -35,8 +33,8 @@ export function Dashboard() {
   )
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <AppHeader user={{ ...mockUser, streak }} />
+    <div className="min-h-dvh bg-background px-4 py-6 pb-8">
+      <AppHeader />
 
       {/* Conversation starters */}
       <div className="mb-8">
