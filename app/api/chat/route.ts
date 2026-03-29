@@ -4,6 +4,12 @@ import type { Correction } from "@/lib/types"
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
+// Known structured topic IDs — anything else is treated as a freeform surprise theme
+const conversationTopicIds = new Set([
+  "restaurant","travel","family","work","weekend","movies","food","sports",
+  "morning","dinner","shopping","endofday","house","coffee",
+])
+
 const SYSTEM_PROMPT = `You are a friendly Spanish conversation partner and tutor helping an intermediate (B1) learner practice conversational Spanish.
 
 Use clear, natural Latin American Spanish (Colombian/Mexican). Specifically:
@@ -50,8 +56,9 @@ export async function POST(req: Request) {
 
     // Opener mode: bot asks the first question for a topic
     if (opener && topic) {
-      const openerInstruction = topic === "surprise"
-        ? `Ask the user one unexpected, fun, and engaging question in Spanish to start a conversation. It can be about anything — daily life, opinions, hypotheticals, memories, or preferences. Make it feel spontaneous and interesting. Do not correct anything — just ask the question.`
+      const isSurprise = topic === "surprise" || !conversationTopicIds.has(topic)
+      const openerInstruction = isSurprise
+        ? `Ask the user one spontaneous, engaging question in Spanish about: "${topic}". Keep it natural and conversational. Do not correct anything — just ask the question.`
         : `Start a conversation about the topic: "${topic}". Ask the user one engaging opening question in Spanish to kick things off. Do not correct anything — just ask the question.`
 
       const response = await openai.chat.completions.create({

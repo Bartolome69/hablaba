@@ -19,6 +19,7 @@ function ChatContent() {
   const sessionId = useRef(searchParams.get("session") ?? crypto.randomUUID()).current
 
   const isSurprise = topicId === SURPRISE_TOPIC_ID
+  const surpriseTheme = searchParams.get("theme") ?? undefined
   const topic = conversationTopics.find((t) => t.id === topicId)
 
   const { upsertSession } = useSessions()
@@ -71,7 +72,7 @@ function ChatContent() {
   const { messages, isLoading, sendMessage } = useChat({
     mode,
     topicId,
-    topicTitle: isSurprise ? "surprise" : topic?.title,
+    topicTitle: isSurprise ? (surpriseTheme ?? "surprise") : topic?.title,
     sessionId,
     onSessionUpdate: (messageCount) => {
       const t = isSurprise ? { id: SURPRISE_TOPIC_ID, title: "Surprise", emoji: "🎲" } : topic

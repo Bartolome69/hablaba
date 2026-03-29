@@ -100,4 +100,31 @@ export const conversationTopics: ConversationTopic[] = [
   { id: "sports", emoji: "⚽", title: "Sports & Fitness", spanish: "Deportes y ejercicio" },
 ]
 
+export const dailyTopics: ConversationTopic[] = [
+  { id: "morning", emoji: "🌅", title: "Morning Routine", spanish: "¿Ya te duchaste?" },
+  { id: "dinner", emoji: "🍳", title: "What's for Dinner?", spanish: "¿Qué hacemos de comer?" },
+  { id: "shopping", emoji: "🛒", title: "Shopping List", spanish: "¿Qué nos falta?" },
+  { id: "endofday", emoji: "😴", title: "End of Day", spanish: "¿Cómo estuvo tu día?" },
+  { id: "house", emoji: "🏠", title: "Around the House", spanish: "¿Puedes limpiar esto?" },
+  { id: "coffee", emoji: "☕", title: "Morning Coffee", spanish: "¿Quieres café?" },
+]
+
 export const SURPRISE_TOPIC_ID = "surprise"
+
+export const surpriseThemes = [
+  "childhood memories",
+  "dream travel destinations",
+  "favourite foods",
+  "weekend plans",
+  "a hypothetical superpower",
+  "the last film or show you watched",
+  "morning routines",
+  "pet peeves",
+  "bucket list items",
+  "the best meal you ever had",
+  "things that make you happy",
+  "an unpopular opinion",
+  "what you would do with a free day",
+  "your favourite season and why",
+  "something you recently learned",
+]

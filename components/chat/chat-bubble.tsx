@@ -82,7 +82,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                   onClick={() => setShowCorrection(!showCorrection)}
                   className={`flex items-center gap-1 text-xs hover:underline ${hasImprovement ? "text-red-500" : "text-green-600"}`}
                 >
-                  <span>See improvement</span>
+                  <span>{hasImprovement ? "See improvement" : "Native tip"}</span>
                   <ChevronDown className={`w-3 h-3 transition-transform ${showCorrection ? "rotate-180" : ""}`} />
                 </button>
               )
