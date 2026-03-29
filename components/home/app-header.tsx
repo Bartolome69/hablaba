@@ -44,9 +44,9 @@ export function AppHeader() {
           Speak
         </button>
         <button
-          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/") }}
+          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/practice") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-            pathname === "/"
+            pathname === "/practice"
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground"
           }`}

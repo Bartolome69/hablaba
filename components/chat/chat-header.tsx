@@ -12,7 +12,7 @@ export function ChatHeader({ mode, topic }: ChatHeaderProps) {
     <header className="flex-shrink-0 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between px-4 py-3">
         <Link
-          href="/"
+          href="/practice"
           className="flex items-center gap-1 text-muted-foreground active:opacity-70 transition-opacity"
         >
           <ChevronLeft className="w-5 h-5" />
