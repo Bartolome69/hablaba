@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 import type { Correction } from "@/lib/types"
+import { posthog } from "@/lib/posthog-server"
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
@@ -75,6 +76,19 @@ export async function POST(req: Request) {
 
       const data = JSON.parse(raw) as { reply: string; translation?: string }
 
+      posthog.capture({
+        distinctId: "server",
+        event: "llm_call",
+        properties: {
+          type: "opener",
+          topic,
+          model: "gpt-4o",
+          input_tokens: response.usage?.prompt_tokens ?? null,
+          output_tokens: response.usage?.completion_tokens ?? null,
+          total_tokens: response.usage?.total_tokens ?? null,
+        },
+      })
+
       return NextResponse.json({
         reply: data.reply,
         translation: data.translation ?? null,
@@ -104,6 +118,20 @@ export async function POST(req: Request) {
       translation?: string
       correction?: Correction & { corrected_translation?: string }
     }
+
+    posthog.capture({
+      distinctId: "server",
+      event: "llm_call",
+      properties: {
+        type: "message",
+        topic: topic ?? null,
+        model: "gpt-4o",
+        had_correction: !!data.correction,
+        input_tokens: response.usage?.prompt_tokens ?? null,
+        output_tokens: response.usage?.completion_tokens ?? null,
+        total_tokens: response.usage?.total_tokens ?? null,
+      },
+    })
 
     return NextResponse.json({
       reply: data.reply,

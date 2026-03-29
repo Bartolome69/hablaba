@@ -6,7 +6,7 @@ import { routines } from "@/lib/routines"
 import { useTTS } from "@/hooks/use-tts"
 
 export function SpeakPage() {
-  const { play, playingId } = useTTS()
+  const { play, playingId } = useTTS("speak")
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">

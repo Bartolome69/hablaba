@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, Volume2, Loader2 } from "lucide-react"
+import { usePostHog } from "posthog-js/react"
 import type { Routine } from "@/lib/routines"
 
 interface RoutineCardProps {
@@ -12,11 +13,16 @@ interface RoutineCardProps {
 
 export function RoutineCard({ routine, playingId, onPlay }: RoutineCardProps) {
   const [expanded, setExpanded] = useState(false)
+  const posthog = usePostHog()
 
   return (
     <div className="bg-card border border-border rounded-2xl overflow-hidden">
       <button
-        onClick={() => setExpanded((v) => !v)}
+        onClick={() => {
+          const next = !expanded
+          if (next) posthog.capture("routine_opened", { routine_id: routine.id, routine_name: routine.name })
+          setExpanded(next)
+        }}
         className="w-full flex items-center gap-3 p-4 text-left hover:bg-secondary/50 active:scale-[0.98] transition-all"
       >
         <span className="text-2xl">{routine.emoji}</span>

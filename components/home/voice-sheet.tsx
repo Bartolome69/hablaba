@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { playAudio } from "@/lib/audio"
 import { voices, type VoiceId } from "@/lib/voices"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { usePostHog } from "posthog-js/react"
 
 const SAMPLE_TEXT = "Hola, ¿cómo estás? Me alegra practicar español contigo."
 
@@ -18,6 +19,7 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
   const { voiceId, setVoiceId } = useVoicePreference()
   const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const posthog = usePostHog()
 
   const preview = async (id: VoiceId) => {
     if (audioRef.current) {
@@ -62,7 +64,10 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
             return (
               <div
                 key={voice.id}
-                onClick={() => setVoiceId(voice.id)}
+                onClick={() => {
+                  posthog.capture("voice_changed", { voice_id: voice.id, voice_name: voice.name })
+                  setVoiceId(voice.id)
+                }}
                 className={`flex items-center gap-3 p-3 rounded-2xl border cursor-pointer transition-all active:scale-[0.98] ${
                   isSelected
                     ? "border-primary bg-primary/5"

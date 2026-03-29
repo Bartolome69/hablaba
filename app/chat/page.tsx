@@ -5,6 +5,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { ChatHeader } from "@/components/chat/chat-header"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
+import { usePostHog } from "posthog-js/react"
 import { useChat } from "@/hooks/use-chat"
 import { playAudio } from "@/lib/audio"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
@@ -27,6 +28,7 @@ function ChatContent() {
   const { savePhrase } = useSavedPhrases()
   const { voiceId } = useVoicePreference()
   const bottomRef = useRef<HTMLDivElement>(null)
+  const posthog = usePostHog()
 
   // TTS state managed at page level
   const [playingId, setPlayingId] = useState<string | null>(null)
@@ -84,6 +86,15 @@ function ChatContent() {
     },
     onNewBotMessage: (id, text) => playTTS(id, text),
   })
+
+  useEffect(() => {
+    posthog.capture("conversation_started", {
+      topic: isSurprise ? "surprise" : (topic?.id ?? "unknown"),
+      topic_title: isSurprise ? (surpriseTheme ?? "surprise") : (topic?.title ?? "unknown"),
+      mode,
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { AudioLines } from "lucide-react"
+import { usePostHog } from "posthog-js/react"
 import { StreakBadge } from "@/components/home/streak-badge"
 import { VoiceSheet } from "@/components/home/voice-sheet"
 import { useStreak } from "@/hooks/use-streak"
@@ -12,6 +13,7 @@ export function AppHeader() {
   const pathname = usePathname()
   const router = useRouter()
   const [sheetOpen, setSheetOpen] = useState(false)
+  const posthog = usePostHog()
 
   return (
     <header className="mb-8">
@@ -32,7 +34,7 @@ export function AppHeader() {
       {/* Row 2: Speak / Practice tab toggle */}
       <div className="flex items-center bg-secondary rounded-full p-1">
         <button
-          onClick={() => router.push("/speak")}
+          onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/speak") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
             pathname === "/speak"
               ? "bg-background text-foreground shadow-sm"
@@ -42,7 +44,7 @@ export function AppHeader() {
           Speak
         </button>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
             pathname === "/"
               ? "bg-background text-foreground shadow-sm"

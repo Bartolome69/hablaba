@@ -1,13 +1,15 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
+import { usePostHog } from "posthog-js/react"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { playAudio } from "@/lib/audio"
 
-export function useTTS() {
+export function useTTS(context: "speak" | "chat" = "chat") {
   const { voiceId } = useVoicePreference()
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const posthog = usePostHog()
 
   const play = useCallback(async (id: string, text: string) => {
     if (audioRef.current) {
@@ -20,6 +22,7 @@ export function useTTS() {
     }
 
     setPlayingId(id)
+    posthog.capture("tts_played", { context, voice_id: voiceId })
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -39,7 +42,7 @@ export function useTTS() {
     } catch {
       setPlayingId(null)
     }
-  }, [voiceId, playingId])
+  }, [voiceId, playingId, context, posthog])
 
   return { play, playingId }
 }
