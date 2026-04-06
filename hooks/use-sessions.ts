@@ -28,5 +28,13 @@ export function useSessions() {
     })
   }, [])
 
-  return { sessions, upsertSession }
+  const deleteSession = useCallback((sessionId: string) => {
+    setSessions((prev) => {
+      const updated = prev.filter((s) => s.id !== sessionId)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      return updated
+    })
+  }, [])
+
+  return { sessions, upsertSession, deleteSession }
 }
