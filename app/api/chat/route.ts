@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 
       const data = JSON.parse(raw) as { reply: string; translation?: string }
 
-      posthog.capture({
+      posthog?.capture({
         distinctId: "server",
         event: "llm_call",
         properties: {
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
       correction?: Correction & { corrected_translation?: string }
     }
 
-    posthog.capture({
+    posthog?.capture({
       distinctId: "server",
       event: "llm_call",
       properties: {
