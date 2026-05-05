@@ -3,7 +3,7 @@
 import { useRef, useState } from "react"
 import { Volume2, Loader2, Check } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { playAudio } from "@/lib/audio"
+import { playAudio, ttsUrl } from "@/lib/audio"
 import { voices, type VoiceId } from "@/lib/voices"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { usePostHog } from "posthog-js/react"
@@ -33,18 +33,9 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
 
     setPreviewingId(id)
     try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: SAMPLE_TEXT, voice: id }),
-      })
-      if (!res.ok) throw new Error()
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = await playAudio(url)
+      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id))
       audioRef.current = audio
-      audio.onended = () => { setPreviewingId(null); URL.revokeObjectURL(url); audioRef.current = null }
-      audio.play()
+      audio.onended = () => { setPreviewingId(null); audioRef.current = null }
     } catch {
       setPreviewingId(null)
     }

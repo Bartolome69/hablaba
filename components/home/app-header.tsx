@@ -19,7 +19,10 @@ export function AppHeader() {
     <header className="mb-8">
       {/* Row 1: brand + controls */}
       <div className="flex items-center justify-between mb-3">
-        <h1 className="font-serif text-2xl font-semibold text-foreground">Hablaba</h1>
+        <div className="flex flex-col">
+          <h1 className="font-serif text-2xl font-semibold text-foreground leading-tight">Hablaba</h1>
+          <p className="text-xs text-muted-foreground">Spanish for daily life</p>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSheetOpen(true)}
@@ -31,7 +34,7 @@ export function AppHeader() {
         </div>
       </div>
 
-      {/* Row 2: Speak / Practice tab toggle */}
+      {/* Row 2: Phrases / Practice tab toggle */}
       <div className="flex items-center bg-secondary rounded-full p-1">
         <button
           onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/speak") }}
@@ -41,7 +44,7 @@ export function AppHeader() {
               : "text-muted-foreground"
           }`}
         >
-          Speak
+          Phrases
         </button>
         <button
           onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/practice") }}

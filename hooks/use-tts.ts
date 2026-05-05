@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from "react"
 import { usePostHog } from "posthog-js/react"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
-import { playAudio } from "@/lib/audio"
+import { playAudio, ttsUrl } from "@/lib/audio"
 
 export function useTTS(context: "speak" | "chat" = "chat") {
   const { voiceId } = useVoicePreference()
@@ -24,19 +24,10 @@ export function useTTS(context: "speak" | "chat" = "chat") {
     setPlayingId(id)
     posthog.capture("tts_played", { context, voice_id: voiceId })
     try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, voice: voiceId }),
-      })
-      if (!res.ok) throw new Error("TTS failed")
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = await playAudio(url)
+      const audio = await playAudio(ttsUrl(text, voiceId))
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
-        URL.revokeObjectURL(url)
         audioRef.current = null
       }
     } catch {
