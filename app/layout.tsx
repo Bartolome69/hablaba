@@ -66,7 +66,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
         <PostHogProvider>
-          {children}
+          <div className="mx-auto w-full max-w-[1420px]">
+            {children}
+          </div>
         </PostHogProvider>
         <Analytics />
       </body>

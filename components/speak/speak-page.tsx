@@ -12,6 +12,10 @@ export function SpeakPage() {
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">
       <AppHeader />
 
+      <p className="text-sm text-muted-foreground mb-6 -mt-2">
+        Practice the same phrases every day to build muscle memory. Tap to hear how a native speaker says them.
+      </p>
+
       <div className="mb-6">
         <h2 className="text-sm font-medium text-muted-foreground mb-1">Daily routines</h2>
         <p className="text-xs text-muted-foreground">Same phrases, every time. Tap to hear pronunciation.</p>

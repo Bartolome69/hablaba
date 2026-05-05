@@ -42,6 +42,10 @@ export function Dashboard() {
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">
       <AppHeader />
 
+      <p className="text-sm text-muted-foreground mb-6 -mt-2">
+        Select a conversation topic below and start speaking right away. You can type or use voice-to-text to practice speaking too.
+      </p>
+
       {/* Surprise me */}
       <button
         onClick={handleSurprise}
