@@ -49,7 +49,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
             <button
               onClick={onPlayRequest}
               disabled={isPlaying}
-              className="p-1.5 rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary disabled:opacity-50"
+              className="p-2.5 rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary disabled:opacity-50"
               aria-label="Play audio"
             >
               {isPlaying
@@ -59,7 +59,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
             </button>
             <button
               onClick={() => setShowTranslation(!showTranslation)}
-              className={`p-1.5 rounded-full transition-colors ${
+              className={`p-2.5 rounded-full transition-colors ${
                 showTranslation
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"

@@ -7,6 +7,7 @@ import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
 import { usePostHog } from "posthog-js/react"
 import { useChat } from "@/hooks/use-chat"
+import { toast } from "sonner"
 import { playAudio } from "@/lib/audio"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
@@ -64,6 +65,13 @@ function ChatContent() {
       }
     } catch {
       setPlayingId(null)
+      toast.error("No se pudo reproducir el audio", {
+        description: "Tap to retry",
+        action: {
+          label: "Retry",
+          onClick: () => playTTS(messageId, text),
+        },
+      })
     }
   }, [voiceId, playingId])
 
@@ -118,7 +126,7 @@ function ChatContent() {
   }, [])
 
   return (
-    <div className="fixed inset-0 bg-background flex flex-col">
+    <div className="fixed inset-0 bg-background flex flex-col mx-auto max-w-lg">
       <ChatHeader mode={mode} topic={isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
@@ -135,9 +143,9 @@ function ChatContent() {
           <div className="flex justify-start">
             <div className="bg-secondary text-secondary-foreground rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex gap-1">
-                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:0ms]" />
-                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:150ms]" />
-                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:300ms]" />
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-pulse [animation-delay:0ms]" />
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-pulse [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-pulse [animation-delay:300ms]" />
               </div>
             </div>
           </div>

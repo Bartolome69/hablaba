@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback, useRef, useEffect } from "react"
+import { toast } from "sonner"
 import type { Message, PracticeMode } from "@/lib/types"
 import type { HistoryMessage } from "@/lib/api"
 import { saveChatMessages, loadChatMessages } from "@/lib/chat-cache"
@@ -74,7 +75,9 @@ export function useChat({
         saveChatMessages(sessionId, [botMessage])
         onNewBotMessage?.(botMessage.id, botMessage.text)
       })
-      .catch(console.error)
+      .catch(() => {
+        toast.error("No se pudo conectar", { description: "Check your connection and try again." })
+      })
       .finally(() => setIsLoading(false))
   }, [sessionId, topicId, topicTitle])
 
@@ -138,14 +141,10 @@ export function useChat({
       onSessionUpdate?.(messageCountRef.current)
     } catch (err) {
       console.error("[useChat]", err)
-      const errorMessage: Message = {
-        id: crypto.randomUUID(),
-        type: "bot",
-        text: "Algo salió mal. Por favor, inténtalo de nuevo.",
-        timestamp: new Date(),
-      }
+      toast.error("Algo salió mal", { description: "Your message wasn't sent. Try again." })
+      // Remove the user message that failed to send
       setMessages((prev) => {
-        const updated = [...prev, errorMessage]
+        const updated = prev.filter((m) => m.id !== userMessageId)
         saveChatMessages(sessionId, updated)
         return updated
       })

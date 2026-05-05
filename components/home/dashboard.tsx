@@ -32,7 +32,7 @@ export function Dashboard() {
       <span className="text-2xl">{topic.emoji}</span>
       <div>
         <p className="text-sm font-medium text-foreground">{topic.title}</p>
-        <p className="text-xs text-muted-foreground">{topic.spanish}</p>
+        <p className="text-xs text-muted-foreground font-serif italic">{topic.spanish}</p>
       </div>
     </button>
   )
@@ -43,41 +43,13 @@ export function Dashboard() {
       <AppHeader />
 
       <p className="text-sm text-muted-foreground mb-6 -mt-2">
-        Select a conversation topic below and start speaking right away. You can type or use voice-to-text to practice speaking too.
+        Pick a topic and start chatting in Spanish.
       </p>
 
-      {/* Surprise me */}
-      <button
-        onClick={handleSurprise}
-        className="w-full mb-8 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:opacity-95 active:scale-[0.98] transition-all"
-      >
-        <span className="text-2xl">🎲</span>
-        <div className="text-left">
-          <p className="text-sm font-semibold">Surprise me</p>
-          <p className="text-xs opacity-75">Let the AI pick a random topic</p>
-        </div>
-      </button>
-
-      {/* Hobbies & interests */}
-      <div className="mb-8">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Hobbies & interests</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {conversationTopics.map(topicCard)}
-        </div>
-      </div>
-
-      {/* Daily life */}
-      <div className="mb-8">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Daily life</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {dailyTopics.map(topicCard)}
-        </div>
-      </div>
-
-      {/* Recent conversations */}
+      {/* Recent conversations — elevated to top */}
       {sessions.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-sm font-medium text-muted-foreground mb-3">Recent conversations</h2>
+        <div className="mb-8">
+          <h2 className="font-serif text-base text-foreground mb-3">Pick up where you left off</h2>
           <div className="space-y-2">
             {sessions.map((session) => (
               <ContinueSession
@@ -96,6 +68,34 @@ export function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Surprise me */}
+      <button
+        onClick={handleSurprise}
+        className="w-full mb-8 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
+      >
+        <span className="text-2xl">🎲</span>
+        <div className="text-left">
+          <p className="text-sm font-semibold">Surprise me</p>
+          <p className="text-xs opacity-75">Let the AI pick a random topic</p>
+        </div>
+      </button>
+
+      {/* Hobbies & interests */}
+      <div className="mb-8">
+        <h2 className="font-serif text-base text-foreground mb-3">Hobbies & interests</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {conversationTopics.map(topicCard)}
+        </div>
+      </div>
+
+      {/* Daily life */}
+      <div className="mb-8">
+        <h2 className="font-serif text-base text-foreground mb-3">Daily life</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {dailyTopics.map(topicCard)}
+        </div>
+      </div>
 
       {/* Saved phrases */}
       {phrases.length > 0 && (

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { DM_Sans, Fraunces } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 const dmSans = DM_Sans({ 
@@ -19,14 +20,16 @@ export const metadata: Metadata = {
   description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
   openGraph: {
     title: 'Hablaba - Learn Spanish',
-    description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
+    description: 'Practice Spanish with your little one. Warm, calm, encouraging.',
     siteName: 'Hablaba',
     type: 'website',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Hablaba — Spanish for daily life' }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Hablaba - Learn Spanish',
-    description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
+    description: 'Practice Spanish with your little one. Warm, calm, encouraging.',
+    images: ['/og-image.png'],
   },
   icons: {
     icon: [
@@ -66,10 +69,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
         <PostHogProvider>
-          <div className="mx-auto w-full max-w-[1420px]">
+          <div className="mx-auto w-full max-w-lg">
             {children}
           </div>
         </PostHogProvider>
+        <Toaster position="top-center" />
         <Analytics />
       </body>
     </html>

@@ -26,7 +26,8 @@ export function AppHeader() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSheetOpen(true)}
-            className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-[0.98] transition-all"
+            aria-label="Voice settings"
           >
             <AudioLines className="w-4 h-4" />
           </button>
@@ -34,8 +35,8 @@ export function AppHeader() {
         </div>
       </div>
 
-      {/* Row 2: Phrases / Practice tab toggle */}
-      <div className="flex items-center bg-secondary rounded-full p-1">
+      {/* Row 2: Speak / Practice tab toggle */}
+      <div className="flex items-center bg-secondary rounded-full p-1 max-w-xs">
         <button
           onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/speak") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
@@ -44,7 +45,7 @@ export function AppHeader() {
               : "text-muted-foreground"
           }`}
         >
-          Phrases
+          Speak
         </button>
         <button
           onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/practice") }}

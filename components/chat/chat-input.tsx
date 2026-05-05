@@ -97,7 +97,7 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
           />
           <Button
             size="icon"
-            className="rounded-full flex-shrink-0 h-10 w-10"
+            className="rounded-full flex-shrink-0 h-11 w-11"
             onClick={handleSubmit}
             disabled={!value.trim()}
           >

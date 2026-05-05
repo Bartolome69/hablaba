@@ -1,33 +1,70 @@
 "use client"
 
+import { useState } from "react"
+import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
 import { RoutineCard } from "@/components/speak/routine-card"
-import { routines } from "@/lib/routines"
+import { categories, routines } from "@/lib/routines"
 import { useTTS } from "@/hooks/use-tts"
+import { useHeardPhrases } from "@/hooks/use-heard-phrases"
 
 export function SpeakPage() {
   const { play, playingId } = useTTS("speak")
+  const { heard, markHeard } = useHeardPhrases()
+  const posthog = usePostHog()
+  const [selected, setSelected] = useState<string>(categories[0].id)
+
+  const visible = routines.filter((r) => r.category === selected)
+  const activeCategory = categories.find((c) => c.id === selected) ?? categories[0]
+
+  const handlePlay = (id: string, text: string) => {
+    markHeard(id)
+    play(id, text)
+  }
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">
       <AppHeader />
 
       <p className="text-sm text-muted-foreground mb-6 -mt-2">
-        Practice the same phrases every day to build muscle memory. Tap to hear how a native speaker says them.
+        Tap any phrase to hear it spoken aloud.
       </p>
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        {categories.map((category) => {
+          const isActive = category.id === selected
+          return (
+            <button
+              key={category.id}
+              onClick={() => {
+                setSelected(category.id)
+                posthog.capture("category_selected", { category: category.id })
+              }}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-muted-foreground"
+              }`}
+            >
+              <span className="mr-1.5">{category.emoji}</span>
+              {category.label}
+            </button>
+          )
+        })}
+      </div>
+
       <div className="mb-6">
-        <h2 className="text-sm font-medium text-muted-foreground mb-1">Daily routines</h2>
-        <p className="text-xs text-muted-foreground">Same phrases, every time. Tap to hear pronunciation.</p>
+        <h2 className="font-serif text-base text-foreground">{activeCategory.label}</h2>
       </div>
 
       <div className="space-y-3">
-        {routines.map((routine) => (
+        {visible.map((routine) => (
           <RoutineCard
             key={routine.id}
             routine={routine}
             playingId={playingId}
-            onPlay={play}
+            onPlay={handlePlay}
+            heardPhrases={heard}
           />
         ))}
       </div>

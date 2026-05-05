@@ -5,8 +5,10 @@ interface StreakBadgeProps {
 }
 
 export function StreakBadge({ count }: StreakBadgeProps) {
+  if (count === 0) return null
+
   return (
-    <div className="flex items-center gap-1.5 bg-accent/30 px-3 py-1.5 rounded-full">
+    <div className="flex items-center gap-1.5 bg-accent/30 px-3 py-1.5 rounded-full h-10">
       <Flame className="w-4 h-4 text-accent" />
       <span className="text-sm font-semibold text-foreground">{count}</span>
     </div>

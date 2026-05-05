@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-05T17:30:00Z",
+  "title": "Design System: Hablaba",
+  "extensions": {
+    "colorMeta": {
+      "olive-branch": {
+        "role": "primary",
+        "displayName": "Olive Branch",
+        "canonical": "oklch(0.45 0.12 145)",
+        "tonalRamp": [
+          "oklch(0.15 0.06 145)",
+          "oklch(0.25 0.08 145)",
+          "oklch(0.35 0.10 145)",
+          "oklch(0.45 0.12 145)",
+          "oklch(0.55 0.12 145)",
+          "oklch(0.65 0.10 145)",
+          "oklch(0.80 0.06 145)",
+          "oklch(0.92 0.02 145)"
+        ]
+      },
+      "honeycomb": {
+        "role": "secondary",
+        "displayName": "Honeycomb",
+        "canonical": "oklch(0.75 0.12 55)",
+        "tonalRamp": [
+          "oklch(0.20 0.06 55)",
+          "oklch(0.35 0.08 55)",
+          "oklch(0.50 0.10 55)",
+          "oklch(0.65 0.12 55)",
+          "oklch(0.75 0.12 55)",
+          "oklch(0.82 0.08 55)",
+          "oklch(0.90 0.04 55)",
+          "oklch(0.95 0.02 55)"
+        ]
+      },
+      "linen": {
+        "role": "neutral",
+        "displayName": "Linen",
+        "canonical": "oklch(0.97 0.01 75)",
+        "tonalRamp": [
+          "oklch(0.18 0.02 75)",
+          "oklch(0.30 0.02 75)",
+          "oklch(0.50 0.02 75)",
+          "oklch(0.70 0.015 75)",
+          "oklch(0.85 0.015 75)",
+          "oklch(0.92 0.01 75)",
+          "oklch(0.97 0.01 75)",
+          "oklch(0.99 0.005 75)"
+        ]
+      },
+      "warm-parchment": {
+        "role": "neutral",
+        "displayName": "Warm Parchment",
+        "canonical": "oklch(0.99 0.005 75)"
+      },
+      "oat-milk": {
+        "role": "neutral",
+        "displayName": "Oat Milk",
+        "canonical": "oklch(0.94 0.02 75)"
+      },
+      "soft-clay": {
+        "role": "neutral",
+        "displayName": "Soft Clay",
+        "canonical": "oklch(0.9 0.02 75)"
+      },
+      "espresso": {
+        "role": "neutral",
+        "displayName": "Espresso",
+        "canonical": "oklch(0.25 0.02 50)"
+      },
+      "morning-ember": {
+        "role": "destructive",
+        "displayName": "Morning Ember",
+        "canonical": "oklch(0.577 0.245 27.325)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Brand name and page-level headings. One per screen maximum."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles, card headings, daily prompts."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Chat messages, descriptions, explanatory text. Capped at 65ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Chips, buttons, metadata, timestamps."
+      }
+    },
+    "shadows": [
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px oklch(0.45 0.12 145 / 0.5)",
+        "purpose": "Focus-visible ring on interactive elements."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing for all transitions. Calm deceleration."
+      },
+      {
+        "name": "press-scale",
+        "value": "scale(0.98)",
+        "purpose": "Active/press feedback on tappable elements."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action. Olive Branch green on warm parchment.",
+      "html": "<button class=\"ds-btn-primary\">Practicar</button>",
+      "css": ".ds-btn-primary { background: oklch(0.45 0.12 145); color: oklch(0.99 0.005 75); padding: 8px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.15s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s cubic-bezier(0.25, 1, 0.5, 1); height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.45 0.12 145 / 0.5); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary actions. Oat Milk background with Espresso text.",
+      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
+      "css": ".ds-btn-secondary { background: oklch(0.94 0.02 75); color: oklch(0.25 0.02 50); padding: 8px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.15s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s cubic-bezier(0.25, 1, 0.5, 1); height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; } .ds-btn-secondary:hover { opacity: 0.8; } .ds-btn-secondary:active { transform: scale(0.98); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.45 0.12 145 / 0.5); }"
+    },
+    {
+      "name": "Suggestion Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill-shaped suggestion prompts in chat. Tappable, horizontally scrollable.",
+      "html": "<button class=\"ds-chip\">Buenos dias</button>",
+      "css": ".ds-chip { background: oklch(0.94 0.02 75); color: oklch(0.25 0.02 50); padding: 6px 14px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; border-radius: 9999px; cursor: pointer; transition: background 0.15s cubic-bezier(0.25, 1, 0.5, 1); white-space: nowrap; } .ds-chip:hover { background: oklch(0.9 0.02 75); } .ds-chip:active { transform: scale(0.98); } .ds-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.45 0.12 145 / 0.5); }"
+    },
+    {
+      "name": "Chat Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Full-width pill input for typing Spanish messages.",
+      "html": "<input class=\"ds-input\" placeholder=\"Escribe en espanol...\" />",
+      "css": ".ds-input { background: oklch(0.94 0.02 75); color: oklch(0.25 0.02 50); padding: 10px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 400; border: none; border-radius: 9999px; width: 100%; outline: none; transition: box-shadow 0.15s cubic-bezier(0.25, 1, 0.5, 1); } .ds-input::placeholder { color: oklch(0.5 0.02 50); } .ds-input:focus { box-shadow: 0 0 0 2px oklch(0.45 0.12 145 / 0.2); }"
+    },
+    {
+      "name": "User Chat Bubble",
+      "kind": "custom",
+      "refersTo": "chat-bubble-user",
+      "description": "Right-aligned user message in Olive Branch green. Squared bottom-right corner.",
+      "html": "<div class=\"ds-bubble-user\">Hola, como estas hoy?</div>",
+      "css": ".ds-bubble-user { background: oklch(0.45 0.12 145); color: oklch(0.99 0.005 75); padding: 12px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; line-height: 1.5; border-radius: 16px 16px 4px 16px; max-width: 85%; margin-left: auto; }"
+    },
+    {
+      "name": "Bot Chat Bubble",
+      "kind": "custom",
+      "refersTo": "chat-bubble-bot",
+      "description": "Left-aligned bot response in Oat Milk. Squared bottom-left corner.",
+      "html": "<div class=\"ds-bubble-bot\">Estoy muy bien, gracias! Y tu, que tal?</div>",
+      "css": ".ds-bubble-bot { background: oklch(0.94 0.02 75); color: oklch(0.25 0.02 50); padding: 12px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; line-height: 1.5; border-radius: 16px 16px 16px 4px; max-width: 85%; }"
+    },
+    {
+      "name": "Topic Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Tappable topic selection card on the dashboard. Emoji + title + subtitle.",
+      "html": "<button class=\"ds-topic-card\"><span class=\"ds-topic-emoji\">☕</span><span class=\"ds-topic-title\">En la cocina</span><span class=\"ds-topic-sub\">In the kitchen</span></button>",
+      "css": ".ds-topic-card { background: oklch(0.99 0.005 75); color: oklch(0.25 0.02 50); padding: 16px; border: 1px solid oklch(0.9 0.02 75); border-radius: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; transition: background 0.15s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s cubic-bezier(0.25, 1, 0.5, 1); } .ds-topic-card:hover { background: oklch(0.94 0.02 75 / 0.5); } .ds-topic-card:active { transform: scale(0.98); } .ds-topic-emoji { font-size: 1.5rem; } .ds-topic-title { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; } .ds-topic-sub { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; color: oklch(0.5 0.02 50); }"
+    },
+    {
+      "name": "Tab Navigation",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Pill-shaped segment control for Speak/Practice tabs.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Speak</button><button class=\"ds-tab\">Practice</button></nav>",
+      "css": ".ds-tabs { background: oklch(0.94 0.02 75); border-radius: 9999px; padding: 3px; display: inline-flex; gap: 2px; } .ds-tab { background: transparent; color: oklch(0.5 0.02 50); padding: 6px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); } .ds-tab:hover { color: oklch(0.25 0.02 50); } .ds-tab-active { background: oklch(0.99 0.005 75); color: oklch(0.25 0.02 50); box-shadow: 0 1px 3px oklch(0 0 0 / 0.08); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Morning Kitchen",
+    "overview": "Hablaba feels like a warm kitchen in the morning: unhurried light through the window, a cup of something warm in your hands, a child nearby. Everything is within reach. Nothing demands attention; things are simply there when you need them. The palette is drawn from natural materials: herbs, honey, linen, clay, wood.\n\nThis is not a classroom. There are no scoreboards, no badges, no mascots bouncing for attention. The interface recedes so the language can come forward. Spanish appears naturally, the way it would on a jar in a market or a note on the fridge, not inside flashcard boxes or drill grids.",
+    "keyCharacteristics": [
+      "Warm earthy palette rooted in greens, golds, and creams",
+      "Generous whitespace; screens breathe",
+      "Serif brand type (Fraunces) for personality, sans (DM Sans) for clarity",
+      "Flat surfaces with tonal layering; no drop shadows",
+      "Touch targets sized for one-handed use",
+      "Motion is gentle and purposeful; never performative"
+    ],
+    "rules": [
+      { "name": "The Olive Branch Rule", "body": "Green is for doing things. If an element is not interactive or actively selected, it does not get Olive Branch. Its scarcity is what makes it trustworthy.", "section": "colors" },
+      { "name": "The No Pure Black Rule", "body": "Every dark value is tinted warm. #000 and #fff are prohibited. The darkest value in the system is Espresso; the lightest is Warm Parchment.", "section": "colors" },
+      { "name": "The One Serif Rule", "body": "Fraunces appears in Display and Headline roles only. Body text, labels, buttons, and inputs are always DM Sans.", "section": "typography" },
+      { "name": "The Flat Table Rule", "body": "Nothing floats. Surfaces sit on the table. If you reach for box-shadow on a card or container, use a background-color shift instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Olive Branch exclusively for interactive elements and active states.",
+      "Do vary spacing between sections for visual rhythm.",
+      "Do show Spanish in natural context: full sentences, routine phrases, conversational fragments.",
+      "Do ensure all touch targets are at least 44x44px.",
+      "Do respect prefers-reduced-motion.",
+      "Do test contrast ratios on every Oat Milk / Soft Clay combination."
+    ],
+    "donts": [
+      "Don't use gamification patterns: streaks that punish, achievement badges, leaderboards, XP counters, progress bars.",
+      "Don't make the interface feel like courseware: numbered lessons, locked levels, completion percentages.",
+      "Don't use cold blues, corporate grays, or dashboard-dense layouts.",
+      "Don't use #000 or #fff.",
+      "Don't use box-shadows on cards or containers.",
+      "Don't nest cards inside cards.",
+      "Don't use gradient text, glassmorphism, or colored side-stripe borders.",
+      "Don't use bounce or elastic easing.",
+      "Don't add competing calls to action. One primary action per screen."
+    ]
+  }
+}
