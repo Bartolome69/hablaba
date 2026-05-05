@@ -42,7 +42,7 @@ export function Dashboard() {
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">
       <AppHeader />
 
-      <p className="text-sm text-muted-foreground mb-6 -mt-2">
+      <p className="text-sm text-muted-foreground mb-4 -mt-2">
         Pick a topic and start chatting in Spanish.
       </p>
 

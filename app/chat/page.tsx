@@ -81,7 +81,7 @@ function ChatContent() {
     topicTitle: isSurprise ? (surpriseTheme ?? "surprise") : topic?.title,
     sessionId,
     onSessionUpdate: (messageCount) => {
-      const t = isSurprise ? { id: SURPRISE_TOPIC_ID, title: "Surprise", emoji: "🎲" } : topic
+      const t = isSurprise ? { id: SURPRISE_TOPIC_ID, title: surpriseTheme ?? "Surprise", emoji: "💬" } : topic
       if (!t) return
       upsertSession({
         id: sessionId,

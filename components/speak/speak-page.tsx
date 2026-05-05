@@ -26,11 +26,11 @@ export function SpeakPage() {
     <div className="min-h-dvh bg-background px-4 py-6 pb-8">
       <AppHeader />
 
-      <p className="text-sm text-muted-foreground mb-6 -mt-2">
+      <p className="text-sm text-muted-foreground mb-4 -mt-2">
         Tap any phrase to hear it spoken aloud.
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-4">
         {categories.map((category) => {
           const isActive = category.id === selected
           return (
@@ -53,9 +53,7 @@ export function SpeakPage() {
         })}
       </div>
 
-      <div className="mb-6">
-        <h2 className="font-serif text-base text-foreground">{activeCategory.label}</h2>
-      </div>
+      <h2 className="font-serif text-base text-foreground mb-3">{activeCategory.label}</h2>
 
       <div className="space-y-3">
         {visible.map((routine) => (
