@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { DM_Sans, Fraunces } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { PwaRegister } from '@/components/pwa-register'
+import { InstallPrompt } from '@/components/install-prompt'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -78,6 +80,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
         <PostHogProvider>{children}</PostHogProvider>
+        <PwaRegister />
+        <InstallPrompt />
         <Toaster position="top-center" />
         <Analytics />
         <script
