@@ -38,9 +38,9 @@ export function AppHeader() {
       {/* Row 2: Speak / Practice tab toggle */}
       <div className="flex items-center bg-secondary rounded-full p-1 max-w-xs">
         <button
-          onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/speak") }}
+          onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/app/speak") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-            pathname === "/speak"
+            pathname === "/app/speak"
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground"
           }`}
@@ -48,9 +48,9 @@ export function AppHeader() {
           Speak
         </button>
         <button
-          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/practice") }}
+          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/app/practice") }}
           className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-            pathname === "/practice"
+            pathname === "/app/practice"
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground"
           }`}

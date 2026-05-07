@@ -23,10 +23,24 @@ No test framework is configured.
 **Stack**: Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + shadcn/ui (New York style)
 
 **Routes**:
-- `/` — Dashboard (`app/page.tsx`) with practice mode selector, daily prompt, saved phrases, session resume
-- `/chat` — Chat interface (`app/chat/page.tsx`), takes `?mode=solo|together` query param
+
+Marketing (route group `app/(marketing)/`, full-width):
+- `/` — Landing page (hero, how it works, features, audience teasers, FAQ)
+- `/for/[slug]` — Programmatic audience pages, content from `lib/marketing/audiences.ts`. Slugs in `audienceSlugs`.
+
+App (under `app/app/`, constrained to `max-w-lg` via its own layout):
+- `/app/practice` — Dashboard with practice mode selector, daily prompt, saved phrases, session resume
+- `/app/speak` — Speak/routine view
+- `/app/chat` — Chat interface, takes `?mode=solo|together` query param
+- Legacy `/practice`, `/speak`, `/chat` paths 301-redirect to `/app/*` via `next.config.mjs`.
+
+API:
 - `POST /api/chat` — Sends message + conversation history to OpenAI, returns `{ reply, correction? }`
+- `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.
+- `POST /api/tts` — Text-to-speech
 - `POST /api/feedback` — Stub, returns 501 (not implemented)
+
+**SEO**: `app/sitemap.ts`, `app/robots.ts`, root `app/opengraph-image.tsx` and per-audience `app/(marketing)/for/[slug]/opengraph-image.tsx` generate dynamic OG images.
 
 **Key files**:
 - `hooks/use-chat.ts` — All chat state: messages array, loading, conversation history ref, correction attachment
@@ -42,7 +56,12 @@ No test framework is configured.
 ## Environment
 
 ```
-OPENAI_API_KEY=   # Required — GPT-4o access
+OPENAI_API_KEY=               # Required — GPT-4o access
+NEXT_PUBLIC_SITE_URL=         # Canonical site URL (e.g. https://hablaba.app). Used in metadata, sitemap, robots.
+NEXT_PUBLIC_POSTHOG_KEY=      # Optional — PostHog analytics
+NEXT_PUBLIC_POSTHOG_HOST=     # Optional — PostHog ingest host
+RESEND_API_KEY=               # Optional — for /api/waitlist; if unset, signups log only
+RESEND_AUDIENCE_ID=           # Optional — Resend audience to add waitlist contacts to
 ```
 
 ## Styling

@@ -15,21 +15,30 @@ const fraunces = Fraunces({
   variable: '--font-fraunces'
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://spanishroutine.com'
+
 export const metadata: Metadata = {
-  title: 'Hablaba - Learn Spanish',
-  description: 'Practice conversational Spanish with an AI tutor — real-time corrections and translations as you go.',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Hablaba — Speak Spanish with your little one',
+    template: '%s · Hablaba',
+  },
+  description: 'Hablaba helps parents raise bilingual kids and B1 learners practice real conversation. Warm, calm, encouraging — Spanish for daily life.',
+  applicationName: 'Hablaba',
+  keywords: ['spanish for parents', 'bilingual parenting', 'spanish practice', 'b1 spanish', 'spanish ai tutor', 'learn spanish'],
+  alternates: { canonical: '/' },
   openGraph: {
-    title: 'Hablaba - Learn Spanish',
-    description: 'Practice Spanish with your little one. Warm, calm, encouraging.',
+    title: 'Hablaba — Speak Spanish with your little one',
+    description: 'Raise a bilingual kid. Practice your Spanish. Warm, calm, encouraging.',
     siteName: 'Hablaba',
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Hablaba — Spanish for daily life' }],
+    url: SITE_URL,
+    locale: 'en_GB',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hablaba - Learn Spanish',
-    description: 'Practice Spanish with your little one. Warm, calm, encouraging.',
-    images: ['/og-image.png'],
+    title: 'Hablaba — Speak Spanish with your little one',
+    description: 'Raise a bilingual kid. Practice your Spanish. Warm, calm, encouraging.',
   },
   icons: {
     icon: [
@@ -68,13 +77,32 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
-        <PostHogProvider>
-          <div className="mx-auto w-full max-w-lg">
-            {children}
-          </div>
-        </PostHogProvider>
+        <PostHogProvider>{children}</PostHogProvider>
         <Toaster position="top-center" />
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Hablaba',
+              url: SITE_URL,
+              logo: `${SITE_URL}/icon-light-32x32.png`,
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Hablaba',
+              url: SITE_URL,
+            }),
+          }}
+        />
       </body>
     </html>
   )
