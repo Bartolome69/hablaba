@@ -26,12 +26,37 @@ export function useRecorder(onTranscript: (text: string) => void) {
   const recorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
 
   const cleanup = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop())
     streamRef.current = null
     recorderRef.current = null
     chunksRef.current = []
+    analyserRef.current = null
+    audioCtxRef.current?.close().catch(() => {})
+    audioCtxRef.current = null
+  }, [])
+
+  const getLevels = useCallback((bars: number): number[] => {
+    const analyser = analyserRef.current
+    const out = new Array(bars).fill(0)
+    if (!analyser) return out
+    const data = new Uint8Array(analyser.frequencyBinCount)
+    analyser.getByteFrequencyData(data)
+    // Voice range: skip the lowest bin (mostly noise) and use ~80 Hz – 5 kHz
+    const start = 1
+    const end = Math.min(32, data.length)
+    const binsPerBar = Math.max(1, Math.floor((end - start) / bars))
+    for (let i = 0; i < bars; i++) {
+      let sum = 0
+      for (let j = 0; j < binsPerBar; j++) {
+        sum += data[start + i * binsPerBar + j] ?? 0
+      }
+      out[i] = sum / binsPerBar / 255
+    }
+    return out
   }, [])
 
   useEffect(() => cleanup, [cleanup])
@@ -41,6 +66,18 @@ export function useRecorder(onTranscript: (text: string) => void) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       streamRef.current = stream
+      const AudioContextClass =
+        window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      if (AudioContextClass) {
+        const ctx = new AudioContextClass()
+        const source = ctx.createMediaStreamSource(stream)
+        const analyser = ctx.createAnalyser()
+        analyser.fftSize = 256
+        analyser.smoothingTimeConstant = 0.6
+        source.connect(analyser)
+        audioCtxRef.current = ctx
+        analyserRef.current = analyser
+      }
       const mimeType = pickMimeType()
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined)
       chunksRef.current = []
@@ -103,5 +140,5 @@ export function useRecorder(onTranscript: (text: string) => void) {
     setState("idle")
   }, [cleanup])
 
-  return { state, error, start, stop, cancel }
+  return { state, error, start, stop, cancel, getLevels }
 }

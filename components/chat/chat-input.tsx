@@ -1,9 +1,50 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Mic, Send, Square } from "lucide-react"
 import { useRecorder } from "@/hooks/use-recorder"
+
+const BAR_COUNT = 4
+
+function VoiceLevelBars({ getLevels }: { getLevels: (n: number) => number[] }) {
+  const barsRef = useRef<(HTMLSpanElement | null)[]>([])
+  const smoothedRef = useRef<number[]>(new Array(BAR_COUNT).fill(0))
+
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      const levels = getLevels(BAR_COUNT)
+      const smoothed = smoothedRef.current
+      for (let i = 0; i < BAR_COUNT; i++) {
+        // Quick attack, slow decay so the bars feel alive but don't twitch
+        const target = levels[i] ?? 0
+        smoothed[i] = target > smoothed[i] ? target : smoothed[i] * 0.8 + target * 0.2
+        const el = barsRef.current[i]
+        if (el) {
+          const scale = 0.25 + Math.min(1, smoothed[i] * 1.8) * 0.75
+          el.style.transform = `scaleY(${scale})`
+        }
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [getLevels])
+
+  return (
+    <div className="flex items-center gap-[3px] h-3">
+      {Array.from({ length: BAR_COUNT }).map((_, i) => (
+        <span
+          key={i}
+          ref={(el) => { barsRef.current[i] = el }}
+          className="block w-[3px] h-3 rounded-full bg-destructive origin-center"
+          style={{ transform: "scaleY(0.25)" }}
+        />
+      ))}
+    </div>
+  )
+}
 
 // Common English words that rarely appear in Spanish
 const ENGLISH_STOP_WORDS = new Set([
@@ -36,7 +77,7 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
     setLanguageError(false)
   }, [])
 
-  const { state: recState, error: recError, start, stop } = useRecorder(handleTranscript)
+  const { state: recState, error: recError, start, stop, getLevels } = useRecorder(handleTranscript)
 
   const handleSubmit = () => {
     if (!value.trim()) return
@@ -94,11 +135,8 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
         )}
         <div className="flex items-center gap-2">
           {isRecording ? (
-            <div className="flex-1 flex items-center gap-2 bg-secondary rounded-full px-4 py-2.5">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-destructive" />
-              </span>
+            <div className="flex-1 flex items-center gap-3 bg-secondary rounded-full px-4 py-2.5">
+              <VoiceLevelBars getLevels={getLevels} />
               <span className="text-sm text-muted-foreground">Escuchando…</span>
             </div>
           ) : (
