@@ -12,7 +12,7 @@ import { playAudio } from "@/lib/audio"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID } from "@/lib/data"
+import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
 import type { PracticeMode } from "@/lib/types"
 
 function ChatContent() {
@@ -22,6 +22,7 @@ function ChatContent() {
   const sessionId = useRef(searchParams.get("session") ?? crypto.randomUUID()).current
 
   const isSurprise = topicId === SURPRISE_TOPIC_ID
+  const isParentChild = topicId === PARENT_CHILD_TOPIC_ID
   const surpriseTheme = searchParams.get("theme") ?? undefined
   const topic = [...conversationTopics, ...dailyTopics].find((t) => t.id === topicId)
 
@@ -78,10 +79,18 @@ function ChatContent() {
   const { messages, isLoading, sendMessage } = useChat({
     mode,
     topicId,
-    topicTitle: isSurprise ? (surpriseTheme ?? "surprise") : topic?.title,
+    topicTitle: isParentChild
+      ? (surpriseTheme ?? "family time")
+      : isSurprise
+        ? (surpriseTheme ?? "surprise")
+        : topic?.title,
     sessionId,
     onSessionUpdate: (messageCount) => {
-      const t = isSurprise ? { id: SURPRISE_TOPIC_ID, title: surpriseTheme ?? "Surprise", emoji: "💬" } : topic
+      const t = isParentChild
+        ? { id: PARENT_CHILD_TOPIC_ID, title: "Family time", emoji: "👶" }
+        : isSurprise
+          ? { id: SURPRISE_TOPIC_ID, title: surpriseTheme ?? "Surprise", emoji: "💬" }
+          : topic
       if (!t) return
       upsertSession({
         id: sessionId,
@@ -97,8 +106,12 @@ function ChatContent() {
 
   useEffect(() => {
     posthog.capture("conversation_started", {
-      topic: isSurprise ? "surprise" : (topic?.id ?? "unknown"),
-      topic_title: isSurprise ? (surpriseTheme ?? "surprise") : (topic?.title ?? "unknown"),
+      topic: isParentChild ? PARENT_CHILD_TOPIC_ID : isSurprise ? "surprise" : (topic?.id ?? "unknown"),
+      topic_title: isParentChild
+        ? (surpriseTheme ?? "family time")
+        : isSurprise
+          ? (surpriseTheme ?? "surprise")
+          : (topic?.title ?? "unknown"),
       mode,
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +140,7 @@ function ChatContent() {
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col mx-auto max-w-lg">
-      <ChatHeader mode={mode} topic={isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
+      <ChatHeader mode={mode} topic={isParentChild ? "👶 Family time" : isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((message) => (
