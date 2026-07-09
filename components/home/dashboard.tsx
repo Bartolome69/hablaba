@@ -6,7 +6,14 @@ import { ContinueSession } from "@/components/home/continue-session"
 import { PhraseList } from "@/components/home/phrase-list"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useSessions } from "@/hooks/use-sessions"
-import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID, surpriseThemes } from "@/lib/data"
+import {
+  conversationTopics,
+  dailyTopics,
+  SURPRISE_TOPIC_ID,
+  surpriseThemes,
+  PARENT_CHILD_TOPIC_ID,
+  parentChildThemes,
+} from "@/lib/data"
 
 export function Dashboard() {
   const router = useRouter()
@@ -16,6 +23,11 @@ export function Dashboard() {
   const handleSurprise = () => {
     const theme = surpriseThemes[Math.floor(Math.random() * surpriseThemes.length)]
     router.push(`/chat?mode=solo&topic=${SURPRISE_TOPIC_ID}&theme=${encodeURIComponent(theme)}`)
+  }
+
+  const handleParentChild = () => {
+    const theme = parentChildThemes[Math.floor(Math.random() * parentChildThemes.length)]
+    router.push(`/chat?mode=solo&topic=${PARENT_CHILD_TOPIC_ID}&theme=${encodeURIComponent(theme)}`)
   }
 
   const topicCard = (topic: typeof conversationTopics[0]) => {
@@ -72,12 +84,24 @@ export function Dashboard() {
       {/* Surprise me */}
       <button
         onClick={handleSurprise}
-        className="w-full mb-8 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
+        className="w-full mb-3 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
       >
         <span className="text-2xl">🎲</span>
         <div className="text-left">
           <p className="text-sm font-semibold">Surprise me</p>
           <p className="text-xs opacity-75">Let the AI pick a random topic</p>
+        </div>
+      </button>
+
+      {/* Talk with your child */}
+      <button
+        onClick={handleParentChild}
+        className="w-full mb-8 flex items-center justify-center gap-3 p-4 bg-accent text-accent-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
+      >
+        <span className="text-2xl">👶</span>
+        <div className="text-left">
+          <p className="text-sm font-semibold">Talk with your child</p>
+          <p className="text-xs opacity-75">Free-chat practice for everyday moments together</p>
         </div>
       </button>
 

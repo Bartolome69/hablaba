@@ -59,7 +59,7 @@ export function useChat({
     fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ opener: true, topic: topicTitle, history: [] }),
+      body: JSON.stringify({ opener: true, topic: topicTitle, topicId, history: [] }),
     })
       .then((r) => r.json())
       .then(({ reply, translation }) => {
@@ -101,7 +101,7 @@ export function useChat({
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history: historyRef.current }),
+        body: JSON.stringify({ message: text, history: historyRef.current, topicId }),
       })
       const { reply, translation, correction } = await res.json()
 
@@ -151,7 +151,7 @@ export function useChat({
     } finally {
       setIsLoading(false)
     }
-  }, [sessionId, onSessionUpdate])
+  }, [sessionId, onSessionUpdate, topicId])
 
   return { messages, isLoading, sendMessage }
 }

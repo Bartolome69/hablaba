@@ -128,3 +128,20 @@ export const surpriseThemes = [
   "your favourite season and why",
   "something you recently learned",
 ]
+
+export const PARENT_CHILD_TOPIC_ID = "parent-child"
+
+export const parentChildThemes = [
+  "asking for a favorite snack before dinner",
+  "getting dressed in the morning",
+  "not wanting to brush your teeth",
+  "playing with a favorite toy",
+  "being scared of a loud noise",
+  "wanting one more bedtime story",
+  "sharing toys with a sibling or friend",
+  "asking to go to the park",
+  "being upset about a small thing",
+  "helping set the table",
+  "talking about your day at school",
+  "asking why the sky is blue",
+]
