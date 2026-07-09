@@ -20,7 +20,11 @@ function extensionFor(mime: string | undefined): string {
   return "webm"
 }
 
-export function useRecorder(onTranscript: (text: string) => void) {
+export function useRecorder(
+  onTranscript: (text: string) => void,
+  opts?: { language?: "es" | "auto" },
+) {
+  const language = opts?.language ?? "es"
   const [state, setState] = useState<RecorderState>("idle")
   const [error, setError] = useState<string | null>(null)
   const recorderRef = useRef<MediaRecorder | null>(null)
@@ -96,6 +100,7 @@ export function useRecorder(onTranscript: (text: string) => void) {
         try {
           const form = new FormData()
           form.append("audio", blob, `audio.${extensionFor(mime)}`)
+          form.append("language", language)
           const res = await fetch("/api/transcribe", { method: "POST", body: form })
           if (!res.ok) throw new Error("Transcription failed")
           const data: { text?: string } = await res.json()
@@ -123,7 +128,7 @@ export function useRecorder(onTranscript: (text: string) => void) {
       setState("idle")
       cleanup()
     }
-  }, [cleanup, onTranscript])
+  }, [cleanup, onTranscript, language])
 
   const stop = useCallback(() => {
     if (recorderRef.current?.state === "recording") {

@@ -18,7 +18,8 @@ export function playAudio(url: string): Promise<HTMLAudioElement> {
   })
 }
 
-export function ttsUrl(text: string, voice: string): string {
+export function ttsUrl(text: string, voice: string, register?: string): string {
   const params = new URLSearchParams({ text, voice })
+  if (register) params.set("register", register)
   return `/api/tts?${params.toString()}`
 }

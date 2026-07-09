@@ -34,6 +34,9 @@ App (under `app/app/`, constrained to `max-w-lg` via its own layout):
 - `/app/chat` — Chat interface, takes `?mode=solo|together` query param
 - Legacy `/practice`, `/speak`, `/chat` paths 301-redirect to `/app/*` via `next.config.mjs`.
 
+Criar (under `app/criar/`, hidden module — no links from main nav, `noindex`):
+- `/criar` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal). Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
+
 API:
 - `POST /api/chat` — Sends message + conversation history to OpenAI, returns `{ reply, correction? }`
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.

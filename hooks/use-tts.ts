@@ -6,7 +6,11 @@ import { usePostHog } from "posthog-js/react"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { playAudio, ttsUrl } from "@/lib/audio"
 
-export function useTTS(context: "speak" | "chat" = "chat") {
+export function useTTS(
+  context: "speak" | "chat" | "criar" = "chat",
+  opts?: { register?: string },
+) {
+  const register = opts?.register
   const { voiceId } = useVoicePreference()
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -25,7 +29,7 @@ export function useTTS(context: "speak" | "chat" = "chat") {
     setPlayingId(id)
     posthog.capture("tts_played", { context, voice_id: voiceId })
     try {
-      const audio = await playAudio(ttsUrl(text, voiceId))
+      const audio = await playAudio(ttsUrl(text, voiceId, register))
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
@@ -40,7 +44,7 @@ export function useTTS(context: "speak" | "chat" = "chat") {
         },
       })
     }
-  }, [voiceId, playingId, context, posthog])
+  }, [voiceId, playingId, context, posthog, register])
 
   return { play, playingId }
 }
