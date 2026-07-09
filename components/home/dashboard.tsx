@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { Shuffle, Baby } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { ContinueSession } from "@/components/home/continue-session"
 import { PhraseList } from "@/components/home/phrase-list"
@@ -84,9 +85,11 @@ export function Dashboard() {
       {/* Surprise me */}
       <button
         onClick={handleSurprise}
-        className="w-full mb-3 flex items-center justify-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
+        className="w-full mb-3 flex items-center gap-3 p-4 bg-primary text-primary-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
       >
-        <span className="text-2xl">🎲</span>
+        <div className="w-10 h-10 rounded-full bg-primary-foreground/15 flex items-center justify-center flex-shrink-0">
+          <Shuffle className="w-5 h-5" />
+        </div>
         <div className="text-left">
           <p className="text-sm font-semibold">Surprise me</p>
           <p className="text-xs opacity-75">Let the AI pick a random topic</p>
@@ -96,12 +99,14 @@ export function Dashboard() {
       {/* Talk with your child */}
       <button
         onClick={handleParentChild}
-        className="w-full mb-8 flex items-center justify-center gap-3 p-4 bg-accent text-accent-foreground rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all"
+        className="w-full mb-8 flex items-center gap-3 p-4 bg-secondary text-secondary-foreground rounded-2xl hover:bg-secondary/80 active:scale-[0.98] transition-all"
       >
-        <span className="text-2xl">👶</span>
+        <div className="w-10 h-10 rounded-full bg-accent/25 flex items-center justify-center flex-shrink-0">
+          <Baby className="w-5 h-5 text-accent-foreground" />
+        </div>
         <div className="text-left">
           <p className="text-sm font-semibold">Talk with your child</p>
-          <p className="text-xs opacity-75">Free-chat practice for everyday moments together</p>
+          <p className="text-xs text-muted-foreground">Free-chat practice for everyday moments together</p>
         </div>
       </button>
 
