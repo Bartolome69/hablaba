@@ -14,34 +14,40 @@ and captures real-life gaps so the next day's material teaches them back.
 | `components/criar/` | All Criar UI components |
 | `lib/criar/` | Types, store, stage logic, prompts, seed, this README |
 
-There are **no links from the main app to Criar** — direct URL access only
-(`/criar`), and the layout sets `robots: noindex`.
+## Access & navigation
 
-## PWA install
+Criar lives inside the **one installed Hablaba PWA** (scope `/`) — deliberately
+not a separate install, because iOS gives each home-screen web app isolated
+storage and Criar's data is in localStorage. The layout sets `robots: noindex`.
 
-Criar installs as **its own PWA**, separate from the Hablaba icon: the layout
-links `/criar/manifest.webmanifest` (served by a route handler — Next only
-supports one `app/manifest.ts`) with `start_url`/`scope` of `/criar`, and
-`app/criar/apple-icon.tsx` gives the install a distinct green home-screen icon
-on iOS. Visit `/criar` in the browser → Add to Home Screen. In-module
-navigation is the fixed bottom bar (`components/criar/criar-nav.tsx`:
-Today / Sparring / Journal), hidden on the full-screen sparring chat. The
-main-app service worker (`public/sw.js`, network-first) covers `/criar` too.
+- **Entry**: a gated third tab in the shared top navigation
+  (`components/app-tabs.tsx`: Speak / Practice / Criar). The tab renders only
+  when the `criar_enabled` localStorage flag is set — unlocked by
+  **long-pressing the Hablaba wordmark** (1.2s, see
+  `components/home/app-header.tsx`; long-press again to re-hide) or by
+  visiting `/criar` directly (the seed sets the flag). Public visitors never
+  see it.
+- **In-module navigation**: fixed bottom bar (`components/criar/criar-nav.tsx`:
+  Today / Sparring / Journal), hidden on the full-screen sparring chat. The
+  Criar home also renders `AppTabs` so you can switch back to Speak/Practice.
+- The main-app service worker (`public/sw.js`, network-first) covers `/criar`.
 
 ## Boundary rules
 
 Criar may import from the main app **only**:
 
 - `components/ui/*` — shadcn primitives (Button, Sheet, …)
+- `components/app-tabs` — shared top-level tab navigation
 - `components/chat/chat-bubble`, `components/chat/chat-input` — presentational chat UI
 - `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference` — audio I/O
 - `lib/audio`, `lib/utils`, `lib/voices` — shared utilities
 - `lib/types` — only the `Message`/`Correction` shapes (for chat UI reuse)
 - Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`)
 
-The main app must **never** import from `lib/criar/`, `components/criar/`, or link
-to `/criar` routes. Anything Criar needs beyond the list above gets copied into the
-module, not imported. This keeps the extraction path clean: to spin Criar out into
+The main app must **never** import from `lib/criar/` or `components/criar/`.
+Its only reference to Criar is the gated `/criar` tab in `components/app-tabs.tsx`
+(a URL string + the `criar_enabled` flag — no code imports). Anything Criar needs
+beyond the list above gets copied into the module, not imported. This keeps the extraction path clean: to spin Criar out into
 a standalone app, take the four directories above plus copies of the shared
 utilities it uses.
 

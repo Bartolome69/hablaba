@@ -1,25 +1,59 @@
 "use client"
 
-import { useState } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { AudioLines } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
+import { AppTabs, CRIAR_FLAG, isCriarEnabled } from "@/components/app-tabs"
 import { StreakBadge } from "@/components/home/streak-badge"
 import { VoiceSheet } from "@/components/home/voice-sheet"
 import { useStreak } from "@/hooks/use-streak"
 
+const LONG_PRESS_MS = 1200
+
 export function AppHeader() {
   const streak = useStreak()
-  const pathname = usePathname()
   const router = useRouter()
   const [sheetOpen, setSheetOpen] = useState(false)
   const posthog = usePostHog()
+
+  // Long-press on the wordmark toggles the hidden Criar tab
+  const pressTimer = useRef<number | null>(null)
+
+  const startPress = () => {
+    pressTimer.current = window.setTimeout(() => {
+      pressTimer.current = null
+      try {
+        if (isCriarEnabled()) {
+          localStorage.removeItem(CRIAR_FLAG)
+          window.location.reload()
+        } else {
+          localStorage.setItem(CRIAR_FLAG, "1")
+          posthog.capture("criar_unlocked")
+          router.push("/criar")
+        }
+      } catch {}
+    }, LONG_PRESS_MS)
+  }
+
+  const cancelPress = () => {
+    if (pressTimer.current !== null) {
+      clearTimeout(pressTimer.current)
+      pressTimer.current = null
+    }
+  }
 
   return (
     <header className="mb-8">
       {/* Row 1: brand + controls */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex flex-col">
+        <div
+          className="flex flex-col select-none [-webkit-touch-callout:none]"
+          onPointerDown={startPress}
+          onPointerUp={cancelPress}
+          onPointerLeave={cancelPress}
+          onContextMenu={(e) => e.preventDefault()}
+        >
           <h1 className="font-serif text-2xl font-semibold text-foreground leading-tight">Hablaba</h1>
           <p className="text-xs text-muted-foreground">Spanish for daily life</p>
         </div>
@@ -35,29 +69,8 @@ export function AppHeader() {
         </div>
       </div>
 
-      {/* Row 2: Speak / Practice tab toggle */}
-      <div className="flex items-center bg-secondary rounded-full p-1 max-w-xs">
-        <button
-          onClick={() => { posthog.capture("tab_switched", { tab: "speak" }); router.push("/app/speak") }}
-          className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-            pathname === "/app/speak"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground"
-          }`}
-        >
-          Speak
-        </button>
-        <button
-          onClick={() => { posthog.capture("tab_switched", { tab: "practice" }); router.push("/app/practice") }}
-          className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-            pathname === "/app/practice"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground"
-          }`}
-        >
-          Practice
-        </button>
-      </div>
+      {/* Row 2: full-width tab navigation */}
+      <AppTabs />
 
       <VoiceSheet open={sheetOpen} onOpenChange={setSheetOpen} />
     </header>

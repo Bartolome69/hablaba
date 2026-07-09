@@ -34,8 +34,8 @@ App (under `app/app/`, constrained to `max-w-lg` via its own layout):
 - `/app/chat` — Chat interface, takes `?mode=solo|together` query param
 - Legacy `/practice`, `/speak`, `/chat` paths 301-redirect to `/app/*` via `next.config.mjs`.
 
-Criar (under `app/criar/`, hidden module — no links from main nav, `noindex`):
-- `/criar` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal). Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
+Criar (under `app/criar/`, hidden module, `noindex`):
+- `/criar` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal). Reached via a gated tab in `components/app-tabs.tsx` (`criar_enabled` localStorage flag; long-press the Hablaba wordmark to toggle). Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
 
 API:
 - `POST /api/chat` — Sends message + conversation history to OpenAI, returns `{ reply, correction? }`

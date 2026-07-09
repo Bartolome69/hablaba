@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import type { CriarCapture, CriarChild, CriarPack } from "@/lib/criar/types"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { getPackByDate, listCaptures, todayKey } from "@/lib/criar/store"
+import { AppTabs } from "@/components/app-tabs"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { CaptureButton } from "@/components/criar/capture-button"
 import { PackGenerator } from "@/components/criar/pack-generator"
@@ -32,6 +33,9 @@ export default function CriarHomePage() {
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
+      <div className="mb-6">
+        <AppTabs />
+      </div>
       <CriarHeader child={child} />
 
       <CaptureButton childId={child.id} onCaptured={() => refreshCaptures(child.id)} />
