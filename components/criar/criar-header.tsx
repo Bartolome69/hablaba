@@ -1,7 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { BookOpen } from "lucide-react"
 import type { CriarChild } from "@/lib/criar/types"
 import { describeAge } from "@/lib/criar/stage"
 
@@ -14,18 +12,9 @@ export function CriarHeader({ child }: { child: CriarChild }) {
           {child.name} · {describeAge(child.birthdate)}
         </p>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-          Rioplatense
-        </span>
-        <Link
-          href="/criar/journal"
-          aria-label="Journal"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-muted-foreground active:opacity-70 transition-opacity"
-        >
-          <BookOpen className="h-4 w-4" />
-        </Link>
-      </div>
+      <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+        Rioplatense
+      </span>
     </header>
   )
 }

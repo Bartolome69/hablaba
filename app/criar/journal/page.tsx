@@ -1,8 +1,7 @@
 "use client"
 
-import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Check, ChevronLeft, Music, Zap } from "lucide-react"
+import { Check, Music, Zap } from "lucide-react"
 import type { CriarCapture, CriarCaptureStatus, CriarChild, CriarPack } from "@/lib/criar/types"
 import { stageMoments } from "@/lib/criar/stage"
 import { ensureSeeded } from "@/lib/criar/seed"
@@ -75,15 +74,8 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-8">
+    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
       <header className="mb-6">
-        <Link
-          href="/criar"
-          className="mb-3 flex items-center gap-1 text-muted-foreground active:opacity-70 transition-opacity"
-        >
-          <ChevronLeft className="w-5 h-5" />
-          <span className="text-sm">Criar</span>
-        </Link>
         <h1 className="font-serif text-2xl text-foreground">Journal</h1>
         <p className="text-sm text-muted-foreground">
           {child.name}&apos;s family phrasebook — every pack and capture, day by day.

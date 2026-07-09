@@ -1,8 +1,6 @@
 "use client"
 
-import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
-import { ChevronRight, MessageCircle } from "lucide-react"
 import type { CriarCapture, CriarChild, CriarPack } from "@/lib/criar/types"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { getPackByDate, listCaptures, todayKey } from "@/lib/criar/store"
@@ -33,7 +31,7 @@ export default function CriarHomePage() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-8">
+    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
       <CriarHeader child={child} />
 
       <CaptureButton childId={child.id} onCaptured={() => refreshCaptures(child.id)} />
@@ -52,22 +50,6 @@ export default function CriarHomePage() {
           </ul>
         </div>
       )}
-
-      <Link
-        href="/criar/sparring"
-        className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition-transform active:scale-[0.99]"
-      >
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground">
-          <MessageCircle className="h-4.5 w-4.5" />
-        </span>
-        <span className="flex-1">
-          <span className="block text-sm font-medium text-foreground">Sparring session</span>
-          <span className="block text-xs text-muted-foreground">
-            Hear your week&apos;s Spanish in someone else&apos;s voice · 5–10 min
-          </span>
-        </span>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-      </Link>
 
       {pack ? (
         <PackView key={pack.id} pack={pack} />

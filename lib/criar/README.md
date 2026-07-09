@@ -17,6 +17,17 @@ and captures real-life gaps so the next day's material teaches them back.
 There are **no links from the main app to Criar** — direct URL access only
 (`/criar`), and the layout sets `robots: noindex`.
 
+## PWA install
+
+Criar installs as **its own PWA**, separate from the Hablaba icon: the layout
+links `/criar/manifest.webmanifest` (served by a route handler — Next only
+supports one `app/manifest.ts`) with `start_url`/`scope` of `/criar`, and
+`app/criar/apple-icon.tsx` gives the install a distinct green home-screen icon
+on iOS. Visit `/criar` in the browser → Add to Home Screen. In-module
+navigation is the fixed bottom bar (`components/criar/criar-nav.tsx`:
+Today / Sparring / Journal), hidden on the full-screen sparring chat. The
+main-app service worker (`public/sw.js`, network-first) covers `/criar` too.
+
 ## Boundary rules
 
 Criar may import from the main app **only**:
