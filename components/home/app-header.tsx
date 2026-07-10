@@ -17,7 +17,7 @@ export function AppHeader() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const posthog = usePostHog()
 
-  // Long-press on the wordmark toggles the hidden Criar tab
+  // Long-press on the wordmark toggles the hidden Grow tab
   const pressTimer = useRef<number | null>(null)
 
   const startPress = () => {
@@ -30,7 +30,7 @@ export function AppHeader() {
         } else {
           localStorage.setItem(CRIAR_FLAG, "1")
           posthog.capture("criar_unlocked")
-          router.push("/criar")
+          router.push("/grow")
         }
       } catch {}
     }, LONG_PRESS_MS)

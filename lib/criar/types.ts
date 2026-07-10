@@ -1,6 +1,8 @@
 // Criar module types. These records are table-shaped on purpose:
 // criar_children / criar_packs / criar_captures map 1:1 to future SQL tables.
 
+import type { Message } from "@/lib/types"
+
 export type CriarStage = "newborn" | "toddler" | "preschool" | "school-age"
 
 export interface CriarChild {
@@ -90,4 +92,19 @@ export interface PackApiResponse {
   phrases: { spanish: string; english: string; note?: string }[]
   song: CriarPackSong
   captureLessons: CriarCaptureLesson[]
+}
+
+// --- sparring session persistence ---
+
+export interface SparringHistoryMessage {
+  role: "user" | "assistant"
+  content: string
+}
+
+/** One sparring session per child per day — resumed rather than restarted. */
+export interface CriarSparringSession {
+  childId: string
+  date: string // YYYY-MM-DD
+  messages: Message[]
+  history: SparringHistoryMessage[]
 }

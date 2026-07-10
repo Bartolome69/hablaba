@@ -3,18 +3,26 @@
 // criar_captures) — swapping this file for a real database client is the
 // designed upgrade path. Client-side only.
 
+import type { Message } from "@/lib/types"
 import type {
   CriarCapture,
   CriarCaptureStatus,
   CriarChild,
   CriarPack,
+  CriarSparringSession,
+  SparringHistoryMessage,
 } from "./types"
 
 const KEYS = {
   children: "criar_children",
   packs: "criar_packs",
   captures: "criar_captures",
+  sparringSessions: "criar_sparring_sessions",
 } as const
+
+type StoredSparringSession = Omit<CriarSparringSession, "messages"> & {
+  messages: (Omit<Message, "timestamp"> & { timestamp: string })[]
+}
 
 function readTable<T>(key: string): T[] {
   try {
@@ -120,6 +128,40 @@ export function markCapturesTaught(ids: string[], packId: string) {
     idSet.has(c.id) ? { ...c, status: "taught" as CriarCaptureStatus, taughtInPackId: packId } : c,
   )
   writeTable(KEYS.captures, rows)
+}
+
+// --- sparring sessions ---
+
+/** Same-day session, if one exists — the caller resumes it instead of restarting. */
+export function getSparringSession(
+  childId: string,
+  date: string,
+): { messages: Message[]; history: SparringHistoryMessage[] } | null {
+  const row = readTable<StoredSparringSession>(KEYS.sparringSessions).find(
+    (s) => s.childId === childId && s.date === date,
+  )
+  if (!row) return null
+  return {
+    messages: row.messages.map((m) => ({ ...m, timestamp: new Date(m.timestamp) })),
+    history: row.history,
+  }
+}
+
+export function saveSparringSession(
+  childId: string,
+  date: string,
+  data: { messages: Message[]; history: SparringHistoryMessage[] },
+) {
+  const rows = readTable<StoredSparringSession>(KEYS.sparringSessions).filter(
+    (s) => !(s.childId === childId && s.date === date),
+  )
+  const serialized: StoredSparringSession = {
+    childId,
+    date,
+    messages: data.messages.map((m) => ({ ...m, timestamp: m.timestamp.toISOString() })),
+    history: data.history,
+  }
+  writeTable(KEYS.sparringSessions, [serialized, ...rows])
 }
 
 // --- derived context for pack generation ---

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { CriarNav } from "@/components/criar/criar-nav"
 
 export const metadata: Metadata = {
-  title: "Criar",
+  title: "Grow",
   robots: { index: false, follow: false },
 }
 

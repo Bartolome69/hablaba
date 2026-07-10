@@ -104,13 +104,13 @@ export function PackView({ pack: initialPack }: { pack: CriarPack }) {
             <Music className="h-4 w-4" />
             {pack.song.title}
           </h3>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
-              {pack.song.kind}
-            </span>
-            <PlayButton id="pack-song" text={pack.song.lyrics} play={play} playingId={playingId} />
-          </div>
+          <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
+            {pack.song.kind}
+          </span>
         </div>
+        <p className="mb-2 text-xs text-muted-foreground/80 italic">
+          No audio — this one you sing yourself.
+        </p>
         <p className="whitespace-pre-line text-[15px] leading-relaxed text-foreground">
           {pack.song.lyrics}
         </p>

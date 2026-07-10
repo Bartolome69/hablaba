@@ -2,15 +2,23 @@
 
 // Sparring chat state — a themed instance of the app's chat mechanics,
 // pointed at /api/criar/sparring with context assembled from recent packs
-// and captures. Sessions are ephemeral (not cached): each visit starts fresh.
+// and captures. One session per child per day: reopening the same day
+// resumes the cached conversation instead of restarting it.
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import type { Message } from "@/lib/types"
-import type { CriarChild } from "./types"
+import type { CriarChild, SparringHistoryMessage } from "./types"
 import type { SparringContext } from "./prompts"
 import { describeAge } from "./stage"
-import { listCaptures, listPacks, updateCapture } from "./store"
+import {
+  getSparringSession,
+  listCaptures,
+  listPacks,
+  saveSparringSession,
+  todayKey,
+  updateCapture,
+} from "./store"
 
 function assembleContext(child: CriarChild): SparringContext {
   const packs = listPacks(child.id).slice(0, 5) // roughly this week
@@ -32,8 +40,9 @@ export function useSparring(
 ) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const historyRef = useRef<{ role: "user" | "assistant"; content: string }[]>([])
+  const historyRef = useRef<SparringHistoryMessage[]>([])
   const contextRef = useRef<SparringContext | null>(null)
+  const dateRef = useRef<string>("")
   const initializedRef = useRef(false)
   const onBotMessageRef = useRef(onNewBotMessage)
   onBotMessageRef.current = onNewBotMessage
@@ -42,14 +51,23 @@ export function useSparring(
     if (!child || initializedRef.current) return
     initializedRef.current = true
 
-    const context = assembleContext(child)
-    contextRef.current = context
+    const date = todayKey()
+    dateRef.current = date
+    contextRef.current = assembleContext(child)
+
+    // Already sparred today — resume instead of restarting (no TTS replay)
+    const cached = getSparringSession(child.id, date)
+    if (cached) {
+      setMessages(cached.messages)
+      historyRef.current = cached.history
+      return
+    }
 
     setIsLoading(true)
     fetch("/api/criar/sparring", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ opener: true, history: [], context }),
+      body: JSON.stringify({ opener: true, history: [], context: contextRef.current }),
     })
       .then((r) => {
         if (!r.ok) throw new Error(`Sparring API error: ${r.status}`)
@@ -65,6 +83,10 @@ export function useSparring(
         }
         setMessages([botMessage])
         historyRef.current = [{ role: "assistant", content: reply }]
+        saveSparringSession(child.id, date, {
+          messages: [botMessage],
+          history: historyRef.current,
+        })
         onBotMessageRef.current?.(botMessage.id, botMessage.text)
         // The session is now exercising taught material — bump taught → learning
         listCaptures(child.id)
@@ -78,6 +100,7 @@ export function useSparring(
   }, [child])
 
   const sendMessage = useCallback(async (text: string) => {
+    if (!child) return null
     const userMessageId = crypto.randomUUID()
     const userMessage: Message = {
       id: userMessageId,
@@ -114,12 +137,18 @@ export function useSparring(
         translation: translation ?? undefined,
         timestamp: new Date(),
       }
-      setMessages((prev) => [...prev, botMessage])
-      historyRef.current = [
+      const newHistory: SparringHistoryMessage[] = [
         ...historyRef.current,
         { role: "user", content: text },
         { role: "assistant", content: reply },
       ]
+
+      setMessages((prev) => {
+        const updated = [...prev, botMessage]
+        saveSparringSession(child.id, dateRef.current, { messages: updated, history: newHistory })
+        return updated
+      })
+      historyRef.current = newHistory
       onBotMessageRef.current?.(botMessage.id, botMessage.text)
       return botMessage
     } catch (err) {
@@ -130,7 +159,7 @@ export function useSparring(
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [child])
 
   return { messages, isLoading, sendMessage }
 }

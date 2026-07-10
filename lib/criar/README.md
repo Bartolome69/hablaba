@@ -1,40 +1,47 @@
-# Criar
+# Criar (user-facing name: "Grow")
 
 A cleanly bounded module inside Hablaba for a parent raising a child bilingually
 (one-parent-one-language) in Rioplatense Argentine Spanish. The parent is the user,
 not the child: the product keeps the parent's daily spoken Spanish rich and correct,
 and captures real-life gaps so the next day's material teaches them back.
 
+**Naming**: the module shows up to Bart as **"Grow"** (heading, tab label, page
+titles, the `/grow` URL). Everything below — folders, type names, localStorage
+keys — keeps the original **"Criar"** codename. That split is deliberate: the
+rename request was cosmetic, and renaming the internal code too would touch
+~15 files and every `criar_*` localStorage key for zero user-visible benefit.
+Don't silently "finish the job" and rename the internals — ask first.
+
 ## What lives where
 
 | Path | Purpose |
 | --- | --- |
-| `app/criar/` | Routes: home (daily pack + capture), `sparring/`, `journal/` |
+| `app/grow/` | Routes: home (daily pack + capture), `sparring/`, `journal/`. `/criar/*` 301-redirects here (`next.config.mjs`) |
 | `app/api/criar/` | Stateless LLM routes: `pack/` (daily pack generation), `sparring/` (conversation) |
-| `components/criar/` | All Criar UI components |
+| `components/criar/` | All Grow UI components |
 | `lib/criar/` | Types, store, stage logic, prompts, seed, this README |
 
 ## Access & navigation
 
-Criar lives inside the **one installed Hablaba PWA** (scope `/`) — deliberately
+Grow lives inside the **one installed Hablaba PWA** (scope `/`) — deliberately
 not a separate install, because iOS gives each home-screen web app isolated
-storage and Criar's data is in localStorage. The layout sets `robots: noindex`.
+storage and Grow's data is in localStorage. The layout sets `robots: noindex`.
 
 - **Entry**: a gated third tab in the shared top navigation
-  (`components/app-tabs.tsx`: Speak / Practice / Criar). The tab renders only
+  (`components/app-tabs.tsx`: Speak / Practice / Grow). The tab renders only
   when the `criar_enabled` localStorage flag is set — unlocked by
   **long-pressing the Hablaba wordmark** (1.2s, see
   `components/home/app-header.tsx`; long-press again to re-hide) or by
-  visiting `/criar` directly (the seed sets the flag). Public visitors never
+  visiting `/grow` directly (the seed sets the flag). Public visitors never
   see it.
 - **In-module navigation**: fixed bottom bar (`components/criar/criar-nav.tsx`:
   Today / Sparring / Journal), hidden on the full-screen sparring chat. The
-  Criar home also renders `AppTabs` so you can switch back to Speak/Practice.
-- The main-app service worker (`public/sw.js`, network-first) covers `/criar`.
+  Grow home also renders `AppTabs` so you can switch back to Speak/Practice.
+- The main-app service worker (`public/sw.js`, network-first) covers `/grow`.
 
 ## Boundary rules
 
-Criar may import from the main app **only**:
+Grow may import from the main app **only**:
 
 - `components/ui/*` — shadcn primitives (Button, Sheet, …)
 - `components/app-tabs` — shared top-level tab navigation
@@ -45,13 +52,13 @@ Criar may import from the main app **only**:
 - Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`)
 
 The main app must **never** import from `lib/criar/` or `components/criar/`.
-Its only reference to Criar is the gated `/criar` tab in `components/app-tabs.tsx`
-(a URL string + the `criar_enabled` flag — no code imports). Anything Criar needs
-beyond the list above gets copied into the module, not imported. This keeps the extraction path clean: to spin Criar out into
+Its only reference to Grow is the gated `/grow` tab in `components/app-tabs.tsx`
+(a URL string + the `criar_enabled` flag — no code imports). Anything Grow needs
+beyond the list above gets copied into the module, not imported. This keeps the extraction path clean: to spin Grow out into
 a standalone app, take the four directories above plus copies of the shared
 utilities it uses.
 
-Shared-code changes made for Criar (kept deliberately tiny, both backwards-compatible):
+Shared-code changes made for Grow (kept deliberately tiny, both backwards-compatible):
 
 - `/api/tts` + `lib/audio.ts` + `hooks/use-tts.ts`: optional `register` param
   (maps to dialect-specific TTS voice instructions server-side)

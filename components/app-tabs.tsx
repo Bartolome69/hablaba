@@ -1,9 +1,10 @@
 "use client"
 
-// Top-level tab navigation shared by the main app (AppHeader) and the Criar
-// module home. The Criar tab is gated by the `criar_enabled` localStorage
-// flag: unlocked by long-pressing the Hablaba wordmark (see AppHeader) or by
-// visiting /criar directly (the seed sets it).
+// Top-level tab navigation shared by the main app (AppHeader) and the Grow
+// module home. The Grow tab is gated by the `criar_enabled` localStorage
+// flag (internal codename, unaffected by the Grow rename): unlocked by
+// long-pressing the Hablaba wordmark (see AppHeader) or by visiting /grow
+// directly (the seed sets it).
 
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
@@ -34,7 +35,7 @@ export function AppTabs() {
     { id: "speak", label: "Speak", href: "/app/speak", active: pathname === "/app/speak" },
     { id: "practice", label: "Practice", href: "/app/practice", active: pathname === "/app/practice" },
     ...(criarEnabled
-      ? [{ id: "criar", label: "Criar", href: "/criar", active: pathname.startsWith("/criar") }]
+      ? [{ id: "criar", label: "Grow", href: "/grow", active: pathname.startsWith("/grow") }]
       : []),
   ]
 

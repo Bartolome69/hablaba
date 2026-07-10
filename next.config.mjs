@@ -14,6 +14,9 @@ const nextConfig = {
       { source: '/practice', destination: '/app/practice', permanent: true },
       { source: '/speak', destination: '/app/speak', permanent: true },
       { source: '/chat', destination: '/app/chat', permanent: true },
+      // Criar was renamed to Grow; keep old links/bookmarks working
+      { source: '/criar', destination: '/grow', permanent: true },
+      { source: '/criar/:path*', destination: '/grow/:path*', permanent: true },
     ]
   },
 }

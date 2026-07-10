@@ -7,7 +7,7 @@ import { deriveStage } from "./stage"
 import { getChild, saveChild, savePack, todayKey, listCaptures } from "./store"
 
 export function ensureSeeded(): CriarChild {
-  // Visiting Criar unlocks its tab in the main app nav (see components/app-tabs.tsx)
+  // Visiting Grow unlocks its tab in the main app nav (see components/app-tabs.tsx)
   try {
     localStorage.setItem("criar_enabled", "1")
   } catch {}

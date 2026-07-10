@@ -34,8 +34,9 @@ App (under `app/app/`, constrained to `max-w-lg` via its own layout):
 - `/app/chat` — Chat interface, takes `?mode=solo|together` query param
 - Legacy `/practice`, `/speak`, `/chat` paths 301-redirect to `/app/*` via `next.config.mjs`.
 
-Criar (under `app/criar/`, hidden module, `noindex`):
-- `/criar` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal). Reached via a gated tab in `components/app-tabs.tsx` (`criar_enabled` localStorage flag; long-press the Hablaba wordmark to toggle). Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
+Grow (under `app/grow/`, hidden module, `noindex` — internal codename "Criar", see below):
+- `/grow` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal). Reached via a gated tab in `components/app-tabs.tsx` (`criar_enabled` localStorage flag; long-press the Hablaba wordmark to toggle). `/criar/*` 301-redirects to `/grow/*` via `next.config.mjs`. Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
+- The module is user-facing as **"Grow"** but its internal code — `lib/criar/`, `components/criar/`, type names (`CriarChild`, etc.), localStorage keys (`criar_*`) — keeps the original "Criar" codename. This is deliberate: renaming those too would touch ~15 files and localStorage table keys for a purely cosmetic change. Don't "fix" this mismatch without checking with the user first.
 
 API:
 - `POST /api/chat` — Sends message + conversation history to OpenAI, returns `{ reply, correction? }`

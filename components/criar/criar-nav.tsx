@@ -5,15 +5,15 @@ import { usePathname } from "next/navigation"
 import { BookOpen, MessageCircle, Sun } from "lucide-react"
 
 const items = [
-  { href: "/criar", label: "Today", icon: Sun },
-  { href: "/criar/sparring", label: "Sparring", icon: MessageCircle },
-  { href: "/criar/journal", label: "Journal", icon: BookOpen },
+  { href: "/grow", label: "Today", icon: Sun },
+  { href: "/grow/sparring", label: "Sparring", icon: MessageCircle },
+  { href: "/grow/journal", label: "Journal", icon: BookOpen },
 ] as const
 
 export function CriarNav() {
   const pathname = usePathname()
   // Sparring is a full-screen chat with its own input bar — no nav there
-  if (pathname.startsWith("/criar/sparring")) return null
+  if (pathname.startsWith("/grow/sparring")) return null
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background">
