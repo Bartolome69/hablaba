@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, Volume2, VolumeX } from "lucide-react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
@@ -23,9 +23,21 @@ export default function SparringPage() {
     setChild(ensureSeeded())
   }, [])
 
+  // Auto-play the partner's turns by default, but let the parent mute it
+  // (e.g. sleeping baby) — muting only silences auto-play; tap-to-hear on any
+  // bubble still works. Preference persists across sessions.
+  const MUTE_KEY = "criar_sparring_muted"
+  const [muted, setMuted] = useState(false)
+  const mutedRef = useRef(false)
+  mutedRef.current = muted
+
   // TTS at page level, same shape as the main chat — but Rioplatense register
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    setMuted(localStorage.getItem(MUTE_KEY) === "1")
+  }, [])
 
   const playTTS = useCallback(async (messageId: string, text: string) => {
     if (audioRef.current) {
@@ -62,7 +74,30 @@ export default function SparringPage() {
     }
   }, [voiceId, playingId])
 
-  const { messages, isLoading, sendMessage } = useSparring(child, playTTS)
+  // Gate for auto-play only; manual bubble taps call playTTS directly
+  const autoPlay = useCallback((id: string, text: string) => {
+    if (mutedRef.current) return
+    playTTS(id, text)
+  }, [playTTS])
+
+  const toggleMuted = useCallback(() => {
+    setMuted((prev) => {
+      const next = !prev
+      try {
+        localStorage.setItem(MUTE_KEY, next ? "1" : "0")
+      } catch {}
+      // Silence anything mid-playback when muting
+      if (next && audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+        setPlayingId(null)
+      }
+      posthog.capture("criar_sparring_mute_toggled", { muted: next })
+      return next
+    })
+  }, [posthog])
+
+  const { messages, isLoading, sendMessage } = useSparring(child, autoPlay)
 
   useEffect(() => {
     posthog.capture("criar_sparring_started")
@@ -103,7 +138,14 @@ export default function SparringPage() {
             <p className="font-serif text-sm text-foreground">Sparring</p>
             <p className="text-xs text-muted-foreground">Your week, out loud · 5–10 min</p>
           </div>
-          <div className="w-9 h-9" />
+          <button
+            onClick={toggleMuted}
+            aria-label={muted ? "Turn voice on" : "Mute voice"}
+            aria-pressed={muted}
+            className="flex items-center justify-center w-9 h-9 -mr-1.5 text-muted-foreground active:opacity-70 transition-opacity"
+          >
+            {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
         </div>
       </header>
 
