@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { AudioLines } from "lucide-react"
+import { Settings } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { AppTabs, CRIAR_FLAG, isCriarEnabled } from "@/components/app-tabs"
 import { StreakBadge } from "@/components/home/streak-badge"
@@ -58,14 +58,14 @@ export function AppHeader() {
           <p className="text-xs text-muted-foreground">Spanish for daily life</p>
         </div>
         <div className="flex items-center gap-2">
+          <StreakBadge count={streak} />
           <button
             onClick={() => setSheetOpen(true)}
             className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-[0.98] transition-all"
-            aria-label="Voice settings"
+            aria-label="Settings"
           >
-            <AudioLines className="w-4 h-4" />
+            <Settings className="w-4 h-4" />
           </button>
-          <StreakBadge count={streak} />
         </div>
       </div>
 

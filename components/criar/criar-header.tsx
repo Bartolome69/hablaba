@@ -29,6 +29,7 @@ export function CriarHeader({ child, onChildUpdate }: CriarHeaderProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <StreakBadge count={streak} />
           <button
             onClick={() => setSettingsOpen(true)}
             className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-[0.98] transition-all"
@@ -36,7 +37,6 @@ export function CriarHeader({ child, onChildUpdate }: CriarHeaderProps) {
           >
             <Settings className="w-4 h-4" />
           </button>
-          <StreakBadge count={streak} />
         </div>
       </div>
 
