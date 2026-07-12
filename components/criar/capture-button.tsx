@@ -75,10 +75,10 @@ export function CaptureButton({ childId, onCaptured }: CaptureButtonProps) {
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
           side="bottom"
-          className="rounded-t-2xl px-6"
+          className="rounded-t-2xl px-6 pt-6"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 24px)" }}
         >
-          <SheetHeader className="mb-3 p-0 text-left">
+          <SheetHeader className="mb-3 p-0 pr-8 text-left">
             <SheetTitle>What couldn&apos;t you say?</SheetTitle>
             <SheetDescription>
               In English, Spanish or a mix — whatever came out in the moment.
