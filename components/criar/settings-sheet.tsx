@@ -64,7 +64,7 @@ export function SettingsSheet({ open, onOpenChange, child, onChildUpdate }: Sett
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="max-h-[85vh] gap-0 overflow-y-auto rounded-t-2xl px-6 pb-8"
+        className="max-h-[85vh] gap-0 overflow-y-auto rounded-t-2xl px-6 pt-6 pb-8"
       >
         <SheetHeader className="p-0 text-left">
           <SheetTitle>Settings</SheetTitle>
