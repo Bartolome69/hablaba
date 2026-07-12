@@ -149,7 +149,10 @@ function ChatContent() {
             message={message}
             isPlaying={playingId === message.id}
             onPlayRequest={() => playTTS(message.id, message.text)}
-            onSavePhrase={savePhrase}
+            onSavePhrase={(spanish, english, source) => {
+              savePhrase(spanish, english, source)
+              posthog.capture("phrase_saved", { source })
+            }}
           />
         ))}
         {isLoading && (

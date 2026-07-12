@@ -9,13 +9,14 @@ interface ChatBubbleProps {
   message: Message
   isPlaying?: boolean
   onPlayRequest?: () => void
-  onSavePhrase?: (spanish: string, english: string) => void
+  onSavePhrase?: (spanish: string, english: string, source: "correction" | "bot" | "user") => void
 }
 
 export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePhrase }: ChatBubbleProps) {
   const [showCorrection, setShowCorrection] = useState(false)
   const [showTranslation, setShowTranslation] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [botSaved, setBotSaved] = useState(false)
   const isUser = message.type === "user"
   const isBot = message.type === "bot"
 
@@ -23,8 +24,13 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
     if (!message.correction) return
     const spanish = message.correction.corrected
     const english = message.correction.corrected_translation ?? message.correction.explanation ?? ""
-    onSavePhrase?.(spanish, english)
+    onSavePhrase?.(spanish, english, "correction")
     setSaved(true)
+  }
+
+  const handleSaveBot = () => {
+    onSavePhrase?.(message.text, message.translation ?? "", "bot")
+    setBotSaved(true)
   }
 
   return (
@@ -67,6 +73,18 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
               aria-label="Translate"
             >
               <Languages className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleSaveBot}
+              disabled={botSaved}
+              className={`p-2.5 rounded-full transition-colors disabled:opacity-100 ${
+                botSaved
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              }`}
+              aria-label={botSaved ? "Saved to review" : "Save phrase"}
+            >
+              <Bookmark className={`w-4 h-4 ${botSaved ? "fill-current" : ""}`} />
             </button>
           </div>
         )}

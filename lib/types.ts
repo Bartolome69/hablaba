@@ -28,7 +28,13 @@ export interface SavedPhrase {
   spanish: string
   english: string
   savedAt: Date
+  source?: "correction" | "bot" | "user"
+  timesPracticed?: number
+  lastPracticedAt?: string // ISO string
+  box?: number // reserved for future spaced-repetition scheduling
 }
+
+export type PracticeResult = "again" | "got_it"
 
 export interface DailyPrompt {
   id: string
