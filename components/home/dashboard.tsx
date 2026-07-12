@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Shuffle, Baby } from "lucide-react"
+import { Shuffle, Baby, ChevronDown } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { ContinueSession } from "@/components/home/continue-session"
 import { ReviewCard } from "@/components/home/review-card"
@@ -20,6 +21,11 @@ export function Dashboard() {
   const router = useRouter()
   const { phrases } = useSavedPhrases()
   const { sessions, deleteSession } = useSessions()
+  const [showAllSessions, setShowAllSessions] = useState(false)
+
+  const SESSION_PREVIEW_COUNT = 3
+  const visibleSessions = showAllSessions ? sessions : sessions.slice(0, SESSION_PREVIEW_COUNT)
+  const hiddenSessionCount = sessions.length - SESSION_PREVIEW_COUNT
 
   const handleSurprise = () => {
     const theme = surpriseThemes[Math.floor(Math.random() * surpriseThemes.length)]
@@ -60,7 +66,7 @@ export function Dashboard() {
         <div className="mb-8">
           <h2 className="font-serif text-base text-foreground mb-3">Pick up where you left off</h2>
           <div className="space-y-2">
-            {sessions.map((session) => (
+            {visibleSessions.map((session) => (
               <ContinueSession
                 key={session.id}
                 session={{
@@ -75,6 +81,15 @@ export function Dashboard() {
               />
             ))}
           </div>
+          {hiddenSessionCount > 0 && (
+            <button
+              onClick={() => setShowAllSessions((v) => !v)}
+              className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showAllSessions ? "Show less" : `See ${hiddenSessionCount} more`}
+              <ChevronDown className={`w-4 h-4 transition-transform ${showAllSessions ? "rotate-180" : ""}`} />
+            </button>
+          )}
         </div>
       )}
 
