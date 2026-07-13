@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Bookmark, ChevronDown, Languages, Volume2, Loader2 } from "lucide-react"
 import type { Message } from "@/lib/types"
+import { useStreamedText } from "@/hooks/use-streamed-text"
 
 interface ChatBubbleProps {
   message: Message
@@ -19,6 +20,9 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
   const [botSaved, setBotSaved] = useState(false)
   const isUser = message.type === "user"
   const isBot = message.type === "bot"
+
+  // Smooth typed-out reveal for streaming bot replies.
+  const { text: streamedText, caret } = useStreamedText(message.text, isBot && !!message.streaming)
 
   const handleSave = () => {
     if (!message.correction) return
@@ -43,7 +47,15 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
               : "bg-secondary text-secondary-foreground rounded-bl-md"
           }`}
         >
-          <p className="text-sm leading-relaxed">{message.text}</p>
+          <p className="text-sm leading-relaxed">
+            {isBot ? streamedText : message.text}
+            {isBot && caret && (
+              <span
+                aria-hidden
+                className="ml-0.5 inline-block w-[2px] h-[0.95em] translate-y-[0.12em] rounded-[1px] bg-current animate-pulse"
+              />
+            )}
+          </p>
           {showTranslation && message.translation && (
             <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border/50 italic">
               {message.translation}

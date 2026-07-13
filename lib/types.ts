@@ -14,6 +14,8 @@ export interface Message {
   timestamp: Date
   correction?: Correction
   translation?: string
+  // True while the bot reply is still streaming in — drives the typed-out reveal.
+  streaming?: boolean
 }
 
 export interface Correction {
