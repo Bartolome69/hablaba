@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { MessageSquare, Mic, Sprout } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
-import { isCriarEnabled } from "@/lib/criar-flag"
+import { CRIAR_FLAG_EVENT, isCriarEnabled } from "@/lib/criar-flag"
 
 const HIDE_ON = ["/app/chat", "/grow/sparring"]
 
@@ -19,9 +19,17 @@ export function BottomNav() {
   const posthog = usePostHog()
   const [criarEnabled, setCriarEnabled] = useState(false)
 
-  // localStorage is client-only — read after mount to avoid hydration mismatch
+  // localStorage is client-only — read after mount to avoid hydration mismatch,
+  // and keep in sync when the Grow toggle flips (Settings) or another tab changes it.
   useEffect(() => {
-    setCriarEnabled(isCriarEnabled())
+    const sync = () => setCriarEnabled(isCriarEnabled())
+    sync()
+    window.addEventListener(CRIAR_FLAG_EVENT, sync)
+    window.addEventListener("storage", sync)
+    return () => {
+      window.removeEventListener(CRIAR_FLAG_EVENT, sync)
+      window.removeEventListener("storage", sync)
+    }
   }, [])
 
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null
