@@ -8,8 +8,8 @@ const validVoices: VoiceId[] = ["nova", "shimmer", "alloy", "onyx", "echo", "fab
 const VOICE_INSTRUCTIONS =
   "Speak in clear, natural Spanish at a conversational pace, like a warm and patient tutor. Use natural prosody and gentle emphasis on key words."
 
-// Optional dialect registers. "rioplatense" is used across Speak, Practice and
-// the Criar/Grow module for a consistent Argentine accent.
+// Optional dialect registers. "rioplatense" is used by the Grow module for a
+// Buenos Aires accent (Speak and Practice use the default neutral voice).
 const REGISTER_INSTRUCTIONS: Record<string, string> = {
   rioplatense:
     "Speak in Rioplatense Argentine Spanish with a Buenos Aires (porteño) accent: pronounce 'll' and 'y' as 'sh' (sheísmo, e.g. 'yo' as 'sho', 'calle' as 'cashe'), with the characteristic Italian-influenced rising-and-falling intonation. Warm, natural and conversational.",

@@ -26,7 +26,7 @@ function dayOfYear(now: Date): number {
 }
 
 export function SpeakPage() {
-  const { play, playingId } = useTTS("speak", { register: "rioplatense" })
+  const { play, playingId } = useTTS("speak")
   const { heard, markHeard } = useHeardPhrases()
   const posthog = usePostHog()
   const [selected, setSelected] = useState<string>(categories[0].id)
@@ -49,7 +49,7 @@ export function SpeakPage() {
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <AppHeader title="Speak" subtitle="Rioplatense Spanish — tap to hear it aloud" />
+      <AppHeader title="Speak" subtitle="Tap any phrase to hear it aloud" />
 
       {/* Phrase of the day */}
       <div className="mb-4 rounded-2xl bg-primary p-4 text-primary-foreground">
