@@ -8,10 +8,11 @@ const validVoices: VoiceId[] = ["nova", "shimmer", "alloy", "onyx", "echo", "fab
 const VOICE_INSTRUCTIONS =
   "Speak in clear, natural Spanish at a conversational pace, like a warm and patient tutor. Use natural prosody and gentle emphasis on key words."
 
-// Optional dialect registers. "rioplatense" is used by the Criar module.
+// Optional dialect registers. "rioplatense" is used across Speak, Practice and
+// the Criar/Grow module for a consistent Argentine accent.
 const REGISTER_INSTRUCTIONS: Record<string, string> = {
   rioplatense:
-    "Speak in Rioplatense Argentine Spanish with a Buenos Aires accent: pronounce 'll' and 'y' as 'sh' (sheísmo), with Italian-influenced rising intonation. Warm and gentle, like a parent talking softly to their baby.",
+    "Speak in Rioplatense Argentine Spanish with a Buenos Aires (porteño) accent: pronounce 'll' and 'y' as 'sh' (sheísmo, e.g. 'yo' as 'sho', 'calle' as 'cashe'), with the characteristic Italian-influenced rising-and-falling intonation. Warm, natural and conversational.",
 }
 
 async function handleTTS(
