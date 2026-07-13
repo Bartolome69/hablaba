@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Check, Music, Zap } from "lucide-react"
-import { GrowSectionNav } from "@/components/criar/grow-section-nav"
+import { CriarHeader } from "@/components/criar/criar-header"
 import type { CriarCapture, CriarCaptureStatus, CriarChild, CriarPack } from "@/lib/criar/types"
 import { stageMoments } from "@/lib/criar/stage"
 import { ensureSeeded } from "@/lib/criar/seed"
@@ -76,14 +76,12 @@ export default function JournalPage() {
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <header className="mb-6">
-        <h1 className="font-serif text-2xl text-foreground">Journal</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {child.name}&apos;s family phrasebook — every pack and capture, day by day.
-        </p>
-      </header>
-
-      <GrowSectionNav />
+      <CriarHeader
+        child={child}
+        onChildUpdate={setChild}
+        title="Journal"
+        subtitle="Every pack and capture, day by day"
+      />
 
       {days.length === 0 && (
         <p className="text-sm text-muted-foreground">

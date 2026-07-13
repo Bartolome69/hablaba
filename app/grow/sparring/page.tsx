@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
-import { GrowSectionNav } from "@/components/criar/grow-section-nav"
+import { CriarHeader } from "@/components/criar/criar-header"
 import { playAudio } from "@/lib/audio"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import type { CriarChild } from "@/lib/criar/types"
@@ -148,22 +148,30 @@ export default function SparringPage() {
     }
   }, [])
 
+  if (!child) {
+    return <div className="min-h-dvh bg-background" />
+  }
+
   return (
     <div className="fixed inset-0 bg-background flex flex-col mx-auto max-w-lg">
-      <header className="flex-shrink-0 bg-background px-4 pt-4 pb-2">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">Your week, out loud · 5–10 min</p>
-          <button
-            onClick={toggleMuted}
-            aria-label={muted ? "Turn voice on" : "Mute voice"}
-            aria-pressed={muted}
-            className="flex items-center justify-center w-9 h-9 -mr-1.5 text-muted-foreground active:opacity-70 transition-opacity"
-          >
-            {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-          </button>
-        </div>
-        <GrowSectionNav className="mb-0" />
-      </header>
+      <div className="flex-shrink-0 px-4 pt-6">
+        <CriarHeader
+          child={child}
+          onChildUpdate={setChild}
+          title="Catch up"
+          subtitle="Your week, out loud · 5–10 min"
+          action={
+            <button
+              onClick={toggleMuted}
+              aria-label={muted ? "Turn voice on" : "Mute voice"}
+              aria-pressed={muted}
+              className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-[0.98] transition-all"
+            >
+              {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+          }
+        />
+      </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((message) => (

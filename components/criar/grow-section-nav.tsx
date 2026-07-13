@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 
 const items = [
   { href: "/grow", label: "Today" },
-  { href: "/grow/sparring", label: "Sparring" },
+  { href: "/grow/sparring", label: "Catch up" },
   { href: "/grow/journal", label: "Journal" },
 ] as const
 
