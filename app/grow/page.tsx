@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from "react"
 import type { CriarCapture, CriarChild, CriarPack } from "@/lib/criar/types"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { getPackByDate, listCaptures, todayKey } from "@/lib/criar/store"
+import { describeAge } from "@/lib/criar/stage"
 import { CriarHeader } from "@/components/criar/criar-header"
-import { GrowSectionNav } from "@/components/criar/grow-section-nav"
 import { CaptureButton } from "@/components/criar/capture-button"
 import { PackGenerator } from "@/components/criar/pack-generator"
 import { PackView } from "@/components/criar/pack-view"
@@ -33,9 +33,12 @@ export default function CriarHomePage() {
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <CriarHeader child={child} onChildUpdate={setChild} />
-
-      <GrowSectionNav />
+      <CriarHeader
+        child={child}
+        onChildUpdate={setChild}
+        title="Today"
+        subtitle={`${child.name} · ${describeAge(child.birthdate)} · Rioplatense`}
+      />
 
       <CaptureButton childId={child.id} onCaptured={() => refreshCaptures(child.id)} />
 
