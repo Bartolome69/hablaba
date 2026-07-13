@@ -58,8 +58,8 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-8">
-      <AppHeader />
+    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
+      <AppHeader title="Practice" subtitle="Your daily Spanish practice" />
 
       {/* Continue — pick up in-progress conversations */}
       {sessions.length > 0 && (

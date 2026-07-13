@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { CriarNav } from "@/components/criar/criar-nav"
+import { BottomNav } from "@/components/bottom-nav"
 
 export const metadata: Metadata = {
   title: "Grow",
@@ -10,7 +10,7 @@ export default function CriarLayout({ children }: { children: React.ReactNode })
   return (
     <div className="mx-auto w-full max-w-lg">
       {children}
-      <CriarNav />
+      <BottomNav />
     </div>
   )
 }

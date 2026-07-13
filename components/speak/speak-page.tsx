@@ -23,12 +23,8 @@ export function SpeakPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-8">
-      <AppHeader />
-
-      <p className="text-sm text-muted-foreground mb-4 -mt-2">
-        Tap any phrase to hear it spoken aloud.
-      </p>
+    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
+      <AppHeader title="Speak" subtitle="Tap any phrase to hear it aloud" />
 
       <div className="flex flex-wrap gap-2 mb-4">
         {categories.map((category) => {
