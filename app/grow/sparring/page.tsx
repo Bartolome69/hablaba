@@ -34,45 +34,71 @@ export default function SparringPage() {
   // TTS at page level, same shape as the main chat — but Rioplatense register
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     setMuted(localStorage.getItem(MUTE_KEY) === "1")
   }, [])
 
-  const playTTS = useCallback(async (messageId: string, text: string) => {
+  // Stop playback and cancel any in-flight TTS request. Stable identity so
+  // the unmount effect below can tear down audio when the user leaves.
+  const stopAudio = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
     }
-    if (playingId === messageId) {
+  }, [])
+
+  const playTTS = useCallback(async (messageId: string, text: string) => {
+    const wasPlaying = playingId === messageId
+    stopAudio()
+    if (wasPlaying) {
       setPlayingId(null)
       return
     }
 
     setPlayingId(messageId)
+    const controller = new AbortController()
+    abortRef.current = controller
+    let url: string | null = null
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, voice: voiceId, register: "rioplatense" }),
+        signal: controller.signal,
       })
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = await playAudio(url)
+      url = URL.createObjectURL(blob)
+      const audio = await playAudio(url, controller.signal)
+      // Navigated away / muted / superseded while the clip was loading.
+      if (controller.signal.aborted) {
+        audio.pause()
+        URL.revokeObjectURL(url)
+        return
+      }
+      const objectUrl = url
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
-        URL.revokeObjectURL(url)
+        URL.revokeObjectURL(objectUrl)
         audioRef.current = null
       }
     } catch {
+      if (url) URL.revokeObjectURL(url)
+      if (controller.signal.aborted) return // silent — user cancelled
       setPlayingId(null)
       toast.error("No se pudo reproducir el audio", {
         action: { label: "Retry", onClick: () => playTTS(messageId, text) },
       })
     }
-  }, [voiceId, playingId])
+  }, [voiceId, playingId, stopAudio])
+
+  // Kill audio if the user navigates away from the conversation.
+  useEffect(() => stopAudio, [stopAudio])
 
   // Gate for auto-play only; manual bubble taps call playTTS directly
   const autoPlay = useCallback((id: string, text: string) => {
@@ -86,16 +112,15 @@ export default function SparringPage() {
       try {
         localStorage.setItem(MUTE_KEY, next ? "1" : "0")
       } catch {}
-      // Silence anything mid-playback when muting
-      if (next && audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current = null
+      // Silence anything playing or still loading when muting
+      if (next) {
+        stopAudio()
         setPlayingId(null)
       }
       posthog.capture("criar_sparring_mute_toggled", { muted: next })
       return next
     })
-  }, [posthog])
+  }, [posthog, stopAudio])
 
   const { messages, isLoading, sendMessage } = useSparring(child, autoPlay)
 
