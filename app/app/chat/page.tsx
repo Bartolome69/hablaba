@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import { playAudio } from "@/lib/audio"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { useTtsMuted } from "@/hooks/use-tts-muted"
 import { useSessions } from "@/hooks/use-sessions"
 import { conversationTopics, dailyTopics, SURPRISE_TOPIC_ID, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
 import type { PracticeMode } from "@/lib/types"
@@ -29,6 +30,7 @@ function ChatContent() {
   const { upsertSession } = useSessions()
   const { savePhrase } = useSavedPhrases()
   const { voiceId } = useVoicePreference()
+  const { muted, setMuted } = useTtsMuted()
   const bottomRef = useRef<HTMLDivElement>(null)
   const posthog = usePostHog()
 
@@ -36,6 +38,9 @@ function ChatContent() {
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
+  // Read in the useChat callback without making it depend on `muted`.
+  const mutedRef = useRef(muted)
+  mutedRef.current = muted
 
   // Stop playback and cancel any in-flight TTS request. Stable identity so
   // the unmount effect below can tear down audio when the user leaves.
@@ -126,8 +131,19 @@ function ChatContent() {
         lastMessageAt: new Date().toISOString(),
       })
     },
-    onNewBotMessage: (id, text) => playTTS(id, text),
+    onNewBotMessage: (id, text) => {
+      if (!mutedRef.current) playTTS(id, text)
+    },
   })
+
+  const toggleMute = useCallback(() => {
+    const next = !muted
+    setMuted(next)
+    if (next) {
+      stopAudio()
+      setPlayingId(null)
+    }
+  }, [muted, setMuted, stopAudio])
 
   useEffect(() => {
     posthog.capture("conversation_started", {
@@ -165,7 +181,12 @@ function ChatContent() {
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col mx-auto max-w-lg">
-      <ChatHeader mode={mode} topic={isParentChild ? "👶 Family time" : isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")} />
+      <ChatHeader
+        mode={mode}
+        topic={isParentChild ? "👶 Family time" : isSurprise ? "🎲 Surprise" : (topic?.title ?? "Practice")}
+        muted={muted}
+        onToggleMute={toggleMute}
+      />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((message) => (

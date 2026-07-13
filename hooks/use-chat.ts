@@ -6,6 +6,23 @@ import type { Message, PracticeMode } from "@/lib/types"
 import type { HistoryMessage } from "@/lib/api"
 import { saveChatMessages, loadChatMessages } from "@/lib/chat-cache"
 
+// Pull the (possibly still-streaming) value of the JSON "reply" field out of a
+// partial payload. The model is told to emit "reply" first, so this resolves
+// almost immediately and grows as more tokens arrive.
+function extractReply(raw: string): string | null {
+  const m = raw.match(/"reply"\s*:\s*"((?:\\.|[^"\\])*)"?/)
+  if (!m) return null
+  try {
+    return JSON.parse(`"${m[1]}"`)
+  } catch {
+    return m[1]
+      .replace(/\\n/g, "\n")
+      .replace(/\\t/g, "\t")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, "\\")
+  }
+}
+
 interface UseChatOptions {
   mode: PracticeMode
   topicId?: string
@@ -83,6 +100,7 @@ export function useChat({
 
   const sendMessage = useCallback(async (text: string) => {
     const userMessageId = crypto.randomUUID()
+    const botId = crypto.randomUUID()
     const userMessage: Message = {
       id: userMessageId,
       type: "user",
@@ -97,39 +115,61 @@ export function useChat({
     })
     setIsLoading(true)
 
+    // Add (once) or update the streaming bot bubble as text arrives. The
+    // updater is pure — it decides from `prev` whether the bubble exists — so
+    // it's safe under React's double-invoked updaters in dev.
+    let sawFirstToken = false
+    const renderReply = (partial: string) => {
+      if (!sawFirstToken) {
+        sawFirstToken = true
+        setIsLoading(false)
+      }
+      setMessages((prev) =>
+        prev.some((m) => m.id === botId)
+          ? prev.map((m) => (m.id === botId ? { ...m, text: partial } : m))
+          : [...prev, { id: botId, type: "bot", text: partial, timestamp: new Date() }],
+      )
+    }
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history: historyRef.current, topicId }),
+        body: JSON.stringify({ message: text, history: historyRef.current, topicId, stream: true }),
       })
-      const { reply, translation, correction } = await res.json()
+      if (!res.ok || !res.body) throw new Error("Chat API error")
 
-      if (!res.ok) throw new Error("Chat API error")
-
-      setMessages((prev) => {
-        const withCorrection = correction
-          ? prev.map((m) => (m.id === userMessageId ? { ...m, correction } : m))
-          : prev
-        saveChatMessages(sessionId, withCorrection)
-        return withCorrection
-      })
-
-      const botMessage: Message = {
-        id: crypto.randomUUID(),
-        type: "bot",
-        text: reply,
-        translation: translation ?? undefined,
-        timestamp: new Date(),
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let raw = ""
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        raw += decoder.decode(value, { stream: true })
+        const partial = extractReply(raw)
+        if (partial != null) renderReply(partial)
       }
+      raw += decoder.decode()
+
+      const data = JSON.parse(raw) as {
+        reply: string
+        translation?: string
+        correction?: (Message["correction"] & { corrected_translation?: string | null }) | null
+      }
+      const reply = data.reply ?? extractReply(raw) ?? ""
+      renderReply(reply)
 
       setMessages((prev) => {
-        const updated = [...prev, botMessage]
+        const updated = prev.map((m) => {
+          if (m.id === botId) return { ...m, text: reply, translation: data.translation ?? undefined }
+          if (m.id === userMessageId && data.correction) return { ...m, correction: data.correction }
+          return m
+        })
         saveChatMessages(sessionId, updated)
         return updated
       })
 
-      onNewBotMessage?.(botMessage.id, botMessage.text)
+      onNewBotMessage?.(botId, reply)
 
       historyRef.current = [
         ...historyRef.current,
@@ -142,16 +182,16 @@ export function useChat({
     } catch (err) {
       console.error("[useChat]", err)
       toast.error("Algo salió mal", { description: "Your message wasn't sent. Try again." })
-      // Remove the user message that failed to send
+      // Remove the user message (and any partial bot bubble) that failed
       setMessages((prev) => {
-        const updated = prev.filter((m) => m.id !== userMessageId)
+        const updated = prev.filter((m) => m.id !== userMessageId && m.id !== botId)
         saveChatMessages(sessionId, updated)
         return updated
       })
     } finally {
       setIsLoading(false)
     }
-  }, [sessionId, onSessionUpdate, topicId])
+  }, [sessionId, onSessionUpdate, onNewBotMessage, topicId])
 
   return { messages, isLoading, sendMessage }
 }

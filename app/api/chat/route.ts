@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import type { Correction } from "@/lib/types"
 import { posthog } from "@/lib/posthog-server"
 import { PARENT_CHILD_TOPIC_ID } from "@/lib/data"
 
@@ -45,6 +44,7 @@ You must ALWAYS respond with a valid JSON object in this exact format:
 
 Always include the "translation" field.
 Always include the "correction" field for every user message — even if their Spanish is perfect, provide the most natural native-speaker phrasing. If it is already perfect, set "corrected" to the same text and explanation to something encouraging like "Perfect — that's exactly how a native speaker would say it."
+Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
 const SYSTEM_PROMPT_PARENT_CHILD = `You are roleplaying as the user's own young child (around 4-6 years old), so the user — a parent doing "one parent, one language" practice — can rehearse natural everyday Spanish conversation with their kid.
@@ -80,6 +80,7 @@ You must ALWAYS respond with a valid JSON object in this exact format:
 
 Always include the "translation" field.
 Always include the "correction" field for every parent message — even if their Spanish is perfect, provide the most natural native-speaker phrasing. If it is already perfect, set "corrected" to the same text and explanation to something encouraging like "Perfect — that's exactly how a native speaker would say it."
+Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
 export async function POST(req: Request) {
@@ -144,7 +145,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 })
     }
 
-    const response = await openai.chat.completions.create({
+    // Stream the model's JSON as it's generated so the reply shows up
+    // token-by-token instead of after the whole completion. The client reads
+    // the growing JSON, renders the "reply" field live (emitted first), and
+    // parses translation + correction from the final payload.
+    const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: systemPrompt },
@@ -152,43 +157,46 @@ export async function POST(req: Request) {
         { role: "user", content: message },
       ],
       response_format: { type: "json_object" },
+      stream: true,
+      stream_options: { include_usage: true },
     })
 
-    const raw = response.choices[0]?.message?.content
-    if (!raw) throw new Error("Empty response from OpenAI")
-
-    const data = JSON.parse(raw) as {
-      reply: string
-      translation?: string
-      correction?: Correction & { corrected_translation?: string }
-    }
-
-    posthog?.capture({
-      distinctId: "server",
-      event: "llm_call",
-      properties: {
-        type: "message",
-        topic: topic ?? null,
-        topicId: topicId ?? null,
-        model: "gpt-4o",
-        had_correction: !!data.correction,
-        input_tokens: response.usage?.prompt_tokens ?? null,
-        output_tokens: response.usage?.completion_tokens ?? null,
-        total_tokens: response.usage?.total_tokens ?? null,
+    const encoder = new TextEncoder()
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          for await (const chunk of completion) {
+            const delta = chunk.choices[0]?.delta?.content
+            if (delta) controller.enqueue(encoder.encode(delta))
+            if (chunk.usage) {
+              posthog?.capture({
+                distinctId: "server",
+                event: "llm_call",
+                properties: {
+                  type: "message",
+                  topic: topic ?? null,
+                  topicId: topicId ?? null,
+                  model: "gpt-4o",
+                  streamed: true,
+                  input_tokens: chunk.usage.prompt_tokens ?? null,
+                  output_tokens: chunk.usage.completion_tokens ?? null,
+                  total_tokens: chunk.usage.total_tokens ?? null,
+                },
+              })
+            }
+          }
+          controller.close()
+        } catch (streamErr) {
+          controller.error(streamErr)
+        }
       },
     })
 
-    return NextResponse.json({
-      reply: data.reply,
-      translation: data.translation ?? null,
-      correction: data.correction
-        ? {
-            original: data.correction.original,
-            corrected: data.correction.corrected,
-            corrected_translation: data.correction.corrected_translation ?? null,
-            explanation: data.correction.explanation ?? null,
-          }
-        : null,
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
     })
   } catch (err) {
     console.error("[/api/chat]", err)

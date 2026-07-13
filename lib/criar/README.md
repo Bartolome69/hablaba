@@ -48,7 +48,7 @@ Grow may import from the main app **only**:
   child-details section via the `growDetails` slot (keeps the main app from
   importing Grow code)
 - `components/chat/chat-bubble`, `components/chat/chat-input` — presentational chat UI
-- `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference` — audio I/O
+- `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference`, `hooks/use-tts-muted` — audio I/O
 - `lib/audio`, `lib/utils`, `lib/voices` — shared utilities
 - `lib/types` — only the `Message`/`Correction` shapes (for chat UI reuse)
 - Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`)

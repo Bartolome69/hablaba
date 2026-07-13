@@ -9,6 +9,7 @@ import { ChatInput } from "@/components/chat/chat-input"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { playAudio } from "@/lib/audio"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { useTtsMuted } from "@/hooks/use-tts-muted"
 import type { CriarChild } from "@/lib/criar/types"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { useSparring } from "@/lib/criar/use-sparring"
@@ -25,20 +26,15 @@ export default function SparringPage() {
 
   // Auto-play the partner's turns by default, but let the parent mute it
   // (e.g. sleeping baby) — muting only silences auto-play; tap-to-hear on any
-  // bubble still works. Preference persists across sessions.
-  const MUTE_KEY = "criar_sparring_muted"
-  const [muted, setMuted] = useState(false)
-  const mutedRef = useRef(false)
+  // bubble still works. Shared with the main chat so one toggle covers both.
+  const { muted, setMuted } = useTtsMuted()
+  const mutedRef = useRef(muted)
   mutedRef.current = muted
 
   // TTS at page level, same shape as the main chat — but Rioplatense register
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
-
-  useEffect(() => {
-    setMuted(localStorage.getItem(MUTE_KEY) === "1")
-  }, [])
 
   // Stop playback and cancel any in-flight TTS request. Stable identity so
   // the unmount effect below can tear down audio when the user leaves.
@@ -107,20 +103,15 @@ export default function SparringPage() {
   }, [playTTS])
 
   const toggleMuted = useCallback(() => {
-    setMuted((prev) => {
-      const next = !prev
-      try {
-        localStorage.setItem(MUTE_KEY, next ? "1" : "0")
-      } catch {}
-      // Silence anything playing or still loading when muting
-      if (next) {
-        stopAudio()
-        setPlayingId(null)
-      }
-      posthog.capture("criar_sparring_mute_toggled", { muted: next })
-      return next
-    })
-  }, [posthog, stopAudio])
+    const next = !muted
+    setMuted(next)
+    // Silence anything playing or still loading when muting
+    if (next) {
+      stopAudio()
+      setPlayingId(null)
+    }
+    posthog.capture("criar_sparring_mute_toggled", { muted: next })
+  }, [muted, setMuted, stopAudio, posthog])
 
   const { messages, isLoading, sendMessage } = useSparring(child, autoPlay)
 
