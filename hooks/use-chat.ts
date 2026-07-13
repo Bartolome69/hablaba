@@ -126,8 +126,8 @@ export function useChat({
       }
       setMessages((prev) =>
         prev.some((m) => m.id === botId)
-          ? prev.map((m) => (m.id === botId ? { ...m, text: partial } : m))
-          : [...prev, { id: botId, type: "bot", text: partial, timestamp: new Date() }],
+          ? prev.map((m) => (m.id === botId ? { ...m, text: partial, streaming: true } : m))
+          : [...prev, { id: botId, type: "bot", text: partial, timestamp: new Date(), streaming: true }],
       )
     }
 
@@ -161,7 +161,7 @@ export function useChat({
 
       setMessages((prev) => {
         const updated = prev.map((m) => {
-          if (m.id === botId) return { ...m, text: reply, translation: data.translation ?? undefined }
+          if (m.id === botId) return { ...m, text: reply, translation: data.translation ?? undefined, streaming: false }
           if (m.id === userMessageId && data.correction) return { ...m, correction: data.correction }
           return m
         })
