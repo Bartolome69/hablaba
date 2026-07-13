@@ -1,15 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { Settings } from "lucide-react"
-import { usePostHog } from "posthog-js/react"
-import { CRIAR_FLAG, isCriarEnabled } from "@/lib/criar-flag"
 import { StreakBadge } from "@/components/home/streak-badge"
 import { VoiceSheet } from "@/components/home/voice-sheet"
 import { useStreak } from "@/hooks/use-streak"
-
-const LONG_PRESS_MS = 1200
 
 interface AppHeaderProps {
   title: string
@@ -18,45 +13,11 @@ interface AppHeaderProps {
 
 export function AppHeader({ title, subtitle }: AppHeaderProps) {
   const streak = useStreak()
-  const router = useRouter()
   const [sheetOpen, setSheetOpen] = useState(false)
-  const posthog = usePostHog()
-
-  // Long-press on the title toggles the hidden Grow tab
-  const pressTimer = useRef<number | null>(null)
-
-  const startPress = () => {
-    pressTimer.current = window.setTimeout(() => {
-      pressTimer.current = null
-      try {
-        if (isCriarEnabled()) {
-          localStorage.removeItem(CRIAR_FLAG)
-          window.location.reload()
-        } else {
-          localStorage.setItem(CRIAR_FLAG, "1")
-          posthog.capture("criar_unlocked")
-          router.push("/grow")
-        }
-      } catch {}
-    }, LONG_PRESS_MS)
-  }
-
-  const cancelPress = () => {
-    if (pressTimer.current !== null) {
-      clearTimeout(pressTimer.current)
-      pressTimer.current = null
-    }
-  }
 
   return (
     <header className="mb-6 flex items-start justify-between">
-      <div
-        className="flex flex-col select-none [-webkit-touch-callout:none]"
-        onPointerDown={startPress}
-        onPointerUp={cancelPress}
-        onPointerLeave={cancelPress}
-        onContextMenu={(e) => e.preventDefault()}
-      >
+      <div className="flex flex-col">
         <h1 className="font-serif text-2xl font-semibold text-foreground leading-tight">{title}</h1>
         {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
       </div>

@@ -3,9 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Volume2, Loader2, Check } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
 import { playAudio, ttsUrl } from "@/lib/audio"
 import { voices, type VoiceId } from "@/lib/voices"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { isCriarEnabled, setCriarEnabled } from "@/lib/criar-flag"
 import { usePostHog } from "posthog-js/react"
 
 const SAMPLE_TEXT = "Hola, ¿cómo estás? Me alegra practicar español contigo."
@@ -18,9 +20,21 @@ interface VoiceSheetProps {
 export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
   const { voiceId, setVoiceId } = useVoicePreference()
   const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
+  const [growEnabled, setGrowEnabled] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
   const posthog = usePostHog()
+
+  // Reflect the current flag each time the sheet opens.
+  useEffect(() => {
+    if (open) setGrowEnabled(isCriarEnabled())
+  }, [open])
+
+  const toggleGrow = (next: boolean) => {
+    setGrowEnabled(next)
+    setCriarEnabled(next)
+    posthog.capture(next ? "criar_unlocked" : "criar_disabled", { source: "settings" })
+  }
 
   const stopPreview = useCallback(() => {
     abortRef.current?.abort()
@@ -63,11 +77,12 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="rounded-t-2xl px-6 pb-8">
-        <SheetHeader className="mb-4">
-          <SheetTitle className="text-left">Choose a voice</SheetTitle>
+      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl px-6 pt-6 pb-8">
+        <SheetHeader className="mb-5 p-0 text-left">
+          <SheetTitle>Settings</SheetTitle>
         </SheetHeader>
 
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">Voice</h3>
         <div className="space-y-2">
           {voices.map((voice) => {
             const isSelected = voiceId === voice.id
@@ -114,6 +129,20 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
             )
           })}
         </div>
+
+        <h3 className="mb-3 mt-7 text-xs font-medium uppercase tracking-wide text-muted-foreground">Grow</h3>
+        <label
+          htmlFor="grow-toggle"
+          className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card p-4"
+        >
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-foreground">Bilingual parenting</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              A daily Rioplatense phrase pack for talking to your little one. Adds a Grow tab.
+            </p>
+          </div>
+          <Switch id="grow-toggle" checked={growEnabled} onCheckedChange={toggleGrow} />
+        </label>
       </SheetContent>
     </Sheet>
   )
