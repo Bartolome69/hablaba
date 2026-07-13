@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Check, Loader2, Volume2 } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import {
@@ -30,29 +30,50 @@ export function SettingsSheet({ open, onOpenChange, child, onChildUpdate }: Sett
   const { voiceId, setVoiceId } = useVoicePreference()
   const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
   const posthog = usePostHog()
 
-  const preview = async (id: VoiceId) => {
+  const stopPreview = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
     }
-    if (previewingId === id) {
-      setPreviewingId(null)
-      return
-    }
+    setPreviewingId(null)
+  }, [])
+
+  const preview = async (id: VoiceId) => {
+    const wasPreviewing = previewingId === id
+    stopPreview()
+    if (wasPreviewing) return
+
     setPreviewingId(id)
+    const controller = new AbortController()
+    abortRef.current = controller
     try {
-      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id, "rioplatense"))
+      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id, "rioplatense"), controller.signal)
+      if (controller.signal.aborted) {
+        audio.pause()
+        return
+      }
       audioRef.current = audio
       audio.onended = () => {
         setPreviewingId(null)
         audioRef.current = null
       }
     } catch {
+      if (controller.signal.aborted) return
       setPreviewingId(null)
     }
   }
+
+  // Stop the preview when the sheet closes (or the component unmounts) so it
+  // doesn't keep playing while the user is doing something else in the app.
+  useEffect(() => {
+    if (!open) stopPreview()
+  }, [open, stopPreview])
+  useEffect(() => stopPreview, [stopPreview])
 
   const updateChild = (patch: Partial<Pick<CriarChild, "name" | "birthdate">>) => {
     const updated = { ...child, ...patch }

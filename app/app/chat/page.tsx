@@ -35,36 +35,58 @@ function ChatContent() {
   // TTS state managed at page level
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
-  const playTTS = useCallback(async (messageId: string, text: string) => {
-    // Stop any currently playing audio
+  // Stop playback and cancel any in-flight TTS request. Stable identity so
+  // the unmount effect below can tear down audio when the user leaves.
+  const stopAudio = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
     }
-    if (playingId === messageId) {
+  }, [])
+
+  const playTTS = useCallback(async (messageId: string, text: string) => {
+    const wasPlaying = playingId === messageId
+    stopAudio()
+    if (wasPlaying) {
       setPlayingId(null)
       return
     }
 
     setPlayingId(messageId)
+    const controller = new AbortController()
+    abortRef.current = controller
+    let url: string | null = null
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, voice: voiceId }),
+        signal: controller.signal,
       })
       if (!res.ok) throw new Error("TTS failed")
       const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = await playAudio(url)
+      url = URL.createObjectURL(blob)
+      const audio = await playAudio(url, controller.signal)
+      // Navigated away / superseded while the clip was loading.
+      if (controller.signal.aborted) {
+        audio.pause()
+        URL.revokeObjectURL(url)
+        return
+      }
+      const objectUrl = url
       audioRef.current = audio
       audio.onended = () => {
         setPlayingId(null)
-        URL.revokeObjectURL(url)
+        URL.revokeObjectURL(objectUrl)
         audioRef.current = null
       }
     } catch {
+      if (url) URL.revokeObjectURL(url)
+      if (controller.signal.aborted) return // silent — user cancelled
       setPlayingId(null)
       toast.error("No se pudo reproducir el audio", {
         description: "Tap to retry",
@@ -74,7 +96,10 @@ function ChatContent() {
         },
       })
     }
-  }, [voiceId, playingId])
+  }, [voiceId, playingId, stopAudio])
+
+  // Kill audio if the user navigates away from the conversation.
+  useEffect(() => stopAudio, [stopAudio])
 
   const { messages, isLoading, sendMessage } = useChat({
     mode,
