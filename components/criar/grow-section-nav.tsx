@@ -8,6 +8,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 const items = [
   { href: "/grow", label: "Today" },
@@ -15,11 +16,11 @@ const items = [
   { href: "/grow/journal", label: "Journal" },
 ] as const
 
-export function GrowSectionNav() {
+export function GrowSectionNav({ className = "mb-6" }: { className?: string }) {
   const pathname = usePathname()
 
   return (
-    <div className="mb-6 flex gap-1 rounded-full bg-secondary p-1">
+    <div className={cn("flex gap-1 rounded-full bg-secondary p-1", className)}>
       {items.map(({ href, label }) => {
         const active = pathname === href
         return (

@@ -1,12 +1,12 @@
 "use client"
 
-import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { ChevronLeft, Volume2, VolumeX } from "lucide-react"
+import { Volume2, VolumeX } from "lucide-react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { ChatInput } from "@/components/chat/chat-input"
+import { GrowSectionNav } from "@/components/criar/grow-section-nav"
 import { playAudio } from "@/lib/audio"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import type { CriarChild } from "@/lib/criar/types"
@@ -150,19 +150,9 @@ export default function SparringPage() {
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col mx-auto max-w-lg">
-      <header className="flex-shrink-0 bg-background border-b border-border">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center px-4 py-3">
-          <Link
-            href="/grow"
-            aria-label="Back"
-            className="flex items-center justify-center w-9 h-9 -ml-1.5 text-muted-foreground active:opacity-70 transition-opacity"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Link>
-          <div className="text-center">
-            <p className="font-serif text-sm text-foreground">Sparring</p>
-            <p className="text-xs text-muted-foreground">Your week, out loud · 5–10 min</p>
-          </div>
+      <header className="flex-shrink-0 bg-background px-4 pt-4 pb-2">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">Your week, out loud · 5–10 min</p>
           <button
             onClick={toggleMuted}
             aria-label={muted ? "Turn voice on" : "Mute voice"}
@@ -172,6 +162,7 @@ export default function SparringPage() {
             {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
           </button>
         </div>
+        <GrowSectionNav className="mb-0" />
       </header>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
