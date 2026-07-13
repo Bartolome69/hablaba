@@ -11,8 +11,7 @@ import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { isCriarEnabled, setCriarEnabled } from "@/lib/criar-flag"
 import { usePostHog } from "posthog-js/react"
 
-// Rioplatense preview line, matching the dialect used across the app.
-const SAMPLE_TEXT = "Hola, ¿cómo andás? Me alegra un montón practicar español con vos."
+const SAMPLE_TEXT = "Hola, ¿cómo estás? Me alegra practicar español contigo."
 
 interface SettingsSheetProps {
   open: boolean
@@ -60,7 +59,7 @@ export function SettingsSheet({ open, onOpenChange, growDetails }: SettingsSheet
     const controller = new AbortController()
     abortRef.current = controller
     try {
-      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id, "rioplatense"), controller.signal)
+      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id), controller.signal)
       if (controller.signal.aborted) {
         audio.pause()
         return
