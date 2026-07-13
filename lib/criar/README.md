@@ -97,11 +97,13 @@ b. 2026-05-21: bedtime pack + 2 captures) on first visit so the UI is reviewable
 
 ## Register
 
-Rioplatense is enforced in the LLM system prompts (`lib/criar/prompts.ts`): voseo
-always (vos tenés, mirá, dale), Argentine baby vocabulary (pañal, chupete, upa,
-mamadera, cochecito), peninsular forms listed as errors. TTS uses
-`register=rioplatense` for sheísmo delivery. Don't soften these prompts —
-generic "neutral Latin American" output is a regression here.
+Grammar is **tú** (not voseo) — a deliberate product call so the parent isn't
+juggling two systems while learning tú elsewhere in the app. The Argentine
+*flavour* is kept: Argentine baby vocabulary (pañal, chupete, upa, mamadera,
+cochecito), warmth (dale, che, re, diminutives), peninsular forms still listed
+as errors, and `register=rioplatense` TTS for the porteño (sheísmo) accent. The
+register lives entirely in `lib/criar/prompts.ts` and `lib/criar/seed.ts` — if
+voseo is ever wanted back, that's the only place to change.
 
 ## Out of scope (deliberate)
 
