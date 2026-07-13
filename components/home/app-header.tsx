@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Settings } from "lucide-react"
 import { StreakBadge } from "@/components/home/streak-badge"
-import { VoiceSheet } from "@/components/home/voice-sheet"
+import { SettingsSheet } from "@/components/settings-sheet"
 import { useStreak } from "@/hooks/use-streak"
 
 interface AppHeaderProps {
@@ -32,7 +32,7 @@ export function AppHeader({ title, subtitle }: AppHeaderProps) {
         </button>
       </div>
 
-      <VoiceSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+      <SettingsSheet open={sheetOpen} onOpenChange={setSheetOpen} />
     </header>
   )
 }

@@ -44,7 +44,9 @@ storage and Grow's data is in localStorage. The layout sets `robots: noindex`.
 Grow may import from the main app **only**:
 
 - `components/ui/*` — shadcn primitives (Button, Sheet, …)
-- `components/app-tabs` — shared top-level tab navigation
+- `components/settings-sheet` — the shared Settings sheet; Grow injects its
+  child-details section via the `growDetails` slot (keeps the main app from
+  importing Grow code)
 - `components/chat/chat-bubble`, `components/chat/chat-input` — presentational chat UI
 - `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference` — audio I/O
 - `lib/audio`, `lib/utils`, `lib/voices` — shared utilities

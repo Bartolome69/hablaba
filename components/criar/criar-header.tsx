@@ -6,7 +6,8 @@ import { StreakBadge } from "@/components/home/streak-badge"
 import { useStreak } from "@/hooks/use-streak"
 import type { CriarChild } from "@/lib/criar/types"
 import { describeAge } from "@/lib/criar/stage"
-import { SettingsSheet } from "./settings-sheet"
+import { SettingsSheet } from "@/components/settings-sheet"
+import { GrowChildSettings } from "./grow-child-settings"
 
 interface CriarHeaderProps {
   child: CriarChild
@@ -39,8 +40,7 @@ export function CriarHeader({ child, onChildUpdate }: CriarHeaderProps) {
       <SettingsSheet
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
-        child={child}
-        onChildUpdate={onChildUpdate}
+        growDetails={<GrowChildSettings child={child} onChildUpdate={onChildUpdate} />}
       />
     </header>
   )
