@@ -1,6 +1,6 @@
 // The Grow module is gated by the `criar_enabled` localStorage flag (internal
 // codename, unaffected by the Grow rename): toggled from the main app Settings
-// (see components/home/voice-sheet.tsx), or unlocked by visiting /grow directly
+// (see components/settings-sheet.tsx), or unlocked by visiting /grow directly
 // (the seed sets it).
 
 export const CRIAR_FLAG = "criar_enabled"

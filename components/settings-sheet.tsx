@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Volume2, Loader2, Check } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -10,14 +11,18 @@ import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { isCriarEnabled, setCriarEnabled } from "@/lib/criar-flag"
 import { usePostHog } from "posthog-js/react"
 
-const SAMPLE_TEXT = "Hola, ¿cómo estás? Me alegra practicar español contigo."
+// Rioplatense preview line, matching the dialect used across the app.
+const SAMPLE_TEXT = "Hola, ¿cómo andás? Me alegra un montón practicar español con vos."
 
-interface VoiceSheetProps {
+interface SettingsSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  // Grow injects its child-details controls here so the main app never has to
+  // import from the Grow module (see lib/criar/README.md boundary rules).
+  growDetails?: ReactNode
 }
 
-export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
+export function SettingsSheet({ open, onOpenChange, growDetails }: SettingsSheetProps) {
   const { voiceId, setVoiceId } = useVoicePreference()
   const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
   const [growEnabled, setGrowEnabled] = useState(false)
@@ -55,7 +60,7 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
     const controller = new AbortController()
     abortRef.current = controller
     try {
-      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id), controller.signal)
+      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id, "rioplatense"), controller.signal)
       if (controller.signal.aborted) {
         audio.pause()
         return
@@ -107,12 +112,11 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
                   <p className="text-xs text-muted-foreground">{voice.descriptor}</p>
                 </div>
 
-                {isSelected && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
+                {isSelected && <Check className="w-4 h-4 text-primary" />}
 
                 <button
                   onClick={(e) => { e.stopPropagation(); preview(voice.id) }}
+                  aria-label={`Preview ${voice.name}`}
                   className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
                     isPreviewing
                       ? "bg-primary text-primary-foreground"
@@ -143,6 +147,8 @@ export function VoiceSheet({ open, onOpenChange }: VoiceSheetProps) {
           </div>
           <Switch id="grow-toggle" checked={growEnabled} onCheckedChange={toggleGrow} />
         </label>
+
+        {growEnabled && growDetails && <div className="mt-3">{growDetails}</div>}
       </SheetContent>
     </Sheet>
   )

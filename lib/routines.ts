@@ -25,6 +25,9 @@ export const categories: Category[] = [
   { id: "travel", label: "Getting around", emoji: "🚆" },
 ]
 
+// All phrases are Rioplatense (Argentine): voseo (mirá, tenés, sos), "acá",
+// and local vocabulary (boleto, medialuna, cochecito). Delivered with the
+// rioplatense TTS register in the Speak tab.
 export const routines: Routine[] = [
   {
     id: "greetings",
@@ -33,11 +36,11 @@ export const routines: Routine[] = [
     name: "Greetings",
     context: "Meeting someone new at the park or a playdate",
     phrases: [
-      { spanish: "¿Qué tal?", english: "How's it going?" },
-      { spanish: "¿De dónde eres?", english: "Where are you from?" },
-      { spanish: "¿A qué te dedicas?", english: "What do you do?" },
+      { spanish: "¿Cómo andás?", english: "How's it going?" },
+      { spanish: "¿De dónde sos?", english: "Where are you from?" },
+      { spanish: "¿A qué te dedicás?", english: "What do you do?" },
       { spanish: "Encantado de conocerte.", english: "Nice to meet you." },
-      { spanish: "Hasta luego.", english: "See you later." },
+      { spanish: "Nos vemos.", english: "See you around." },
     ],
   },
   {
@@ -47,10 +50,10 @@ export const routines: Routine[] = [
     name: "At the café",
     context: "Ordering coffee with baby in the stroller",
     phrases: [
-      { spanish: "¿Me trae la carta, por favor?", english: "Could I have the menu, please?" },
+      { spanish: "¿Me traés la carta, por favor?", english: "Could you bring me the menu, please?" },
       { spanish: "Para mí, un café con leche.", english: "A café con leche for me." },
-      { spanish: "¿Qué me recomienda?", english: "What do you recommend?" },
-      { spanish: "¿Está incluida la propina?", english: "Is the tip included?" },
+      { spanish: "¿Qué me recomendás?", english: "What do you recommend?" },
+      { spanish: "¿La propina está incluida?", english: "Is the tip included?" },
       { spanish: "La cuenta, por favor.", english: "The bill, please." },
     ],
   },
@@ -62,9 +65,9 @@ export const routines: Routine[] = [
     context: "Getting around town with the family",
     phrases: [
       { spanish: "¿Dónde está la estación?", english: "Where's the station?" },
-      { spanish: "Un billete a Madrid, por favor.", english: "A ticket to Madrid, please." },
+      { spanish: "Un boleto al centro, por favor.", english: "A ticket to the centre, please." },
       { spanish: "¿A qué hora sale el tren?", english: "What time does the train leave?" },
-      { spanish: "¿Cuánto cuesta?", english: "How much does it cost?" },
+      { spanish: "¿Cuánto sale?", english: "How much is it?" },
       { spanish: "¿Está libre este asiento?", english: "Is this seat free?" },
     ],
   },
@@ -76,9 +79,9 @@ export const routines: Routine[] = [
     context: "Use these while changing the diaper",
     phrases: [
       { spanish: "Vamos a cambiar el pañal.", english: "Let's change your diaper." },
-      { spanish: "Aquí vamos, ya casi.", english: "Here we go, almost done." },
-      { spanish: "Levanta las piernas.", english: "Lift your legs." },
-      { spanish: "¡Muy bien! Qué limpio estás.", english: "Well done! You're so clean." },
+      { spanish: "Acá vamos, ya casi.", english: "Here we go, almost done." },
+      { spanish: "Levantá las piernas.", english: "Lift your legs." },
+      { spanish: "¡Muy bien! Qué limpito estás.", english: "Well done! You're so clean." },
       { spanish: "¿Listo? ¡Listo!", english: "Ready? Done!" },
     ],
   },
@@ -89,9 +92,9 @@ export const routines: Routine[] = [
     name: "Feeding",
     context: "During bottle or mealtime",
     phrases: [
-      { spanish: "¿Tienes hambre?", english: "Are you hungry?" },
-      { spanish: "Aquí viene la leche.", english: "Here comes the milk." },
-      { spanish: "Rico, ¿verdad?", english: "Yummy, right?" },
+      { spanish: "¿Tenés hambre?", english: "Are you hungry?" },
+      { spanish: "Acá viene la mamadera.", english: "Here comes the bottle." },
+      { spanish: "Rico, ¿no?", english: "Yummy, right?" },
       { spanish: "Más despacio, tranquilo.", english: "Slow down, easy." },
       { spanish: "¿Ya terminaste?", english: "Are you done?" },
     ],
@@ -107,7 +110,7 @@ export const routines: Routine[] = [
       { spanish: "El agua está calentita.", english: "The water is warm." },
       { spanish: "Vamos a lavar la cabecita.", english: "Let's wash your little head." },
       { spanish: "¡Qué rico el baño!", english: "What a nice bath!" },
-      { spanish: "Ya terminamos. ¡Qué limpio!", english: "All done. So clean!" },
+      { spanish: "Ya terminamos. ¡Qué limpito!", english: "All done. So clean!" },
     ],
   },
   {
@@ -119,8 +122,8 @@ export const routines: Routine[] = [
     phrases: [
       { spanish: "Es hora de dormir.", english: "It's time to sleep." },
       { spanish: "Buenas noches, mi amor.", english: "Good night, my love." },
-      { spanish: "Cierra los ojitos.", english: "Close your little eyes." },
-      { spanish: "Dulces sueños.", english: "Sweet dreams." },
+      { spanish: "Cerrá los ojitos.", english: "Close your little eyes." },
+      { spanish: "Que tengas lindos sueños.", english: "Sweet dreams." },
       { spanish: "Te quiero muchísimo.", english: "I love you so much." },
     ],
   },
@@ -131,10 +134,10 @@ export const routines: Routine[] = [
     name: "Waking up",
     context: "First thing in the morning",
     phrases: [
-      { spanish: "¡Buenos días!", english: "Good morning!" },
+      { spanish: "¡Buen día!", english: "Good morning!" },
       { spanish: "¿Dormiste bien?", english: "Did you sleep well?" },
-      { spanish: "¡Ya despertaste!", english: "You woke up!" },
-      { spanish: "Qué rico dormir, ¿verdad?", english: "Feels good to sleep, doesn't it?" },
+      { spanish: "¡Ya te despertaste!", english: "You woke up!" },
+      { spanish: "Qué rico dormir, ¿no?", english: "Feels good to sleep, doesn't it?" },
       { spanish: "Hora de levantarse.", english: "Time to get up." },
     ],
   },
@@ -147,9 +150,9 @@ export const routines: Routine[] = [
     phrases: [
       { spanish: "¡Vamos a salir!", english: "Let's go outside!" },
       { spanish: "Qué lindo día.", english: "What a beautiful day." },
-      { spanish: "Mira el cielo.", english: "Look at the sky." },
-      { spanish: "Siente el sol.", english: "Feel the sun." },
-      { spanish: "¿Escuchas los pájaros?", english: "Do you hear the birds?" },
+      { spanish: "Mirá el cielo.", english: "Look at the sky." },
+      { spanish: "Sentí el sol.", english: "Feel the sun." },
+      { spanish: "¿Escuchás los pajaritos?", english: "Do you hear the birds?" },
     ],
   },
   {
@@ -161,7 +164,7 @@ export const routines: Routine[] = [
     phrases: [
       { spanish: "¿Cuántos años tiene el tuyo?", english: "How old is yours?" },
       { spanish: "El mío tiene casi dos.", english: "Mine is almost two." },
-      { spanish: "¿Vienen mucho por aquí?", english: "Do you come here a lot?" },
+      { spanish: "¿Vienen seguido por acá?", english: "Do you come here often?" },
       { spanish: "Se llevan bien, ¿no?", english: "They get along well, don't they?" },
       { spanish: "Nos vemos la próxima.", english: "See you next time." },
     ],
@@ -173,7 +176,7 @@ export const routines: Routine[] = [
     name: "Weather & the day",
     context: "Easy small talk about the weather",
     phrases: [
-      { spanish: "Qué buen día hace hoy.", english: "What a nice day it is today." },
+      { spanish: "Qué lindo día que está.", english: "What a nice day it is." },
       { spanish: "Parece que va a llover.", english: "It looks like it's going to rain." },
       { spanish: "Hace bastante calor, ¿no?", english: "It's pretty hot, isn't it?" },
       { spanish: "Mejor llevamos abrigo.", english: "We'd better bring a coat." },
@@ -187,10 +190,10 @@ export const routines: Routine[] = [
     name: "At the bakery",
     context: "Grabbing something at the panadería",
     phrases: [
-      { spanish: "¿Qué tienen recién hecho?", english: "What's freshly made?" },
-      { spanish: "Me llevo dos medialunas.", english: "I'll take two croissants." },
-      { spanish: "¿Tienen algo sin azúcar?", english: "Do you have anything without sugar?" },
-      { spanish: "¿Me lo pone para llevar?", english: "Could you make it to go?" },
+      { spanish: "¿Qué tenés recién hecho?", english: "What's freshly made?" },
+      { spanish: "Llevo dos medialunas.", english: "I'll take two medialunas." },
+      { spanish: "¿Tenés algo sin azúcar?", english: "Do you have anything without sugar?" },
+      { spanish: "¿Me lo ponés para llevar?", english: "Could you make it to go?" },
       { spanish: "¿Cuánto es todo?", english: "How much is it all?" },
     ],
   },
@@ -202,9 +205,9 @@ export const routines: Routine[] = [
     context: "Sorting out space for the stroller",
     phrases: [
       { spanish: "¿Hay lugar para el cochecito?", english: "Is there room for the stroller?" },
-      { spanish: "¿Tienen sillita para bebé?", english: "Do you have a high chair?" },
-      { spanish: "¿Me calienta esto, por favor?", english: "Could you warm this up, please?" },
-      { spanish: "¿Dónde puedo cambiarlo?", english: "Where can I change him?" },
+      { spanish: "¿Tenés sillita para bebé?", english: "Do you have a high chair?" },
+      { spanish: "¿Me calentás esto, por favor?", english: "Could you warm this up, please?" },
+      { spanish: "¿Dónde lo puedo cambiar?", english: "Where can I change him?" },
       { spanish: "Un vaso de agua, por favor.", english: "A glass of water, please." },
     ],
   },
@@ -215,11 +218,11 @@ export const routines: Routine[] = [
     name: "Taxi & rideshare",
     context: "Getting a cab with the family",
     phrases: [
-      { spanish: "¿Me lleva a esta dirección?", english: "Can you take me to this address?" },
-      { spanish: "¿Tiene sillita para niños?", english: "Do you have a child seat?" },
+      { spanish: "¿Me llevás a esta dirección?", english: "Can you take me to this address?" },
+      { spanish: "¿Tenés sillita para chicos?", english: "Do you have a child seat?" },
       { spanish: "¿Cuánto sale hasta el centro?", english: "How much is it to the centre?" },
-      { spanish: "Puede dejarnos aquí, gracias.", english: "You can drop us here, thanks." },
-      { spanish: "¿Acepta tarjeta?", english: "Do you take card?" },
+      { spanish: "Dejanos acá, gracias.", english: "Drop us here, thanks." },
+      { spanish: "¿Aceptás tarjeta?", english: "Do you take card?" },
     ],
   },
   {
@@ -230,7 +233,7 @@ export const routines: Routine[] = [
     context: "Finding your way around town",
     phrases: [
       { spanish: "¿Cómo llego al parque?", english: "How do I get to the park?" },
-      { spanish: "¿Está lejos de aquí?", english: "Is it far from here?" },
+      { spanish: "¿Está lejos de acá?", english: "Is it far from here?" },
       { spanish: "¿Puedo ir caminando?", english: "Can I walk there?" },
       { spanish: "¿Hay un baño cerca?", english: "Is there a bathroom nearby?" },
       { spanish: "Me perdí un poco.", english: "I'm a bit lost." },
