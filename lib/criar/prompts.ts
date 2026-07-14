@@ -74,6 +74,7 @@ You must ALWAYS respond with a valid JSON object in this exact format:
 
 Always include the "translation" field.
 Always include the "correction" field for every user message — if their Spanish is already perfect, set "corrected" to the same text and make the explanation encouraging.
+Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 }
 

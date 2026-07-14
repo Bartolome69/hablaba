@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import type { Correction } from "@/lib/types"
 import { buildSparringSystem, type SparringContext } from "@/lib/criar/prompts"
 import { posthog } from "@/lib/posthog-server"
 
@@ -66,7 +65,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 })
     }
 
-    const response = await openai.chat.completions.create({
+    // Stream replies (reply field emitted first) so they type out live, like
+    // the main chat. The opener above stays non-streamed — it lands in full.
+    const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: system },
@@ -74,41 +75,41 @@ export async function POST(req: Request) {
         { role: "user", content: body.message },
       ],
       response_format: { type: "json_object" },
+      stream: true,
+      stream_options: { include_usage: true },
     })
 
-    const raw = response.choices[0]?.message?.content
-    if (!raw) throw new Error("Empty response from OpenAI")
-
-    const data = JSON.parse(raw) as {
-      reply: string
-      translation?: string
-      correction?: Correction & { corrected_translation?: string }
-    }
-
-    posthog?.capture({
-      distinctId: "server",
-      event: "llm_call",
-      properties: {
-        type: "criar_sparring_message",
-        model: "gpt-4o",
-        had_correction: !!data.correction,
-        input_tokens: response.usage?.prompt_tokens ?? null,
-        output_tokens: response.usage?.completion_tokens ?? null,
-        total_tokens: response.usage?.total_tokens ?? null,
+    const encoder = new TextEncoder()
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          for await (const chunk of completion) {
+            const delta = chunk.choices[0]?.delta?.content
+            if (delta) controller.enqueue(encoder.encode(delta))
+            if (chunk.usage) {
+              posthog?.capture({
+                distinctId: "server",
+                event: "llm_call",
+                properties: {
+                  type: "criar_sparring_message",
+                  model: "gpt-4o",
+                  streamed: true,
+                  input_tokens: chunk.usage.prompt_tokens ?? null,
+                  output_tokens: chunk.usage.completion_tokens ?? null,
+                  total_tokens: chunk.usage.total_tokens ?? null,
+                },
+              })
+            }
+          }
+          controller.close()
+        } catch (streamErr) {
+          controller.error(streamErr)
+        }
       },
     })
 
-    return NextResponse.json({
-      reply: data.reply,
-      translation: data.translation ?? null,
-      correction: data.correction
-        ? {
-            original: data.correction.original,
-            corrected: data.correction.corrected,
-            corrected_translation: data.correction.corrected_translation ?? null,
-            explanation: data.correction.explanation ?? null,
-          }
-        : null,
+    return new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
     })
   } catch (err) {
     console.error("[/api/criar/sparring]", err)

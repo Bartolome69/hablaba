@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import type { Message } from "@/lib/types"
+import { extractReply } from "@/lib/utils"
 import type { CriarChild, SparringHistoryMessage } from "./types"
 import type { SparringContext } from "./prompts"
 import { describeAge } from "./stage"
@@ -108,8 +109,24 @@ export function useSparring(
       text,
       timestamp: new Date(),
     }
+    const botId = crypto.randomUUID()
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
+
+    // Add (once) or update the streaming bot bubble as text arrives — a pure
+    // updater, safe under React's dev double-invoked state updaters.
+    let sawFirstToken = false
+    const renderReply = (partial: string) => {
+      if (!sawFirstToken) {
+        sawFirstToken = true
+        setIsLoading(false)
+      }
+      setMessages((prev) =>
+        prev.some((m) => m.id === botId)
+          ? prev.map((m) => (m.id === botId ? { ...m, text: partial, streaming: true } : m))
+          : [...prev, { id: botId, type: "bot", text: partial, timestamp: new Date(), streaming: true }],
+      )
+    }
 
     try {
       const res = await fetch("/api/criar/sparring", {
@@ -121,40 +138,54 @@ export function useSparring(
           context: contextRef.current,
         }),
       })
-      const { reply, translation, correction } = await res.json()
-      if (!res.ok) throw new Error("Sparring API error")
+      if (!res.ok || !res.body) throw new Error("Sparring API error")
 
-      if (correction) {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === userMessageId ? { ...m, correction } : m)),
-        )
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let raw = ""
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        raw += decoder.decode(value, { stream: true })
+        const partial = extractReply(raw)
+        if (partial != null) renderReply(partial)
       }
+      raw += decoder.decode()
 
-      const botMessage: Message = {
-        id: crypto.randomUUID(),
-        type: "bot",
-        text: reply,
-        translation: translation ?? undefined,
-        timestamp: new Date(),
+      const data = JSON.parse(raw) as {
+        reply: string
+        translation?: string
+        correction?: Message["correction"] | null
       }
+      const reply = data.reply ?? extractReply(raw) ?? ""
+      renderReply(reply)
+
       const newHistory: SparringHistoryMessage[] = [
         ...historyRef.current,
         { role: "user", content: text },
         { role: "assistant", content: reply },
       ]
 
+      let botMessage: Message | null = null
       setMessages((prev) => {
-        const updated = [...prev, botMessage]
+        const updated = prev.map((m) => {
+          if (m.id === botId) {
+            botMessage = { ...m, text: reply, translation: data.translation ?? undefined, streaming: false }
+            return botMessage
+          }
+          if (m.id === userMessageId && data.correction) return { ...m, correction: data.correction }
+          return m
+        })
         saveSparringSession(child.id, dateRef.current, { messages: updated, history: newHistory })
         return updated
       })
       historyRef.current = newHistory
-      onBotMessageRef.current?.(botMessage.id, botMessage.text)
+      onBotMessageRef.current?.(botId, reply)
       return botMessage
     } catch (err) {
       console.error("[useSparring]", err)
       toast.error("Algo salió mal", { description: "Your message wasn't sent. Try again." })
-      setMessages((prev) => prev.filter((m) => m.id !== userMessageId))
+      setMessages((prev) => prev.filter((m) => m.id !== userMessageId && m.id !== botId))
       return null
     } finally {
       setIsLoading(false)
