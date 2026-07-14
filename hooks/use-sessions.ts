@@ -5,24 +5,24 @@ import type { StoredSession } from "@/lib/types"
 
 const STORAGE_KEY = "hablaba_sessions"
 
+// Most recently active first, so "Pick up where you left off" is reverse-chronological.
+const byRecent = (a: StoredSession, b: StoredSession) =>
+  new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime()
+
 export function useSessions() {
   const [sessions, setSessions] = useState<StoredSession[]>([])
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) setSessions(JSON.parse(stored))
+      if (stored) setSessions((JSON.parse(stored) as StoredSession[]).sort(byRecent))
     } catch {}
   }, [])
 
   const upsertSession = useCallback((session: StoredSession) => {
     setSessions((prev) => {
-      const existing = prev.findIndex((s) => s.id === session.id)
-      const updated =
-        existing >= 0
-          ? prev.map((s) => (s.id === session.id ? session : s))
-          : [session, ...prev]
-      const trimmed = updated.slice(0, 10) // keep last 10
+      const others = prev.filter((s) => s.id !== session.id)
+      const trimmed = [session, ...others].sort(byRecent).slice(0, 10) // most recent first, keep 10
       localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
       return trimmed
     })
