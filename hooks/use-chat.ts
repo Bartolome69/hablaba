@@ -5,23 +5,7 @@ import { toast } from "sonner"
 import type { Message, PracticeMode } from "@/lib/types"
 import type { HistoryMessage } from "@/lib/api"
 import { saveChatMessages, loadChatMessages } from "@/lib/chat-cache"
-
-// Pull the (possibly still-streaming) value of the JSON "reply" field out of a
-// partial payload. The model is told to emit "reply" first, so this resolves
-// almost immediately and grows as more tokens arrive.
-function extractReply(raw: string): string | null {
-  const m = raw.match(/"reply"\s*:\s*"((?:\\.|[^"\\])*)"?/)
-  if (!m) return null
-  try {
-    return JSON.parse(`"${m[1]}"`)
-  } catch {
-    return m[1]
-      .replace(/\\n/g, "\n")
-      .replace(/\\t/g, "\t")
-      .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\")
-  }
-}
+import { extractReply } from "@/lib/utils"
 
 interface UseChatOptions {
   mode: PracticeMode
