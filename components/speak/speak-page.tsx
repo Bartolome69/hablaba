@@ -49,7 +49,7 @@ export function SpeakPage() {
 
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <AppHeader title="Speak" subtitle="Tap any phrase to hear it aloud" />
+      <AppHeader title="Phrases" subtitle="Tap any phrase to hear it aloud" />
 
       {/* Phrase of the day */}
       <div className="mb-4 rounded-2xl bg-primary p-4 text-primary-foreground">
