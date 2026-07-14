@@ -7,7 +7,51 @@ import { usePostHog } from "posthog-js/react"
 import { Button } from "@/components/ui/button"
 import { FlashcardDeck } from "@/components/review/flashcard-deck"
 import { useSavedPhrases } from "@/hooks/use-saved-phrases"
-import type { PracticeResult } from "@/lib/types"
+import type { PracticeResult, SavedPhrase } from "@/lib/types"
+
+// Saved-phrase row with an inline delete confirmation, matching the
+// "Pick up where you left off" cards (see components/home/continue-session.tsx).
+function SavedPhraseRow({ phrase, onRemove }: { phrase: SavedPhrase; onRemove: () => void }) {
+  const [confirmDelete, setConfirmDelete] = useState(false)
+
+  if (confirmDelete) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-destructive/20 bg-destructive/10 p-3">
+        <p className="text-sm text-foreground">Delete this phrase?</p>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setConfirmDelete(false)}
+            className="px-3 py-1.5 text-xs font-medium rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onRemove}
+            className="px-3 py-1.5 text-xs font-medium rounded-full bg-destructive text-white hover:bg-destructive/90 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-3 flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-foreground">{phrase.spanish}</p>
+        <p className="text-xs text-muted-foreground">{phrase.english || "—"}</p>
+      </div>
+      <button
+        onClick={() => setConfirmDelete(true)}
+        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-secondary transition-colors"
+        aria-label="Remove phrase"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  )
+}
 
 export default function ReviewPage() {
   const router = useRouter()
@@ -78,22 +122,7 @@ export default function ReviewPage() {
           </div>
           <div className="space-y-2">
             {phrases.map((phrase) => (
-              <div
-                key={phrase.id}
-                className="bg-card border border-border rounded-lg p-3 flex items-start justify-between gap-3"
-              >
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground">{phrase.spanish}</p>
-                  <p className="text-xs text-muted-foreground">{phrase.english || "—"}</p>
-                </div>
-                <button
-                  onClick={() => removePhrase(phrase.id)}
-                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-secondary transition-colors"
-                  aria-label="Remove phrase"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+              <SavedPhraseRow key={phrase.id} phrase={phrase} onRemove={() => removePhrase(phrase.id)} />
             ))}
           </div>
         </>
