@@ -82,6 +82,13 @@ export function ensureSeeded(): CriarChild {
       phrase("Papá te quiere con todo el corazón.", "Daddy loves you with all his heart."),
       phrase("Buenas noches, mi vida. Hasta mañana.", "Good night, my darling. See you tomorrow."),
     ],
+    story: {
+      title: "La liebre y la tortuga",
+      text:
+        "Había una vez una liebre muy veloz que siempre se reía de una tortuga por lo lenta que era. Un día, la tortuga se cansó de sus burlas y la retó a una carrera.\n\nApenas empezaron, la liebre salió corriendo y dejó a la tortuga muy atrás. Como iba tan adelantada, pensó: «Tengo tiempo de sobra», y se recostó bajo un árbol a dormir la siesta.\n\nLa tortuga, en cambio, siguió caminando pasito a pasito, sin parar nunca. Cuando la liebre se despertó, la tortuga ya estaba cruzando la meta.\n\nDespacio pero constante, también se llega. Buenas noches, mi amor.",
+      english:
+        "Once upon a time there was a very fast hare who always laughed at a tortoise for being so slow. One day the tortoise got tired of being teased and challenged the hare to a race.\n\nAs soon as they started, the hare shot off and left the tortoise far behind. Since she was so far ahead, she thought, “I've got plenty of time,” and lay down under a tree for a nap.\n\nThe tortoise, on the other hand, kept walking step by little step, never stopping. When the hare woke up, the tortoise was already crossing the finish line.\n\nSlow but steady still gets there. Good night, my love.",
+    },
     song: {
       title: "Arrorró mi niño",
       kind: "nana",

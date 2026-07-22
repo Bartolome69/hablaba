@@ -56,6 +56,12 @@ export interface CriarPackSong {
   english: string
 }
 
+export interface CriarPackStory {
+  title: string // Spanish title of the well-known tale
+  text: string // short retelling in simple Spanish, paragraphs split by \n\n
+  english: string // English translation, same paragraph breaks
+}
+
 export interface CriarCaptureLesson {
   captureId: string
   request: string // the original capture text
@@ -71,6 +77,7 @@ export interface CriarPack {
   stage: CriarStage
   moment: CriarMomentId
   phrases: CriarPackPhrase[]
+  story: CriarPackStory
   song: CriarPackSong
   captureLessons: CriarCaptureLesson[]
   createdAt: string // ISO datetime
@@ -90,6 +97,7 @@ export interface PackApiRequest {
 
 export interface PackApiResponse {
   phrases: { spanish: string; english: string; note?: string }[]
+  story: CriarPackStory
   song: CriarPackSong
   captureLessons: CriarCaptureLesson[]
 }

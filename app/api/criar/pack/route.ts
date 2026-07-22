@@ -41,7 +41,12 @@ export async function POST(req: Request) {
     if (!raw) throw new Error("Empty response from OpenAI")
 
     const data = JSON.parse(raw) as PackApiResponse
-    if (!Array.isArray(data.phrases) || data.phrases.length === 0 || !data.song?.lyrics) {
+    if (
+      !Array.isArray(data.phrases) ||
+      data.phrases.length === 0 ||
+      !data.song?.lyrics ||
+      !data.story?.text
+    ) {
       throw new Error("Malformed pack from OpenAI")
     }
 
@@ -66,6 +71,11 @@ export async function POST(req: Request) {
         english: p.english,
         note: p.note || undefined,
       })),
+      story: {
+        title: data.story.title ?? "",
+        text: data.story.text,
+        english: data.story.english ?? "",
+      },
       song: {
         title: data.song.title,
         kind: data.song.kind ?? "canción",

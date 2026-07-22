@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Music, Volume2 } from "lucide-react"
+import { BookOpen, Check, Music, Volume2 } from "lucide-react"
 import type { CriarPack } from "@/lib/criar/types"
 import { stageMoments } from "@/lib/criar/stage"
 import { setPhraseLearned } from "@/lib/criar/store"
@@ -97,6 +97,31 @@ export function PackView({ pack: initialPack }: { pack: CriarPack }) {
           </div>
         ))}
       </div>
+
+      {pack.story && (
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <BookOpen className="h-4 w-4" />
+              {pack.story.title}
+            </h3>
+            <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
+              cuento
+            </span>
+          </div>
+          <p className="mb-2 text-xs text-muted-foreground/80 italic">
+            A little story to read aloud in Spanish.
+          </p>
+          <p className="whitespace-pre-line text-[15px] leading-relaxed text-foreground">
+            {pack.story.text}
+          </p>
+          {pack.story.english && (
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {pack.story.english}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="mb-2 flex items-center justify-between">

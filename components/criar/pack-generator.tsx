@@ -61,6 +61,7 @@ export function PackGenerator({ child, onGenerated }: PackGeneratorProps) {
           note: p.note,
           learned: false,
         })),
+        story: data.story,
         song: data.song,
         captureLessons: data.captureLessons,
         createdAt: new Date().toISOString(),

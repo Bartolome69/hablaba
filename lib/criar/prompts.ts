@@ -89,6 +89,10 @@ export function buildPackUserPrompt(req: PackApiRequest): string {
     `Include 10 to 15 phrases the parent can say during this moment, each with a natural English gloss. Add a short usage "note" only where a word or structure needs it (e.g. a very Argentine word worth flagging). Also include one song, rhyme or nana ("kind": "nana" | "rima" | "canción") that fits the moment — prefer traditional Argentine/Latin American ones, with lyrics and an English translation.`,
   )
 
+  sections.push(
+    `Also include a "story": a short retelling of a WELL-KNOWN children's fairy tale or fable (e.g. Los tres cerditos, Caperucita Roja, Ricitos de Oro, La liebre y la tortuga, El patito feo, Los tres chanchitos) for the parent to read aloud to the baby. Keep it 6–10 short sentences in simple, warm B1 Spanish (tú register, no voseo, gentle Argentine flavour), split into 2–4 short paragraphs separated by blank lines. Give the Spanish "title", the "text", and an "english" translation with the same paragraph breaks. Vary which tale you pick.`,
+  )
+
   if (req.captures.length > 0) {
     sections.push(
       `The parent captured these gaps — things they could NOT say in Spanish during real moments with the baby. For EACH one, create a mini-lesson: the natural Argentine (tú) phrase, 1–2 variants, and a one-sentence usage note. Echo back the capture's "id" as "captureId" and its text as "request".\nCaptures:\n${req.captures.map((c) => `- id: ${c.id} — "${c.text}"`).join("\n")}`,
@@ -116,6 +120,7 @@ export function buildPackUserPrompt(req: PackApiRequest): string {
   sections.push(`Respond with ONLY a valid JSON object in exactly this shape:
 {
   "phrases": [{ "spanish": "...", "english": "...", "note": "optional, omit if not needed" }],
+  "story": { "title": "...", "text": "paragraph one\\n\\nparagraph two", "english": "paragraph one\\n\\nparagraph two" },
   "song": { "title": "...", "kind": "nana", "lyrics": "line one\\nline two", "english": "translated lyrics" },
   "captureLessons": [{ "captureId": "...", "request": "...", "spanish": "...", "variants": ["..."], "note": "..." }]
 }

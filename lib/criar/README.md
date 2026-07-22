@@ -76,8 +76,9 @@ preschool 3–5y → school-age 5+. Only the newborn stage has content (`stageMo
 later stages plug in without schema changes.
 
 - `CriarPack` — one per child per day: 10–15 Rioplatense phrases (with English gloss,
-  optional usage note, `learned` flag), one song/rhyme/nana, and mini-lessons for
-  captures woven in.
+  optional usage note, `learned` flag), a short retelling of a well-known children's
+  tale (`story`, for the parent to read aloud), one song/rhyme/nana, and mini-lessons
+  for captures woven in.
 - `CriarCapture` — a gap the parent hit in real life. Status chain:
   `new` (queued) → `taught` (woven into a pack) → `learning` (exercised in a
   sparring session) → `learned` (future: parent marks it).
