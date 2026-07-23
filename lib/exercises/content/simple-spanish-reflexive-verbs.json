@@ -1,0 +1,137 @@
+{
+  "id": "simple-spanish-reflexive-verbs",
+  "title": "Reflexive Verbs (Reflexivos y Se)",
+  "teacher": "Simple Spanish",
+  "description": "Plain-English lesson on reflexive verbs: subject = object, the reflexive pronouns me/te/se/nos/se, pronoun placement, and common daily-routine verbs.",
+  "topicIds": ["reflexive-verbs"],
+  "ingestedAt": "2026-07-23",
+  "lessons": [
+    {
+      "topicId": "reflexive-verbs",
+      "summary": "A reflexive verb is one where the subject and the object are the same — the do-er and the receiver are one person (levantar = to raise; levantarse = to raise oneself = to get up). They need reflexive pronouns: me, te, se, nos, se. The pronoun normally goes before the conjugated verb: me llamo, te lavas, se levanta, nos duchamos, se despiertan. After another verb it can attach to the infinitive: quiere peinarse. Careful: me/te/se/nos also work as other kinds of pronoun, so read the sentence before deciding.",
+      "examples": [
+        { "spanish": "Me llamo Calvin.", "english": "I'm called Calvin.", "note": "llamarse = to call oneself" },
+        { "spanish": "¿A qué hora te levantaste?", "english": "What time did you get up?" },
+        { "spanish": "Él se lava los pies con agua caliente.", "english": "He washes his feet with hot water." },
+        { "spanish": "Nos levantamos tarde ayer.", "english": "We got up late yesterday." },
+        { "spanish": "Ella quiere peinarse.", "english": "She wants to comb her hair.", "note": "pronoun attaches to the infinitive" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "rf-pro-yo",
+      "topicId": "reflexive-verbs",
+      "type": "choice",
+      "prompt": "___ llamo Marcos.",
+      "promptEnglish": "I'm called Marcos.",
+      "options": ["Me", "Te", "Se"],
+      "answers": ["Me"],
+      "explanation": "The reflexive pronoun for 'yo' is 'me'.",
+      "difficulty": 1
+    },
+    {
+      "id": "rf-pro-el",
+      "topicId": "reflexive-verbs",
+      "type": "choice",
+      "prompt": "Ella ___ levanta a las siete.",
+      "promptEnglish": "She gets up at seven.",
+      "options": ["me", "te", "se"],
+      "answers": ["se"],
+      "explanation": "The reflexive pronoun for él/ella/usted is 'se'.",
+      "difficulty": 1
+    },
+    {
+      "id": "rf-pro-nos",
+      "topicId": "reflexive-verbs",
+      "type": "choice",
+      "prompt": "Nosotros ___ duchamos por la mañana.",
+      "promptEnglish": "We shower in the morning.",
+      "options": ["nos", "se", "me"],
+      "answers": ["nos"],
+      "explanation": "The reflexive pronoun for 'nosotros' is 'nos'.",
+      "difficulty": 1
+    },
+    {
+      "id": "rf-llamas",
+      "topicId": "reflexive-verbs",
+      "type": "cloze",
+      "prompt": "¿Cómo te ___? — Me llamo Ana. (llamarse, tú)",
+      "promptEnglish": "What are you called? — I'm called Ana.",
+      "answers": ["llamas"],
+      "explanation": "llamarse, tú form: te llamas.",
+      "difficulty": 1
+    },
+    {
+      "id": "rf-levanto",
+      "topicId": "reflexive-verbs",
+      "type": "cloze",
+      "prompt": "Yo ___ a las seis cada día. (levantarse — 'I get up')",
+      "promptEnglish": "I get up at six every day.",
+      "answers": ["me levanto"],
+      "explanation": "Reflexive pronoun 'me' before the conjugated verb 'levanto'.",
+      "difficulty": 2
+    },
+    {
+      "id": "rf-lava",
+      "topicId": "reflexive-verbs",
+      "type": "cloze",
+      "prompt": "Ella ___ las manos con jabón. (lavarse — 'she washes')",
+      "promptEnglish": "She washes her hands with soap.",
+      "answers": ["se lava"],
+      "explanation": "Reflexive pronoun 'se' before 'lava'. (Spanish uses the reflexive, not a possessive, for body parts.)",
+      "difficulty": 2
+    },
+    {
+      "id": "rf-despertamos",
+      "topicId": "reflexive-verbs",
+      "type": "cloze",
+      "prompt": "Nosotros ___ temprano. (despertarse — 'we wake up')",
+      "promptEnglish": "We wake up early.",
+      "answers": ["nos despertamos"],
+      "explanation": "Reflexive pronoun 'nos' before 'despertamos'.",
+      "difficulty": 2
+    },
+    {
+      "id": "rf-infinitive",
+      "topicId": "reflexive-verbs",
+      "type": "cloze",
+      "prompt": "Ella quiere ___. (peinarse — 'to comb her hair')",
+      "promptEnglish": "She wants to comb her hair.",
+      "answers": ["peinarse", "se peinar"],
+      "explanation": "After another verb the reflexive infinitive keeps -se attached: quiere peinarse (also valid: se quiere peinar).",
+      "difficulty": 3
+    },
+    {
+      "id": "rf-transform-add",
+      "topicId": "reflexive-verbs",
+      "type": "transform",
+      "prompt": "Make it reflexive: \"Levanto a las seis\" → \"___ a las seis\" (I get up at six).",
+      "promptEnglish": "I get up at six.",
+      "answers": ["me levanto"],
+      "explanation": "levantarse is reflexive; for 'yo' add 'me' before the verb.",
+      "difficulty": 2
+    },
+    {
+      "id": "rf-transform-neg",
+      "topicId": "reflexive-verbs",
+      "type": "transform",
+      "prompt": "Make it negative: \"Se levantó temprano\" → \"___\" (He didn't get up early).",
+      "promptEnglish": "He didn't get up early.",
+      "answers": ["No se levantó temprano"],
+      "explanation": "'No' goes before the reflexive pronoun: no se levantó.",
+      "difficulty": 2
+    },
+    {
+      "id": "rf-open",
+      "topicId": "reflexive-verbs",
+      "type": "open",
+      "prompt": "Describe tu rutina de la mañana usando dos verbos reflexivos.",
+      "promptEnglish": "Describe your morning routine using two reflexive verbs.",
+      "guidance": "Must be grammatical Spanish with at least two reflexive verbs, each with the correct reflexive pronoun before the conjugated verb (e.g. 'Me levanto a las siete y me ducho'). Mark incorrect if reflexive pronouns are missing or mismatched to the subject.",
+      "sampleAnswer": "Me despierto a las seis, me levanto y me lavo la cara.",
+      "explanation": "Reflexive verbs need a reflexive pronoun (me/te/se/nos) agreeing with the subject.",
+      "difficulty": 3
+    }
+  ]
+}

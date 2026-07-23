@@ -1,0 +1,230 @@
+{
+  "id": "jennifer-por-para",
+  "title": "Por y Para — Lecciones with Jennifer",
+  "teacher": "Jennifer",
+  "description": "Por vs para handout: a brief rule summary, fill-in and multiple-choice drills, a short analysis text, and written production.",
+  "topicIds": ["por-vs-para"],
+  "ingestedAt": "2026-07-23",
+  "lessons": [
+    {
+      "topicId": "por-vs-para",
+      "summary": "Jennifer's rule. Use PARA for: destino (destination), objetivo o finalidad (purpose/goal), fecha límite (deadline), and opinión. Use POR for: causa o razón (cause/reason), medio (means), intercambio (exchange), movimiento por un lugar (movement through a place), tiempo aproximado (approximate time), and agente (the doer, in passive sentences). Shorthand: PARA looks ahead to a goal or endpoint; POR looks back to the cause or the means.",
+      "examples": [
+        { "spanish": "Salí de casa por la mañana para ir a la oficina.", "english": "I left home in the morning to go to the office.", "note": "por = approximate time; para = purpose — both in one sentence" },
+        { "spanish": "Compré una pulsera por diez euros.", "english": "I bought a bracelet for ten euros.", "note": "por = exchange (price)" },
+        { "spanish": "Llegué tarde por el tráfico.", "english": "I arrived late because of the traffic.", "note": "por = cause" },
+        { "spanish": "Entregué el informe para las tres.", "english": "I handed in the report by three o'clock.", "note": "para = deadline" },
+        { "spanish": "Este regalo es para tu cumpleaños.", "english": "This gift is for your birthday.", "note": "para = destination/occasion" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "jpp-fill-1",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Este café es ___ ti.",
+      "promptEnglish": "This coffee is for you.",
+      "answers": ["para"],
+      "explanation": "PARA marks the destination — the person the coffee is intended for.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-fill-2",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Gracias ___ la ayuda.",
+      "promptEnglish": "Thanks for the help.",
+      "answers": ["por"],
+      "explanation": "POR gives the cause/reason for the thanks.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-fill-3",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Caminamos ___ la playa al atardecer.",
+      "promptEnglish": "We walked along the beach at sunset.",
+      "answers": ["por"],
+      "explanation": "POR expresses movement through/along a place.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-fill-4",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Necesito el informe ___ el jueves.",
+      "promptEnglish": "I need the report by Thursday.",
+      "answers": ["para"],
+      "explanation": "PARA marks a deadline (fecha límite).",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-fill-5",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Viajamos a Chile ___ ver a mi familia.",
+      "promptEnglish": "We travel to Chile to see my family.",
+      "answers": ["para"],
+      "explanation": "PARA + infinitive expresses purpose (finalidad).",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-fill-6",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Te envío los documentos ___ correo electrónico.",
+      "promptEnglish": "I'm sending you the documents by email.",
+      "answers": ["por"],
+      "explanation": "POR marks the means (medio) by which something is done.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-fill-7",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Perdí el tren ___ llegar tarde.",
+      "promptEnglish": "I missed the train because I arrived late.",
+      "answers": ["por"],
+      "explanation": "POR gives the cause. POR + infinitive = 'because of (doing) something'.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-fill-8",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Este libro es ___ estudiar para el examen.",
+      "promptEnglish": "This book is for studying for the exam.",
+      "answers": ["para"],
+      "explanation": "PARA + infinitive expresses purpose. (Note the second 'para el examen' = purpose again.)",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-choice-1",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "¿Vamos a caminar ___ el centro hoy?",
+      "promptEnglish": "Shall we walk around the centre today?",
+      "options": ["por", "para"],
+      "answers": ["por"],
+      "explanation": "POR expresses movement through a place — walking around/through the centre.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-choice-2",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "Este regalo es ___ tu cumpleaños.",
+      "promptEnglish": "This gift is for your birthday.",
+      "options": ["por", "para"],
+      "answers": ["para"],
+      "explanation": "PARA marks the destination/occasion the gift is meant for.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-choice-3",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "No pude ir ___ la lluvia.",
+      "promptEnglish": "I couldn't go because of the rain.",
+      "options": ["por", "para"],
+      "answers": ["por"],
+      "explanation": "POR marks the cause — the rain is the reason.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-choice-4",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "Trabajo mucho ___ conseguir mis objetivos.",
+      "promptEnglish": "I work hard to achieve my goals.",
+      "options": ["por", "para"],
+      "answers": ["para"],
+      "explanation": "PARA + infinitive expresses purpose (finalidad).",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-choice-5",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "Te cambio mi turno ___ el tuyo.",
+      "promptEnglish": "I'll swap my shift for yours.",
+      "options": ["por", "para"],
+      "answers": ["por"],
+      "explanation": "POR marks an exchange (intercambio) — one thing traded for another.",
+      "difficulty": 1
+    },
+    {
+      "id": "jpp-text-1",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Salí de casa ___ la mañana para ir a la oficina.",
+      "promptEnglish": "I left home in the morning to go to the office.",
+      "answers": ["por"],
+      "explanation": "POR is used for approximate time / part of the day: 'por la mañana'.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-text-2",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Compré una pulsera ___ diez euros.",
+      "promptEnglish": "I bought a bracelet for ten euros.",
+      "answers": ["por"],
+      "explanation": "POR marks exchange — the price paid in return.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-text-3",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Llegué tarde ___ el tráfico.",
+      "promptEnglish": "I arrived late because of the traffic.",
+      "answers": ["por"],
+      "explanation": "POR marks the cause — the traffic is the reason for arriving late.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-text-4",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Entregué el informe ___ las tres.",
+      "promptEnglish": "I handed in the report by three o'clock.",
+      "answers": ["para"],
+      "explanation": "PARA marks a deadline (fecha límite) — the time by which it was done.",
+      "difficulty": 2
+    },
+    {
+      "id": "jpp-transform-1",
+      "topicId": "por-vs-para",
+      "type": "transform",
+      "prompt": "Rewrite stating the reason with POR: \"No fui a la fiesta porque estaba enfermo.\" → \"No fui a la fiesta ___ estar enfermo.\"",
+      "promptEnglish": "I didn't go to the party because of being ill.",
+      "answers": ["por"],
+      "explanation": "A cause can be expressed with POR + infinitive: 'por estar enfermo' = 'because (I was) ill'.",
+      "difficulty": 3
+    },
+    {
+      "id": "jpp-open-1",
+      "topicId": "por-vs-para",
+      "type": "open",
+      "prompt": "Escribe una frase con PARA que exprese finalidad o destino.",
+      "promptEnglish": "Write a sentence with PARA expressing purpose or destination.",
+      "guidance": "The sentence must be grammatical Spanish and use 'para' to express either purpose (para + infinitive, or para que + subjunctive) or a destination/recipient (e.g. 'Estudio para ser ingeniero' or 'Este libro es para María'). Mark incorrect if it uses 'por', or uses 'para' for a meaning that should take 'por' (cause, exchange, means, movement).",
+      "sampleAnswer": "Compré flores para mi madre.",
+      "explanation": "PARA marks purpose (finalidad) and destination/recipient — where something is headed or what it's for.",
+      "difficulty": 3
+    },
+    {
+      "id": "jpp-open-2",
+      "topicId": "por-vs-para",
+      "type": "open",
+      "prompt": "Escribe una frase con POR que exprese causa o medio.",
+      "promptEnglish": "Write a sentence with POR expressing cause or means.",
+      "guidance": "The sentence must be grammatical Spanish and use 'por' to express either a cause/reason (e.g. 'Cerraron la calle por la nieve') or a means (e.g. 'Hablamos por teléfono'). Mark incorrect if it uses 'para', or uses 'por' for a meaning that should take 'para' (purpose, destination, deadline).",
+      "sampleAnswer": "Te llamo por teléfono esta noche.",
+      "explanation": "POR marks cause (the reason something happens) and means (the medium through which it happens).",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "ser-vs-estar",
+    "title": "Ser vs Estar",
+    "spanish": "Ser y estar",
+    "emoji": "🎭",
+    "cefr": "A2",
+    "area": "verbs",
+    "blurb": "Choosing between the two verbs for \"to be\"."
+  },
+  {
+    "id": "por-vs-para",
+    "title": "Por vs Para",
+    "spanish": "Por y para",
+    "emoji": "↔️",
+    "cefr": "B1",
+    "area": "prepositions",
+    "blurb": "When to use por and when to use para."
+  },
+  {
+    "id": "preterite-vs-imperfect",
+    "title": "Preterite vs Imperfect",
+    "spanish": "Pretérito e imperfecto",
+    "emoji": "⏳",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "Two past tenses: completed actions vs ongoing background."
+  },
+  {
+    "id": "present-perfect",
+    "title": "Present Perfect",
+    "spanish": "Pretérito perfecto",
+    "emoji": "✅",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "He hablado — talking about recent and life-experience past."
+  },
+  {
+    "id": "future-tense",
+    "title": "Future Tense",
+    "spanish": "Futuro simple",
+    "emoji": "🔮",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "The simple future and its irregular stems."
+  },
+  {
+    "id": "conditional",
+    "title": "Conditional",
+    "spanish": "Condicional",
+    "emoji": "🕊️",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "Would-forms: hablaría, tendría, and polite requests."
+  },
+  {
+    "id": "present-subjunctive",
+    "title": "Present Subjunctive",
+    "spanish": "Presente de subjuntivo",
+    "emoji": "🌙",
+    "cefr": "B1",
+    "area": "mood",
+    "blurb": "Forming the present subjunctive."
+  },
+  {
+    "id": "subjunctive-triggers",
+    "title": "Subjunctive Triggers",
+    "spanish": "Disparadores del subjuntivo",
+    "emoji": "🔔",
+    "cefr": "B1",
+    "area": "mood",
+    "blurb": "Expressions and conjunctions that require the subjunctive."
+  },
+  {
+    "id": "commands",
+    "title": "Commands",
+    "spanish": "Imperativo",
+    "emoji": "📣",
+    "cefr": "B1",
+    "area": "mood",
+    "blurb": "Affirmative and negative tú/usted commands."
+  },
+  {
+    "id": "haber-uses",
+    "title": "Haber",
+    "spanish": "El verbo haber",
+    "emoji": "🗝️",
+    "cefr": "B1",
+    "area": "verbs",
+    "blurb": "Hay, había, and haber as the auxiliary in the perfect tenses."
+  },
+  {
+    "id": "gustar-verbs",
+    "title": "Gustar & Similar Verbs",
+    "spanish": "Verbos como gustar",
+    "emoji": "❤️",
+    "cefr": "A2",
+    "area": "verbs",
+    "blurb": "Verbs that work backwards: me gusta, me encanta, me falta."
+  },
+  {
+    "id": "reflexive-verbs",
+    "title": "Reflexive Verbs",
+    "spanish": "Verbos reflexivos",
+    "emoji": "🔁",
+    "cefr": "A2",
+    "area": "verbs",
+    "blurb": "Verbs with se: levantarse, ducharse, acordarse."
+  },
+  {
+    "id": "object-pronouns",
+    "title": "Object Pronouns",
+    "spanish": "Pronombres de objeto",
+    "emoji": "🎯",
+    "cefr": "B1",
+    "area": "pronouns",
+    "blurb": "Direct and indirect object pronouns and their order."
+  }
+]

@@ -1,0 +1,86 @@
+{
+  "id": "por-vs-para-example",
+  "title": "Por vs Para — worked example",
+  "teacher": "(sample)",
+  "date": "2026-07-23",
+  "description": "A hand-written reference pack showing every exercise type. Safe to delete once a real PDF has been ingested; the /ingest-pdf skill mirrors this shape.",
+  "topicIds": ["por-vs-para"],
+  "lessons": [
+    {
+      "topicId": "por-vs-para",
+      "summary": "Use PARA for destination, purpose, deadline and recipient (the goal or endpoint). Use POR for cause/reason, exchange, duration, movement through a place, and 'on behalf of' (the motive or means). A quick test: PARA points forward to a goal; POR points back to a cause.",
+      "examples": [
+        { "spanish": "Este regalo es para ti.", "english": "This gift is for you.", "note": "para = recipient" },
+        { "spanish": "Gracias por tu ayuda.", "english": "Thanks for your help.", "note": "por = reason" },
+        { "spanish": "Estudio para ser médico.", "english": "I study (in order) to be a doctor.", "note": "para = purpose" },
+        { "spanish": "Caminamos por el parque.", "english": "We walked through the park.", "note": "por = movement through" },
+        { "spanish": "La tarea es para el lunes.", "english": "The homework is due Monday.", "note": "para = deadline" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "pp-1",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "Este regalo es ___ ti.",
+      "promptEnglish": "This gift is for you.",
+      "options": ["por", "para"],
+      "answers": ["para"],
+      "explanation": "PARA marks the recipient — the person the gift is destined for.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-2",
+      "topicId": "por-vs-para",
+      "type": "choice",
+      "prompt": "Gracias ___ venir a mi fiesta.",
+      "promptEnglish": "Thanks for coming to my party.",
+      "options": ["por", "para"],
+      "answers": ["por"],
+      "explanation": "POR expresses the reason you are grateful — the cause of the thanks.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-3",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Estudio mucho ___ aprobar el examen.",
+      "promptEnglish": "I study a lot (in order) to pass the exam.",
+      "answers": ["para"],
+      "explanation": "PARA + infinitive expresses purpose: the goal of studying.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-4",
+      "topicId": "por-vs-para",
+      "type": "cloze",
+      "prompt": "Pagué veinte euros ___ este libro.",
+      "promptEnglish": "I paid twenty euros for this book.",
+      "answers": ["por"],
+      "explanation": "POR marks exchange — money given in return for something.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-5",
+      "topicId": "por-vs-para",
+      "type": "transform",
+      "prompt": "Rewrite expressing a deadline: \"Necesito el informe el viernes.\" → \"Necesito el informe ___ el viernes.\"",
+      "promptEnglish": "I need the report by Friday.",
+      "answers": ["para"],
+      "explanation": "A deadline (by/for a point in time) takes PARA.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-6",
+      "topicId": "por-vs-para",
+      "type": "open",
+      "prompt": "Escribe una frase que use \"por\" para expresar duración de tiempo.",
+      "promptEnglish": "Write a sentence using \"por\" to express duration of time.",
+      "guidance": "The sentence must be grammatical Spanish and use 'por' to express a length of time (e.g. 'Viví en Madrid por dos años'). Mark incorrect if it uses 'para', or uses 'por' for a non-duration meaning.",
+      "sampleAnswer": "Estudié por tres horas anoche.",
+      "explanation": "POR expresses duration — the span of time an action lasts.",
+      "difficulty": 3
+    }
+  ]
+}

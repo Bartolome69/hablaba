@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, MessageSquare, Sprout } from "lucide-react"
+import { BookOpen, Dumbbell, MessageSquare, Sprout } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CRIAR_FLAG_EVENT, isCriarEnabled } from "@/lib/criar-flag"
 
@@ -37,6 +37,7 @@ export function BottomNav() {
   const tabs = [
     { id: "speak", label: "Phrases", href: "/app/speak", icon: BookOpen, active: pathname === "/app/speak" },
     { id: "practice", label: "Practice", href: "/app/practice", icon: MessageSquare, active: pathname === "/app/practice" },
+    { id: "exercises", label: "Exercises", href: "/app/exercises", icon: Dumbbell, active: pathname.startsWith("/app/exercises") },
     ...(criarEnabled
       ? [{ id: "criar", label: "Grow", href: "/grow", icon: Sprout, active: pathname.startsWith("/grow") }]
       : []),

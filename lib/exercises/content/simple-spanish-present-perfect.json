@@ -1,0 +1,175 @@
+{
+  "id": "simple-spanish-present-perfect",
+  "title": "The Present Perfect Tense",
+  "teacher": "Simple Spanish",
+  "description": "Plain-English lesson on the pretérito perfecto: haber + past participle, regular and irregular participles, with formation drills.",
+  "topicIds": ["present-perfect"],
+  "ingestedAt": "2026-07-23",
+  "lessons": [
+    {
+      "topicId": "present-perfect",
+      "summary": "The present perfect (pretérito perfecto) is a compound tense — two words: the present tense of haber + the past participle. Use it for the recent past and for past events that still matter now ('¿Has comido?' / '¿Has estado en España?'). Haber here is an auxiliary meaning 'to have'; it is never used like tener — you can't say 'yo he un libro' (that's 'tengo un libro'). Forms of haber: he, has, ha, hemos, habéis, han. Regular participles: -ar → -ado, -er/-ir → -ido.",
+      "examples": [
+        { "spanish": "He vivido acá por muchos años.", "english": "I have lived here for many years." },
+        { "spanish": "¿Has comido? — Sí, he comido.", "english": "Have you eaten? — Yes, I have." },
+        { "spanish": "Ella ha escrito la carta.", "english": "She has written the letter.", "note": "escrito is an irregular participle" },
+        { "spanish": "No hemos hecho nada.", "english": "We haven't done anything.", "note": "hecho is an irregular participle" },
+        { "spanish": "¿Has visto a Tom hoy?", "english": "Have you seen Tom today?", "note": "perfect (relevance now) vs preterite '¿Viste a Tom?'" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "pp-haber-yo",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Yo ___ vivido acá por muchos años. (haber)",
+      "promptEnglish": "I have lived here for many years.",
+      "answers": ["he"],
+      "explanation": "Present perfect = present of haber + participle. For 'yo', haber is 'he'.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-haber-tu",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "¿Tú ___ visto mi libro rojo? (haber)",
+      "promptEnglish": "Have you seen my red book?",
+      "answers": ["has"],
+      "explanation": "For 'tú', haber is 'has'.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-haber-el",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Él ___ hecho todo para ti. (haber)",
+      "promptEnglish": "He has done everything for you.",
+      "answers": ["ha"],
+      "explanation": "For él/ella/usted, haber is 'ha'.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-haber-nosotros",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Nosotros ___ vivido allí antes. (haber)",
+      "promptEnglish": "We have lived there before.",
+      "answers": ["hemos"],
+      "explanation": "For 'nosotros', haber is 'hemos'.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-haber-ellos",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Ellos no ___ dado los libros. (haber)",
+      "promptEnglish": "They haven't given the books.",
+      "answers": ["han"],
+      "explanation": "For ellos/ellas/ustedes, haber is 'han'.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-part-comer",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Past participle of 'comer': ___",
+      "promptEnglish": "eaten",
+      "answers": ["comido"],
+      "explanation": "-er verbs form the participle with -ido: comer → comido.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-part-hablar",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Past participle of 'hablar': ___",
+      "promptEnglish": "spoken",
+      "answers": ["hablado"],
+      "explanation": "-ar verbs form the participle with -ado: hablar → hablado.",
+      "difficulty": 1
+    },
+    {
+      "id": "pp-part-hacer",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Past participle of 'hacer' (irregular): ___",
+      "promptEnglish": "done/made",
+      "answers": ["hecho"],
+      "explanation": "hacer has the irregular participle 'hecho'.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-part-escribir",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Past participle of 'escribir' (irregular): ___",
+      "promptEnglish": "written",
+      "answers": ["escrito"],
+      "explanation": "escribir has the irregular participle 'escrito'.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-part-ver",
+      "topicId": "present-perfect",
+      "type": "conjugation",
+      "prompt": "Past participle of 'ver' (irregular): ___",
+      "promptEnglish": "seen",
+      "answers": ["visto"],
+      "explanation": "ver has the irregular participle 'visto'.",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-full-broken",
+      "topicId": "present-perfect",
+      "type": "cloze",
+      "prompt": "Yo no ___ el vaso. (romper — 'I have not broken')",
+      "promptEnglish": "I have not broken the glass.",
+      "answers": ["he roto"],
+      "explanation": "he (haber, yo) + roto (irregular participle of romper).",
+      "difficulty": 3
+    },
+    {
+      "id": "pp-full-said",
+      "topicId": "present-perfect",
+      "type": "cloze",
+      "prompt": "Ustedes no ___ nada. (decir — 'have said')",
+      "promptEnglish": "You (pl.) have said nothing.",
+      "answers": ["han dicho"],
+      "explanation": "han (haber, ustedes) + dicho (irregular participle of decir).",
+      "difficulty": 3
+    },
+    {
+      "id": "pp-full-written",
+      "topicId": "present-perfect",
+      "type": "cloze",
+      "prompt": "Ellas todavía no ___ la carta. (escribir — 'have written')",
+      "promptEnglish": "They still haven't written the letter.",
+      "answers": ["han escrito"],
+      "explanation": "han (haber, ellas) + escrito (irregular participle of escribir).",
+      "difficulty": 3
+    },
+    {
+      "id": "pp-choice-vs-preterite",
+      "topicId": "present-perfect",
+      "type": "choice",
+      "prompt": "Which sentence is in the present perfect?",
+      "promptEnglish": "recent past with relevance now",
+      "options": ["¿Has visto a Tom hoy?", "¿Viste a Tom ayer?"],
+      "answers": ["¿Has visto a Tom hoy?"],
+      "explanation": "The present perfect uses haber + participle (has visto). '¿Viste?' is the preterite (simple past).",
+      "difficulty": 2
+    },
+    {
+      "id": "pp-open",
+      "topicId": "present-perfect",
+      "type": "open",
+      "prompt": "Escribe una frase en pretérito perfecto sobre algo que has hecho hoy.",
+      "promptEnglish": "Write a present-perfect sentence about something you've done today.",
+      "guidance": "Must be grammatical Spanish using the present perfect: present of haber (he/has/ha/hemos/han) + a correct past participle, e.g. 'Hoy he estudiado español.' Mark incorrect if it uses the preterite (e.g. 'estudié') or an incorrect participle.",
+      "sampleAnswer": "Hoy he tomado dos cafés.",
+      "explanation": "Present perfect = present of haber + past participle, for the recent past.",
+      "difficulty": 3
+    }
+  ]
+}
