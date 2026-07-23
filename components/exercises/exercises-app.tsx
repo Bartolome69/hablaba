@@ -200,12 +200,38 @@ function Quiz({
     setChecked(false)
   }
 
-  if (done) {
-    const pct = Math.round((correctCount / items.length) * 100)
-    return (
-      <div className="min-h-dvh bg-background px-4 py-6 pb-24 flex flex-col">
+  const atLast = idx + 1 >= items.length
+  const pct = items.length ? Math.round((correctCount / items.length) * 100) : 0
+
+  // Full-screen focused view (covers the bottom nav, like the chat screen). The
+  // action button lives in a flex-shrink-0 footer so it stays pinned above the
+  // bottom bar and — thanks to `interactiveWidget: resizes-content` (see the
+  // root viewport config) shrinking this fixed container — above the keyboard.
+  return (
+    <div className="fixed inset-0 z-50 mx-auto flex max-w-lg flex-col bg-background">
+      {/* top bar + progress */}
+      <div
+        className="flex-shrink-0 px-4 pb-2"
+        style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}
+      >
         <QuizTopBar title={title} onExit={onExit} />
-        <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">
+        {!done && (
+          <div className="mt-4">
+            <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all"
+                style={{ width: `${(idx / items.length) * 100}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Question {idx + 1} of {items.length}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {done ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 text-center">
           <p className="font-serif text-5xl text-foreground">
             {correctCount}/{items.length}
           </p>
@@ -219,125 +245,109 @@ function Quiz({
             Back to topics
           </button>
         </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-dvh bg-background px-4 py-6 flex flex-col">
-      <QuizTopBar title={title} onExit={onExit} />
-
-      {/* progress */}
-      <div className="mt-4 mb-6">
-        <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-          <div
-            className="h-full bg-primary transition-all"
-            style={{ width: `${(idx / items.length) * 100}%` }}
-          />
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Question {idx + 1} of {items.length}
-        </p>
-      </div>
-
-      {/* prompt */}
-      <div className="mb-6">
-        <p className="text-lg text-foreground leading-relaxed">{item.prompt}</p>
-        {item.promptEnglish && (
-          <p className="mt-1 text-sm text-muted-foreground italic">{item.promptEnglish}</p>
-        )}
-      </div>
-
-      {/* input */}
-      <div className="flex-1">
-        {isChoice ? (
-          <div className="space-y-2">
-            {item.options.map((opt) => {
-              const isSel = selected === opt
-              const isRight = checked && acceptedAnswers(item).includes(opt)
-              const isWrongPick = checked && isSel && !wasCorrect
-              return (
-                <button
-                  key={opt}
-                  disabled={checked}
-                  onClick={() => setSelected(opt)}
-                  className={`w-full p-4 rounded-2xl border text-left text-sm transition-all active:scale-[0.98] ${
-                    isRight
-                      ? "border-emerald-500 bg-emerald-500/10 text-foreground"
-                      : isWrongPick
-                        ? "border-red-500 bg-red-500/10 text-foreground"
-                        : isSel
-                          ? "border-primary bg-primary/5 text-foreground"
-                          : "border-border bg-card text-foreground hover:bg-secondary/50"
-                  }`}
-                >
-                  {opt}
-                </button>
-              )
-            })}
-          </div>
-        ) : (
-          <input
-            type="text"
-            value={typed}
-            disabled={checked}
-            onChange={(e) => setTyped(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") (checked ? next() : check())
-            }}
-            autoFocus
-            autoCapitalize="off"
-            autoCorrect="off"
-            spellCheck={false}
-            placeholder="Type your answer…"
-            className="w-full p-4 rounded-2xl border border-border bg-card text-foreground text-sm outline-none focus:border-primary disabled:opacity-100"
-          />
-        )}
-
-        {/* feedback */}
-        {checked && (
-          <div
-            className={`mt-4 p-4 rounded-2xl text-sm ${
-              wasCorrect ? "bg-emerald-500/10" : "bg-red-500/10"
-            }`}
-          >
-            <p className="flex items-center gap-2 font-medium text-foreground">
-              {wasCorrect ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-600" /> Correct
-                </>
-              ) : (
-                <>
-                  <X className="w-4 h-4 text-red-600" /> Not quite —{" "}
-                  <span className="font-semibold">{acceptedAnswers(item)[0]}</span>
-                </>
+      ) : (
+        <>
+          {/* scrollable question area */}
+          <div className="flex-1 overflow-y-auto px-4">
+            <div className="mb-6 mt-2">
+              <p className="text-lg text-foreground leading-relaxed">{item.prompt}</p>
+              {item.promptEnglish && (
+                <p className="mt-1 text-sm text-muted-foreground italic">{item.promptEnglish}</p>
               )}
-            </p>
-            <p className="mt-1.5 text-muted-foreground">{item.explanation}</p>
-          </div>
-        )}
-      </div>
+            </div>
 
-      {/* action */}
-      <div className="pt-4">
-        {checked ? (
-          <button
-            onClick={next}
-            autoFocus
-            className="w-full py-3 bg-primary text-primary-foreground rounded-2xl text-sm font-semibold hover:brightness-110 active:scale-[0.98] transition-all"
+            {item.type === "choice" ? (
+              <div className="space-y-2">
+                {item.options.map((opt) => {
+                  const isSel = selected === opt
+                  const isRight = checked && acceptedAnswers(item).includes(opt)
+                  const isWrongPick = checked && isSel && !wasCorrect
+                  return (
+                    <button
+                      key={opt}
+                      disabled={checked}
+                      onClick={() => setSelected(opt)}
+                      className={`w-full p-4 rounded-2xl border text-left text-sm transition-all active:scale-[0.98] ${
+                        isRight
+                          ? "border-emerald-500 bg-emerald-500/10 text-foreground"
+                          : isWrongPick
+                            ? "border-red-500 bg-red-500/10 text-foreground"
+                            : isSel
+                              ? "border-primary bg-primary/5 text-foreground"
+                              : "border-border bg-card text-foreground hover:bg-secondary/50"
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  )
+                })}
+              </div>
+            ) : (
+              <input
+                type="text"
+                value={typed}
+                disabled={checked}
+                onChange={(e) => setTyped(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") (checked ? next() : check())
+                }}
+                autoFocus
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="Type your answer…"
+                className="w-full p-4 rounded-2xl border border-border bg-card text-foreground text-sm outline-none focus:border-primary disabled:opacity-100"
+              />
+            )}
+
+            {checked && (
+              <div
+                className={`mt-4 mb-2 p-4 rounded-2xl text-sm ${
+                  wasCorrect ? "bg-emerald-500/10" : "bg-red-500/10"
+                }`}
+              >
+                <p className="flex items-center gap-2 font-medium text-foreground">
+                  {wasCorrect ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-600" /> Correct
+                    </>
+                  ) : (
+                    <>
+                      <X className="w-4 h-4 text-red-600" /> Not quite —{" "}
+                      <span className="font-semibold">{acceptedAnswers(item)[0]}</span>
+                    </>
+                  )}
+                </p>
+                <p className="mt-1.5 text-muted-foreground">{item.explanation}</p>
+              </div>
+            )}
+          </div>
+
+          {/* pinned action footer — stays above the bottom nav and the keyboard */}
+          <div
+            className="flex-shrink-0 border-t border-border bg-background px-4 pt-3"
+            style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
           >
-            {idx + 1 >= items.length ? "See results" : "Next"}
-          </button>
-        ) : (
-          <button
-            onClick={check}
-            disabled={!answer.trim()}
-            className="w-full py-3 bg-primary text-primary-foreground rounded-2xl text-sm font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40 disabled:active:scale-100"
-          >
-            Check
-          </button>
-        )}
-      </div>
+            {checked ? (
+              <button
+                onClick={next}
+                autoFocus
+                className="w-full py-3 bg-primary text-primary-foreground rounded-2xl text-sm font-semibold hover:brightness-110 active:scale-[0.98] transition-all"
+              >
+                {atLast ? "See results" : "Next"}
+              </button>
+            ) : (
+              <button
+                onClick={check}
+                disabled={!answer.trim()}
+                className="w-full py-3 bg-primary text-primary-foreground rounded-2xl text-sm font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40 disabled:active:scale-100"
+              >
+                Check
+              </button>
+            )}
+          </div>
+        </>
+      )}
     </div>
   )
 }
