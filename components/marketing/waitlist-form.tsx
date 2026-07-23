@@ -34,6 +34,7 @@ export function WaitlistForm({ audience, placement = "hero", className }: Waitli
         const { error } = await res.json().catch(() => ({ error: "Something went wrong" }))
         throw new Error(error || "Something went wrong")
       }
+      posthog?.identify(email, { email })
       posthog?.capture("waitlist_signup", { source: pathname, audience, placement })
       setDone(true)
       toast.success("You're on the list. ¡Hasta pronto!")
