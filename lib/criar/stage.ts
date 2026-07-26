@@ -46,6 +46,7 @@ export const stageMoments: Record<CriarStage, CriarMoment[]> = {
     { id: "feed", label: "Feeds", emoji: "🍼" },
     { id: "nappy", label: "Nappy change", emoji: "🧷" },
     { id: "pram-walk", label: "Pram walk", emoji: "🚼" },
+    { id: "play", label: "Playtime", emoji: "🧸" },
     { id: "bath", label: "Bath", emoji: "🛁" },
     { id: "bedtime", label: "Bedtime", emoji: "🌙" },
     { id: "soothing", label: "Soothing", emoji: "🤍" },

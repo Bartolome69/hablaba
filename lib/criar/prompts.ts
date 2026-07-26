@@ -5,7 +5,14 @@
 // vocabulary (upa, mamadera, pañal…), warmth, and the porteño TTS accent —
 // so Grow still feels Argentine without the voseo learning-curve.
 
-import type { PackApiRequest } from "./types"
+import type { CriarMomentId, PackApiRequest } from "./types"
+
+// Optional hints so the model knows what a moment actually involves. Only added
+// where the bare moment id could be ambiguous; existing moments stay unchanged
+// when they have no entry here.
+const momentHints: Partial<Record<CriarMomentId, string>> = {
+  play: "Playtime / floor time with the baby: tummy time, rattles and soft toys, a mirror, peekaboo, funny faces and sounds. Narrate what the baby sees and does, celebrate little smiles and kicks, and offer playful either/or choices (e.g. «¿jugamos con este juguete o con aquel?»).",
+}
 
 export const RIOPLATENSE_SYSTEM = `You are an Argentine Spanish coach for a parent raising their baby bilingually in Buenos Aires. The parent speaks intermediate (B1) Spanish. Your job is to give them rich, natural, CORRECT phrases to say out loud to their baby during daily routines.
 
@@ -81,8 +88,9 @@ Do not include any text outside the JSON object.`
 export function buildPackUserPrompt(req: PackApiRequest): string {
   const sections: string[] = []
 
+  const hint = momentHints[req.moment]
   sections.push(
-    `Generate today's phrase pack for the "${req.moment}" routine moment. The baby is ${req.childName}, ${req.ageDescription} old (stage: ${req.stage}). Use the baby's name in a few phrases.`,
+    `Generate today's phrase pack for the "${req.moment}" routine moment.${hint ? ` ${hint}` : ""} The baby is ${req.childName}, ${req.ageDescription} old (stage: ${req.stage}). Use the baby's name in a few phrases.`,
   )
 
   sections.push(
