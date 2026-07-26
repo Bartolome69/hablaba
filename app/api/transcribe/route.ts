@@ -1,6 +1,4 @@
-import OpenAI from "openai"
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+import { getOpenAI } from "@/lib/openai"
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +11,7 @@ export async function POST(req: Request) {
     // Defaults to Spanish; pass language="auto" to let the model detect
     // (Criar captures are often English or mixed).
     const language = form.get("language")
-    const transcription = await openai.audio.transcriptions.create({
+    const transcription = await getOpenAI().audio.transcriptions.create({
       file,
       model: "gpt-4o-transcribe",
       ...(language === "auto" ? {} : { language: typeof language === "string" ? language : "es" }),

@@ -1,7 +1,5 @@
-import OpenAI from "openai"
+import { getOpenAI } from "@/lib/openai"
 import type { VoiceId } from "@/lib/voices"
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 const validVoices: VoiceId[] = ["nova", "shimmer", "alloy", "onyx", "echo", "fable"]
 
@@ -27,7 +25,7 @@ async function handleTTS(
   const voice = voiceParam && validVoices.includes(voiceParam) ? voiceParam : "nova"
   const instructions = (register && REGISTER_INSTRUCTIONS[register]) || VOICE_INSTRUCTIONS
 
-  const response = await openai.audio.speech.create({
+  const response = await getOpenAI().audio.speech.create({
     model: "gpt-4o-mini-tts",
     voice,
     input: text.trim(),

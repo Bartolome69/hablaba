@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
+import { getOpenAI } from "@/lib/openai"
 import { buildSparringSystem, type SparringContext } from "@/lib/criar/prompts"
 import { posthog } from "@/lib/posthog-server"
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 interface SparringRequest {
   message?: string
@@ -29,7 +27,7 @@ export async function POST(req: Request) {
 
     // Opener mode: the friend starts the conversation
     if (body.opener) {
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-4o",
         messages: [
           { role: "system", content: system },
@@ -67,7 +65,7 @@ export async function POST(req: Request) {
 
     // Stream replies (reply field emitted first) so they type out live, like
     // the main chat. The opener above stays non-streamed — it lands in full.
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: system },

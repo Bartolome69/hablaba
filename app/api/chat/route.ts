@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
+import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
 import { PARENT_CHILD_TOPIC_ID } from "@/lib/data"
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 // Known structured topic IDs — anything else is treated as a freeform surprise theme
 const conversationTopicIds = new Set([
@@ -106,7 +104,7 @@ export async function POST(req: Request) {
           ? `Ask the user one spontaneous, engaging question in Spanish about: "${topic}". Keep it natural and conversational. Do not correct anything — just ask the question.`
           : `Start a conversation about the topic: "${topic}". Ask the user one engaging opening question in Spanish to kick things off. Do not correct anything — just ask the question.`
 
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
@@ -149,7 +147,7 @@ export async function POST(req: Request) {
     // token-by-token instead of after the whole completion. The client reads
     // the growing JSON, renders the "reply" field live (emitted first), and
     // parses translation + correction from the final payload.
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: systemPrompt },

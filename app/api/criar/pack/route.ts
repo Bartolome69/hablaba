@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
+import { getOpenAI } from "@/lib/openai"
 import type { PackApiRequest, PackApiResponse } from "@/lib/criar/types"
 import { RIOPLATENSE_SYSTEM, buildPackUserPrompt } from "@/lib/criar/prompts"
 import { posthog } from "@/lib/posthog-server"
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 const validMoments = new Set([
   "waking", "feed", "nappy", "pram-walk", "play", "bath", "bedtime", "soothing",
@@ -28,7 +26,7 @@ export async function POST(req: Request) {
       avoidPhrases: (body.avoidPhrases ?? []).slice(0, 60),
     }
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: [
         { role: "system", content: RIOPLATENSE_SYSTEM },
