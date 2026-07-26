@@ -7,7 +7,7 @@ import { posthog } from "@/lib/posthog-server"
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 const validMoments = new Set([
-  "waking", "feed", "nappy", "pram-walk", "bath", "bedtime", "soothing",
+  "waking", "feed", "nappy", "pram-walk", "play", "bath", "bedtime", "soothing",
 ])
 
 export async function POST(req: Request) {

@@ -20,6 +20,7 @@ export type CriarMomentId =
   | "feed"
   | "nappy"
   | "pram-walk"
+  | "play"
   | "bath"
   | "bedtime"
   | "soothing"
