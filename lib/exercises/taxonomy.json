@@ -27,6 +27,33 @@
     "blurb": "Two past tenses: completed actions vs ongoing background."
   },
   {
+    "id": "preterite",
+    "title": "Preterite",
+    "spanish": "Pretérito",
+    "emoji": "📸",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "The simple past for completed, specific events."
+  },
+  {
+    "id": "imperfect",
+    "title": "Imperfect",
+    "spanish": "Imperfecto",
+    "emoji": "🕰️",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "The past for habits, ongoing actions, and description."
+  },
+  {
+    "id": "pluperfect",
+    "title": "Pluperfect",
+    "spanish": "Pluscuamperfecto",
+    "emoji": "⏪",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "Había + participle: a past action before another past one."
+  },
+  {
     "id": "present-perfect",
     "title": "Present Perfect",
     "spanish": "Pretérito perfecto",

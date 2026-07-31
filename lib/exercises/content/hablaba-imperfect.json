@@ -1,0 +1,45 @@
+{
+  "id": "hablaba-imperfect",
+  "title": "Imperfecto — Practice",
+  "description": "Authored B1 practice set for the imperfect: regular forms, the three irregulars (ser, ir, ver), and its core uses — habits, ongoing background, description, time and age.",
+  "topicIds": ["imperfect"],
+  "ingestedAt": "2026-07-31",
+  "lessons": [
+    {
+      "topicId": "imperfect",
+      "summary": "The imperfect (imperfecto) describes the past without a defined endpoint: habits ('used to'), ongoing background actions ('was …ing'), descriptions, and time, age, weather and feelings. Regular endings — -ar verbs: -aba, -abas, -aba, -ábamos, -aban; -er/-ir verbs: -ía, -ías, -ía, -íamos, -ían. Only three verbs are irregular: ser (era, eras, era, éramos, eran), ir (iba, ibas, iba, íbamos, iban) and ver (veía, veías, veía, veíamos, veían).",
+      "examples": [
+        { "spanish": "Cuando era niño, jugaba al fútbol todos los días.", "english": "When I was a child, I used to play football every day.", "note": "habit" },
+        { "spanish": "Llovía y hacía frío.", "english": "It was raining and it was cold.", "note": "background / weather" },
+        { "spanish": "Eran las tres de la tarde.", "english": "It was three in the afternoon.", "note": "telling time" },
+        { "spanish": "Ella tenía diez años entonces.", "english": "She was ten years old then.", "note": "age" },
+        { "spanish": "Íbamos a la playa cada verano.", "english": "We used to go to the beach every summer.", "note": "ir, irregular" }
+      ]
+    }
+  ],
+  "items": [
+    { "id": "imp-hablar-yo", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'yo' of hablar: ___", "promptEnglish": "I used to speak / was speaking", "answers": ["hablaba"], "explanation": "-ar verbs take -aba in the imperfect: hablar → hablaba.", "difficulty": 1 },
+    { "id": "imp-hablar-ellos", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'ellos' of hablar: ___", "promptEnglish": "they used to speak", "answers": ["hablaban"], "explanation": "-ar, ellos: hablaban.", "difficulty": 1 },
+    { "id": "imp-comer-tu", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'tú' of comer: ___", "promptEnglish": "you used to eat", "answers": ["comías"], "explanation": "-er verbs take -ía: comer → comías.", "difficulty": 1 },
+    { "id": "imp-vivir-nosotros", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'nosotros' of vivir: ___", "promptEnglish": "we used to live", "answers": ["vivíamos"], "explanation": "-ir verbs take -ía: vivir → vivíamos.", "difficulty": 2 },
+    { "id": "imp-trabajar-ella", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'ella' of trabajar: ___", "promptEnglish": "she used to work", "answers": ["trabajaba"], "explanation": "-ar, ella: trabajaba.", "difficulty": 1 },
+    { "id": "imp-tener-yo", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'yo' of tener: ___", "promptEnglish": "I used to have", "answers": ["tenía"], "explanation": "tener is regular in the imperfect: tenía.", "difficulty": 2 },
+    { "id": "imp-ser-yo", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'yo' of ser (irregular): ___", "promptEnglish": "I was", "answers": ["era"], "explanation": "ser is irregular: era, eras, era, éramos, eran.", "difficulty": 2 },
+    { "id": "imp-ser-nosotros", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'nosotros' of ser (irregular): ___", "promptEnglish": "we were", "answers": ["éramos"], "explanation": "ser, nosotros: éramos.", "difficulty": 2 },
+    { "id": "imp-ir-yo", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'yo' of ir (irregular): ___", "promptEnglish": "I used to go", "answers": ["iba"], "explanation": "ir is irregular: iba, ibas, iba, íbamos, iban.", "difficulty": 2 },
+    { "id": "imp-ir-ellos", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'ellos' of ir (irregular): ___", "promptEnglish": "they used to go", "answers": ["iban"], "explanation": "ir, ellos: iban.", "difficulty": 2 },
+    { "id": "imp-ver-yo", "topicId": "imperfect", "type": "conjugation", "prompt": "Imperfect 'yo' of ver (irregular): ___", "promptEnglish": "I used to see/watch", "answers": ["veía"], "explanation": "ver keeps the e: veía, veías, veía, veíamos, veían.", "difficulty": 2 },
+    { "id": "imp-cloze-habit", "topicId": "imperfect", "type": "cloze", "prompt": "Cuando era niño, ___ al fútbol todos los días. (jugar)", "promptEnglish": "When I was a child, I used to play football every day.", "answers": ["jugaba"], "explanation": "A repeated past habit takes the imperfect: jugaba.", "difficulty": 2 },
+    { "id": "imp-cloze-weather", "topicId": "imperfect", "type": "cloze", "prompt": "Ese día ___ mucho frío. (hacer)", "promptEnglish": "That day it was very cold.", "answers": ["hacía"], "explanation": "Weather as background description takes the imperfect: hacía frío.", "difficulty": 2 },
+    { "id": "imp-cloze-time", "topicId": "imperfect", "type": "cloze", "prompt": "___ las tres cuando llegó. (ser)", "promptEnglish": "It was three o'clock when he arrived.", "answers": ["eran"], "explanation": "Telling time in the past uses the imperfect: eran las tres.", "difficulty": 2 },
+    { "id": "imp-cloze-age", "topicId": "imperfect", "type": "cloze", "prompt": "Ella ___ diez años entonces. (tener)", "promptEnglish": "She was ten years old then.", "answers": ["tenía"], "explanation": "Age in the past uses the imperfect: tenía diez años.", "difficulty": 2 },
+    { "id": "imp-cloze-ongoing", "topicId": "imperfect", "type": "cloze", "prompt": "Mientras yo ___, sonó el teléfono. (leer)", "promptEnglish": "While I was reading, the phone rang.", "answers": ["leía"], "explanation": "The ongoing background action takes the imperfect: leía.", "difficulty": 3 },
+    { "id": "imp-cloze-description", "topicId": "imperfect", "type": "cloze", "prompt": "La casa ___ grande y vieja. (ser)", "promptEnglish": "The house was big and old.", "answers": ["era"], "explanation": "Description in the past uses the imperfect: era.", "difficulty": 2 },
+    { "id": "imp-cloze-ir", "topicId": "imperfect", "type": "cloze", "prompt": "Todos los veranos ___ a la playa. (ir, nosotros)", "promptEnglish": "Every summer we used to go to the beach.", "answers": ["íbamos"], "explanation": "A recurring past habit takes the imperfect: íbamos.", "difficulty": 3 },
+    { "id": "imp-cloze-ver", "topicId": "imperfect", "type": "cloze", "prompt": "De niño, ___ dibujos animados cada mañana. (ver, yo)", "promptEnglish": "As a child, I used to watch cartoons every morning.", "answers": ["veía"], "explanation": "Childhood habit + irregular ver: veía.", "difficulty": 3 },
+    { "id": "imp-choice-habit", "topicId": "imperfect", "type": "choice", "prompt": "Antes ___ temprano todos los días.", "promptEnglish": "I used to get up early every day.", "options": ["me levantaba", "me levanté"], "answers": ["me levantaba"], "explanation": "A repeated habit ('used to') takes the imperfect, not the preterite.", "difficulty": 2 },
+    { "id": "imp-choice-mientras", "topicId": "imperfect", "type": "choice", "prompt": "Mientras ella ___, yo cocinaba.", "promptEnglish": "While she was studying, I was cooking.", "options": ["estudiaba", "estudió"], "answers": ["estudiaba"], "explanation": "'Mientras' + ongoing background action → imperfect.", "difficulty": 2 },
+    { "id": "imp-transform", "topicId": "imperfect", "type": "transform", "prompt": "Put into the imperfect (habit): \"Como pan\" → \"___ pan\" (I used to eat bread).", "promptEnglish": "I used to eat bread.", "answers": ["comía"], "explanation": "comer → comía in the imperfect.", "difficulty": 2 },
+    { "id": "imp-open", "topicId": "imperfect", "type": "open", "prompt": "Escribe una frase en imperfecto sobre algo que hacías de niño/a.", "promptEnglish": "Write an imperfect sentence about something you used to do as a child.", "guidance": "Must be grammatical Spanish using the imperfect to describe a past habit or ongoing situation (e.g. 'De niño, jugaba en el parque todas las tardes'). Mark incorrect if it uses the preterite for a habit (e.g. 'jugué') or otherwise avoids the imperfect.", "sampleAnswer": "De niña, leía cuentos todas las noches antes de dormir.", "explanation": "Childhood habits take the imperfect.", "difficulty": 3 }
+  ]
+}

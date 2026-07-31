@@ -13,6 +13,9 @@ import jenniferPorPara from "./content/jennifer-por-para.json"
 import presentPerfect from "./content/simple-spanish-present-perfect.json"
 import reflexiveVerbs from "./content/simple-spanish-reflexive-verbs.json"
 import conditional from "./content/simple-spanish-conditional.json"
+import imperfect from "./content/hablaba-imperfect.json"
+import preterite from "./content/hablaba-preterite.json"
+import pluperfect from "./content/hablaba-pluperfect.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -21,6 +24,9 @@ export const sources = [
   presentPerfect,
   reflexiveVerbs,
   conditional,
+  imperfect,
+  preterite,
+  pluperfect,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)
