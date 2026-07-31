@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Sparkles, ArrowLeft, Check, X } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
@@ -200,6 +200,27 @@ function Quiz({
     setChecked(false)
   }
 
+  // Enter drives the whole quiz from the keyboard: check the answer, then (once
+  // checked) advance — so on desktop it's type, Enter, Enter, type, Enter, Enter.
+  // A window listener is used (not the input's own onKeyDown) because the input
+  // disables after checking and a disabled field stops receiving key events.
+  const advanceRef = useRef<() => void>(() => {})
+  advanceRef.current = () => {
+    if (done) onExit()
+    else if (!checked) {
+      if (answer.trim()) check()
+    } else next()
+  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Enter" || e.repeat) return
+      e.preventDefault()
+      advanceRef.current()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [])
+
   const atLast = idx + 1 >= items.length
   const pct = items.length ? Math.round((correctCount / items.length) * 100) : 0
 
@@ -288,9 +309,6 @@ function Quiz({
                 value={typed}
                 disabled={checked}
                 onChange={(e) => setTyped(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") (checked ? next() : check())
-                }}
                 autoFocus
                 autoCapitalize="off"
                 autoCorrect="off"
@@ -331,7 +349,6 @@ function Quiz({
             {checked ? (
               <button
                 onClick={next}
-                autoFocus
                 className="w-full py-3 bg-primary text-primary-foreground rounded-2xl text-sm font-semibold hover:brightness-110 active:scale-[0.98] transition-all"
               >
                 {atLast ? "See results" : "Next"}
