@@ -16,6 +16,8 @@ import conditional from "./content/simple-spanish-conditional.json"
 import imperfect from "./content/hablaba-imperfect.json"
 import preterite from "./content/hablaba-preterite.json"
 import pluperfect from "./content/hablaba-pluperfect.json"
+import futureTense from "./content/hablaba-future-tense.json"
+import presentSubjunctive from "./content/hablaba-present-subjunctive.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -27,6 +29,8 @@ export const sources = [
   imperfect,
   preterite,
   pluperfect,
+  futureTense,
+  presentSubjunctive,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)
