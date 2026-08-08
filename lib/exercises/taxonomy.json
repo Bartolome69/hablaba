@@ -135,12 +135,48 @@
     "blurb": "Verbs with se: levantarse, ducharse, acordarse."
   },
   {
-    "id": "object-pronouns",
-    "title": "Object Pronouns",
-    "spanish": "Pronombres de objeto",
+    "id": "direct-object-pronouns",
+    "title": "Direct Object Pronouns",
+    "spanish": "Pronombres de objeto directo",
     "emoji": "🎯",
+    "cefr": "A2",
+    "area": "pronouns",
+    "blurb": "Lo, la, los, las — replacing the thing the verb acts on."
+  },
+  {
+    "id": "indirect-object-pronouns",
+    "title": "Indirect Object Pronouns",
+    "spanish": "Pronombres de objeto indirecto",
+    "emoji": "📮",
     "cefr": "B1",
     "area": "pronouns",
-    "blurb": "Direct and indirect object pronouns and their order."
+    "blurb": "Le and les — saying to whom or for whom something is done."
+  },
+  {
+    "id": "object-pronouns",
+    "title": "Double Object Pronouns",
+    "spanish": "Pronombres dobles",
+    "emoji": "🔗",
+    "cefr": "B1",
+    "area": "pronouns",
+    "blurb": "Using both pronouns together: se lo, te la, and their order."
+  },
+  {
+    "id": "comparatives",
+    "title": "Comparatives",
+    "spanish": "Comparativos",
+    "emoji": "⚖️",
+    "cefr": "A2",
+    "area": "comparison",
+    "blurb": "Más/menos… que, and the irregulars mejor, peor, mayor, menor."
+  },
+  {
+    "id": "superlatives",
+    "title": "Superlatives",
+    "spanish": "Superlativos",
+    "emoji": "🏆",
+    "cefr": "B1",
+    "area": "comparison",
+    "blurb": "El más… de, and the absolute superlative in -ísimo."
   }
 ]

@@ -18,6 +18,11 @@ import preterite from "./content/hablaba-preterite.json"
 import pluperfect from "./content/hablaba-pluperfect.json"
 import futureTense from "./content/hablaba-future-tense.json"
 import presentSubjunctive from "./content/hablaba-present-subjunctive.json"
+import subjunctiveTriggers from "./content/hablaba-subjunctive-triggers.json"
+import directObjectPronouns from "./content/hablaba-direct-object-pronouns.json"
+import indirectObjectPronouns from "./content/hablaba-indirect-object-pronouns.json"
+import comparatives from "./content/hablaba-comparatives.json"
+import superlatives from "./content/hablaba-superlatives.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -31,6 +36,11 @@ export const sources = [
   pluperfect,
   futureTense,
   presentSubjunctive,
+  subjunctiveTriggers,
+  directObjectPronouns,
+  indirectObjectPronouns,
+  comparatives,
+  superlatives,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)

@@ -18,7 +18,14 @@ export function isTopicId(id: string): boolean {
   return byId.has(id)
 }
 
-const AREA_ORDER: GrammarArea[] = ["verbs", "tenses", "mood", "prepositions", "pronouns"]
+const AREA_ORDER: GrammarArea[] = [
+  "verbs",
+  "tenses",
+  "mood",
+  "prepositions",
+  "pronouns",
+  "comparison",
+]
 
 export const AREA_LABELS: Record<GrammarArea, string> = {
   verbs: "Verbs",
@@ -26,6 +33,7 @@ export const AREA_LABELS: Record<GrammarArea, string> = {
   mood: "Mood",
   prepositions: "Prepositions",
   pronouns: "Pronouns",
+  comparison: "Comparison",
 }
 
 /** Topics grouped by area in display order — the shape the topic map UI wants. */

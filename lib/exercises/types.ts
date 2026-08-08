@@ -12,7 +12,13 @@ export type { ExerciseType, ExerciseItem, ExerciseSource, SourceLesson, LessonEx
 
 // --- content: taxonomy ---
 
-export type GrammarArea = "prepositions" | "tenses" | "mood" | "verbs" | "pronouns"
+export type GrammarArea =
+  | "prepositions"
+  | "tenses"
+  | "mood"
+  | "verbs"
+  | "pronouns"
+  | "comparison"
 export type Cefr = "A1" | "A2" | "B1" | "B2"
 
 export interface ExerciseTopic {
