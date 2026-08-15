@@ -18,7 +18,17 @@ export default function SparringPage() {
   const [child, setChild] = useState<CriarChild | null>(null)
   const { voiceId } = useVoicePreference()
   const bottomRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const posthog = usePostHog()
+
+  // The composer grows as you type, which shrinks the transcript above it.
+  // Follow that only when the reader was already at the bottom.
+  const keepBottomInView = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    if (el.scrollHeight - el.scrollTop - el.clientHeight > 80) return
+    bottomRef.current?.scrollIntoView({ block: "end" })
+  }, [])
 
   useEffect(() => {
     setChild(ensureSeeded())
@@ -164,7 +174,7 @@ export default function SparringPage() {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((message) => (
           <ChatBubble
             key={message.id}
@@ -191,6 +201,7 @@ export default function SparringPage() {
         <ChatInput
           onSend={sendMessage}
           onFocus={() => bottomRef.current?.scrollIntoView({ behavior: "smooth" })}
+          onHeightChange={keepBottomInView}
         />
       </div>
     </div>

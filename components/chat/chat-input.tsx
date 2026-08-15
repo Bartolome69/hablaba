@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Mic, Send, Square } from "lucide-react"
 import { useRecorder } from "@/hooks/use-recorder"
@@ -62,15 +62,52 @@ function looksLikeEnglish(text: string): boolean {
   return englishCount / words.length > 0.35
 }
 
+// The composer is one `leading-6` line plus `py-2.5`, so a single line is 44px
+// — the same height as the send button next to it. Cap growth at five lines
+// and let the textarea scroll internally beyond that.
+const LINE_HEIGHT = 24
+const VERTICAL_PADDING = 20
+const MIN_INPUT_HEIGHT = LINE_HEIGHT + VERTICAL_PADDING
+const MAX_INPUT_HEIGHT = LINE_HEIGHT * 5 + VERTICAL_PADDING
+
 interface ChatInputProps {
   onSend: (message: string) => void
   onFocus?: () => void
+  onHeightChange?: () => void
   suggestions?: string[]
 }
 
-export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps) {
+export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }: ChatInputProps) {
   const [value, setValue] = useState("")
   const [languageError, setLanguageError] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const heightRef = useRef(MIN_INPUT_HEIGHT)
+
+  // Grow the composer to fit its content. Measuring needs `height: auto`, which
+  // would otherwise restart the CSS height transition from the measured value
+  // and make the box snap — so the measurement is done with transitions off and
+  // the previous height restored before the real one is applied.
+  const resize = useCallback(() => {
+    const el = textareaRef.current
+    if (!el) return
+
+    const previous = el.style.height
+    el.style.transition = "none"
+    el.style.height = "auto"
+    const content = el.scrollHeight
+    el.style.height = previous
+    void el.offsetHeight // flush, so the transition below starts from `previous`
+    el.style.transition = ""
+
+    const next = Math.max(MIN_INPUT_HEIGHT, Math.min(content, MAX_INPUT_HEIGHT))
+    el.style.height = `${next}px`
+    el.style.overflowY = content > MAX_INPUT_HEIGHT ? "auto" : "hidden"
+
+    if (next !== heightRef.current) {
+      heightRef.current = next
+      onHeightChange?.()
+    }
+  }, [onHeightChange])
 
   const handleTranscript = useCallback((text: string) => {
     setValue((current) => (current ? `${current} ${text}` : text))
@@ -78,6 +115,19 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
   }, [])
 
   const { state: recState, error: recError, start, stop, getLevels } = useRecorder(handleTranscript)
+
+  // Layout effect so the height is right before paint — typing, suggestions,
+  // dictated transcripts and the reset after send all flow through `value`.
+  // `recState` is in here too: recording swaps the textarea out for the level
+  // meter, so the remounted textarea has to be re-measured against its content.
+  useLayoutEffect(() => {
+    resize()
+  }, [value, recState, resize])
+
+  const isTouchRef = useRef(false)
+  useEffect(() => {
+    isTouchRef.current = window.matchMedia?.("(pointer: coarse)").matches ?? false
+  }, [])
 
   const handleSubmit = () => {
     if (!value.trim()) return
@@ -90,16 +140,19 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
     setValue("")
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value)
     if (languageError) setLanguageError(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSubmit()
-    }
+    if (e.key !== "Enter" || e.shiftKey) return
+    // On touch keyboards Return has to insert a newline — the send button is
+    // right there. Enter still sends on a physical keyboard.
+    if (isTouchRef.current) return
+    if ((e.nativeEvent as KeyboardEvent).isComposing) return
+    e.preventDefault()
+    handleSubmit()
   }
 
   const hasText = value.trim().length > 0
@@ -133,15 +186,16 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
         {recError && (
           <p className="text-xs text-destructive mb-2 px-1">{recError}</p>
         )}
-        <div className="flex items-center gap-2">
+        <div className="flex items-end gap-2">
           {isRecording ? (
-            <div className="flex-1 flex items-center gap-3 bg-secondary rounded-full px-4 py-2.5">
+            <div className="flex-1 flex items-center gap-3 bg-secondary rounded-full px-4 py-2.5 min-h-11">
               <VoiceLevelBars getLevels={getLevels} />
               <span className="text-sm text-muted-foreground">Escuchando…</span>
             </div>
           ) : (
-            <input
-              type="text"
+            <textarea
+              ref={textareaRef}
+              rows={1}
               value={value}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
@@ -152,11 +206,14 @@ export function ChatInput({ onSend, onFocus, suggestions = [] }: ChatInputProps)
               autoCorrect="on"
               autoCapitalize="sentences"
               spellCheck
-              className={`flex-1 bg-secondary rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 transition-shadow disabled:opacity-60 ${
+              // 22px keeps a perfect pill at one line and stays softly rounded
+              // as the box grows, so there's no radius pop mid-transition.
+              className={`flex-1 min-w-0 resize-none overflow-hidden bg-secondary rounded-[22px] px-4 py-2.5 text-sm leading-6 outline-none focus:ring-2 transition-[height,box-shadow] duration-150 ease-out disabled:opacity-60 ${
                 languageError
                   ? "ring-2 ring-destructive/50 focus:ring-destructive/50"
                   : "focus:ring-primary/20"
               }`}
+              style={{ height: MIN_INPUT_HEIGHT }}
             />
           )}
 
