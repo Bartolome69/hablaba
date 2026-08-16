@@ -62,8 +62,14 @@ but is the fallback path). The difference is load-bearing and lives in
   the backgrounded tab is doing real work.
 - **Mic-denied recovery copy** differs per platform; `micPermissionHelp()` owns it.
 
-Voice mode uses the module's shared **register flag** in `prompts.ts`; it is
-currently **tú**, like the rest of Grow.
+Voice mode uses the module's shared **register flag** in `prompts.ts`
+(`VOICE_REGISTER`, currently `"tu"` like the rest of Grow). Both register
+blocks are kept current, so flipping voice mode to voseo is a one-constant
+change that needs no prompt rewriting. The parent's correction preference
+("corrígeme mucho / normal / poco") is chosen on the voice screen, stored as
+`criar_correction_level`, and folded into the instructions server-side.
+Curriculum context (this week's pack phrases + capture lessons) comes from
+`session-context.ts` — the same query sparring uses.
 
 ## Access & navigation
 

@@ -7,7 +7,7 @@
 // second module that satisfies this interface and changing which factory
 // `use-voice-session.ts` calls.
 
-import type { VoiceEngineMeta, VoiceError, VoiceTurn } from "./types"
+import type { VoiceEngineMeta, VoiceError, VoiceSeedContext, VoiceTurn } from "./types"
 
 export interface VoiceEngineHandlers {
   /** Fired on every partial and final turn update. Same `id` mutates in place. */
@@ -27,6 +27,12 @@ export interface VoiceEngineStartOptions {
    * from a real gesture.
    */
   audioElement: HTMLAudioElement
+  /**
+   * Curriculum + correction preference for this conversation. Provider-neutral:
+   * each engine forwards it to its own session-mint endpoint, where the
+   * provider-specific instructions are built server-side.
+   */
+  seedContext: VoiceSeedContext
 }
 
 export interface VoiceEngine {

@@ -11,29 +11,14 @@ import type { Message } from "@/lib/types"
 import { extractReply } from "@/lib/utils"
 import type { CriarChild, SparringHistoryMessage } from "./types"
 import type { SparringContext } from "./prompts"
-import { describeAge } from "./stage"
+import { assembleSessionContext } from "./session-context"
 import {
   getSparringSession,
   listCaptures,
-  listPacks,
   saveSparringSession,
   todayKey,
   updateCapture,
 } from "./store"
-
-function assembleContext(child: CriarChild): SparringContext {
-  const packs = listPacks(child.id).slice(0, 5) // roughly this week
-  const packPhrases = packs.flatMap((p) => p.phrases.map((ph) => ph.spanish))
-  const packLessons = packs.flatMap((p) =>
-    p.captureLessons.map((l) => ({ request: l.request, spanish: l.spanish })),
-  )
-  return {
-    childName: child.name,
-    ageDescription: describeAge(child.birthdate),
-    packPhrases,
-    captureLessons: packLessons,
-  }
-}
 
 export function useSparring(
   child: CriarChild | null,
@@ -54,7 +39,7 @@ export function useSparring(
 
     const date = todayKey()
     dateRef.current = date
-    contextRef.current = assembleContext(child)
+    contextRef.current = assembleSessionContext(child)
 
     // Already sparred today — resume instead of restarting (no TTS replay)
     const cached = getSparringSession(child.id, date)

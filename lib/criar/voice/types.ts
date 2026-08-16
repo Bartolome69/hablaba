@@ -64,3 +64,19 @@ export interface VoiceEngineMeta {
   model: string
   voice: string
 }
+
+/**
+ * What the conversation was seeded with: the curriculum material injected into
+ * the partner's instructions, plus how much correcting the parent asked for.
+ *
+ * Doubles as Phase 3's `criar_voice_sessions.seed_context` jsonb — the Phase 4
+ * analysis reads `packPhrases`/`captureLessons` back to check which target
+ * phrases the parent actually used.
+ */
+export interface VoiceSeedContext {
+  childName: string
+  ageDescription: string
+  packPhrases: string[]
+  captureLessons: { request: string; spanish: string }[]
+  correctionLevel: "mucho" | "normal" | "poco"
+}

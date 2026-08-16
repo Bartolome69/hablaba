@@ -15,11 +15,17 @@ import { CriarHeader } from "@/components/criar/criar-header"
 import { LiveTranscript } from "@/components/criar/voice/live-transcript"
 import { VoiceOrb } from "@/components/criar/voice/voice-orb"
 import { ensureSeeded } from "@/lib/criar/seed"
+import { assembleSessionContext } from "@/lib/criar/session-context"
 import type { CriarChild } from "@/lib/criar/types"
 import {
+  CORRECTION_LEVELS,
+  CORRECTION_LEVEL_KEY,
+  DEFAULT_CORRECTION_LEVEL,
+  isCorrectionLevel,
   KEEP_AWAKE_KEY,
   MAX_SESSION_SECONDS,
   SESSION_WARNING_SECONDS,
+  type CorrectionLevel,
 } from "@/lib/criar/voice/config"
 import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/criar/voice/platform"
 import { useMediaSession } from "@/lib/criar/voice/use-media-session"
@@ -32,6 +38,7 @@ export default function VoicePage() {
   const [child, setChild] = useState<CriarChild | null>(null)
   const [showExplainer, setShowExplainer] = useState(false)
   const [keepAwake, setKeepAwake] = useState(false)
+  const [correctionLevel, setCorrectionLevel] = useState<CorrectionLevel>(DEFAULT_CORRECTION_LEVEL)
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
@@ -48,10 +55,19 @@ export default function VoicePage() {
       setShowExplainer(localStorage.getItem(MIC_EXPLAINER_SEEN) !== "1")
       const stored = localStorage.getItem(KEEP_AWAKE_KEY)
       setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
+      const level = localStorage.getItem(CORRECTION_LEVEL_KEY)
+      if (isCorrectionLevel(level)) setCorrectionLevel(level)
     } catch {
       setShowExplainer(true)
       setKeepAwake(defaultKeepScreenAwake())
     }
+  }, [])
+
+  const pickCorrectionLevel = useCallback((level: CorrectionLevel) => {
+    setCorrectionLevel(level)
+    try {
+      localStorage.setItem(CORRECTION_LEVEL_KEY, level)
+    } catch {}
   }, [])
 
   const toggleKeepAwake = useCallback(() => {
@@ -78,6 +94,7 @@ export default function VoicePage() {
   }, [state, posthog])
 
   const handleStart = () => {
+    if (!child) return
     // The explainer is shown once, before the OS prompt, so the permission
     // dialog never arrives unexplained. Safari gives no second chance if it's
     // dismissed — recovering means a trip to Settings.
@@ -87,7 +104,9 @@ export default function VoicePage() {
       } catch {}
       setShowExplainer(false)
     }
-    void start()
+    // Same curriculum query as sparring: this week's pack phrases + capture
+    // lessons, woven into the partner's instructions server-side.
+    void start({ ...assembleSessionContext(child), correctionLevel })
   }
 
   const nearLimit = useMemo(
@@ -119,6 +138,31 @@ export default function VoicePage() {
           }
         />
       </div>
+
+      {/* Changing this mid-conversation can't take effect (instructions are
+          fixed when the session is minted), so it hides while live rather than
+          pretending otherwise. */}
+      {(state === "idle" || state === "ended" || state === "error") && (
+        <div className="mx-4 mb-2 flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Corrígeme</span>
+          <div className="flex flex-1 gap-1 rounded-full bg-secondary p-1">
+            {CORRECTION_LEVELS.map((level) => (
+              <button
+                key={level}
+                onClick={() => pickCorrectionLevel(level)}
+                aria-pressed={correctionLevel === level}
+                className={`flex-1 rounded-full py-1.5 text-center text-xs font-medium transition-colors ${
+                  correctionLevel === level
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {showExplainer && state === "idle" && (
         <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-secondary/60 px-4 py-3">

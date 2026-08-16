@@ -12,7 +12,13 @@ import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
 import { MAX_SESSION_SECONDS } from "./config"
 import { suspendsAudioOnBackground } from "./platform"
-import type { VoiceConnectionState, VoiceEngineMeta, VoiceError, VoiceTurn } from "./types"
+import type {
+  VoiceConnectionState,
+  VoiceEngineMeta,
+  VoiceError,
+  VoiceSeedContext,
+  VoiceTurn,
+} from "./types"
 
 const engineFactory: VoiceEngineFactory = createOpenAIRealtimeEngine
 
@@ -24,7 +30,7 @@ export interface VoiceSessionController {
   /** Seconds since the conversation went live. */
   elapsed: number
   meta: VoiceEngineMeta | null
-  start: () => Promise<void>
+  start: (seedContext: VoiceSeedContext) => Promise<void>
   stop: () => void
 }
 
@@ -58,7 +64,7 @@ export function useVoiceSession(): VoiceSessionController {
     setState((prev) => (prev === "error" ? prev : "ended"))
   }, [teardown])
 
-  const start = useCallback(async () => {
+  const start = useCallback(async (seedContext: VoiceSeedContext) => {
     if (engineRef.current) return
     setError(null)
     setTurnMap({})
@@ -106,7 +112,7 @@ export function useVoiceSession(): VoiceSessionController {
 
     engineRef.current = engine
     setState("connecting")
-    await engine.start({ audioElement: audio })
+    await engine.start({ audioElement: audio, seedContext })
   }, [teardown])
 
   // Elapsed timer + the hard cost cap. Counts only while actually live.

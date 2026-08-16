@@ -8,7 +8,7 @@
 // The API key never leaves the server.
 
 import type { VoiceEngine, VoiceEngineFactory, VoiceEngineHandlers, VoiceEngineStartOptions } from "./adapter"
-import type { VoiceEngineMeta, VoiceSpeaker, VoiceTurn } from "./types"
+import type { VoiceEngineMeta, VoiceSeedContext, VoiceSpeaker, VoiceTurn } from "./types"
 
 const PROVIDER = "openai-realtime"
 const CALLS_URL = "https://api.openai.com/v1/realtime/calls"
@@ -42,7 +42,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
 
   constructor(private handlers: VoiceEngineHandlers) {}
 
-  async start({ audioElement }: VoiceEngineStartOptions): Promise<void> {
+  async start({ audioElement, seedContext }: VoiceEngineStartOptions): Promise<void> {
     if (typeof RTCPeerConnection === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       this.handlers.onError({
         kind: "unsupported",
@@ -83,7 +83,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     // 2. Ephemeral credential from our own server.
     let session: MintedSession
     try {
-      session = await this.mintSession()
+      session = await this.mintSession(seedContext)
     } catch (err) {
       this.handlers.onError({
         kind: "token",
@@ -108,8 +108,12 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     }
   }
 
-  private async mintSession(): Promise<MintedSession> {
-    const res = await fetch("/api/criar/voice/session", { method: "POST" })
+  private async mintSession(seedContext: VoiceSeedContext): Promise<MintedSession> {
+    const res = await fetch("/api/criar/voice/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(seedContext),
+    })
     if (!res.ok) throw new Error(`voice session mint failed: ${res.status}`)
     const data = (await res.json()) as Partial<MintedSession>
     if (!data.clientSecret) throw new Error("voice session mint returned no client secret")
