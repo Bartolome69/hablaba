@@ -16,10 +16,37 @@ Don't silently "finish the job" and rename the internals — ask first.
 
 | Path | Purpose |
 | --- | --- |
-| `app/grow/` | Routes: home (daily pack + capture), `sparring/`, `journal/`. `/criar/*` 301-redirects here (`next.config.mjs`) |
-| `app/api/criar/` | Stateless LLM routes: `pack/` (daily pack generation), `sparring/` (conversation) |
-| `components/criar/` | All Grow UI components |
-| `lib/criar/` | Types, store, stage logic, prompts, seed, this README |
+| `app/grow/` | Routes: home (daily pack + capture), `sparring/`, `journal/`, `voice/`. `/criar/*` 301-redirects here (`next.config.mjs`) |
+| `app/api/criar/` | Stateless LLM routes: `pack/` (daily pack generation), `sparring/` (conversation), `voice/session/` (mints Realtime tokens) |
+| `components/criar/` | All Grow UI components (`voice/` for voice mode) |
+| `lib/criar/` | Types, store, stage logic, prompts, seed, this README (`voice/` for voice mode) |
+
+## Voice mode (`/grow/voice`)
+
+Hands-free spoken conversation — a sibling of sparring for a parent pushing a
+pram. **Unlinked while it's being dogfooded**: reachable by URL, and only
+listed in `GrowSectionNav` once the `criar_voice_enabled` flag is set
+(`lib/criar/voice/config.ts`, a separate flag from `criar_enabled` so
+unlocking Grow doesn't unlock this).
+
+The engine sits behind an adapter so the provider is swappable:
+
+- `lib/criar/voice/adapter.ts` — the `VoiceEngine` interface. Provider-neutral.
+- `lib/criar/voice/openai-realtime.ts` — **the only file that knows about
+  WebRTC or OpenAI event names.** Trialling ElevenLabs Conversational AI for a
+  better Argentine voice means adding a sibling implementation and changing the
+  factory in `use-voice-session.ts`.
+- `lib/criar/voice/types.ts` — what everything else imports. Keep it free of
+  engine vocabulary; the transcript, store and analysis layers depend on it.
+
+`OPENAI_API_KEY` never reaches the browser: `/api/criar/voice/session` mints a
+60-second ephemeral client secret and the browser does the SDP exchange with
+OpenAI directly. Session length is capped client-side (`MAX_SESSION_SECONDS`,
+15 min) as the cost guardrail — the credential's TTL can't do it, because a
+session outlives the secret that opened it.
+
+Voice mode uses the module's shared **register flag** in `prompts.ts`; it is
+currently **tú**, like the rest of Grow.
 
 ## Access & navigation
 
