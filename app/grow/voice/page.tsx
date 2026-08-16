@@ -9,7 +9,8 @@
 // without showing up for anyone else.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
+import Link from "next/link"
+import { History, Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { LiveTranscript } from "@/components/criar/voice/live-transcript"
@@ -42,7 +43,8 @@ export default function VoicePage() {
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
-  const { state, turns, error, userSpeaking, elapsed, start, stop } = useVoiceSession()
+  const { state, turns, error, userSpeaking, elapsed, sessionId, start, stop } =
+    useVoiceSession(child)
 
   useWakeLock(state === "live" && keepAwake)
 
@@ -125,16 +127,25 @@ export default function VoicePage() {
           title="Charlar"
           subtitle="Sin manos · 5–15 min"
           action={
-            <button
-              onClick={toggleKeepAwake}
+            <div className="flex gap-2">
+              <Link
+                href="/grow/voice/historial"
+                aria-label="Charlas anteriores"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.98]"
+              >
+                <History className="h-4 w-4" />
+              </Link>
+              <button
+                onClick={toggleKeepAwake}
               aria-label={keepAwake ? "Dejar que la pantalla se apague" : "Mantener la pantalla encendida"}
               aria-pressed={keepAwake}
               className={`flex h-10 w-10 items-center justify-center rounded-full bg-secondary transition-all active:scale-[0.98] ${
                 keepAwake ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
-            >
-              <Sun className={`h-4 w-4 ${keepAwake ? "fill-current" : ""}`} />
-            </button>
+              >
+                <Sun className={`h-4 w-4 ${keepAwake ? "fill-current" : ""}`} />
+              </button>
+            </div>
           }
         />
       </div>
@@ -198,6 +209,15 @@ export default function VoicePage() {
               <p className="mt-1 text-muted-foreground">{micPermissionHelp()}</p>
             )}
           </div>
+        </div>
+      )}
+
+      {state === "ended" && sessionId && (
+        <div className="mx-4 mb-2 rounded-xl bg-secondary/60 px-4 py-3 text-sm text-pretty">
+          <p className="text-foreground">Quedó guardada la charla.</p>
+          <Link href={`/grow/voice/${sessionId}`} className="font-medium text-primary underline-offset-2 hover:underline">
+            Ver la conversación completa →
+          </Link>
         </div>
       )}
 

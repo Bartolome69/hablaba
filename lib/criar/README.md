@@ -62,6 +62,17 @@ but is the fallback path). The difference is load-bearing and lives in
   the backgrounded tab is doing real work.
 - **Mic-denied recovery copy** differs per platform; `micPermissionHelp()` owns it.
 
+Voice conversations are **persisted from day one** in three store tables —
+`criar_voice_sessions`, `criar_voice_turns`, `criar_voice_observations` —
+following the store's table-shaped convention. Turns are written individually
+as they finalise (a killed tab loses at most the turn in flight, never the
+transcript); the session row is stamped with `endedAt`/`durationSeconds` on
+every teardown path. History lives at `/grow/voice/historial`, the full
+transcript at `/grow/voice/[id]`. Observations are filled by the post-session
+analysis (Phase 4); `listRecentVoiceObservations()` is the weekly-report hook,
+and grammar observation tags use the **exercises taxonomy topic ids** so a
+weekly pattern can link straight to practice material.
+
 Voice mode uses the module's shared **register flag** in `prompts.ts`
 (`VOICE_REGISTER`, currently `"tu"` like the rest of Grow). Both register
 blocks are kept current, so flipping voice mode to voseo is a one-constant

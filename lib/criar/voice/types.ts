@@ -80,3 +80,62 @@ export interface VoiceSeedContext {
   captureLessons: { request: string; spanish: string }[]
   correctionLevel: "mucho" | "normal" | "poco"
 }
+
+// --- persisted records (localStorage today, SQL later) ---
+//
+// Table-shaped like the rest of lib/criar/store.ts: these map 1:1 to future
+// criar_voice_sessions / criar_voice_turns / criar_voice_observations tables
+// (camelCase here ↔ snake_case there, same as CriarPack.childId ↔ child_id).
+
+export interface CriarVoiceSession {
+  id: string
+  childId: string
+  startedAt: string // ISO datetime
+  endedAt: string | null // null = still running, or the tab died before the stamp
+  durationSeconds: number | null
+  seedContext: VoiceSeedContext // → seed_context jsonb
+  engineMeta: VoiceEngineMeta // → engine_meta jsonb
+}
+
+export interface CriarVoiceTurn {
+  id: string
+  sessionId: string
+  speaker: VoiceSpeaker
+  text: string
+  startedAt: string // ISO datetime
+  ordinal: number // spoken order within the session (see VoiceTurn.ordinal)
+}
+
+/**
+ * One tagged finding from the post-session analysis (Phase 4).
+ *
+ * `type` is the coarse family; `detail.tag` is the fine-grained grouping key
+ * and — for grammar findings — MUST be an exercises-taxonomy topic id
+ * (lib/exercises/taxonomy.json, validated in /api/analyze). That id is what
+ * lets the weekly report link a pattern straight to practice material.
+ *
+ * WEEKLY REPORT HOOK: the future report is a 7-day group-by over (type,
+ * detail.tag) on this table plus one narrative-generation call. Keep both
+ * fields groupable — no free-prose values.
+ */
+export type CriarVoiceObservationType =
+  | "error_grammar"
+  | "voseo_lapse" // reserved: only meaningful if VOICE_REGISTER flips to voseo
+  | "avoidance"
+  | "repetition"
+  | "code_switch"
+  | "target_phrase_used"
+
+export interface CriarVoiceObservation {
+  id: string
+  sessionId: string
+  turnId: string | null // null = session-level pattern (e.g. repetition)
+  type: CriarVoiceObservationType
+  detail: {
+    original?: string // what the parent said
+    corrected?: string // the natural form
+    note?: string // one encouraging sentence, in Spanish
+    tag?: string // grouping key: exercises topic id, or a stable slug
+  }
+  createdAt: string // ISO datetime
+}

@@ -12,12 +12,20 @@ import type {
   CriarSparringSession,
   SparringHistoryMessage,
 } from "./types"
+import type {
+  CriarVoiceObservation,
+  CriarVoiceSession,
+  CriarVoiceTurn,
+} from "./voice/types"
 
 const KEYS = {
   children: "criar_children",
   packs: "criar_packs",
   captures: "criar_captures",
   sparringSessions: "criar_sparring_sessions",
+  voiceSessions: "criar_voice_sessions",
+  voiceTurns: "criar_voice_turns",
+  voiceObservations: "criar_voice_observations",
 } as const
 
 type StoredSparringSession = Omit<CriarSparringSession, "messages"> & {
@@ -162,6 +170,88 @@ export function saveSparringSession(
     history: data.history,
   }
   writeTable(KEYS.sparringSessions, [serialized, ...rows])
+}
+
+// --- voice sessions ---
+//
+// Turns are written INDIVIDUALLY as they finalise during a live conversation,
+// not as one blob at session end — a killed tab loses at most the turn in
+// flight, never the transcript. The session row is created when the
+// conversation goes live and stamped with endedAt/duration when it ends; a row
+// with endedAt === null whose session isn't running anymore is a tab that died
+// mid-conversation, and its transcript is still intact.
+
+export function addVoiceSession(session: CriarVoiceSession) {
+  const rows = readTable<CriarVoiceSession>(KEYS.voiceSessions).filter((s) => s.id !== session.id)
+  writeTable(KEYS.voiceSessions, [session, ...rows])
+}
+
+export function endVoiceSession(id: string, endedAt: string, durationSeconds: number) {
+  const rows = readTable<CriarVoiceSession>(KEYS.voiceSessions).map((s) =>
+    // Idempotent: the first stamp wins, so overlapping teardown paths
+    // (stop button, engine close, visibility pause) can all call this.
+    s.id === id && s.endedAt === null ? { ...s, endedAt, durationSeconds } : s,
+  )
+  writeTable(KEYS.voiceSessions, rows)
+}
+
+export function listVoiceSessions(childId: string): CriarVoiceSession[] {
+  return readTable<CriarVoiceSession>(KEYS.voiceSessions)
+    .filter((s) => s.childId === childId)
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+}
+
+export function getVoiceSession(id: string): CriarVoiceSession | null {
+  return readTable<CriarVoiceSession>(KEYS.voiceSessions).find((s) => s.id === id) ?? null
+}
+
+export function saveVoiceTurn(turn: CriarVoiceTurn) {
+  const rows = readTable<CriarVoiceTurn>(KEYS.voiceTurns).filter((t) => t.id !== turn.id)
+  writeTable(KEYS.voiceTurns, [...rows, turn])
+}
+
+export function listVoiceTurns(sessionId: string): CriarVoiceTurn[] {
+  return readTable<CriarVoiceTurn>(KEYS.voiceTurns)
+    .filter((t) => t.sessionId === sessionId)
+    .sort((a, b) => a.ordinal - b.ordinal)
+}
+
+// --- voice observations (post-session analysis, Phase 4) ---
+
+export function saveVoiceObservations(observations: CriarVoiceObservation[]) {
+  if (observations.length === 0) return
+  const sessionIds = new Set(observations.map((o) => o.sessionId))
+  // Replace per session rather than append: re-running the analysis for a
+  // session (e.g. after a failed first attempt) must not duplicate findings.
+  const rows = readTable<CriarVoiceObservation>(KEYS.voiceObservations).filter(
+    (o) => !sessionIds.has(o.sessionId),
+  )
+  writeTable(KEYS.voiceObservations, [...rows, ...observations])
+}
+
+export function listVoiceObservations(sessionId: string): CriarVoiceObservation[] {
+  return readTable<CriarVoiceObservation>(KEYS.voiceObservations).filter(
+    (o) => o.sessionId === sessionId,
+  )
+}
+
+/**
+ * WEEKLY REPORT HOOK. The future report is exactly this query for `days = 7`,
+ * grouped by (type, detail.tag), plus one narrative-generation call. Nothing
+ * else about the schema should need to change.
+ */
+export function listRecentVoiceObservations(
+  childId: string,
+  days: number,
+): CriarVoiceObservation[] {
+  const sessionIds = new Set(
+    listVoiceSessions(childId)
+      .filter((s) => Date.now() - new Date(s.startedAt).getTime() <= days * 86400_000)
+      .map((s) => s.id),
+  )
+  return readTable<CriarVoiceObservation>(KEYS.voiceObservations).filter((o) =>
+    sessionIds.has(o.sessionId),
+  )
 }
 
 // --- derived context for pack generation ---

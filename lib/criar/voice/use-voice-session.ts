@@ -8,6 +8,8 @@
 // when we trial ElevenLabs.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import type { CriarChild } from "../types"
+import { addVoiceSession, endVoiceSession, saveVoiceTurn } from "../store"
 import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
 import { MAX_SESSION_SECONDS } from "./config"
@@ -30,11 +32,13 @@ export interface VoiceSessionController {
   /** Seconds since the conversation went live. */
   elapsed: number
   meta: VoiceEngineMeta | null
+  /** Persisted id of the most recent conversation — the link target for "ver la charla". */
+  sessionId: string | null
   start: (seedContext: VoiceSeedContext) => Promise<void>
   stop: () => void
 }
 
-export function useVoiceSession(): VoiceSessionController {
+export function useVoiceSession(child: CriarChild | null): VoiceSessionController {
   const [state, setState] = useState<VoiceConnectionState>("idle")
   const [turnMap, setTurnMap] = useState<Record<string, VoiceTurn>>({})
   const [error, setError] = useState<VoiceError | null>(null)
@@ -42,10 +46,49 @@ export function useVoiceSession(): VoiceSessionController {
   const [elapsed, setElapsed] = useState(0)
   const [meta, setMeta] = useState<VoiceEngineMeta | null>(null)
 
+  const [sessionId, setSessionId] = useState<string | null>(null)
+
   const engineRef = useRef<VoiceEngine | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const stateRef = useRef<VoiceConnectionState>("idle")
   stateRef.current = state
+
+  // Persistence bookkeeping. Turns are written to the store as they finalise
+  // (a killed tab loses at most the turn in flight); anything still partial
+  // when the session ends is flushed then.
+  const sessionIdRef = useRef<string | null>(null)
+  const sessionStartedAtRef = useRef<number>(0)
+  const liveTurnsRef = useRef<Record<string, VoiceTurn>>({})
+  const writtenTurnIdsRef = useRef<Set<string>>(new Set())
+  const childRef = useRef(child)
+  childRef.current = child
+
+  const persistTurn = useCallback((turn: VoiceTurn) => {
+    const sid = sessionIdRef.current
+    if (!sid || !turn.text.trim() || writtenTurnIdsRef.current.has(turn.id)) return
+    writtenTurnIdsRef.current.add(turn.id)
+    saveVoiceTurn({
+      id: turn.id,
+      sessionId: sid,
+      speaker: turn.speaker,
+      text: turn.text,
+      startedAt: turn.startedAt,
+      ordinal: turn.ordinal,
+    })
+  }, [])
+
+  /** Stamp the session ended and flush still-partial turns. Idempotent. */
+  const persistSessionEnd = useCallback(() => {
+    const sid = sessionIdRef.current
+    if (!sid) return
+    for (const turn of Object.values(liveTurnsRef.current)) persistTurn(turn)
+    endVoiceSession(
+      sid,
+      new Date().toISOString(),
+      Math.round((Date.now() - sessionStartedAtRef.current) / 1000),
+    )
+    sessionIdRef.current = null
+  }, [persistTurn])
 
   const teardown = useCallback(() => {
     engineRef.current?.stop()
@@ -60,9 +103,10 @@ export function useVoiceSession(): VoiceSessionController {
   const stop = useCallback(() => {
     if (stateRef.current === "idle" || stateRef.current === "ended") return
     teardown()
+    persistSessionEnd()
     setUserSpeaking(false)
     setState((prev) => (prev === "error" ? prev : "ended"))
-  }, [teardown])
+  }, [teardown, persistSessionEnd])
 
   const start = useCallback(async (seedContext: VoiceSeedContext) => {
     if (engineRef.current) return
@@ -82,23 +126,52 @@ export function useVoiceSession(): VoiceSessionController {
     audio.setAttribute("playsinline", "true")
     audioRef.current = audio
 
+    liveTurnsRef.current = {}
+    writtenTurnIdsRef.current = new Set()
+
     const engine = engineFactory({
       onTurn: (turn) => {
-        setTurnMap((prev) => {
-          // An empty final turn means the engine dropped it (failed
-          // transcription) — remove it rather than render a blank bubble.
-          if (turn.final && !turn.text.trim()) {
+        if (turn.final && !turn.text.trim()) {
+          // Dropped by the engine (failed transcription) — remove everywhere.
+          delete liveTurnsRef.current[turn.id]
+          setTurnMap((prev) => {
             const { [turn.id]: _discarded, ...rest } = prev
             return rest
-          }
-          return { ...prev, [turn.id]: turn }
-        })
+          })
+          return
+        }
+        if (turn.final) {
+          delete liveTurnsRef.current[turn.id]
+          persistTurn(turn)
+        } else {
+          liveTurnsRef.current[turn.id] = turn
+        }
+        setTurnMap((prev) => ({ ...prev, [turn.id]: turn }))
       },
       onOpen: (engineMeta) => {
         setMeta(engineMeta)
+        // The session row exists from the moment the conversation is live —
+        // its turns attach to it as they finalise.
+        const currentChild = childRef.current
+        if (currentChild) {
+          const id = crypto.randomUUID()
+          sessionIdRef.current = id
+          sessionStartedAtRef.current = Date.now()
+          setSessionId(id)
+          addVoiceSession({
+            id,
+            childId: currentChild.id,
+            startedAt: new Date().toISOString(),
+            endedAt: null,
+            durationSeconds: null,
+            seedContext,
+            engineMeta,
+          })
+        }
         setState("live")
       },
       onClose: () => {
+        persistSessionEnd()
         setUserSpeaking(false)
         setState((prev) => (prev === "error" ? prev : "ended"))
       },
@@ -106,6 +179,7 @@ export function useVoiceSession(): VoiceSessionController {
         setError(err)
         setState("error")
         teardown()
+        persistSessionEnd()
       },
       onUserSpeaking: setUserSpeaking,
     })
@@ -139,20 +213,27 @@ export function useVoiceSession(): VoiceSessionController {
       if (document.visibilityState !== "hidden") return
       if (stateRef.current !== "live" && stateRef.current !== "connecting") return
       teardown()
+      persistSessionEnd()
       setUserSpeaking(false)
       setState("interrupted")
     }
     document.addEventListener("visibilitychange", onVisibility)
     return () => document.removeEventListener("visibilitychange", onVisibility)
-  }, [teardown])
+  }, [teardown, persistSessionEnd])
 
-  // Leaving the screen must release the mic.
-  useEffect(() => teardown, [teardown])
+  // Leaving the screen must release the mic (and close out the session row).
+  useEffect(
+    () => () => {
+      teardown()
+      persistSessionEnd()
+    },
+    [teardown, persistSessionEnd],
+  )
 
   const turns = useMemo(
     () => Object.values(turnMap).sort((a, b) => a.ordinal - b.ordinal),
     [turnMap],
   )
 
-  return { state, turns, error, userSpeaking, elapsed, meta, start, stop }
+  return { state, turns, error, userSpeaking, elapsed, meta, sessionId, start, stop }
 }
