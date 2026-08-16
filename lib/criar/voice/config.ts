@@ -40,6 +40,13 @@ export function isCorrectionLevel(value: unknown): value is CorrectionLevel {
 }
 
 /**
+ * Whether to hold the screen on during a conversation. Platform-dependent
+ * default (see `defaultKeepScreenAwake`), overridable by the parent and
+ * remembered.
+ */
+export const KEEP_AWAKE_KEY = "criar_voice_keep_awake"
+
+/**
  * Voice mode is unlinked until it has been dogfooded — reachable by URL only,
  * and only once this flag is set. Mirrors `lib/criar-flag.ts`, deliberately as
  * a separate flag so unlocking Grow doesn't also unlock this.

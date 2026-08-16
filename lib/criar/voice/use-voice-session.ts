@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
 import { MAX_SESSION_SECONDS } from "./config"
+import { suspendsAudioOnBackground } from "./platform"
 import type { VoiceConnectionState, VoiceEngineMeta, VoiceError, VoiceTurn } from "./types"
 
 const engineFactory: VoiceEngineFactory = createOpenAIRealtimeEngine
@@ -121,10 +122,13 @@ export function useVoiceSession(): VoiceSessionController {
     return () => window.clearInterval(id)
   }, [state, stop])
 
-  // iOS suspends audio capture when Safari backgrounds or the screen locks, and
-  // does not resume it. Rather than leave a session that looks live but is
-  // deaf, we end it and say so — the UI offers an explicit reconnect.
+  // Backgrounding is platform-dependent, and getting this wrong in either
+  // direction is bad: on iOS the mic is suspended and never resumes, so a
+  // session left "live" is silently deaf; on Android the session keeps running
+  // with the screen off, which is the entire point of hands-free mode, and
+  // stopping it here would throw that away. Only iOS gets the pause.
   useEffect(() => {
+    if (!suspendsAudioOnBackground()) return
     const onVisibility = () => {
       if (document.visibilityState !== "hidden") return
       if (stateRef.current !== "live" && stateRef.current !== "connecting") return

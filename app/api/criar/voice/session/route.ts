@@ -47,7 +47,14 @@ export async function POST() {
           input: {
             // Transcription is what the on-screen transcript and the whole
             // Phase 4 analysis are built on, so it is not optional here.
-            transcription: { model: "gpt-4o-mini-transcribe", language: "es" },
+            //
+            // `language` is deliberately omitted (auto-detect) rather than
+            // pinned to "es": the parent code-switches, and pinning Spanish
+            // makes the transcriber mangle the English words into Spanish-ish
+            // nonsense. Those moments are exactly the gaps worth catching, so
+            // mangling them would blind the Phase 4 analysis to them. Same
+            // reasoning as `language=auto` on /api/transcribe for capture.
+            transcription: { model: "gpt-4o-mini-transcribe" },
             turn_detection: { type: "semantic_vad" },
           },
           output: { voice: VOICE },

@@ -45,6 +45,23 @@ OpenAI directly. Session length is capped client-side (`MAX_SESSION_SECONDS`,
 15 min) as the cost guardrail — the credential's TTL can't do it, because a
 session outlives the secret that opened it.
 
+**Primary target is Chrome on Android, installed as a PWA** (iOS Safari works
+but is the fallback path). The difference is load-bearing and lives in
+`voice/platform.ts`:
+
+- **Backgrounding.** Android keeps an active WebRTC session running with the
+  screen off — that's the whole point for a parent pushing a pram — so voice
+  mode leaves it alone and lets genuine drops surface as connection failures.
+  iOS suspends the mic and never resumes it, so there (and only there) hiding
+  the page pauses the session with an explicit reconnect. Never make this
+  unconditional in either direction.
+- **Wake lock** defaults off on Android (a screen held on for 15 minutes in a
+  pocket is battery burn plus stray taps) and on elsewhere, with a toggle the
+  parent can override.
+- **Media Session** gives a lock-screen stop button and signals to Android that
+  the backgrounded tab is doing real work.
+- **Mic-denied recovery copy** differs per platform; `micPermissionHelp()` owns it.
+
 Voice mode uses the module's shared **register flag** in `prompts.ts`; it is
 currently **tú**, like the rest of Grow.
 

@@ -8,15 +8,21 @@
 // appears once `criar_voice_enabled` is set), so it's dogfoodable by URL
 // without showing up for anyone else.
 
-import { useEffect, useMemo, useRef, useState } from "react"
-import { Mic, MicOff, RotateCcw, WifiOff } from "lucide-react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { LiveTranscript } from "@/components/criar/voice/live-transcript"
 import { VoiceOrb } from "@/components/criar/voice/voice-orb"
 import { ensureSeeded } from "@/lib/criar/seed"
 import type { CriarChild } from "@/lib/criar/types"
-import { MAX_SESSION_SECONDS, SESSION_WARNING_SECONDS } from "@/lib/criar/voice/config"
+import {
+  KEEP_AWAKE_KEY,
+  MAX_SESSION_SECONDS,
+  SESSION_WARNING_SECONDS,
+} from "@/lib/criar/voice/config"
+import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/criar/voice/platform"
+import { useMediaSession } from "@/lib/criar/voice/use-media-session"
 import { useVoiceSession } from "@/lib/criar/voice/use-voice-session"
 import { useWakeLock } from "@/lib/criar/voice/use-wake-lock"
 
@@ -25,20 +31,37 @@ const MIC_EXPLAINER_SEEN = "criar_voice_mic_explained"
 export default function VoicePage() {
   const [child, setChild] = useState<CriarChild | null>(null)
   const [showExplainer, setShowExplainer] = useState(false)
+  const [keepAwake, setKeepAwake] = useState(false)
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
   const { state, turns, error, userSpeaking, elapsed, start, stop } = useVoiceSession()
 
-  useWakeLock(state === "live")
+  useWakeLock(state === "live" && keepAwake)
+
+  // Lock-screen stop button, so the phone can go back in the pocket.
+  useMediaSession(state === "live", stop)
 
   useEffect(() => {
     setChild(ensureSeeded())
     try {
       setShowExplainer(localStorage.getItem(MIC_EXPLAINER_SEEN) !== "1")
+      const stored = localStorage.getItem(KEEP_AWAKE_KEY)
+      setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
     } catch {
       setShowExplainer(true)
+      setKeepAwake(defaultKeepScreenAwake())
     }
+  }, [])
+
+  const toggleKeepAwake = useCallback(() => {
+    setKeepAwake((prev) => {
+      const next = !prev
+      try {
+        localStorage.setItem(KEEP_AWAKE_KEY, next ? "1" : "0")
+      } catch {}
+      return next
+    })
   }, [])
 
   useEffect(() => {
@@ -82,6 +105,18 @@ export default function VoicePage() {
           onChildUpdate={setChild}
           title="Charlar"
           subtitle="Sin manos · 5–15 min"
+          action={
+            <button
+              onClick={toggleKeepAwake}
+              aria-label={keepAwake ? "Dejar que la pantalla se apague" : "Mantener la pantalla encendida"}
+              aria-pressed={keepAwake}
+              className={`flex h-10 w-10 items-center justify-center rounded-full bg-secondary transition-all active:scale-[0.98] ${
+                keepAwake ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Sun className={`h-4 w-4 ${keepAwake ? "fill-current" : ""}`} />
+            </button>
+          }
         />
       </div>
 
@@ -90,7 +125,8 @@ export default function VoicePage() {
           <Mic className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
           <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
             Vamos a usar el micrófono para charlar en voz alta. Tu teléfono te va a pedir permiso
-            una sola vez. Podés dejarlo en el bolsillo y seguir caminando.
+            una sola vez. Después podés apagar la pantalla y guardarlo en el bolsillo — la
+            conversación sigue.
           </p>
         </div>
       )}
@@ -115,9 +151,7 @@ export default function VoicePage() {
           <div className="text-sm leading-relaxed text-foreground text-pretty">
             <p>{error.message}</p>
             {error.kind === "mic-denied" && (
-              <p className="mt-1 text-muted-foreground">
-                En iPhone: Ajustes → Safari → Micrófono, y permitilo para este sitio.
-              </p>
+              <p className="mt-1 text-muted-foreground">{micPermissionHelp()}</p>
             )}
           </div>
         </div>

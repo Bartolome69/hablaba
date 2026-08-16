@@ -54,6 +54,16 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     // 1. Mic first: it is the step most likely to fail or be denied, and asking
     //    before we have spent anything keeps the failure cheap.
     try {
+      // Left as the WebRTC defaults on purpose. With Bluetooth earbuds there is
+      // no acoustic echo path, but AEC costs nothing there and is essential the
+      // moment the parent falls back to the phone speaker — and we cannot tell
+      // which is in use from the web. Noise suppression earns its keep on a
+      // street walk either way.
+      //
+      // Bluetooth caveat we cannot fix from here: on Android, opening a mic
+      // forces the headset onto the hands-free profile (mono, narrowband), so
+      // the partner's voice will sound worse through earbuds than music does.
+      // That is an OS routing decision, not something a constraint can undo.
       this.micStream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       })
