@@ -17,6 +17,7 @@ import { LiveTranscript } from "@/components/criar/voice/live-transcript"
 import { VoiceOrb } from "@/components/criar/voice/voice-orb"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { assembleSessionContext } from "@/lib/criar/session-context"
+import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
 import type { CriarChild } from "@/lib/criar/types"
 import {
   CORRECTION_LEVELS,
@@ -91,9 +92,14 @@ export default function VoicePage() {
       startedRef.current = false
       posthog.capture("criar_voice_session_ended", { duration_seconds: elapsed, turns: turns.length })
     }
+    // Fire-and-forget: kick the analysis while the transcript is fresh. A
+    // failure is fine — the session detail view lazily retries.
+    if ((state === "ended" || state === "interrupted") && sessionId) {
+      void ensureSessionAnalysis(sessionId).catch(() => {})
+    }
     // elapsed/turns are read at transition time only — not triggers
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, posthog])
+  }, [state, posthog, sessionId])
 
   const handleStart = () => {
     if (!child) return

@@ -1,15 +1,14 @@
 "use client"
 
 // One conversation, in full — readable, with the parent's own turns emphasised,
-// because rereading what YOU managed to say is the point of keeping it.
-//
-// PHASE 4 HOOK: the "session review" section (3–5 encouraging observations,
-// original → corrected) renders here, above the transcript, once the analysis
-// job exists. It reads listVoiceObservations(session.id).
+// because rereading what YOU managed to say is the point of keeping it. The
+// session review (3–5 observations from the analysis) renders above the
+// transcript; SessionReview lazily runs the analysis if it hasn't happened.
 
 import { use, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { SessionReview } from "@/components/criar/voice/session-review"
 import type { CriarVoiceSession, CriarVoiceTurn } from "@/lib/criar/voice/types"
 import { getVoiceSession, listVoiceTurns } from "@/lib/criar/store"
 
@@ -83,6 +82,8 @@ export default function VoiceSessionDetailPage({
           <p className="text-xs text-muted-foreground">{formatMeta(session)}</p>
         </div>
       </div>
+
+      {turns.some((t) => t.speaker === "user") && <SessionReview sessionId={session.id} />}
 
       {turns.length === 0 ? (
         <p className="text-sm text-muted-foreground text-pretty">

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Sparkles, ArrowLeft, Check, X } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
@@ -46,6 +47,8 @@ export function ExercisesApp() {
     setMastery(m)
   }
 
+  const searchParams = useSearchParams()
+
   // localStorage is client-only — read after mount to avoid hydration mismatch
   useEffect(() => {
     refreshMastery()
@@ -56,6 +59,17 @@ export function ExercisesApp() {
     const items = shuffle(itemsForTopic(topicId).filter(isClientGradable)).slice(0, SESSION_SIZE)
     if (items.length) setView({ name: "quiz", title, items })
   }
+
+  // ?topic=<taxonomy id> jumps straight into that topic's quiz — the deep link
+  // the Grow voice session review uses ("Practicar →"). Falls back to the
+  // normal topic map when the topic has no practice content yet.
+  const requestedTopic = searchParams.get("topic")
+  useEffect(() => {
+    if (!requestedTopic) return
+    const match = covered.find((c) => c.topic.id === requestedTopic)
+    if (match) startTopic(match.topic.id, match.topic.title)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedTopic])
 
   const startMixed = () => {
     // Weakest-first: untested topics sort ahead of low scores.

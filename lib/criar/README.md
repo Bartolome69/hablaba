@@ -68,10 +68,17 @@ following the store's table-shaped convention. Turns are written individually
 as they finalise (a killed tab loses at most the turn in flight, never the
 transcript); the session row is stamped with `endedAt`/`durationSeconds` on
 every teardown path. History lives at `/grow/voice/historial`, the full
-transcript at `/grow/voice/[id]`. Observations are filled by the post-session
-analysis (Phase 4); `listRecentVoiceObservations()` is the weekly-report hook,
-and grammar observation tags use the **exercises taxonomy topic ids** so a
-weekly pattern can link straight to practice material.
+transcript at `/grow/voice/[id]`.
+
+**Post-session analysis**: on session end the client fires `/api/analyze`
+(stateless; currently GPT-4o behind a single swappable function — the original
+spec named Claude, and switching vendors touches only `runAnalysisModel()`).
+The session detail view lazily retries if observations are missing, using the
+session row's `analyzedAt` to tell "analyzed, found nothing" from "not yet
+analyzed". Grammar observation tags are **exercises-taxonomy topic ids**
+(enforced by structured output + revalidation), which is what lets the review
+deep-link to `/app/exercises?topic=<tag>` and keeps the future weekly report a
+group-by — `listRecentVoiceObservations()` in the store is that report's hook.
 
 Voice mode uses the module's shared **register flag** in `prompts.ts`
 (`VOICE_REGISTER`, currently `"tu"` like the rest of Grow). Both register
@@ -112,7 +119,7 @@ Grow may import from the main app **only**:
 - `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference`, `hooks/use-tts-muted` — audio I/O
 - `lib/audio`, `lib/utils`, `lib/voices` — shared utilities
 - `lib/types` — only the `Message`/`Correction` shapes (for chat UI reuse)
-- Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`)
+- Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`), `/api/analyze` (voice-session transcript analysis — lives at the root because it imports the exercises taxonomy for tag validation, which Grow itself must not)
 
 The main app must **never** import from `lib/criar/` or `components/criar/`.
 Its only reference to Grow is the gated `/grow` tab in `components/app-tabs.tsx`

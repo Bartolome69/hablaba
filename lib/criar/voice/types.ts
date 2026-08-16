@@ -95,6 +95,12 @@ export interface CriarVoiceSession {
   durationSeconds: number | null
   seedContext: VoiceSeedContext // → seed_context jsonb
   engineMeta: VoiceEngineMeta // → engine_meta jsonb
+  /**
+   * When the post-session analysis last completed. Missing/undefined = not yet
+   * analyzed (the session detail view lazily triggers it), which is distinct
+   * from "analyzed and found nothing".
+   */
+  analyzedAt?: string | null
 }
 
 export interface CriarVoiceTurn {
@@ -125,6 +131,22 @@ export type CriarVoiceObservationType =
   | "repetition"
   | "code_switch"
   | "target_phrase_used"
+
+/**
+ * Tags that are voice-mode vocabulary rather than exercises-taxonomy topic
+ * ids. Anything NOT in this list is a topic id and can deep-link to
+ * `/app/exercises?topic=<tag>` (a URL string, so the module boundary holds).
+ */
+export const VOICE_ONLY_TAGS = [
+  "code-switch",
+  "vocab-repetition",
+  "target-phrase",
+  "other",
+] as const
+
+export function isPracticeableTag(tag: string | undefined): tag is string {
+  return !!tag && !(VOICE_ONLY_TAGS as readonly string[]).includes(tag)
+}
 
 export interface CriarVoiceObservation {
   id: string

@@ -195,6 +195,13 @@ export function endVoiceSession(id: string, endedAt: string, durationSeconds: nu
   writeTable(KEYS.voiceSessions, rows)
 }
 
+export function markVoiceSessionAnalyzed(id: string) {
+  const rows = readTable<CriarVoiceSession>(KEYS.voiceSessions).map((s) =>
+    s.id === id ? { ...s, analyzedAt: new Date().toISOString() } : s,
+  )
+  writeTable(KEYS.voiceSessions, rows)
+}
+
 export function listVoiceSessions(childId: string): CriarVoiceSession[] {
   return readTable<CriarVoiceSession>(KEYS.voiceSessions)
     .filter((s) => s.childId === childId)
