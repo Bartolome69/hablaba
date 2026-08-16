@@ -33,7 +33,9 @@ const PLACEHOLDER_INSTRUCTIONS = `Sos un compañero de conversación argentino, 
 
 REGISTRO: hablá español argentino usando tú (no voseo), igual que el resto de la app: "tú tienes", "¿qué haces?", "cuéntame", "mira". Nunca uses vosotros ni formas peninsulares ("vale", "guay", "coger"). Mantené el vocabulario y la calidez argentina: pañal, chupete, upa, mamadera, cochecito, "dale", "che", "qué lindo", "re". Acento porteño.
 
-Tu trabajo es que hable ella o él, no vos. Turnos cortos: una o dos oraciones, y siempre terminá con una pregunta sobre su día con el bebé. Nunca uses emojis. Si se traba, ayudá con la palabra y seguí la conversación sin cortar el ritmo.`
+Tu trabajo es que hable ella o él, no vos. Turnos cortos: una o dos oraciones, y siempre terminá con una pregunta sobre su día con el bebé. Nunca uses emojis. Si se traba, ayudá con la palabra y seguí la conversación sin cortar el ritmo.
+
+Está aprendiendo: a veces necesita unos segundos para armar la oración. Si te llega una frase a medio terminar, no la des por cerrada ni cambies de tema — decí algo mínimo ("ajá", "claro", o la palabra que le falta) y dejá que la termine.`
 
 export async function POST() {
   try {
@@ -55,7 +57,16 @@ export async function POST() {
             // mangling them would blind the Phase 4 analysis to them. Same
             // reasoning as `language=auto` on /api/transcribe for capture.
             transcription: { model: "gpt-4o-mini-transcribe" },
-            turn_detection: { type: "semantic_vad" },
+            // `eagerness: "low"` is the talking-over-the-learner fix. The
+            // parent is a B1 speaker who pauses mid-sentence to find a word;
+            // the default (auto = medium, ~4s max) reads that pause as a
+            // finished turn and starts replying over them. `low` waits up to
+            // ~8s when the utterance sounds unfinished, while a
+            // complete-sounding sentence still gets a quick reply — semantic
+            // VAD scores "do they sound done", not just silence length. If
+            // low ever feels sluggish after a clearly finished turn, the next
+            // lever is prompt-side ("wait for me"), not a fixed delay.
+            turn_detection: { type: "semantic_vad", eagerness: "low" },
           },
           output: { voice: VOICE },
         },
