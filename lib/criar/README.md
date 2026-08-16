@@ -24,10 +24,8 @@ Don't silently "finish the job" and rename the internals — ask first.
 ## Voice mode (`/grow/voice`)
 
 Hands-free spoken conversation — a sibling of sparring for a parent pushing a
-pram. **Unlinked while it's being dogfooded**: reachable by URL, and only
-listed in `GrowSectionNav` once the `criar_voice_enabled` flag is set
-(`lib/criar/voice/config.ts`, a separate flag from `criar_enabled` so
-unlocking Grow doesn't unlock this).
+pram. Listed as "Charlar" in `GrowSectionNav` alongside Today/Catch up/Journal
+(still behind the module's own `criar_enabled` gate, same as the rest of Grow).
 
 The engine sits behind an adapter so the provider is swappable:
 

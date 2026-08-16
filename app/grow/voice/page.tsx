@@ -4,9 +4,8 @@
 // treatment, same "your week, out loud" job — but spoken, with the parent
 // pushing a pram instead of typing.
 //
-// Unlinked for now (see components/criar/grow-section-nav.tsx: the entry only
-// appears once `criar_voice_enabled` is set), so it's dogfoodable by URL
-// without showing up for anyone else.
+// Listed as "Charlar" in GrowSectionNav — reachable the same way as the rest
+// of Grow's screens.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"

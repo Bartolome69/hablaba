@@ -45,25 +45,3 @@ export function isCorrectionLevel(value: unknown): value is CorrectionLevel {
  * remembered.
  */
 export const KEEP_AWAKE_KEY = "criar_voice_keep_awake"
-
-/**
- * Voice mode is unlinked until it has been dogfooded — reachable by URL only,
- * and only once this flag is set. Mirrors `lib/criar-flag.ts`, deliberately as
- * a separate flag so unlocking Grow doesn't also unlock this.
- */
-export const VOICE_FLAG = "criar_voice_enabled"
-
-export function isVoiceEnabled(): boolean {
-  try {
-    return localStorage.getItem(VOICE_FLAG) === "1"
-  } catch {
-    return false
-  }
-}
-
-export function setVoiceEnabled(enabled: boolean): void {
-  try {
-    if (enabled) localStorage.setItem(VOICE_FLAG, "1")
-    else localStorage.removeItem(VOICE_FLAG)
-  } catch {}
-}
