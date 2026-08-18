@@ -79,6 +79,11 @@ export interface VoiceSeedContext {
   packPhrases: string[]
   captureLessons: { request: string; spanish: string }[]
   correctionLevel: "mucho" | "normal" | "poco"
+  /**
+   * What the conversation was about (lib/voice-topics.ts). Optional because
+   * sessions recorded before topics existed don't have one.
+   */
+  topicId?: string
 }
 
 // --- persisted records (localStorage today, SQL later) ---

@@ -11,6 +11,7 @@ import { ArrowLeft } from "lucide-react"
 import { SessionReview } from "@/components/criar/voice/session-review"
 import type { CriarVoiceSession, CriarVoiceTurn } from "@/lib/criar/voice/types"
 import { getVoiceSession, listVoiceTurns } from "@/lib/criar/store"
+import { voiceTopics } from "@/lib/voice-topics"
 
 function formatDay(iso: string): string {
   return new Date(iso).toLocaleDateString("es-AR", {
@@ -22,6 +23,8 @@ function formatDay(iso: string): string {
 
 function formatMeta(session: CriarVoiceSession): string {
   const parts: string[] = []
+  const topic = voiceTopics.find((t) => t.id === session.seedContext?.topicId)
+  if (topic) parts.push(`${topic.emoji} ${topic.label}`)
   if (session.durationSeconds != null) {
     const mins = Math.round(session.durationSeconds / 60)
     parts.push(mins < 1 ? "menos de un minuto" : `${mins} min`)

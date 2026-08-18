@@ -116,6 +116,7 @@ Grow may import from the main app **only**:
 - `components/chat/chat-bubble`, `components/chat/chat-input` — presentational chat UI
 - `hooks/use-recorder`, `hooks/use-tts`, `hooks/use-voice-preference`, `hooks/use-tts-muted` — audio I/O
 - `lib/audio`, `lib/utils`, `lib/voices` — shared utilities
+- `lib/voice-topics` + `components/voice/*` — conversation topics and shared voice UI, deliberately main-app-owned so Speak can reuse them when voice mode lands there
 - `lib/types` — only the `Message`/`Correction` shapes (for chat UI reuse)
 - Shared API routes: `/api/tts` (with `register=rioplatense`), `/api/transcribe` (with `language=auto`), `/api/analyze` (voice-session transcript analysis — lives at the root because it imports the exercises taxonomy for tag validation, which Grow itself must not)
 

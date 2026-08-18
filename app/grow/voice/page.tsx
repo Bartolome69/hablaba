@@ -14,6 +14,8 @@ import { usePostHog } from "posthog-js/react"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { LiveTranscript } from "@/components/criar/voice/live-transcript"
 import { VoiceOrb } from "@/components/criar/voice/voice-orb"
+import { TopicPicker } from "@/components/voice/topic-picker"
+import { DEFAULT_VOICE_TOPIC_ID, voiceTopics } from "@/lib/voice-topics"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { assembleSessionContext } from "@/lib/criar/session-context"
 import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
@@ -34,12 +36,14 @@ import { useVoiceSession } from "@/lib/criar/voice/use-voice-session"
 import { useWakeLock } from "@/lib/criar/voice/use-wake-lock"
 
 const MIC_EXPLAINER_SEEN = "criar_voice_mic_explained"
+const TOPIC_KEY = "criar_voice_topic"
 
 export default function VoicePage() {
   const [child, setChild] = useState<CriarChild | null>(null)
   const [showExplainer, setShowExplainer] = useState(false)
   const [keepAwake, setKeepAwake] = useState(false)
   const [correctionLevel, setCorrectionLevel] = useState<CorrectionLevel>(DEFAULT_CORRECTION_LEVEL)
+  const [topicId, setTopicId] = useState<string>(DEFAULT_VOICE_TOPIC_ID)
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
@@ -59,6 +63,8 @@ export default function VoicePage() {
       setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
       const level = localStorage.getItem(CORRECTION_LEVEL_KEY)
       if (isCorrectionLevel(level)) setCorrectionLevel(level)
+      const topic = localStorage.getItem(TOPIC_KEY)
+      if (topic && voiceTopics.some((t) => t.id === topic)) setTopicId(topic)
     } catch {
       setShowExplainer(true)
       setKeepAwake(defaultKeepScreenAwake())
@@ -69,6 +75,13 @@ export default function VoicePage() {
     setCorrectionLevel(level)
     try {
       localStorage.setItem(CORRECTION_LEVEL_KEY, level)
+    } catch {}
+  }, [])
+
+  const pickTopic = useCallback((id: string) => {
+    setTopicId(id)
+    try {
+      localStorage.setItem(TOPIC_KEY, id)
     } catch {}
   }, [])
 
@@ -113,7 +126,7 @@ export default function VoicePage() {
     }
     // Same curriculum query as sparring: this week's pack phrases + capture
     // lessons, woven into the partner's instructions server-side.
-    void start({ ...assembleSessionContext(child), correctionLevel })
+    void start({ ...assembleSessionContext(child), correctionLevel, topicId })
   }
 
   const nearLimit = useMemo(
@@ -155,9 +168,15 @@ export default function VoicePage() {
         />
       </div>
 
-      {/* Changing this mid-conversation can't take effect (instructions are
-          fixed when the session is minted), so it hides while live rather than
-          pretending otherwise. */}
+      {/* Topic and correction level are both baked into the instructions when
+          the session is minted, so they hide while live rather than pretending
+          a mid-conversation change could take effect. */}
+      {(state === "idle" || state === "ended" || state === "error") && (
+        <div className="mx-4 mb-3">
+          <TopicPicker topics={voiceTopics} selectedId={topicId} onSelect={pickTopic} />
+        </div>
+      )}
+
       {(state === "idle" || state === "ended" || state === "error") && (
         <div className="mx-4 mb-2 flex items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground">Corrígeme</span>

@@ -57,6 +57,7 @@ export async function POST(req: Request) {
           .slice(0, 10),
       },
       correctionLevel,
+      topicId: typeof body.topicId === "string" ? body.topicId : undefined,
     })
 
     const created = await getOpenAI().realtime.clientSecrets.create({
@@ -101,6 +102,7 @@ export async function POST(req: Request) {
         model: MODEL,
         voice: VOICE,
         correction_level: correctionLevel,
+        topic_id: body.topicId ?? null,
         pack_phrases: body.packPhrases?.length ?? 0,
         capture_lessons: body.captureLessons?.length ?? 0,
       },

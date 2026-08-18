@@ -11,6 +11,7 @@ import { ensureSeeded } from "@/lib/criar/seed"
 import type { CriarChild } from "@/lib/criar/types"
 import type { CriarVoiceSession } from "@/lib/criar/voice/types"
 import { listVoiceSessions, listVoiceTurns } from "@/lib/criar/store"
+import { voiceTopics } from "@/lib/voice-topics"
 
 interface HistoryRow {
   session: CriarVoiceSession
@@ -23,6 +24,12 @@ function formatDay(iso: string): string {
     day: "numeric",
     month: "long",
   })
+}
+
+/** Leading emoji for the topic, so a list of days is scannable. Blank for pre-topic sessions. */
+function topicEmoji(session: CriarVoiceSession): string {
+  const topic = voiceTopics.find((t) => t.id === session.seedContext?.topicId)
+  return topic ? `${topic.emoji} ` : ""
 }
 
 function formatDuration(session: CriarVoiceSession): string {
@@ -80,6 +87,7 @@ export default function VoiceHistoryPage() {
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium capitalize text-foreground">
+                    {topicEmoji(session)}
                     {formatDay(session.startedAt)}
                   </p>
                   <p className="text-xs text-muted-foreground">

@@ -5,6 +5,7 @@
 // vocabulary (upa, mamadera, pañal…), warmth, and the porteño TTS accent —
 // so Grow still feels Argentine without the voseo learning-curve.
 
+import { getVoiceTopic } from "@/lib/voice-topics"
 import type { CriarMomentId, PackApiRequest } from "./types"
 
 // Optional hints so the model knows what a moment actually involves. Only added
@@ -122,14 +123,18 @@ const CORRECTION_BLOCKS: Record<VoiceCorrectionLevel, string> = {
 export interface VoiceInstructionInput {
   context: SparringContext
   correctionLevel: VoiceCorrectionLevel
+  /** What the conversation is about — see lib/voice-topics.ts. */
+  topicId?: string
   register?: CriarRegister
 }
 
 export function buildVoiceInstructions({
   context,
   correctionLevel,
+  topicId,
   register = VOICE_REGISTER,
 }: VoiceInstructionInput): string {
+  const topic = getVoiceTopic(topicId)
   const vocab =
     context.packPhrases.length > 0
       ? `\n\nTHIS WEEK'S MATERIAL — weave these phrases and their vocabulary/structures into your own speech naturally, so the parent hears their week's language in someone else's voice. Don't quiz them on it; just use it:\n${context.packPhrases
@@ -146,7 +151,10 @@ export function buildVoiceInstructions({
           .join("\n")}`
       : ""
 
-  return `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner. Talk about daily life with the baby: routines, feeds, sleep, walks, little moments, how the parent is doing.
+  return `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner.
+
+TODAY'S TOPIC — ${topic.label}. ${topic.prompt}
+Stay on this topic unless the parent clearly takes the conversation somewhere else; then follow them. Do not drift back to the baby out of habit if the topic isn't about the baby.
 
 ${REGISTER_BLOCKS[register]}
 
@@ -154,7 +162,7 @@ VOICE. You are speech, not text: contractions, natural rhythm, porteño intonati
 
 YOUR JOB IS TO ELICIT SPEECH, NOT TO TALK. This is a 5–15 minute conversation and the parent should do most of the talking:
 - Keep your turns SHORT: one or two sentences, then a question. Never monologue.
-- Ask about their day with the baby; follow up on what they actually said.
+- Ask questions within today's topic; follow up on what they actually said rather than moving down a list.
 - The parent is a learner: they sometimes need a few seconds to build a sentence. If a half-finished phrase reaches you, don't treat it as done or change topic — respond minimally ("ajá", "claro", or the word they're reaching for) and let them finish.
 
 ${CORRECTION_BLOCKS[correctionLevel]}
