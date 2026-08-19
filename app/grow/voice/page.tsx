@@ -17,7 +17,7 @@ import { VoiceOrb } from "@/components/criar/voice/voice-orb"
 import { TopicPicker } from "@/components/voice/topic-picker"
 import { DEFAULT_VOICE_TOPIC_ID, voiceTopics } from "@/lib/voice-topics"
 import { ensureSeeded } from "@/lib/criar/seed"
-import { assembleSessionContext } from "@/lib/criar/session-context"
+import { assembleFocusAreas, assembleSessionContext } from "@/lib/criar/session-context"
 import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
 import type { CriarChild } from "@/lib/criar/types"
 import {
@@ -126,7 +126,12 @@ export default function VoicePage() {
     }
     // Same curriculum query as sparring: this week's pack phrases + capture
     // lessons, woven into the partner's instructions server-side.
-    void start({ ...assembleSessionContext(child), correctionLevel, topicId })
+    void start({
+      ...assembleSessionContext(child),
+      correctionLevel,
+      topicId,
+      focusAreas: assembleFocusAreas(child.id),
+    })
   }
 
   const nearLimit = useMemo(

@@ -58,6 +58,10 @@ export async function POST(req: Request) {
       },
       correctionLevel,
       topicId: typeof body.topicId === "string" ? body.topicId : undefined,
+      focusAreas: (Array.isArray(body.focusAreas) ? body.focusAreas : [])
+        .filter((f): f is string => typeof f === "string")
+        .map((f) => f.slice(0, 200))
+        .slice(0, 3),
     })
 
     const created = await getOpenAI().realtime.clientSecrets.create({

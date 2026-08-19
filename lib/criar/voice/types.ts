@@ -84,6 +84,11 @@ export interface VoiceSeedContext {
    * sessions recorded before topics existed don't have one.
    */
   topicId?: string
+  /**
+   * Last week's weak spots (from the analysis observations), as short hints
+   * the partner weaves in without announcing — see assembleFocusAreas().
+   */
+  focusAreas?: string[]
 }
 
 // --- persisted records (localStorage today, SQL later) ---

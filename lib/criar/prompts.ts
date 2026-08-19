@@ -125,6 +125,8 @@ export interface VoiceInstructionInput {
   correctionLevel: VoiceCorrectionLevel
   /** What the conversation is about — see lib/voice-topics.ts. */
   topicId?: string
+  /** Last week's weak spots, from the analysis — woven in, never announced. */
+  focusAreas?: string[]
   register?: CriarRegister
 }
 
@@ -132,9 +134,17 @@ export function buildVoiceInstructions({
   context,
   correctionLevel,
   topicId,
+  focusAreas = [],
   register = VOICE_REGISTER,
 }: VoiceInstructionInput): string {
   const topic = getVoiceTopic(topicId)
+
+  const focus =
+    focusAreas.length > 0
+      ? `\n\nQUIET FOCUS — analysis of their recent sessions found these recurring weak spots. Steer the conversation so natural openings for these structures come up (a question that invites the tense, a story that needs the mood), and recast warmly when they stumble. NEVER announce that you are targeting these; it must feel like ordinary conversation:\n${focusAreas
+          .map((f) => `- ${f}`)
+          .join("\n")}`
+      : ""
   const vocab =
     context.packPhrases.length > 0
       ? `\n\nTHIS WEEK'S MATERIAL — weave these phrases and their vocabulary/structures into your own speech naturally, so the parent hears their week's language in someone else's voice. Don't quiz them on it; just use it:\n${context.packPhrases
@@ -167,7 +177,7 @@ YOUR JOB IS TO ELICIT SPEECH, NOT TO TALK. This is a 5–15 minute conversation 
 
 ${CORRECTION_BLOCKS[correctionLevel]}
 
-CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${vocab}${lessons}`
+CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${focus}${vocab}${lessons}`
 }
 
 export function buildPackUserPrompt(req: PackApiRequest): string {
