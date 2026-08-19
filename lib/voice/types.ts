@@ -26,6 +26,8 @@ export type VoiceConnectionState =
   | "requesting-mic"
   | "connecting"
   | "live"
+  /** Held by the user: mic released, session still open, resumable. */
+  | "paused"
   | "interrupted"
   | "ended"
   | "error"

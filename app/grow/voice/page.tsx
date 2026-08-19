@@ -48,13 +48,19 @@ export default function VoicePage() {
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
-  const { state, turns, error, userSpeaking, elapsed, sessionId, start, stop } =
+  const { state, turns, error, userSpeaking, elapsed, sessionId, start, pause, resume, stop } =
     useVoiceSession(criarVoicePersistence(child), "/api/voice/session")
 
-  useWakeLock(state === "live" && keepAwake)
+  useWakeLock((state === "live" || state === "paused") && keepAwake)
 
-  // Lock-screen stop button, so the phone can go back in the pocket.
-  useMediaSession(state === "live", stop)
+  // Lock-screen pause/resume/stop, so the phone can stay in the pocket.
+  useMediaSession({
+    active: state === "live" || state === "paused",
+    paused: state === "paused",
+    onPause: pause,
+    onResume: resume,
+    onStop: stop,
+  })
 
   useEffect(() => {
     setChild(ensureSeeded())
@@ -275,6 +281,8 @@ export default function VoicePage() {
           elapsed={elapsed}
           nearLimit={nearLimit}
           onStart={handleStart}
+          onPause={pause}
+          onResume={resume}
           onStop={stop}
         />
       </div>

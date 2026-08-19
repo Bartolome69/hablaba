@@ -15,6 +15,15 @@ const PROVIDER = "openai-realtime"
 const CALLS_URL = "https://api.openai.com/v1/realtime/calls"
 const DATA_CHANNEL = "oai-events"
 
+// Left as the WebRTC defaults on purpose. With Bluetooth earbuds there is no
+// acoustic echo path, but AEC costs nothing there and is essential the moment
+// the parent falls back to the phone speaker — and we cannot tell which is in
+// use from the web. Noise suppression earns its keep on a street walk either
+// way. Shared by start() and resume() so a resumed mic behaves identically.
+const MIC_CONSTRAINTS: MediaStreamConstraints = {
+  audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+}
+
 interface MintedSession {
   clientSecret: string
   model: string
@@ -36,6 +45,10 @@ class OpenAIRealtimeEngine implements VoiceEngine {
   private channel: RTCDataChannel | null = null
   private micStream: MediaStream | null = null
   private stopped = false
+  private paused = false
+  /** Kept so pause/resume can detach and reattach the mic without renegotiating. */
+  private micSender: RTCRtpSender | null = null
+  private audioElement: HTMLAudioElement | null = null
 
   /** item_id → turn. Holds partials until they finalise. */
   private turns = new Map<string, VoiceTurn>()
@@ -52,22 +65,17 @@ class OpenAIRealtimeEngine implements VoiceEngine {
       return
     }
 
+    this.audioElement = audioElement
+
     // 1. Mic first: it is the step most likely to fail or be denied, and asking
     //    before we have spent anything keeps the failure cheap.
+    //
+    // Bluetooth caveat we cannot fix from here: on Android, opening a mic
+    // forces the headset onto the hands-free profile (mono, narrowband), so
+    // the partner's voice will sound worse through earbuds than music does.
+    // That is an OS routing decision, not something a constraint can undo.
     try {
-      // Left as the WebRTC defaults on purpose. With Bluetooth earbuds there is
-      // no acoustic echo path, but AEC costs nothing there and is essential the
-      // moment the parent falls back to the phone speaker — and we cannot tell
-      // which is in use from the web. Noise suppression earns its keep on a
-      // street walk either way.
-      //
-      // Bluetooth caveat we cannot fix from here: on Android, opening a mic
-      // forces the headset onto the hands-free profile (mono, narrowband), so
-      // the partner's voice will sound worse through earbuds than music does.
-      // That is an OS routing decision, not something a constraint can undo.
-      this.micStream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-      })
+      this.micStream = await navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS)
     } catch (err) {
       const denied = err instanceof DOMException && (err.name === "NotAllowedError" || err.name === "SecurityError")
       this.handlers.onError({
@@ -146,7 +154,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     }
 
     for (const track of this.micStream?.getAudioTracks() ?? []) {
-      pc.addTrack(track, this.micStream!)
+      this.micSender = pc.addTrack(track, this.micStream!)
     }
 
     const channel = pc.createDataChannel(DATA_CHANNEL)
@@ -279,6 +287,72 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     if (!turn) return
     this.turns.delete(id)
     this.handlers.onTurn({ ...turn, text: "", final: true })
+  }
+
+  private send(event: Record<string, unknown>) {
+    if (this.channel?.readyState === "open") this.channel.send(JSON.stringify(event))
+  }
+
+  /**
+   * Hold the conversation without ending it: the Realtime session and the peer
+   * connection stay open, so resuming continues the SAME conversation with all
+   * its context — no replaying history.
+   *
+   * "Paused" means the mic is genuinely off, not merely ignored: the track is
+   * detached from the sender (so nothing is transmitted — a disabled track
+   * would still stream billable silence) and then stopped, which releases the
+   * hardware and turns off the OS recording indicator. That matters here,
+   * because the reason to pause is usually that someone else started talking.
+   */
+  pause(): void {
+    if (this.stopped || this.paused || !this.pc) return
+    this.paused = true
+
+    // Cut her off mid-sentence if she's speaking, and drop whatever half-heard
+    // audio is buffered so it can't be committed as a turn on resume.
+    this.send({ type: "response.cancel" })
+    this.send({ type: "input_audio_buffer.clear" })
+    this.audioElement?.pause()
+
+    void this.micSender?.replaceTrack(null)
+    this.micStream?.getTracks().forEach((t) => t.stop())
+    this.micStream = null
+  }
+
+  async resume(): Promise<void> {
+    if (this.stopped || !this.paused) return
+
+    // The connection can die while paused (backgrounded on iOS, network lost).
+    // Say so rather than reopening a mic into a dead session.
+    if (!this.pc || this.pc.connectionState === "failed" || this.pc.connectionState === "closed") {
+      this.handlers.onError({
+        kind: "network",
+        message: "La conversación se cortó mientras estaba en pausa. Lo que hablaste quedó guardado.",
+      })
+      return
+    }
+
+    let stream: MediaStream
+    try {
+      stream = await navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS)
+    } catch (err) {
+      this.handlers.onError({
+        kind: "mic-unavailable",
+        message: "No pudimos volver a abrir el micrófono. Probá de nuevo.",
+        cause: err,
+      })
+      return
+    }
+    if (this.stopped) {
+      stream.getTracks().forEach((t) => t.stop())
+      return
+    }
+
+    this.micStream = stream
+    const track = stream.getAudioTracks()[0] ?? null
+    await this.micSender?.replaceTrack(track)
+    void this.audioElement?.play().catch(() => {})
+    this.paused = false
   }
 
   stop(): void {

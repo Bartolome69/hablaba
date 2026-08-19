@@ -20,6 +20,17 @@ export const MAX_SESSION_SECONDS = 15 * 60
 export const SESSION_WARNING_SECONDS = 60
 
 /**
+ * How long a paused conversation is held before we end and save it.
+ *
+ * A pause releases the mic and transmits nothing, so the cost while held is
+ * negligible — but the Realtime session is still open on OpenAI's side and we
+ * don't control its server-side lifetime. Rather than let a forgotten pause
+ * rot into a session that fails on resume, close it cleanly and keep the
+ * transcript.
+ */
+export const MAX_PAUSE_SECONDS = 10 * 60
+
+/**
  * TTL for the ephemeral client secret. Only needs to cover the round trip from
  * mint to SDP exchange; short by design so a leaked token is near-worthless.
  * The API accepts 10–7200.

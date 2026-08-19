@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
-import { MAX_SESSION_SECONDS } from "./config"
+import { MAX_PAUSE_SECONDS, MAX_SESSION_SECONDS } from "./config"
 import { suspendsAudioOnBackground } from "./platform"
 import type {
   VoiceConnectionState,
@@ -43,6 +43,9 @@ export interface VoiceSessionController {
   /** Persisted id of the most recent conversation — the link target for "ver la charla". */
   sessionId: string | null
   start: (seedContext: VoiceSeedContext) => Promise<void>
+  /** Hold the conversation: mic released, session kept open, same chat on resume. */
+  pause: () => void
+  resume: () => void
   stop: () => void
 }
 
@@ -120,6 +123,22 @@ export function useVoiceSession(
     setUserSpeaking(false)
     setState((prev) => (prev === "error" ? prev : "ended"))
   }, [teardown, persistSessionEnd])
+
+  const pause = useCallback(() => {
+    if (stateRef.current !== "live") return
+    engineRef.current?.pause()
+    setUserSpeaking(false)
+    setState("paused")
+  }, [])
+
+  const resume = useCallback(() => {
+    if (stateRef.current !== "paused") return
+    const engine = engineRef.current
+    if (!engine) return
+    // Optimistic: onError flips to "error" if the mic or the connection is gone.
+    setState("live")
+    void engine.resume()
+  }, [])
 
   const start = useCallback(async (seedContext: VoiceSeedContext) => {
     if (engineRef.current) return
@@ -213,6 +232,14 @@ export function useVoiceSession(
     return () => window.clearInterval(id)
   }, [state, stop])
 
+  // A forgotten pause shouldn't leave a session open indefinitely — end it
+  // cleanly and keep the transcript. See MAX_PAUSE_SECONDS.
+  useEffect(() => {
+    if (state !== "paused") return
+    const id = window.setTimeout(() => stop(), MAX_PAUSE_SECONDS * 1000)
+    return () => window.clearTimeout(id)
+  }, [state, stop])
+
   // Backgrounding is platform-dependent, and getting this wrong in either
   // direction is bad: on iOS the mic is suspended and never resumes, so a
   // session left "live" is silently deaf; on Android the session keeps running
@@ -246,5 +273,5 @@ export function useVoiceSession(
     [turnMap],
   )
 
-  return { state, turns, error, userSpeaking, elapsed, meta, sessionId, start, stop }
+  return { state, turns, error, userSpeaking, elapsed, meta, sessionId, start, pause, resume, stop }
 }

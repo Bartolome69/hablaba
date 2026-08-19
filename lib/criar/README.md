@@ -61,8 +61,16 @@ but is the fallback path). The difference is load-bearing and lives in
 - **Wake lock** defaults off on Android (a screen held on for 15 minutes in a
   pocket is battery burn plus stray taps) and on elsewhere, with a toggle the
   parent can override.
-- **Media Session** gives a lock-screen stop button and signals to Android that
-  the backgrounded tab is doing real work.
+- **Media Session** gives lock-screen pause/resume/stop and signals to Android
+  that the backgrounded tab is doing real work.
+- **Pause holds the same session.** `VoiceEngine.pause()` keeps the peer
+  connection and the Realtime session open, so resuming continues the same
+  conversation with all its context — no history replay. It must genuinely
+  release the mic (detach the track from the sender, then stop it, so nothing
+  is transmitted and the OS recording indicator goes out): pausing exists
+  because someone else started talking, so "paused" has to mean *not
+  listening*, never merely "ignoring input". A forgotten pause is ended and
+  saved after `MAX_PAUSE_SECONDS`.
 - **Mic-denied recovery copy** differs per platform; `micPermissionHelp()` owns it.
 
 Voice conversations are **persisted from day one** in three store tables —

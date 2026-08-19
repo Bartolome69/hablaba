@@ -45,13 +45,19 @@ export default function CharlaPage() {
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
-  const { state, turns, error, userSpeaking, elapsed, sessionId, start, stop } = useVoiceSession(
+  const { state, turns, error, userSpeaking, elapsed, sessionId, start, pause, resume, stop } = useVoiceSession(
     speakVoicePersistence,
     "/api/voice/session",
   )
 
-  useWakeLock(state === "live" && keepAwake)
-  useMediaSession(state === "live", stop)
+  useWakeLock((state === "live" || state === "paused") && keepAwake)
+  useMediaSession({
+    active: state === "live" || state === "paused",
+    paused: state === "paused",
+    onPause: pause,
+    onResume: resume,
+    onStop: stop,
+  })
 
   useEffect(() => {
     try {
@@ -268,6 +274,8 @@ export default function CharlaPage() {
           elapsed={elapsed}
           nearLimit={nearLimit}
           onStart={handleStart}
+          onPause={pause}
+          onResume={resume}
           onStop={stop}
         />
       </div>

@@ -42,6 +42,13 @@ export interface VoiceEngineStartOptions {
 
 export interface VoiceEngine {
   start(options: VoiceEngineStartOptions): Promise<void>
+  /**
+   * Hold the conversation without ending it — the session stays open so resume
+   * continues the same one. Implementations must genuinely release the mic, not
+   * just ignore it: pausing is usually a privacy act.
+   */
+  pause(): void
+  resume(): Promise<void>
   /** Idempotent. Safe to call from unmount, from the stop button, and on error. */
   stop(): void
 }
