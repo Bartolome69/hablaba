@@ -69,8 +69,14 @@ but is the fallback path). The difference is load-bearing and lives in
   release the mic (detach the track from the sender, then stop it, so nothing
   is transmitted and the OS recording indicator goes out): pausing exists
   because someone else started talking, so "paused" has to mean *not
-  listening*, never merely "ignoring input". A forgotten pause is ended and
-  saved after `MAX_PAUSE_SECONDS`.
+  listening*, never merely "ignoring input". Pausing mid-reply cancels it and
+  drops the half sentence; resuming asks her to re-deliver that turn **from the
+  beginning**, because after a few minutes away you've lost the thread. A
+  forgotten pause is ended and saved after `MAX_PAUSE_SECONDS`.
+- **Realtime `error` events are not fatal.** Many are recoverable and some are
+  ours (cancelling when nothing is generating). Only a connection-state change
+  ends a session. Treating protocol errors as fatal killed sessions on pause —
+  don't reintroduce it.
 - **Mic-denied recovery copy** differs per platform; `micPermissionHelp()` owns it.
 
 Voice conversations are **persisted from day one** in three store tables —

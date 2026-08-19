@@ -46,6 +46,10 @@ class OpenAIRealtimeEngine implements VoiceEngine {
   private micStream: MediaStream | null = null
   private stopped = false
   private paused = false
+  /** True while she is actually generating a reply — `response.cancel` errors otherwise. */
+  private responseActive = false
+  /** She was cut off mid-sentence, so resume should re-deliver that whole turn. */
+  private pausedMidResponse = false
   /** Kept so pause/resume can detach and reattach the mic without renegotiating. */
   private micSender: RTCRtpSender | null = null
   private audioElement: HTMLAudioElement | null = null
@@ -218,6 +222,14 @@ class OpenAIRealtimeEngine implements VoiceEngine {
         this.discard(event.item_id)
         break
 
+      case "response.created":
+        this.responseActive = true
+        break
+
+      case "response.done":
+        this.responseActive = false
+        break
+
       case "response.output_audio_transcript.delta":
         this.append(event.item_id, "assistant", event.delta ?? "")
         break
@@ -234,12 +246,13 @@ class OpenAIRealtimeEngine implements VoiceEngine {
         this.handlers.onUserSpeaking(false)
         break
 
+      // Protocol errors are NOT fatal and must not tear the session down.
+      // Most are recoverable and some are ours (e.g. cancelling when nothing
+      // is generating). A conversation that actually dies shows up as a
+      // connection-state change, which is handled separately — that's the only
+      // signal worth ending a session over.
       case "error":
-        this.handlers.onError({
-          kind: "engine",
-          message: "Hubo un problema en la conversación.",
-          cause: event.error?.message,
-        })
+        console.warn("[realtime] server error event:", event.error?.message)
         break
     }
   }
@@ -308,11 +321,27 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     if (this.stopped || this.paused || !this.pc) return
     this.paused = true
 
-    // Cut her off mid-sentence if she's speaking, and drop whatever half-heard
-    // audio is buffered so it can't be committed as a turn on resume.
-    this.send({ type: "response.cancel" })
+    // Cut her off if she's actually mid-reply. Cancelling when nothing is
+    // generating makes the server emit an error event, so this is conditional.
+    if (this.responseActive) {
+      this.send({ type: "response.cancel" })
+      this.responseActive = false
+      // Resume re-delivers this turn from the beginning rather than picking up
+      // mid-sentence: after a few minutes away you've lost the thread, and a
+      // clean re-read is both easier to follow and quicker than reconstructing
+      // where she was.
+      this.pausedMidResponse = true
+    }
+    // Whatever half-heard audio is buffered must not commit as a turn later.
     this.send({ type: "input_audio_buffer.clear" })
     this.audioElement?.pause()
+
+    // Drop every unfinished turn on both sides — a half sentence left on
+    // screen (or worse, persisted) is noise. Her turn comes back in full on
+    // resume; the parent's cleared audio was never going to transcribe.
+    for (const turn of [...this.turns.values()]) {
+      if (!turn.final) this.discard(turn.id)
+    }
 
     void this.micSender?.replaceTrack(null)
     this.micStream?.getTracks().forEach((t) => t.stop())
@@ -353,6 +382,17 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     await this.micSender?.replaceTrack(track)
     void this.audioElement?.play().catch(() => {})
     this.paused = false
+
+    if (this.pausedMidResponse) {
+      this.pausedMidResponse = false
+      this.send({
+        type: "response.create",
+        response: {
+          instructions:
+            "You were interrupted mid-sentence and the listener did not hear the end of it. Say that same message again from the beginning, in full — same meaning, natural delivery. Do not apologise, do not mention the pause or the interruption, and do not add anything new.",
+        },
+      })
+    }
   }
 
   stop(): void {
