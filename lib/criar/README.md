@@ -86,7 +86,11 @@ group-by — `listRecentVoiceObservations()` in the store is that report's hook.
 Voice mode uses the module's shared **register flag** in `prompts.ts`
 (`VOICE_REGISTER`, currently `"tu"` like the rest of Grow). Both register
 blocks are kept current, so flipping voice mode to voseo is a one-constant
-change that needs no prompt rewriting. The parent's correction preference
+change that needs no prompt rewriting. **The same persona speaks on every
+voice surface** — Grow's Charlar and the main app's `/app/charla` share the
+one warm Argentine partner (Bart's explicit call: one person across the whole
+app, revisit later). Don't give Speak's voice mode a separate
+neutral-LatAm persona without asking. The parent's correction preference
 ("corrígeme mucho / normal / poco") is chosen on the voice screen, stored as
 `criar_correction_level`, and folded into the instructions server-side.
 Curriculum context (this week's pack phrases + capture lessons) comes from
