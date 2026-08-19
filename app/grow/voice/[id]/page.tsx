@@ -7,8 +7,9 @@
 
 import { use, useEffect, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { SessionReview } from "@/components/criar/voice/session-review"
+import { useTurnTranslations } from "@/hooks/use-turn-translations"
 import type { CriarVoiceSession, CriarVoiceTurn } from "@/lib/criar/voice/types"
 import { getVoiceSession, listVoiceTurns } from "@/lib/criar/store"
 import { voiceTopics } from "@/lib/voice-topics"
@@ -47,6 +48,7 @@ export default function VoiceSessionDetailPage({
   const [session, setSession] = useState<CriarVoiceSession | null>(null)
   const [turns, setTurns] = useState<CriarVoiceTurn[]>([])
   const [loaded, setLoaded] = useState(false)
+  const { translations, openIds, pendingId, toggle } = useTurnTranslations()
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
@@ -94,22 +96,39 @@ export default function VoiceSessionDetailPage({
         </p>
       ) : (
         <div className="space-y-3">
-          {turns.map((turn) => (
-            <div
-              key={turn.id}
-              className={turn.speaker === "user" ? "flex justify-end" : "flex justify-start"}
-            >
+          {turns.map((turn) => {
+            const translatable = turn.speaker === "assistant"
+            const open = openIds.has(turn.id)
+            return (
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
-                  turn.speaker === "user"
-                    ? "rounded-br-md bg-primary text-primary-foreground font-medium"
-                    : "rounded-bl-md bg-secondary text-secondary-foreground"
-                }`}
+                key={turn.id}
+                className={turn.speaker === "user" ? "flex justify-end" : "flex justify-start"}
               >
-                {turn.text}
+                <div
+                  onClick={translatable ? () => toggle(turn.id, turn.text) : undefined}
+                  role={translatable ? "button" : undefined}
+                  aria-expanded={translatable ? open : undefined}
+                  aria-label={translatable ? "Ver traducción" : undefined}
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
+                    turn.speaker === "user"
+                      ? "rounded-br-md bg-primary text-primary-foreground font-medium"
+                      : "rounded-bl-md bg-secondary text-secondary-foreground cursor-pointer select-none"
+                  }`}
+                >
+                  {turn.text}
+                  {translatable && open && (
+                    <p className="mt-1.5 border-t border-foreground/10 pt-1.5 text-[13px] leading-snug text-muted-foreground">
+                      {pendingId === turn.id && !translations[turn.id] ? (
+                        <Loader2 className="inline h-3 w-3 animate-spin" />
+                      ) : (
+                        translations[turn.id]
+                      )}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
