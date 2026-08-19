@@ -11,6 +11,21 @@ The app has two modes that work together:
 
 The better you Practice, the more confidently you Speak.
 
+> **Status note (Aug 2026).** The two-mode framing below is the original
+> vision; the shipped app has grown past it. What exists now: **Phrases**
+> (this doc's Speak mode), **Practice** (text chat), **Exercises** (grammar
+> quizzes from teacher PDFs), **Charlar** (hands-free spoken conversation with
+> transcripts, per-session review and a weekly pattern report), and **Grow** —
+> a bounded bilingual-parenting module with daily Rioplatense phrase packs,
+> gap capture, sparring, journal and its own voice mode.
+>
+> The Practice→Speak loop this doc describes turned out to be a tighter cycle
+> than expected: *speak aloud → the session review names your patterns →
+> deep-link into the exercise for that exact rule → the next conversation
+> quietly targets it*. Sections below marked with the original roadmap phases
+> should be read as intent, not as current state. `CLAUDE.md` and
+> `lib/criar/README.md` are the accurate architecture references.
+
 ---
 
 ## The Core Philosophy
