@@ -11,7 +11,7 @@ import { BookOpen, Dumbbell, MessageSquare, Sprout } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CRIAR_FLAG_EVENT, isCriarEnabled } from "@/lib/criar-flag"
 
-const HIDE_ON = ["/app/chat", "/grow/sparring", "/grow/voice"]
+const HIDE_ON = ["/app/chat", "/app/charla", "/grow/sparring", "/grow/voice"]
 
 export function BottomNav() {
   const pathname = usePathname()

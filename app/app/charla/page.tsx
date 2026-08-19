@@ -1,0 +1,276 @@
+"use client"
+
+// Voice conversation for the main app — the same hands-free partner as Grow's
+// Charlar, minus the baby premise: child-free topics only, seeds carry no
+// child, and persistence goes to the main app's voice_* tables. Entered from
+// the Speak screen.
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import Link from "next/link"
+import { History, Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
+import { usePostHog } from "posthog-js/react"
+import { LiveTranscript } from "@/components/voice/live-transcript"
+import { TopicPicker } from "@/components/voice/topic-picker"
+import { VoiceOrb } from "@/components/voice/voice-orb"
+import { voiceTopics } from "@/lib/voice-topics"
+import {
+  CORRECTION_LEVELS,
+  CORRECTION_LEVEL_KEY,
+  DEFAULT_CORRECTION_LEVEL,
+  isCorrectionLevel,
+  KEEP_AWAKE_KEY,
+  MAX_SESSION_SECONDS,
+  SESSION_WARNING_SECONDS,
+  type CorrectionLevel,
+} from "@/lib/voice/config"
+import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/voice/platform"
+import { ensureSpeakSessionAnalysis, speakVoicePersistence } from "@/lib/voice/store"
+import { useMediaSession } from "@/lib/voice/use-media-session"
+import { useVoiceSession } from "@/lib/voice/use-voice-session"
+import { useWakeLock } from "@/lib/voice/use-wake-lock"
+
+const MIC_EXPLAINER_SEEN = "voice_mic_explained"
+const TOPIC_KEY = "voice_topic"
+const DEFAULT_TOPIC = "charla"
+
+// No baby premise on this surface.
+const topics = voiceTopics.filter((t) => !t.requiresChild)
+
+export default function CharlaPage() {
+  const [showExplainer, setShowExplainer] = useState(false)
+  const [keepAwake, setKeepAwake] = useState(false)
+  const [correctionLevel, setCorrectionLevel] = useState<CorrectionLevel>(DEFAULT_CORRECTION_LEVEL)
+  const [topicId, setTopicId] = useState<string>(DEFAULT_TOPIC)
+  const [ready, setReady] = useState(false)
+  const posthog = usePostHog()
+  const startedRef = useRef(false)
+
+  const { state, turns, error, userSpeaking, elapsed, sessionId, start, stop } = useVoiceSession(
+    speakVoicePersistence,
+    "/api/voice/session",
+  )
+
+  useWakeLock(state === "live" && keepAwake)
+  useMediaSession(state === "live", stop)
+
+  useEffect(() => {
+    try {
+      setShowExplainer(localStorage.getItem(MIC_EXPLAINER_SEEN) !== "1")
+      const stored = localStorage.getItem(KEEP_AWAKE_KEY)
+      setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
+      const level = localStorage.getItem(CORRECTION_LEVEL_KEY)
+      if (isCorrectionLevel(level)) setCorrectionLevel(level)
+      const topic = localStorage.getItem(TOPIC_KEY)
+      if (topic && topics.some((t) => t.id === topic)) setTopicId(topic)
+    } catch {
+      setShowExplainer(true)
+      setKeepAwake(defaultKeepScreenAwake())
+    }
+    setReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (state === "live" && !startedRef.current) {
+      startedRef.current = true
+      posthog.capture("charla_voice_session_started")
+    }
+    if (state === "ended" && startedRef.current) {
+      startedRef.current = false
+      posthog.capture("charla_voice_session_ended", { duration_seconds: elapsed, turns: turns.length })
+    }
+    if ((state === "ended" || state === "interrupted") && sessionId) {
+      void ensureSpeakSessionAnalysis(sessionId).catch(() => {})
+    }
+    // elapsed/turns are read at transition time only — not triggers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, posthog, sessionId])
+
+  const pickCorrectionLevel = useCallback((level: CorrectionLevel) => {
+    setCorrectionLevel(level)
+    try {
+      localStorage.setItem(CORRECTION_LEVEL_KEY, level)
+    } catch {}
+  }, [])
+
+  const pickTopic = useCallback((id: string) => {
+    setTopicId(id)
+    try {
+      localStorage.setItem(TOPIC_KEY, id)
+    } catch {}
+  }, [])
+
+  const toggleKeepAwake = useCallback(() => {
+    setKeepAwake((prev) => {
+      const next = !prev
+      try {
+        localStorage.setItem(KEEP_AWAKE_KEY, next ? "1" : "0")
+      } catch {}
+      return next
+    })
+  }, [])
+
+  const handleStart = () => {
+    if (showExplainer) {
+      try {
+        localStorage.setItem(MIC_EXPLAINER_SEEN, "1")
+      } catch {}
+      setShowExplainer(false)
+    }
+    // Child-free seed: empty names select the generic-learner persona
+    // server-side; no packs or captures exist on this surface (yet).
+    void start({
+      childName: "",
+      ageDescription: "",
+      packPhrases: [],
+      captureLessons: [],
+      correctionLevel,
+      topicId,
+    })
+  }
+
+  const nearLimit = useMemo(
+    () => state === "live" && MAX_SESSION_SECONDS - elapsed <= SESSION_WARNING_SECONDS,
+    [state, elapsed],
+  )
+
+  if (!ready) return <div className="min-h-dvh bg-background" />
+
+  return (
+    <div className="fixed inset-0 mx-auto flex max-w-lg flex-col bg-background">
+      <div className="flex-shrink-0 px-4 pt-6">
+        <header className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <h1 className="font-serif text-2xl font-semibold leading-tight text-foreground">
+              Charlar
+            </h1>
+            <p className="mt-0.5 text-xs text-muted-foreground">Sin manos · 5–15 min</p>
+          </div>
+          <div className="flex gap-2 pt-1">
+            <Link
+              href="/app/charla/historial"
+              aria-label="Charlas anteriores"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.98]"
+            >
+              <History className="h-4 w-4" />
+            </Link>
+            <button
+              onClick={toggleKeepAwake}
+              aria-label={keepAwake ? "Dejar que la pantalla se apague" : "Mantener la pantalla encendida"}
+              aria-pressed={keepAwake}
+              className={`flex h-10 w-10 items-center justify-center rounded-full bg-secondary transition-all active:scale-[0.98] ${
+                keepAwake ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Sun className={`h-4 w-4 ${keepAwake ? "fill-current" : ""}`} />
+            </button>
+          </div>
+        </header>
+      </div>
+
+      {(state === "idle" || state === "ended" || state === "error") && (
+        <div className="mx-4 mb-3">
+          <TopicPicker topics={topics} selectedId={topicId} onSelect={pickTopic} />
+        </div>
+      )}
+
+      {(state === "idle" || state === "ended" || state === "error") && (
+        <div className="mx-4 mb-2 flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Corrígeme</span>
+          <div className="flex flex-1 gap-1 rounded-full bg-secondary p-1">
+            {CORRECTION_LEVELS.map((level) => (
+              <button
+                key={level}
+                onClick={() => pickCorrectionLevel(level)}
+                aria-pressed={correctionLevel === level}
+                className={`flex-1 rounded-full py-1.5 text-center text-xs font-medium transition-colors ${
+                  correctionLevel === level
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {showExplainer && state === "idle" && (
+        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-secondary/60 px-4 py-3">
+          <Mic className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+          <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
+            Vamos a usar el micrófono para charlar en voz alta. Tu teléfono te va a pedir permiso
+            una sola vez. Después podés apagar la pantalla y guardarlo en el bolsillo — la
+            conversación sigue.
+          </p>
+        </div>
+      )}
+
+      {state === "interrupted" && (
+        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-amber-500/10 px-4 py-3">
+          <WifiOff className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-500" />
+          <p className="text-sm leading-relaxed text-foreground text-pretty">
+            La conversación se pausó cuando saliste de la pantalla. Lo que hablaste quedó acá abajo
+            — tocá <span className="font-medium">Volver</span> para seguir.
+          </p>
+        </div>
+      )}
+
+      {state === "error" && error && (
+        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-destructive/10 px-4 py-3">
+          {error.kind === "mic-denied" ? (
+            <MicOff className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
+          ) : (
+            <RotateCcw className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
+          )}
+          <div className="text-sm leading-relaxed text-foreground text-pretty">
+            <p>{error.message}</p>
+            {error.kind === "mic-denied" && (
+              <p className="mt-1 text-muted-foreground">{micPermissionHelp()}</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {state === "ended" && sessionId && (
+        <div className="mx-4 mb-2 rounded-xl bg-secondary/60 px-4 py-3 text-sm text-pretty">
+          <p className="text-foreground">Quedó guardada la charla.</p>
+          <Link
+            href={`/app/charla/${sessionId}`}
+            className="font-medium text-primary underline-offset-2 hover:underline"
+          >
+            Ver la conversación completa →
+          </Link>
+        </div>
+      )}
+
+      {nearLimit && (
+        <p className="mx-4 mb-2 text-center text-xs font-medium text-amber-600 dark:text-amber-500">
+          Estamos por cerrar la sesión — ya casi llegamos a los 15 minutos.
+        </p>
+      )}
+
+      <LiveTranscript
+        turns={turns}
+        hint={
+          state === "idle"
+            ? "Elegí un tema, tocá el micrófono y charlá."
+            : state === "connecting" || state === "requesting-mic"
+              ? "Un segundito…"
+              : undefined
+        }
+      />
+
+      <div className="flex-shrink-0 border-t border-border">
+        <VoiceOrb
+          state={state}
+          userSpeaking={userSpeaking}
+          elapsed={elapsed}
+          nearLimit={nearLimit}
+          onStart={handleStart}
+          onStop={stop}
+        />
+      </div>
+    </div>
+  )
+}

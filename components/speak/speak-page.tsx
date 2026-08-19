@@ -1,7 +1,8 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Volume2, Loader2, Check } from "lucide-react"
+import Link from "next/link"
+import { Volume2, Loader2, Check, Mic, ChevronRight } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
 import { RoutineCard } from "@/components/speak/routine-card"
@@ -50,6 +51,23 @@ export function SpeakPage() {
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
       <AppHeader title="Phrases" subtitle="Tap any phrase to hear it aloud" />
+
+      {/* Live voice conversation — hands-free practice with the AI partner */}
+      <Link
+        href="/app/charla"
+        className="mb-4 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50 active:scale-[0.99]"
+      >
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
+          <Mic className="h-5 w-5 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-foreground">Charlar</p>
+          <p className="text-xs text-muted-foreground">
+            Live voice conversation — hands-free, 5–15 min
+          </p>
+        </div>
+        <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+      </Link>
 
       {/* Phrase of the day */}
       <div className="mb-4 rounded-2xl bg-primary p-4 text-primary-foreground">
