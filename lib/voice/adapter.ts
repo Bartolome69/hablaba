@@ -49,6 +49,11 @@ export interface VoiceEngine {
    */
   pause(): void
   resume(): Promise<void>
+  /**
+   * Multiply the partner's output volume (1 = untouched). Provider-neutral:
+   * every voice engine produces output audio. Live-adjustable mid-conversation.
+   */
+  setOutputGain(multiplier: number): void
   /** Idempotent. Safe to call from unmount, from the stop button, and on error. */
   stop(): void
 }

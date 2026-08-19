@@ -8,7 +8,7 @@
 // is the one action you can't undo: reaching for "pause" and hitting "stop"
 // would lose the thread of the conversation.
 
-import { Loader2, Mic, Play, Square } from "lucide-react"
+import { Loader2, Mic, Play, Square, Volume1, Volume2 } from "lucide-react"
 import type { VoiceConnectionState } from "@/lib/voice/types"
 
 const PRIMARY_LABELS: Record<VoiceConnectionState, string> = {
@@ -48,6 +48,8 @@ export function VoiceOrb({
   onPause,
   onResume,
   onStop,
+  outputGain,
+  onCycleGain,
 }: {
   state: VoiceConnectionState
   userSpeaking: boolean
@@ -57,6 +59,8 @@ export function VoiceOrb({
   onPause: () => void
   onResume: () => void
   onStop: () => void
+  outputGain: number
+  onCycleGain: () => void
 }) {
   const live = state === "live"
   const paused = state === "paused"
@@ -91,9 +95,22 @@ export function VoiceOrb({
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Spacer keeps the primary button optically centred when the end
-            button is showing, so its position doesn't shift mid-conversation. */}
-        {inConversation && <div aria-hidden className="h-12 w-12" />}
+        {/* Volume sits opposite the end button — it balances the row so the
+            primary button stays optically centred, and it's adjustable
+            mid-conversation (unlike topic or corrígeme, which are baked in when
+            the session is minted). */}
+        {inConversation && (
+          <button
+            onClick={onCycleGain}
+            aria-label={`Volumen ${outputGain}× — tocá para cambiar`}
+            className="flex h-12 w-12 flex-col items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.97]"
+          >
+            {outputGain > 1 ? <Volume2 className="h-4 w-4" /> : <Volume1 className="h-4 w-4" />}
+            <span className="text-[10px] font-medium tabular-nums leading-none">
+              {outputGain}×
+            </span>
+          </button>
+        )}
 
         <button
           onClick={primaryAction}

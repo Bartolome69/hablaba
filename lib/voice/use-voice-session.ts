@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
-import { MAX_PAUSE_SECONDS, MAX_SESSION_SECONDS } from "./config"
+import { DEFAULT_OUTPUT_GAIN, MAX_PAUSE_SECONDS, MAX_SESSION_SECONDS } from "./config"
 import { suspendsAudioOnBackground } from "./platform"
 import type {
   VoiceConnectionState,
@@ -47,6 +47,9 @@ export interface VoiceSessionController {
   pause: () => void
   resume: () => void
   stop: () => void
+  /** Partner output volume multiplier — live-adjustable mid-conversation. */
+  outputGain: number
+  setOutputGain: (multiplier: number) => void
 }
 
 export function useVoiceSession(
@@ -61,6 +64,9 @@ export function useVoiceSession(
   const [meta, setMeta] = useState<VoiceEngineMeta | null>(null)
 
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [outputGain, setOutputGainState] = useState(DEFAULT_OUTPUT_GAIN)
+  const outputGainRef = useRef(DEFAULT_OUTPUT_GAIN)
+  outputGainRef.current = outputGain
 
   const engineRef = useRef<VoiceEngine | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -123,6 +129,11 @@ export function useVoiceSession(
     setUserSpeaking(false)
     setState((prev) => (prev === "error" ? prev : "ended"))
   }, [teardown, persistSessionEnd])
+
+  const setOutputGain = useCallback((multiplier: number) => {
+    setOutputGainState(multiplier)
+    engineRef.current?.setOutputGain(multiplier)
+  }, [])
 
   const pause = useCallback(() => {
     if (stateRef.current !== "live") return
@@ -215,6 +226,7 @@ export function useVoiceSession(
     })
 
     engineRef.current = engine
+    engine.setOutputGain(outputGainRef.current)
     setState("connecting")
     await engine.start({ audioElement: audio, seedContext, sessionEndpoint: endpointRef.current })
   }, [teardown])
@@ -273,5 +285,19 @@ export function useVoiceSession(
     [turnMap],
   )
 
-  return { state, turns, error, userSpeaking, elapsed, meta, sessionId, start, pause, resume, stop }
+  return {
+    state,
+    turns,
+    error,
+    userSpeaking,
+    elapsed,
+    meta,
+    sessionId,
+    start,
+    pause,
+    resume,
+    stop,
+    outputGain,
+    setOutputGain,
+  }
 }

@@ -54,6 +54,14 @@ class OpenAIRealtimeEngine implements VoiceEngine {
   private micSender: RTCRtpSender | null = null
   private audioElement: HTMLAudioElement | null = null
 
+  // Output boost. Above 1× the partner's audio is routed through WebAudio
+  // (gain → limiter) instead of straight out of the audio element, because on
+  // Android an open mic pushes playback onto the quieter voice-call stream.
+  private remoteStream: MediaStream | null = null
+  private audioCtx: AudioContext | null = null
+  private gainNode: GainNode | null = null
+  private outputGain = 1
+
   /** item_id → turn. Holds partials until they finalise. */
   private turns = new Map<string, VoiceTurn>()
   private nextOrdinal = 0
@@ -139,10 +147,12 @@ class OpenAIRealtimeEngine implements VoiceEngine {
 
     // Partner's voice arrives as a remote track.
     pc.ontrack = (event) => {
-      audioElement.srcObject = event.streams[0] ?? null
+      this.remoteStream = event.streams[0] ?? null
+      audioElement.srcObject = this.remoteStream
       // Autoplay can still be refused; the caller primed this element inside
       // the tap handler, so a rejection here is not fatal to the transcript.
       void audioElement.play().catch(() => {})
+      this.applyOutputGain()
     }
 
     pc.onconnectionstatechange = () => {
@@ -302,6 +312,85 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     this.handlers.onTurn({ ...turn, text: "", final: true })
   }
 
+  setOutputGain(multiplier: number): void {
+    this.outputGain = multiplier
+    if (this.gainNode) this.gainNode.gain.value = multiplier
+    this.applyOutputGain()
+  }
+
+  /**
+   * Build (or tear down) the boost graph: stream → gain → limiter → out.
+   *
+   * The limiter matters — a bare 3× gain on speech clips and sounds worse than
+   * quiet. Chrome will not pull audio from a remote WebRTC stream through
+   * WebAudio unless the stream is also attached to a media element, so the
+   * element stays in place and is muted rather than removed.
+   *
+   * Every failure path falls back to the plain element at normal volume: silence
+   * would be far worse than quiet, and this runs on a device we can't test.
+   */
+  private applyOutputGain() {
+    const audio = this.audioElement
+    if (!audio) return
+
+    if (this.outputGain <= 1 || !this.remoteStream) {
+      this.teardownAudioGraph()
+      audio.muted = false
+      return
+    }
+
+    if (this.gainNode) return // already boosting
+
+    try {
+      const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      if (!Ctx) throw new Error("no AudioContext")
+      const ctx = new Ctx()
+      this.audioCtx = ctx
+
+      const source = ctx.createMediaStreamSource(this.remoteStream)
+      const gain = ctx.createGain()
+      gain.gain.value = this.outputGain
+      const limiter = ctx.createDynamicsCompressor()
+      limiter.threshold.value = -6
+      limiter.knee.value = 0
+      limiter.ratio.value = 20
+      limiter.attack.value = 0.003
+      limiter.release.value = 0.25
+
+      source.connect(gain)
+      gain.connect(limiter)
+      limiter.connect(ctx.destination)
+      this.gainNode = gain
+
+      audio.muted = true
+
+      // A context created outside a gesture can come up suspended. Resume it,
+      // then verify — if it isn't running we'd be handing the parent silence,
+      // so revert to the unboosted element instead.
+      void ctx
+        .resume()
+        .catch(() => {})
+        .then(() => {
+          if (ctx.state !== "running") {
+            console.warn("[realtime] audio boost unavailable, falling back to normal volume")
+            this.teardownAudioGraph()
+            audio.muted = false
+          }
+        })
+    } catch (err) {
+      console.warn("[realtime] audio boost setup failed, using normal volume", err)
+      this.teardownAudioGraph()
+      audio.muted = false
+    }
+  }
+
+  private teardownAudioGraph() {
+    this.gainNode = null
+    const ctx = this.audioCtx
+    this.audioCtx = null
+    void ctx?.close().catch(() => {})
+  }
+
   private send(event: Record<string, unknown>) {
     if (this.channel?.readyState === "open") this.channel.send(JSON.stringify(event))
   }
@@ -402,8 +491,10 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     this.handlers.onClose()
   }
 
-  /** Release hardware and sockets. Safe to call twice. */
+  /** Release hardware, sockets and the audio graph. Safe to call twice. */
   private teardown() {
+    this.teardownAudioGraph()
+    this.remoteStream = null
     this.channel?.close()
     this.channel = null
     this.pc?.close()

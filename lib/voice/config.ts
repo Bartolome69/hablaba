@@ -37,6 +37,27 @@ export const MAX_PAUSE_SECONDS = 10 * 60
  */
 export const TOKEN_TTL_SECONDS = 60
 
+/**
+ * Output volume multipliers for the partner's voice.
+ *
+ * Needed because on Android, holding a mic open routes playback to the
+ * voice-call audio stream, which is quieter than media and has its own volume
+ * slider — she can end up hard to hear with the media volume already maxed.
+ * A boost above 1 runs the audio through WebAudio (gain + limiter); level 1 is
+ * the plain audio element, which is also the fallback if WebAudio misbehaves.
+ */
+export const OUTPUT_GAIN_LEVELS = [1, 2, 3] as const
+
+export const OUTPUT_GAIN_KEY = "voice_output_gain"
+
+/** Default to a boost: the untouched level is measurably too quiet on Android. */
+export const DEFAULT_OUTPUT_GAIN = 2
+
+export function nextOutputGain(current: number): number {
+  const i = OUTPUT_GAIN_LEVELS.indexOf(current as (typeof OUTPUT_GAIN_LEVELS)[number])
+  return OUTPUT_GAIN_LEVELS[(i + 1) % OUTPUT_GAIN_LEVELS.length]
+}
+
 /** How much the parent wants to be pulled up on mistakes. */
 export type CorrectionLevel = "mucho" | "normal" | "poco"
 

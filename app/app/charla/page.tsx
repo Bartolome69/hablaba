@@ -20,6 +20,8 @@ import {
   isCorrectionLevel,
   KEEP_AWAKE_KEY,
   MAX_SESSION_SECONDS,
+  nextOutputGain,
+  OUTPUT_GAIN_KEY,
   SESSION_WARNING_SECONDS,
   type CorrectionLevel,
 } from "@/lib/voice/config"
@@ -45,7 +47,7 @@ export default function CharlaPage() {
   const posthog = usePostHog()
   const startedRef = useRef(false)
 
-  const { state, turns, error, userSpeaking, elapsed, sessionId, start, pause, resume, stop } = useVoiceSession(
+  const { state, turns, error, userSpeaking, elapsed, sessionId, start, pause, resume, stop, outputGain, setOutputGain } = useVoiceSession(
     speakVoicePersistence,
     "/api/voice/session",
   )
@@ -66,6 +68,8 @@ export default function CharlaPage() {
       setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
       const level = localStorage.getItem(CORRECTION_LEVEL_KEY)
       if (isCorrectionLevel(level)) setCorrectionLevel(level)
+      const gain = Number(localStorage.getItem(OUTPUT_GAIN_KEY))
+      if (Number.isFinite(gain) && gain >= 1) setOutputGain(gain)
       const topic = localStorage.getItem(TOPIC_KEY)
       if (topic && topics.some((t) => t.id === topic)) setTopicId(topic)
     } catch {
@@ -104,6 +108,14 @@ export default function CharlaPage() {
       localStorage.setItem(TOPIC_KEY, id)
     } catch {}
   }, [])
+
+  const cycleGain = useCallback(() => {
+    const next = nextOutputGain(outputGain)
+    setOutputGain(next)
+    try {
+      localStorage.setItem(OUTPUT_GAIN_KEY, String(next))
+    } catch {}
+  }, [outputGain, setOutputGain])
 
   const toggleKeepAwake = useCallback(() => {
     setKeepAwake((prev) => {
@@ -277,6 +289,8 @@ export default function CharlaPage() {
           onPause={pause}
           onResume={resume}
           onStop={stop}
+          outputGain={outputGain}
+          onCycleGain={cycleGain}
         />
       </div>
     </div>
