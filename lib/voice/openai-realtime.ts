@@ -1,7 +1,8 @@
 // OpenAI Realtime over WebRTC — the ONLY file in the module that knows about
 // WebRTC, OpenAI event names, or SDP. Everything else talks to `VoiceEngine`.
 //
-// Flow: our server mints a short-lived client secret (`/api/criar/voice/session`),
+// Flow: our server mints a short-lived client secret (the caller says which
+// endpoint — each surface has its own instructions built server-side there),
 // the browser opens a peer connection with the mic as the outbound track, POSTs
 // its SDP offer to OpenAI with that secret, and gets an answer back. Audio then
 // flows peer-to-peer; JSON events flow over the `oai-events` data channel.
@@ -42,7 +43,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
 
   constructor(private handlers: VoiceEngineHandlers) {}
 
-  async start({ audioElement, seedContext }: VoiceEngineStartOptions): Promise<void> {
+  async start({ audioElement, seedContext, sessionEndpoint }: VoiceEngineStartOptions): Promise<void> {
     if (typeof RTCPeerConnection === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       this.handlers.onError({
         kind: "unsupported",
@@ -83,7 +84,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     // 2. Ephemeral credential from our own server.
     let session: MintedSession
     try {
-      session = await this.mintSession(seedContext)
+      session = await this.mintSession(sessionEndpoint, seedContext)
     } catch (err) {
       this.handlers.onError({
         kind: "token",
@@ -108,8 +109,8 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     }
   }
 
-  private async mintSession(seedContext: VoiceSeedContext): Promise<MintedSession> {
-    const res = await fetch("/api/criar/voice/session", {
+  private async mintSession(endpoint: string, seedContext: VoiceSeedContext): Promise<MintedSession> {
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(seedContext),

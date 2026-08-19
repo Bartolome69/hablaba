@@ -3,13 +3,12 @@
 // Voice session state. Deliberately the same shape as `use-sparring.ts` — plain
 // hooks and refs, no state library — so the two feel like siblings.
 //
-// This hook is engine-agnostic: it holds a `VoiceEngine` and never imports
-// anything OpenAI-specific. The factory below is the single line that changes
-// when we trial ElevenLabs.
+// Engine-agnostic AND surface-agnostic: it holds a `VoiceEngine` (the factory
+// below is the single line that changes when we trial ElevenLabs) and writes
+// through a `VoicePersistence` adapter, so Grow binds it to the criar_* tables
+// and Speak to its own — the hook never knows whose transcript this is.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import type { CriarChild } from "../types"
-import { addVoiceSession, endVoiceSession, saveVoiceTurn } from "../store"
 import type { VoiceEngine, VoiceEngineFactory } from "./adapter"
 import { createOpenAIRealtimeEngine } from "./openai-realtime"
 import { MAX_SESSION_SECONDS } from "./config"
@@ -19,10 +18,19 @@ import type {
   VoiceEngineMeta,
   VoiceError,
   VoiceSeedContext,
+  VoiceSessionRecord,
   VoiceTurn,
+  VoiceTurnRecord,
 } from "./types"
 
 const engineFactory: VoiceEngineFactory = createOpenAIRealtimeEngine
+
+/** How a surface stores its sessions. All writes are synchronous (localStorage). */
+export interface VoicePersistence {
+  createSession(session: VoiceSessionRecord): void
+  saveTurn(turn: VoiceTurnRecord): void
+  endSession(id: string, endedAt: string, durationSeconds: number): void
+}
 
 export interface VoiceSessionController {
   state: VoiceConnectionState
@@ -38,7 +46,10 @@ export interface VoiceSessionController {
   stop: () => void
 }
 
-export function useVoiceSession(child: CriarChild | null): VoiceSessionController {
+export function useVoiceSession(
+  persistence: VoicePersistence | null,
+  sessionEndpoint: string,
+): VoiceSessionController {
   const [state, setState] = useState<VoiceConnectionState>("idle")
   const [turnMap, setTurnMap] = useState<Record<string, VoiceTurn>>({})
   const [error, setError] = useState<VoiceError | null>(null)
@@ -60,14 +71,16 @@ export function useVoiceSession(child: CriarChild | null): VoiceSessionControlle
   const sessionStartedAtRef = useRef<number>(0)
   const liveTurnsRef = useRef<Record<string, VoiceTurn>>({})
   const writtenTurnIdsRef = useRef<Set<string>>(new Set())
-  const childRef = useRef(child)
-  childRef.current = child
+  const persistenceRef = useRef(persistence)
+  persistenceRef.current = persistence
+  const endpointRef = useRef(sessionEndpoint)
+  endpointRef.current = sessionEndpoint
 
   const persistTurn = useCallback((turn: VoiceTurn) => {
     const sid = sessionIdRef.current
     if (!sid || !turn.text.trim() || writtenTurnIdsRef.current.has(turn.id)) return
     writtenTurnIdsRef.current.add(turn.id)
-    saveVoiceTurn({
+    persistenceRef.current?.saveTurn({
       id: turn.id,
       sessionId: sid,
       speaker: turn.speaker,
@@ -82,7 +95,7 @@ export function useVoiceSession(child: CriarChild | null): VoiceSessionControlle
     const sid = sessionIdRef.current
     if (!sid) return
     for (const turn of Object.values(liveTurnsRef.current)) persistTurn(turn)
-    endVoiceSession(
+    persistenceRef.current?.endSession(
       sid,
       new Date().toISOString(),
       Math.round((Date.now() - sessionStartedAtRef.current) / 1000),
@@ -152,15 +165,13 @@ export function useVoiceSession(child: CriarChild | null): VoiceSessionControlle
         setMeta(engineMeta)
         // The session row exists from the moment the conversation is live —
         // its turns attach to it as they finalise.
-        const currentChild = childRef.current
-        if (currentChild) {
+        if (persistenceRef.current) {
           const id = crypto.randomUUID()
           sessionIdRef.current = id
           sessionStartedAtRef.current = Date.now()
           setSessionId(id)
-          addVoiceSession({
+          persistenceRef.current.createSession({
             id,
-            childId: currentChild.id,
             startedAt: new Date().toISOString(),
             endedAt: null,
             durationSeconds: null,
@@ -186,7 +197,7 @@ export function useVoiceSession(child: CriarChild | null): VoiceSessionControlle
 
     engineRef.current = engine
     setState("connecting")
-    await engine.start({ audioElement: audio, seedContext })
+    await engine.start({ audioElement: audio, seedContext, sessionEndpoint: endpointRef.current })
   }, [teardown])
 
   // Elapsed timer + the hard cost cap. Counts only while actually live.

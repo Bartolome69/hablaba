@@ -1,7 +1,7 @@
 "use client"
 
-// Client side of the post-session analysis. Stateless server, client-owned
-// persistence — the same shape as every other LLM feature in the module.
+// Grow's side of the post-session analysis: orchestrates the shared
+// /api/analyze call (lib/voice/analysis.ts) around the criar_* store.
 //
 // Called twice by design: fire-and-forget from the voice screen when a session
 // ends, and lazily from the session detail view if the observations aren't
@@ -18,15 +18,8 @@ import {
   markVoiceSessionAnalyzed,
   saveVoiceObservations,
 } from "../store"
-import type { CriarVoiceObservation, CriarVoiceObservationType } from "./types"
-
-interface AnalyzeResponse {
-  observations: {
-    turnId: string | null
-    type: CriarVoiceObservationType
-    detail: CriarVoiceObservation["detail"]
-  }[]
-}
+import { requestTranscriptAnalysis } from "@/lib/voice/analysis"
+import type { CriarVoiceObservation } from "./types"
 
 /**
  * Returns the session's observations, running the analysis first if it hasn't
@@ -44,22 +37,9 @@ export async function ensureSessionAnalysis(sessionId: string): Promise<CriarVoi
     return []
   }
 
-  const res = await fetch("/api/analyze", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      turns: turns.map((t) => ({ id: t.id, speaker: t.speaker, text: t.text, ordinal: t.ordinal })),
-      seedContext: {
-        packPhrases: session.seedContext.packPhrases,
-        captureLessons: session.seedContext.captureLessons,
-      },
-    }),
-  })
-  if (!res.ok) throw new Error(`Analyze API error: ${res.status}`)
-
-  const data = (await res.json()) as AnalyzeResponse
+  const analyzed = await requestTranscriptAnalysis(turns, session.seedContext)
   const now = new Date().toISOString()
-  const observations: CriarVoiceObservation[] = (data.observations ?? []).map((o) => ({
+  const observations: CriarVoiceObservation[] = analyzed.map((o) => ({
     id: crypto.randomUUID(),
     sessionId,
     turnId: o.turnId,

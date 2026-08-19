@@ -29,10 +29,15 @@ export interface VoiceEngineStartOptions {
   audioElement: HTMLAudioElement
   /**
    * Curriculum + correction preference for this conversation. Provider-neutral:
-   * each engine forwards it to its own session-mint endpoint, where the
-   * provider-specific instructions are built server-side.
+   * the engine forwards it to the mint endpoint, where the provider-specific
+   * instructions are built server-side.
    */
   seedContext: VoiceSeedContext
+  /**
+   * Which server route mints this surface's session (e.g. "/api/voice/session").
+   * The route owns the persona/instructions; the engine just POSTs the seed.
+   */
+  sessionEndpoint: string
 }
 
 export interface VoiceEngine {

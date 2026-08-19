@@ -8,7 +8,8 @@
 import { use, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Loader2 } from "lucide-react"
-import { SessionReview } from "@/components/criar/voice/session-review"
+import { SessionReview } from "@/components/voice/session-review"
+import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
 import { useTurnTranslations } from "@/hooks/use-turn-translations"
 import type { CriarVoiceSession, CriarVoiceTurn } from "@/lib/criar/voice/types"
 import { getVoiceSession, listVoiceTurns } from "@/lib/criar/store"
@@ -88,7 +89,7 @@ export default function VoiceSessionDetailPage({
         </div>
       </div>
 
-      {turns.some((t) => t.speaker === "user") && <SessionReview sessionId={session.id} />}
+      {turns.some((t) => t.speaker === "user") && <SessionReview sessionId={session.id} analyze={ensureSessionAnalysis} />}
 
       {turns.length === 0 ? (
         <p className="text-sm text-muted-foreground text-pretty">

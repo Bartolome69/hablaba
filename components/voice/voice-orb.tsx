@@ -4,7 +4,7 @@
 // held one-handed over a pram — everything else on the screen is read-only.
 
 import { Loader2, Mic, Square } from "lucide-react"
-import type { VoiceConnectionState } from "@/lib/criar/voice/types"
+import type { VoiceConnectionState } from "@/lib/voice/types"
 
 const LABELS: Record<VoiceConnectionState, string> = {
   idle: "Empezar",

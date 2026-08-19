@@ -165,8 +165,11 @@ export function buildVoiceInstructions({
   // the persona (register, elicitation, corrections, code-switching) applies
   // to the character too — the mozo also recasts mistakes warmly.
   const persona = topic.personaPrompt
-    ? `${topic.personaPrompt} The learner is a B1 Spanish learner (a parent, often out walking with their baby's pram — hands-free, spoken conversation). If they get genuinely lost, step briefly out of character with one short hint in Spanish, then return to the scene.`
-    : `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner.`
+    ? `${topic.personaPrompt} The learner is a B1 Spanish learner (often hands-free, out walking — spoken conversation). If they get genuinely lost, step briefly out of character with one short hint in Spanish, then return to the scene.`
+    : context.childName
+      ? `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner.`
+      : // Child-free surfaces (Speak's voice mode) get the same partner, no baby premise.
+        `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a B1 Spanish learner going about their day.`
 
   return `${persona}
 

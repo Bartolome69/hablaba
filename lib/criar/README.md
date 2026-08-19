@@ -17,7 +17,7 @@ Don't silently "finish the job" and rename the internals — ask first.
 | Path | Purpose |
 | --- | --- |
 | `app/grow/` | Routes: home (daily pack + capture), `sparring/`, `journal/`, `voice/`. `/criar/*` 301-redirects here (`next.config.mjs`) |
-| `app/api/criar/` | Stateless LLM routes: `pack/` (daily pack generation), `sparring/` (conversation), `voice/session/` (mints Realtime tokens) |
+| `app/api/criar/` | Stateless LLM routes: `pack/` (daily pack generation), `sparring/` (conversation) |
 | `components/criar/` | All Grow UI components (`voice/` for voice mode) |
 | `lib/criar/` | Types, store, stage logic, prompts, seed, this README (`voice/` for voice mode) |
 
@@ -27,17 +27,22 @@ Hands-free spoken conversation — a sibling of sparring for a parent pushing a
 pram. Listed as "Charlar" in `GrowSectionNav` alongside Today/Catch up/Journal
 (still behind the module's own `criar_enabled` gate, same as the rest of Grow).
 
-The engine sits behind an adapter so the provider is swappable:
+The engine is **shared code** (`lib/voice/`, `components/voice/`) because
+voice mode also serves Speak; Grow keeps only its bindings here:
 
-- `lib/criar/voice/adapter.ts` — the `VoiceEngine` interface. Provider-neutral.
-- `lib/criar/voice/openai-realtime.ts` — **the only file that knows about
-  WebRTC or OpenAI event names.** Trialling ElevenLabs Conversational AI for a
-  better Argentine voice means adding a sibling implementation and changing the
-  factory in `use-voice-session.ts`.
-- `lib/criar/voice/types.ts` — what everything else imports. Keep it free of
-  engine vocabulary; the transcript, store and analysis layers depend on it.
+- `lib/voice/adapter.ts` — the `VoiceEngine` interface. Provider-neutral.
+- `lib/voice/openai-realtime.ts` — **the only file that knows about WebRTC or
+  OpenAI event names.** Trialling ElevenLabs Conversational AI for a better
+  Argentine voice means adding a sibling implementation and changing the
+  factory in `lib/voice/use-voice-session.ts`.
+- `lib/voice/use-voice-session.ts` — surface-agnostic session state; writes
+  through a `VoicePersistence` adapter and mints via a caller-chosen endpoint.
+- `lib/criar/voice/` — Grow's bindings only: `types.ts` (adds `childId` to the
+  shared records for the criar_* tables), `persistence.ts`, `analysis.ts`
+  (store orchestration around the shared `/api/analyze` call), `weekly.ts`.
 
-`OPENAI_API_KEY` never reaches the browser: `/api/criar/voice/session` mints a
+`OPENAI_API_KEY` never reaches the browser: `/api/voice/session` (root — it
+serves every voice surface and imports this module's prompt builder) mints a
 60-second ephemeral client secret and the browser does the SDP exchange with
 OpenAI directly. Session length is capped client-side (`MAX_SESSION_SECONDS`,
 15 min) as the cost guardrail — the credential's TTL can't do it, because a

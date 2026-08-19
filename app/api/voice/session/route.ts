@@ -2,10 +2,12 @@ import { NextResponse } from "next/server"
 import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
 import { buildVoiceInstructions, type VoiceCorrectionLevel } from "@/lib/criar/prompts"
-import { TOKEN_TTL_SECONDS, isCorrectionLevel } from "@/lib/criar/voice/config"
-import type { VoiceSeedContext } from "@/lib/criar/voice/types"
+import { TOKEN_TTL_SECONDS, isCorrectionLevel } from "@/lib/voice/config"
+import type { VoiceSeedContext } from "@/lib/voice/types"
 
-// Mints a short-lived OpenAI Realtime client secret for the browser.
+// Mints a short-lived OpenAI Realtime client secret for the browser. Root
+// route (not /api/criar/) because it now serves every voice surface AND it
+// imports the Grow prompt builder — a shared route may import both sides.
 //
 // Why this route exists at all: the browser needs to speak WebRTC directly to
 // OpenAI, but must never see OPENAI_API_KEY. It gets an `ek_…` secret instead,
@@ -43,9 +45,11 @@ export async function POST(req: Request) {
 
     const instructions = buildVoiceInstructions({
       context: {
-        childName: (typeof body.childName === "string" && body.childName.trim()) || "el bebé",
+        // Empty childName = a child-free surface (Speak) — the builder swaps
+        // to the generic-learner persona rather than inventing a baby.
+        childName: typeof body.childName === "string" ? body.childName.trim() : "",
         ageDescription:
-          (typeof body.ageDescription === "string" && body.ageDescription.trim()) || "a few months",
+          typeof body.ageDescription === "string" ? body.ageDescription.trim() : "",
         packPhrases: (Array.isArray(body.packPhrases) ? body.packPhrases : [])
           .filter((p): p is string => typeof p === "string")
           .slice(0, 40),

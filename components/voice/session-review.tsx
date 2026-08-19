@@ -6,21 +6,24 @@
 //
 // Grammar observations carry an exercises-taxonomy topic id in detail.tag, so
 // they link straight into practice (/app/exercises?topic=<tag>). URL string
-// only — the Grow module never imports exercises code.
+// only — module code never imports exercises code.
+//
+// Surface-agnostic: the caller passes its own `analyze` (Grow's reads the
+// criar_* store; Speak's reads lib/voice/store.ts), so this component never
+// knows whose session it's reviewing.
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowRight, Loader2, MessageCircleHeart, RotateCcw, Sparkles } from "lucide-react"
-import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
 import {
   isPracticeableTag,
-  type CriarVoiceObservation,
-  type CriarVoiceObservationType,
-} from "@/lib/criar/voice/types"
+  type VoiceObservationRecord,
+  type VoiceObservationType,
+} from "@/lib/voice/types"
 
 const MAX_SHOWN = 5
 
-const TYPE_LABELS: Record<CriarVoiceObservationType, string> = {
+const TYPE_LABELS: Record<VoiceObservationType, string> = {
   target_phrase_used: "¡Lo usaste!",
   error_grammar: "Un ajuste",
   avoidance: "Un desafío",
@@ -30,7 +33,7 @@ const TYPE_LABELS: Record<CriarVoiceObservationType, string> = {
 }
 
 // Celebrations first, then the work, then variety notes.
-const TYPE_ORDER: CriarVoiceObservationType[] = [
+const TYPE_ORDER: VoiceObservationType[] = [
   "target_phrase_used",
   "error_grammar",
   "avoidance",
@@ -41,19 +44,26 @@ const TYPE_ORDER: CriarVoiceObservationType[] = [
 
 type Status = "loading" | "ready" | "error"
 
-export function SessionReview({ sessionId }: { sessionId: string }) {
+export function SessionReview({
+  sessionId,
+  analyze,
+}: {
+  sessionId: string
+  /** The surface's ensure-analysis function — runs it lazily if needed. */
+  analyze: (sessionId: string) => Promise<VoiceObservationRecord[]>
+}) {
   const [status, setStatus] = useState<Status>("loading")
-  const [observations, setObservations] = useState<CriarVoiceObservation[]>([])
+  const [observations, setObservations] = useState<VoiceObservationRecord[]>([])
 
   const run = useCallback(() => {
     setStatus("loading")
-    ensureSessionAnalysis(sessionId)
+    analyze(sessionId)
       .then((obs) => {
         setObservations(obs)
         setStatus("ready")
       })
       .catch(() => setStatus("error"))
-  }, [sessionId])
+  }, [sessionId, analyze])
 
   useEffect(() => run(), [run])
 

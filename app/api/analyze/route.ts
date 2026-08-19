@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
 import { topics } from "@/lib/exercises/taxonomy"
-import { VOICE_ONLY_TAGS, type CriarVoiceObservationType } from "@/lib/criar/voice/types"
+import { VOICE_ONLY_TAGS, type VoiceObservationType } from "@/lib/voice/types"
 
 // Post-session transcript analysis: transcript in, tagged observations out.
 // Stateless like every LLM route here — the client owns persistence.
@@ -34,7 +34,7 @@ const MAX_OBSERVATIONS = 8
 const MAX_TURNS = 200
 const MAX_TURN_CHARS = 600
 
-const OBSERVATION_TYPES: CriarVoiceObservationType[] = [
+const OBSERVATION_TYPES: VoiceObservationType[] = [
   "error_grammar",
   "avoidance",
   "repetition",
@@ -63,7 +63,7 @@ interface AnalyzeRequest {
 
 export interface AnalyzeObservation {
   turnId: string | null
-  type: CriarVoiceObservationType
+  type: VoiceObservationType
   detail: { original?: string; corrected?: string; note?: string; tag?: string }
 }
 
@@ -142,7 +142,7 @@ async function runAnalysisModel(system: string, userPayload: string): Promise<An
   const parsed = JSON.parse(raw) as {
     observations: {
       turnId: string | null
-      type: CriarVoiceObservationType
+      type: VoiceObservationType
       original: string | null
       corrected: string | null
       note: string

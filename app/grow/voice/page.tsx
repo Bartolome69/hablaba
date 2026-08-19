@@ -12,13 +12,14 @@ import Link from "next/link"
 import { History, Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CriarHeader } from "@/components/criar/criar-header"
-import { LiveTranscript } from "@/components/criar/voice/live-transcript"
-import { VoiceOrb } from "@/components/criar/voice/voice-orb"
+import { LiveTranscript } from "@/components/voice/live-transcript"
+import { VoiceOrb } from "@/components/voice/voice-orb"
 import { TopicPicker } from "@/components/voice/topic-picker"
 import { DEFAULT_VOICE_TOPIC_ID, voiceTopics } from "@/lib/voice-topics"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { assembleFocusAreas, assembleSessionContext } from "@/lib/criar/session-context"
 import { ensureSessionAnalysis } from "@/lib/criar/voice/analysis"
+import { criarVoicePersistence } from "@/lib/criar/voice/persistence"
 import type { CriarChild } from "@/lib/criar/types"
 import {
   CORRECTION_LEVELS,
@@ -29,11 +30,11 @@ import {
   MAX_SESSION_SECONDS,
   SESSION_WARNING_SECONDS,
   type CorrectionLevel,
-} from "@/lib/criar/voice/config"
-import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/criar/voice/platform"
-import { useMediaSession } from "@/lib/criar/voice/use-media-session"
-import { useVoiceSession } from "@/lib/criar/voice/use-voice-session"
-import { useWakeLock } from "@/lib/criar/voice/use-wake-lock"
+} from "@/lib/voice/config"
+import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/voice/platform"
+import { useMediaSession } from "@/lib/voice/use-media-session"
+import { useVoiceSession } from "@/lib/voice/use-voice-session"
+import { useWakeLock } from "@/lib/voice/use-wake-lock"
 
 const MIC_EXPLAINER_SEEN = "criar_voice_mic_explained"
 const TOPIC_KEY = "criar_voice_topic"
@@ -48,7 +49,7 @@ export default function VoicePage() {
   const startedRef = useRef(false)
 
   const { state, turns, error, userSpeaking, elapsed, sessionId, start, stop } =
-    useVoiceSession(child)
+    useVoiceSession(criarVoicePersistence(child), "/api/voice/session")
 
   useWakeLock(state === "live" && keepAwake)
 

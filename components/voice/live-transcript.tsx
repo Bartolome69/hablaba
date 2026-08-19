@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ArrowDown, Loader2 } from "lucide-react"
 import { useTurnTranslations } from "@/hooks/use-turn-translations"
-import type { VoiceTurn } from "@/lib/criar/voice/types"
+import type { VoiceTurn } from "@/lib/voice/types"
 
 const NEAR_BOTTOM_PX = 48
 
