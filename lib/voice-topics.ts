@@ -29,6 +29,14 @@ export interface VoiceTopic {
   practises: string[]
   /** Only offered where a child is in context (i.e. inside Grow). */
   requiresChild?: boolean
+  /**
+   * Roleplay only: replaces the partner's DEFAULT PERSONA with a character
+   * for the scene. Everything else (register, corrections-by-recast, short
+   * turns, patience with half-built sentences) stays in force. Chips for
+   * these are labelled "Rol:" so slipping into a scene is always a choice —
+   * never a surprise swap of the partner the user knows.
+   */
+  personaPrompt?: string
 }
 
 export const voiceTopics: VoiceTopic[] = [
@@ -86,6 +94,28 @@ export const voiceTopics: VoiceTopic[] = [
     prompt:
       "YOU pick the topic. Choose something specific and a bit unexpected that a parent in Buenos Aires would have something to say about — a neighbourhood argument, a food opinion, a small daily annoyance, a memory, a what-would-you-do. Commit to it: open with the topic already chosen rather than asking what they want to talk about.",
     practises: [],
+  },
+  {
+    id: "rol-cafe",
+    label: "Rol: café",
+    emoji: "🎭",
+    blurb: "Vos pedís, yo soy el mozo",
+    prompt:
+      "Run the café scene from start to finish: greet them, take the order, and keep the visit alive with realistic beats — a question about how they want the coffee, something that's run out (no hay medialunas today, offer an alternative), bringing the bill, taking payment. If they finish fast, extend naturally: recommend something, ask if they want anything else. Keep the customer talking.",
+    practises: ["direct-object-pronouns", "conditional"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are a friendly porteño waiter (mozo) in a Buenos Aires café, and the learner is your customer. Stay in character for the whole scene.",
+  },
+  {
+    id: "rol-verduleria",
+    label: "Rol: verdulería",
+    emoji: "🎭",
+    blurb: "Comprá fruta y verdura",
+    prompt:
+      "Run the shop scene: greet them, ask what they need, weigh things, quote prices, suggest what's good today (está de estación), handle quantities (un kilo, medio kilo, una docena), give a total, take payment and say goodbye warmly. Push gently on quantities and prices so numbers get real practice. If they finish fast, tell them what's coming in nice next week.",
+    practises: ["direct-object-pronouns", "comparatives"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are the chatty owner of a Buenos Aires verdulería, and the learner is a regular customer doing their shopping. Stay in character for the whole scene.",
   },
 ]
 
