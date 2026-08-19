@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { ChevronRight, Mic } from "lucide-react"
+import { CalendarRange, ChevronRight, Mic } from "lucide-react"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { ensureSeeded } from "@/lib/criar/seed"
 import type { CriarChild } from "@/lib/criar/types"
@@ -64,6 +64,22 @@ export default function VoiceHistoryPage() {
         title="Charlas"
         subtitle="Tus conversaciones guardadas"
       />
+
+      {rows.length > 0 && (
+        <Link
+          href="/grow/voice/semana"
+          className="mb-4 flex items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground transition-all hover:brightness-110 active:scale-[0.99]"
+        >
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-foreground/15">
+            <CalendarRange className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Tu semana</p>
+            <p className="text-xs opacity-80">Patrones, logros y qué practicar</p>
+          </div>
+          <ChevronRight className="h-4 w-4 flex-shrink-0 opacity-80" />
+        </Link>
+      )}
 
       {rows.length === 0 ? (
         <div className="mt-12 flex flex-col items-center gap-3 text-center">
