@@ -44,7 +44,7 @@ nav is **Today / Charlar / Phrases / Exercises**:
 - `/app/charla` — Conversations hub: resume cards (expire after 14 days), starters, history
 - `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
 - `/app/charla/historial` — Every conversation
-- `/app/speak` — Phrases by routine, with audio
+- `/app/speak` — Phrases: capture, the moment pack (a live query over the library), routine browsing with audio
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
 - `/app/practice` and `/app/chat` are **retired** — 301'd to `/app/today` and `/app/charla`. Practice split into Today (the dashboard half) and Charlar (the conversations half); text chat became a conversation thread.
@@ -61,6 +61,7 @@ reintroduce a Grow module or the `criar_` prefix.
 API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/chat` — Sends message + conversation history to OpenAI, returns `{ reply, correction? }`
 - `POST /api/voice/session` — Mints an ephemeral OpenAI Realtime client secret (60s TTL); model/voice/instructions fixed server-side. Serves both voice surfaces.
+- `POST /api/phrases/generate` — Phrase generation: capture mode (real-life gap → the natural phrase, immediately) and moment mode (fill a moment's pack only when the library runs short)
 - `POST /api/analyze` — Conversation transcript in, tagged observations out (imports the exercises taxonomy for tag validation)
 - `POST /api/analyze/weekly` — Weekly-report narrative + taxonomy tag labels
 - `POST /api/translate` — One turn of Spanish → English (tap-to-translate)

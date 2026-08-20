@@ -10,6 +10,7 @@
 // transcriber, not the learner).
 
 import { requestTranscriptAnalysis } from "@/lib/voice/analysis"
+import { markUsedByText } from "@/lib/phrases/store"
 import { getConversation, listObservations, listTurns, markAnalyzed, saveObservations } from "./store"
 import type { ConversationObservation } from "./types"
 
@@ -51,6 +52,15 @@ export async function ensureConversationAnalysis(
   }))
 
   saveObservations(observations)
+
+  // Close the phrase state machine: a confirmed real-world use moves the
+  // matching library phrase practicando → usada. Loose text match by design —
+  // the analysis quotes what was SAID, which rarely equals the phrase verbatim.
+  for (const o of observations) {
+    if (o.type === "target_phrase_used" && o.detail.original) {
+      markUsedByText(o.detail.original)
+    }
+  }
   markAnalyzed(conversationId)
   return observations
 }

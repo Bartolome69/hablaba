@@ -18,7 +18,8 @@ import { ConversationTranscript } from "@/components/conversations/conversation-
 import { SessionReview } from "@/components/voice/session-review"
 import { VoiceOrb } from "@/components/voice/voice-orb"
 import { assembleFocusAreas } from "@/lib/conversations/focus"
-import { addPhrase } from "@/lib/phrases/store"
+import { getConversationSeedPhrases } from "@/lib/phrases/pack"
+import { addPhrase, markSeeded } from "@/lib/phrases/store"
 import { describeAge, getProfile } from "@/lib/profile/store"
 import { ensureConversationAnalysis } from "@/lib/conversations/analysis"
 import { conversationVoicePersistence } from "@/lib/conversations/persistence"
@@ -106,12 +107,21 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
       .slice(-12)
       .map((t) => ({ speaker: t.speaker, text: t.text }))
     const profile = getProfile()
-    posthog.capture("conversation_voice_started", { prior_turns: priorTurns.length })
+    // Seed the working set: she weaves these in, and seeding is the state
+    // transition nueva → practicando.
+    const seedPhrases = getConversationSeedPhrases()
+    markSeeded(seedPhrases.map((p) => p.id))
+    posthog.capture("conversation_voice_started", {
+      prior_turns: priorTurns.length,
+      seed_phrases: seedPhrases.length,
+    })
     void voice.start({
       childName: profile.child?.name ?? "",
       ageDescription: profile.child?.birthdate ? describeAge(profile.child.birthdate) : "",
-      packPhrases: [],
-      captureLessons: [],
+      packPhrases: seedPhrases.map((p) => p.text),
+      captureLessons: seedPhrases
+        .filter((p) => p.source === "captured")
+        .map((p) => ({ request: p.translation, spanish: p.text })),
       correctionLevel: profile.correctionLevel,
       dialect: profile.dialect,
       topicId: conversation.starterId ?? undefined,

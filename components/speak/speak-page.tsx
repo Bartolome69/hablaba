@@ -1,14 +1,17 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Volume2, Loader2, Check, Mic, ChevronRight } from "lucide-react"
+import { Volume2, Loader2, Mic, ChevronRight } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
+import { CaptureCard } from "@/components/phrases/capture-card"
+import { MomentPack } from "@/components/phrases/moment-pack"
 import { RoutineCard } from "@/components/speak/routine-card"
 import { categories, routines } from "@/lib/routines"
 import { useTTS } from "@/hooks/use-tts"
-import { useHeardPhrases } from "@/hooks/use-heard-phrases"
+import { runMigrations } from "@/lib/migrations"
+import { completePendingCaptures } from "@/lib/phrases/pack"
 
 // Flat index of every phrase, used for the progress meter and phrase of the day.
 const allPhrases = routines.flatMap((r) =>
@@ -28,23 +31,26 @@ function dayOfYear(now: Date): number {
 
 export function SpeakPage() {
   const { play, playingId } = useTTS("speak")
-  const { heard, markHeard } = useHeardPhrases()
   const posthog = usePostHog()
   const [selected, setSelected] = useState<string>(categories[0].id)
+  const [packKey, setPackKey] = useState(0)
+
+  // Complete any captures migrated in without their Spanish yet.
+  useEffect(() => {
+    runMigrations()
+    void completePendingCaptures().then((n) => {
+      if (n > 0) setPackKey((k) => k + 1)
+    })
+  }, [])
 
   const visible = routines.filter((r) => r.category === selected)
   const activeCategory = categories.find((c) => c.id === selected) ?? categories[0]
-
-  const heardCount = allPhrases.filter((p) => heard.has(p.id)).length
-  const total = allPhrases.length
-  const pct = total ? Math.round((heardCount / total) * 100) : 0
 
   // Rotates once a day, same for the whole day.
   const phraseOfDay = useMemo(() => allPhrases[dayOfYear(new Date()) % allPhrases.length], [])
   const potdPlaying = playingId === phraseOfDay.id
 
   const handlePlay = (id: string, text: string) => {
-    markHeard(id)
     play(id, text)
   }
 
@@ -90,24 +96,9 @@ export function SpeakPage() {
         </div>
       </div>
 
-      {/* Progress */}
-      <div className="mb-5 rounded-2xl border border-border bg-card p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <p className="text-sm font-medium text-foreground">Your progress</p>
-          <p className="text-xs text-muted-foreground tabular-nums">
-            {heardCount === total && total > 0 ? (
-              <span className="inline-flex items-center gap-1 text-primary">
-                <Check className="h-3.5 w-3.5" /> All heard
-              </span>
-            ) : (
-              `${heardCount} / ${total} heard`
-            )}
-          </p>
-        </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-          <div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} />
-        </div>
-      </div>
+      <CaptureCard onCaptured={() => setPackKey((k) => k + 1)} />
+
+      <MomentPack key={packKey} />
 
       <div className="flex flex-wrap gap-2 mb-4">
         {categories.map((category) => {
@@ -143,7 +134,6 @@ export function SpeakPage() {
             routine={routine}
             playingId={playingId}
             onPlay={handlePlay}
-            heardPhrases={heard}
           />
         ))}
       </div>
