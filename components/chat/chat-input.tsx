@@ -1,50 +1,14 @@
 "use client"
 
+// The text composer. Deliberately has NO dictation mic: the only microphone
+// near this box is the live-conversation button beside it, so a mic can only
+// ever mean one thing. In-app speech-to-text was removed (Aug 2026) — two
+// identical mic icons with different meanings sat side by side, and keyboard
+// dictation (e.g. Wispr Flow) covers typing by voice better anyway.
+
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Mic, Send, Square } from "lucide-react"
-import { useRecorder } from "@/hooks/use-recorder"
-
-const BAR_COUNT = 4
-
-function VoiceLevelBars({ getLevels }: { getLevels: (n: number) => number[] }) {
-  const barsRef = useRef<(HTMLSpanElement | null)[]>([])
-  const smoothedRef = useRef<number[]>(new Array(BAR_COUNT).fill(0))
-
-  useEffect(() => {
-    let raf = 0
-    const tick = () => {
-      const levels = getLevels(BAR_COUNT)
-      const smoothed = smoothedRef.current
-      for (let i = 0; i < BAR_COUNT; i++) {
-        // Quick attack, slow decay so the bars feel alive but don't twitch
-        const target = levels[i] ?? 0
-        smoothed[i] = target > smoothed[i] ? target : smoothed[i] * 0.8 + target * 0.2
-        const el = barsRef.current[i]
-        if (el) {
-          const scale = 0.25 + Math.min(1, smoothed[i] * 1.8) * 0.75
-          el.style.transform = `scaleY(${scale})`
-        }
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [getLevels])
-
-  return (
-    <div className="flex items-center gap-[3px] h-3">
-      {Array.from({ length: BAR_COUNT }).map((_, i) => (
-        <span
-          key={i}
-          ref={(el) => { barsRef.current[i] = el }}
-          className="block w-[3px] h-3 rounded-full bg-destructive origin-center"
-          style={{ transform: "scaleY(0.25)" }}
-        />
-      ))}
-    </div>
-  )
-}
+import { Send } from "lucide-react"
 
 // Common English words that rarely appear in Spanish
 const ENGLISH_STOP_WORDS = new Set([
@@ -109,20 +73,11 @@ export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }:
     }
   }, [onHeightChange])
 
-  const handleTranscript = useCallback((text: string) => {
-    setValue((current) => (current ? `${current} ${text}` : text))
-    setLanguageError(false)
-  }, [])
-
-  const { state: recState, error: recError, start, stop, getLevels } = useRecorder(handleTranscript)
-
-  // Layout effect so the height is right before paint — typing, suggestions,
-  // dictated transcripts and the reset after send all flow through `value`.
-  // `recState` is in here too: recording swaps the textarea out for the level
-  // meter, so the remounted textarea has to be re-measured against its content.
+  // Layout effect so the height is right before paint — typing, suggestions
+  // and the reset after send all flow through `value`.
   useLayoutEffect(() => {
     resize()
-  }, [value, recState, resize])
+  }, [value, resize])
 
   const isTouchRef = useRef(false)
   useEffect(() => {
@@ -156,8 +111,6 @@ export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }:
   }
 
   const hasText = value.trim().length > 0
-  const isRecording = recState === "recording"
-  const isTranscribing = recState === "transcribing"
 
   return (
     <div className="bg-background border-t border-border">
@@ -183,60 +136,37 @@ export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }:
             ¡Por favor escribe en español! (Please write in Spanish)
           </p>
         )}
-        {recError && (
-          <p className="text-xs text-destructive mb-2 px-1">{recError}</p>
-        )}
         <div className="flex items-end gap-2">
-          {isRecording ? (
-            <div className="flex-1 flex items-center gap-3 bg-secondary rounded-full px-4 py-2.5 min-h-11">
-              <VoiceLevelBars getLevels={getLevels} />
-              <span className="text-sm text-muted-foreground">Escuchando…</span>
-            </div>
-          ) : (
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={value}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              onFocus={onFocus}
-              placeholder={isTranscribing ? "Transcribiendo…" : "Escribe en español..."}
-              disabled={isTranscribing}
-              lang="es"
-              autoCorrect="on"
-              autoCapitalize="sentences"
-              spellCheck
-              // 22px keeps a perfect pill at one line and stays softly rounded
-              // as the box grows, so there's no radius pop mid-transition.
-              className={`flex-1 min-w-0 resize-none overflow-hidden bg-secondary rounded-[22px] px-4 py-2.5 text-sm leading-6 outline-none focus:ring-2 transition-[height,box-shadow] duration-150 ease-out disabled:opacity-60 ${
-                languageError
-                  ? "ring-2 ring-destructive/50 focus:ring-destructive/50"
-                  : "focus:ring-primary/20"
-              }`}
-              style={{ height: MIN_INPUT_HEIGHT }}
-            />
-          )}
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onFocus={onFocus}
+            placeholder="Escribe en español..."
+            lang="es"
+            autoCorrect="on"
+            autoCapitalize="sentences"
+            spellCheck
+            // 22px keeps a perfect pill at one line and stays softly rounded
+            // as the box grows, so there's no radius pop mid-transition.
+            className={`flex-1 min-w-0 resize-none overflow-hidden bg-secondary rounded-[22px] px-4 py-2.5 text-sm leading-6 outline-none focus:ring-2 transition-[height,box-shadow] duration-150 ease-out ${
+              languageError
+                ? "ring-2 ring-destructive/50 focus:ring-destructive/50"
+                : "focus:ring-primary/20"
+            }`}
+            style={{ height: MIN_INPUT_HEIGHT }}
+          />
 
-          {hasText && !isRecording ? (
+          {hasText && (
             <Button
               size="icon"
               className="rounded-full flex-shrink-0 h-11 w-11"
               onClick={handleSubmit}
-              disabled={isTranscribing}
               aria-label="Send message"
             >
               <Send className="w-5 h-5" />
-            </Button>
-          ) : (
-            <Button
-              size="icon"
-              variant={isRecording ? "destructive" : "default"}
-              className="rounded-full flex-shrink-0 h-11 w-11"
-              onClick={isRecording ? stop : start}
-              disabled={isTranscribing}
-              aria-label={isRecording ? "Stop recording" : "Start recording"}
-            >
-              {isRecording ? <Square className="w-4 h-4 fill-current" /> : <Mic className="w-5 h-5" />}
             </Button>
           )}
         </div>

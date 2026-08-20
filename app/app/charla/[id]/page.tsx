@@ -10,7 +10,7 @@
 
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Mic, MicOff, RotateCcw, WifiOff } from "lucide-react"
+import { ArrowLeft, AudioLines, MicOff, RotateCcw, WifiOff } from "lucide-react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { ChatInput } from "@/components/chat/chat-input"
@@ -283,12 +283,15 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
                 onFocus={() => bottomRef.current?.scrollIntoView({ behavior: "smooth" })}
               />
             </div>
+            {/* AudioLines, not a mic: a mic reads as "dictate into the text
+                box" (which keyboard dictation covers); the waveform means
+                "switch this thread to a live spoken conversation". */}
             <button
               onClick={startVoice}
               aria-label="Seguir en voz alta"
               className="mb-3 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform active:scale-[0.96]"
             >
-              <Mic className="h-5 w-5" />
+              <AudioLines className="h-5 w-5" />
             </button>
           </div>
         )}
