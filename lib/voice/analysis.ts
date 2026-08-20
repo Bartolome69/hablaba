@@ -7,6 +7,12 @@
 
 import type { VoiceObservationType, VoiceSeedContext, VoiceTurnRecord } from "./types"
 
+/** A turn as the analyzer needs it: text plus how it was produced. */
+export type AnalyzableTurn = Pick<VoiceTurnRecord, "id" | "speaker" | "text" | "ordinal"> & {
+  /** Spoken turns are transcriptions, so their spelling isn't the learner's. */
+  modality?: "text" | "voice"
+}
+
 export interface AnalyzedObservation {
   turnId: string | null
   type: VoiceObservationType
@@ -14,14 +20,20 @@ export interface AnalyzedObservation {
 }
 
 export async function requestTranscriptAnalysis(
-  turns: VoiceTurnRecord[],
+  turns: AnalyzableTurn[],
   seedContext: Pick<VoiceSeedContext, "packPhrases" | "captureLessons">,
 ): Promise<AnalyzedObservation[]> {
   const res = await fetch("/api/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      turns: turns.map((t) => ({ id: t.id, speaker: t.speaker, text: t.text, ordinal: t.ordinal })),
+      turns: turns.map((t) => ({
+        id: t.id,
+        speaker: t.speaker,
+        text: t.text,
+        ordinal: t.ordinal,
+        modality: t.modality ?? "voice",
+      })),
       seedContext: {
         packPhrases: seedContext.packPhrases,
         captureLessons: seedContext.captureLessons,

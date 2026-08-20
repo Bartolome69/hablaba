@@ -49,6 +49,8 @@ interface AnalyzeRequestTurn {
   speaker: "user" | "assistant"
   text: string
   ordinal: number
+  /** Defaults to voice; a thread can mix typed and spoken turns. */
+  modality?: "text" | "voice"
 }
 
 interface AnalyzeRequest {
@@ -68,9 +70,13 @@ export interface AnalyzeObservation {
 function buildSystemPrompt(): string {
   const topicList = topics.map((t) => `- ${t.id}: ${t.title} (${t.blurb})`).join("\n")
 
-  return `You analyze the transcript of a spoken Spanish practice conversation. The learner ("user" turns) is an English-speaking parent at B1 level, learning Argentine Spanish in the tú register (NOT voseo), chatting about daily life with their baby. The "assistant" turns are the AI partner — never analyze those; they are context only.
+  return `You analyze the transcript of a Spanish practice conversation. The learner ("user" turns) is an English-speaking parent at B1 level, learning Argentine Spanish in the tú register (NOT voseo). The "assistant" turns are the AI partner — never analyze those; they are context only.
 
-Produce at most ${MAX_OBSERVATIONS} observations, ordered most useful first. Prefer PATTERNS (something that happened 2+ times) over one-off slips. Speech-to-text quirks (missing punctuation, mis-heard words, fillers) are NOT errors — ignore anything that is plausibly transcription noise rather than the learner's Spanish.
+Each turn is marked SPOKEN or TYPED. That distinction is binding:
+- SPOKEN turns are speech-to-text output. Their spelling is the transcriber's, not the learner's, so NEVER report anything orthographic about them — no missing or wrong accents, no punctuation, no capitalisation, no spelling. Judge only grammar, word choice and structure. Mis-heard words and filler are transcription noise, not errors.
+- TYPED turns were written by the learner, so orthography is fair game — but even there, prefer a substantive grammar or usage point over an accent unless the accent changes the word's meaning or tense (e.g. hablo/habló).
+
+Produce at most ${MAX_OBSERVATIONS} observations, ordered most useful first. Prefer PATTERNS (something that happened 2+ times) over one-off slips.
 
 Observation types:
 - "target_phrase_used": the learner successfully used (even loosely) a phrase from TARGET MATERIAL below. Celebrate these — find them first. detail.original = what they said, detail.tag = "target-phrase".
@@ -185,6 +191,7 @@ export async function POST(req: Request) {
           typeof t.text === "string" &&
           typeof t.ordinal === "number",
       )
+      .map((t) => ({ ...t, modality: t.modality === "text" ? ("text" as const) : ("voice" as const) }))
       .slice(0, MAX_TURNS)
 
     if (!turns.some((t) => t.speaker === "user")) {
@@ -204,7 +211,12 @@ export async function POST(req: Request) {
       .slice(0, 10)
 
     const transcript = turns
-      .map((t) => `[${t.speaker === "user" ? "USER" : "PARTNER"} id=${t.id}] ${t.text.slice(0, MAX_TURN_CHARS)}`)
+      .map(
+        (t) =>
+          `[${t.speaker === "user" ? "USER" : "PARTNER"} ${
+            t.modality === "text" ? "TYPED" : "SPOKEN"
+          } id=${t.id}] ${t.text.slice(0, MAX_TURN_CHARS)}`,
+      )
       .join("\n")
 
     const targetMaterial =
