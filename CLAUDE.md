@@ -65,11 +65,14 @@ version:
   binds its own persistence and analysis. `lib/voice/openai-realtime.ts` is
   the only file allowed to know about WebRTC/OpenAI event names.
 - **One persona app-wide** (decided with Bart): the same warm Argentine
-  partner — Rioplatense-flavoured **tú**, voice `marin` — speaks on BOTH
-  surfaces, even though Speak's written phrase content is neutral LatAm and
-  Grow's packs are tú-with-Argentine-flavour. Do not split the voice persona
-  per surface or flip it to voseo without asking; the change points are
-  `VOICE_REGISTER` and the register blocks in `lib/criar/prompts.ts`.
+  partner — voice `marin` — speaks on BOTH surfaces. Don't split the persona
+  per surface without asking.
+- **Grammar is tú everywhere, full stop.** Voseo is not a mode and there is no
+  register switch — one system for the learner to hold, across written content,
+  text chat and voice alike. **Dialect** is the separate axis: Rioplatense is a
+  *flavour* (vocabulary, warmth, porteño TTS voice) layered on tú grammar,
+  selectable per child/profile. `SpanishDialect` in `lib/criar/prompts.ts` is
+  where a dialect is added; never reintroduce a grammar flag.
 - Post-session analysis (`/api/analyze`) tags observations with
   **exercises-taxonomy topic ids** — the closed vocabulary that makes session
   reviews and the weekly report link into `/app/exercises?topic=…`. Keep tags

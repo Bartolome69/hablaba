@@ -141,7 +141,6 @@ export interface VoiceTurnRecord {
  */
 export type VoiceObservationType =
   | "error_grammar"
-  | "voseo_lapse" // reserved: only meaningful if VOICE_REGISTER flips to voseo
   | "avoidance"
   | "repetition"
   | "code_switch"

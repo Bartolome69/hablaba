@@ -40,8 +40,6 @@ const OBSERVATION_TYPES: VoiceObservationType[] = [
   "repetition",
   "code_switch",
   "target_phrase_used",
-  // "voseo_lapse" is deliberately absent while VOICE_REGISTER is "tu" —
-  // reinstate it in this enum and in the prompt if voice mode flips to voseo.
 ]
 
 const VALID_TAGS = new Set<string>([...topics.map((t) => t.id), ...VOICE_ONLY_TAGS])

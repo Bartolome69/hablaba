@@ -29,7 +29,6 @@ const TYPE_LABELS: Record<VoiceObservationType, string> = {
   avoidance: "Un desafío",
   repetition: "Variedad",
   code_switch: "En criollo",
-  voseo_lapse: "Voseo",
 }
 
 // Celebrations first, then the work, then variety notes.
@@ -39,7 +38,6 @@ const TYPE_ORDER: VoiceObservationType[] = [
   "avoidance",
   "code_switch",
   "repetition",
-  "voseo_lapse",
 ]
 
 type Status = "loading" | "ready" | "error"

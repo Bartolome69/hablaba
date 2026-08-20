@@ -89,26 +89,26 @@ Do not include any text outside the JSON object.`
 // --- Voice mode ---
 
 /**
- * Grammar register for the voice conversation partner.
+ * Grammar is **tú everywhere** in Hablaba — one system for the learner to hold,
+ * across written content, text chat and spoken conversation alike. There is no
+ * register switch: voseo is not a mode, it's out of scope.
  *
- * This constant is the whole switch: written/pack/sparring content stays tú
- * regardless (see the README's register note), and flipping voice mode to
- * voseo is changing this one value — both register blocks below are kept
- * current so the flip needs no rewriting.
+ * Dialect is a separate axis. Rioplatense is a *flavour* — vocabulary, warmth,
+ * and the porteño TTS voice — layered on top of tú grammar, and selectable per
+ * child/profile (`CriarChild.dialect`). Adding a dialect means adding an entry
+ * below, never touching the grammar.
  */
-export type CriarRegister = "tu" | "voseo"
+export type SpanishDialect = "rioplatense" | "neutral"
 
-export const VOICE_REGISTER: CriarRegister = "tu"
+export const DEFAULT_DIALECT: SpanishDialect = "rioplatense"
 
-const REGISTER_BLOCKS: Record<CriarRegister, string> = {
-  tu: `REGISTER. Speak Argentine Spanish using tú (not voseo), matching what the parent is learning across the app, but keep the warm Argentine flavour:
+const TU_GRAMMAR = `REGISTER. Grammar is tú, always:
 - Use tú: "tú tienes", "¿qué haces?", "¿quieres?", "cuéntame", "dime"; tú imperatives "mira", "cuenta", "toma"
-- Do NOT use voseo (never "tenés", "hacés", "contame", "mirá") and NEVER vosotros
-- Keep Argentine vocabulary and warmth: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re"; peninsular words are errors ("vale", "guay", "coger")`,
-  voseo: `REGISTER. Speak natural Rioplatense Argentine Spanish with full voseo:
-- Use vos: "vos tenés", "vos sos", "¿qué hacés?", "¿querés?"; vos imperatives "vení", "mirá", "contame", "dale"
-- NEVER tú forms, NEVER usted (unless genuinely formal), NEVER vosotros
-- Keep Argentine vocabulary and warmth: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re"; peninsular or neutral Latin American forms are errors ("vale", "guay", "coger")`,
+- NEVER voseo ("tenés", "hacés", "contame", "mirá") and NEVER vosotros`
+
+const DIALECT_FLAVOUR: Record<SpanishDialect, string> = {
+  rioplatense: `- Flavour is Argentine: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re". Peninsular words are errors ("vale", "guay", "coger")`,
+  neutral: `- Flavour is neutral Latin American: clear, widely understood vocabulary. Avoid strongly region-marked slang, and peninsular words are errors ("vale", "guay", "coger")`,
 }
 
 /** How much the parent wants correcting — the "corrígeme mucho / normal / poco" setting. */
@@ -127,7 +127,8 @@ export interface VoiceInstructionInput {
   topicId?: string
   /** Last week's weak spots, from the analysis — woven in, never announced. */
   focusAreas?: string[]
-  register?: CriarRegister
+  /** Vocabulary flavour only — grammar is tú regardless. */
+  dialect?: SpanishDialect
 }
 
 export function buildVoiceInstructions({
@@ -135,7 +136,7 @@ export function buildVoiceInstructions({
   correctionLevel,
   topicId,
   focusAreas = [],
-  register = VOICE_REGISTER,
+  dialect = DEFAULT_DIALECT,
 }: VoiceInstructionInput): string {
   const topic = getVoiceTopic(topicId)
 
@@ -162,7 +163,7 @@ export function buildVoiceInstructions({
       : ""
 
   // Roleplay topics swap WHO the partner is for the scene; everything below
-  // the persona (register, elicitation, corrections, code-switching) applies
+  // the persona (grammar, elicitation, corrections, code-switching) applies
   // to the character too — the mozo also recasts mistakes warmly.
   const persona = topic.personaPrompt
     ? `${topic.personaPrompt} The learner is a B1 Spanish learner (often hands-free, out walking — spoken conversation). If they get genuinely lost, step briefly out of character with one short hint in Spanish, then return to the scene.`
@@ -176,7 +177,8 @@ export function buildVoiceInstructions({
 TODAY'S TOPIC — ${topic.label}. ${topic.prompt}
 Stay on this topic unless the parent clearly takes the conversation somewhere else; then follow them. Do not drift back to the baby out of habit if the topic isn't about the baby.
 
-${REGISTER_BLOCKS[register]}
+${TU_GRAMMAR}
+${DIALECT_FLAVOUR[dialect]}
 
 VOICE. You are speech, not text: contractions, natural rhythm, porteño intonation. Never use emojis, lists, or anything that only works written down.
 

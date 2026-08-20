@@ -97,11 +97,11 @@ analyzed". Grammar observation tags are **exercises-taxonomy topic ids**
 deep-link to `/app/exercises?topic=<tag>` and keeps the future weekly report a
 group-by — `listRecentVoiceObservations()` in the store is that report's hook.
 
-Voice mode uses the module's shared **register flag** in `prompts.ts`
-(`VOICE_REGISTER`, currently `"tu"` like the rest of Grow). Both register
-blocks are kept current, so flipping voice mode to voseo is a one-constant
-change that needs no prompt rewriting. **The same persona speaks on every
-voice surface** — Grow's Charlar and the main app's `/app/charla` share the
+**Grammar is tú everywhere** — across packs, sparring and voice alike. Voseo
+is not a mode and there is no register flag; don't reintroduce one. Dialect is
+the separate axis: Rioplatense is a *flavour* (vocabulary, warmth, porteño TTS)
+layered on tú grammar, per child (`CriarChild.dialect`) — see `SpanishDialect`
+in `prompts.ts`. **The same persona speaks on every voice surface** — Grow's Charlar and the main app's `/app/charla` share the
 one warm Argentine partner (Bart's explicit call: one person across the whole
 app, revisit later). Don't give Speak's voice mode a separate
 neutral-LatAm persona without asking. The parent's correction preference
@@ -189,13 +189,12 @@ b. 2026-05-21: bedtime pack + 2 captures) on first visit so the UI is reviewable
 
 ## Register
 
-Grammar is **tú** (not voseo) — a deliberate product call so the parent isn't
-juggling two systems while learning tú elsewhere in the app. The Argentine
-*flavour* is kept: Argentine baby vocabulary (pañal, chupete, upa, mamadera,
+Grammar is **tú**, app-wide and settled — the parent holds one system, never
+two. The Argentine *flavour* is a separate, per-child dialect axis: Argentine baby vocabulary (pañal, chupete, upa, mamadera,
 cochecito), warmth (dale, che, re, diminutives), peninsular forms still listed
 as errors, and `register=rioplatense` TTS for the porteño (sheísmo) accent. The
-register lives entirely in `lib/criar/prompts.ts` and `lib/criar/seed.ts` — if
-voseo is ever wanted back, that's the only place to change.
+dialect flavour lives in `lib/criar/prompts.ts` (`SpanishDialect`) and
+`lib/criar/seed.ts`. Grammar is not configurable.
 
 ## Out of scope (deliberate)
 
