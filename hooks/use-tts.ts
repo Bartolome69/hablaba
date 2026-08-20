@@ -7,7 +7,7 @@ import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { playAudio, ttsUrl } from "@/lib/audio"
 
 export function useTTS(
-  context: "speak" | "chat" | "criar" = "chat",
+  context: "speak" | "chat" | "today" = "chat",
   opts?: { register?: string },
 ) {
   const register = opts?.register

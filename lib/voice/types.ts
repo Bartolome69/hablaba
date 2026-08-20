@@ -96,6 +96,8 @@ export interface VoiceSeedContext {
    * the partner weaves in without announcing — see assembleFocusAreas().
    */
   focusAreas?: string[]
+  /** Vocabulary flavour from the profile — grammar is tú regardless. */
+  dialect?: "rioplatense" | "neutral"
   /**
    * The thread so far, when speech is taking over from typing mid-conversation.
    * Lets the partner continue what was already being discussed instead of

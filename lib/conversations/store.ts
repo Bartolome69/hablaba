@@ -144,6 +144,27 @@ export function listResumable(now: Date = new Date()): Conversation[] {
 
 // --- turns ---
 
+/**
+ * Idempotent bulk import for migrations: skips a conversation whose id already
+ * exists, so a re-run (flag cleared to redo a migration) can't duplicate.
+ */
+export function importConversation(
+  conversation: Conversation,
+  turns: ConversationTurn[],
+  observations: ConversationObservation[],
+) {
+  const existing = readTable<Conversation>(KEYS.conversations)
+  if (existing.some((c) => c.id === conversation.id)) return
+  writeTable(KEYS.conversations, [conversation, ...existing])
+  writeTable(KEYS.turns, [...readTable<ConversationTurn>(KEYS.turns), ...turns])
+  if (observations.length) {
+    writeTable(KEYS.observations, [
+      ...readTable<ConversationObservation>(KEYS.observations),
+      ...observations,
+    ])
+  }
+}
+
 export function listTurns(conversationId: string): ConversationTurn[] {
   return readTable<ConversationTurn>(KEYS.turns)
     .filter((t) => t.conversationId === conversationId)

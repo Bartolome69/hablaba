@@ -17,7 +17,9 @@ import { ChatInput } from "@/components/chat/chat-input"
 import { ConversationTranscript } from "@/components/conversations/conversation-transcript"
 import { SessionReview } from "@/components/voice/session-review"
 import { VoiceOrb } from "@/components/voice/voice-orb"
-import { useSavedPhrases } from "@/hooks/use-saved-phrases"
+import { assembleFocusAreas } from "@/lib/conversations/focus"
+import { addPhrase } from "@/lib/phrases/store"
+import { describeAge, getProfile } from "@/lib/profile/store"
 import { ensureConversationAnalysis } from "@/lib/conversations/analysis"
 import { conversationVoicePersistence } from "@/lib/conversations/persistence"
 import { getConversation, listTurns } from "@/lib/conversations/store"
@@ -42,7 +44,6 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
   const [outputGainPref, setOutputGainPref] = useState<number | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const posthog = usePostHog()
-  const { savePhrase } = useSavedPhrases()
 
   const { turns, isLoading, sendMessage, reload } = useConversation(
     loaded && conversation ? id : null,
@@ -104,14 +105,17 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
     const priorTurns = listTurns(id)
       .slice(-12)
       .map((t) => ({ speaker: t.speaker, text: t.text }))
+    const profile = getProfile()
     posthog.capture("conversation_voice_started", { prior_turns: priorTurns.length })
     void voice.start({
-      childName: "",
-      ageDescription: "",
+      childName: profile.child?.name ?? "",
+      ageDescription: profile.child?.birthdate ? describeAge(profile.child.birthdate) : "",
       packPhrases: [],
       captureLessons: [],
-      correctionLevel: "normal",
+      correctionLevel: profile.correctionLevel,
+      dialect: profile.dialect,
       topicId: conversation.starterId ?? undefined,
+      focusAreas: assembleFocusAreas(),
       priorTurns,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -218,8 +222,8 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
         {/* The review covers the whole thread, so it sits at the end of it. */}
         <ConversationTranscript
           turns={displayTurns}
-          onSavePhrase={(spanish, english, source) => {
-            savePhrase(spanish, english, source)
+          onSavePhrase={(spanish, english) => {
+            addPhrase({ text: spanish, translation: english, source: "saved" })
             toast.success("Guardada")
           }}
         />

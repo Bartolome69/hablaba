@@ -10,37 +10,38 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowRight, ChevronRight, Mic, Sprout, Volume2 } from "lucide-react"
+import { ArrowRight, CalendarRange, ChevronRight, Mic, Sprout, Volume2 } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { ReviewCard } from "@/components/home/review-card"
-import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import { useTTS } from "@/hooks/use-tts"
-import {
-  countTurns,
-  createConversation,
-  listResumable,
-  migrateLegacyConversations,
-} from "@/lib/conversations/store"
+import { countTurns, createConversation, listResumable } from "@/lib/conversations/store"
 import type { Conversation } from "@/lib/conversations/types"
 import { dailyPrompt } from "@/lib/data"
-import { readTodayHighlights, type TodayHighlights } from "@/lib/today-highlights"
+import { runMigrations } from "@/lib/migrations"
+import { listPhrases } from "@/lib/phrases/store"
+import type { Phrase } from "@/lib/phrases/types"
 import { DEFAULT_VOICE_TOPIC_ID, getVoiceTopic } from "@/lib/voice-topics"
 
 export default function TodayPage() {
   const router = useRouter()
-  const { phrases } = useSavedPhrases()
   const { play, playingId } = useTTS("speak")
   const [resume, setResume] = useState<Conversation | null>(null)
   const [resumeTurns, setResumeTurns] = useState(0)
-  const [highlights, setHighlights] = useState<TodayHighlights | null>(null)
+  const [duePhrases, setDuePhrases] = useState<Phrase[]>([])
+  const [phraseCount, setPhraseCount] = useState(0)
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
-    migrateLegacyConversations()
+    runMigrations()
     const [latest] = listResumable()
     setResume(latest ?? null)
     if (latest) setResumeTurns(countTurns(latest.id))
-    setHighlights(readTodayHighlights())
+    const all = listPhrases().filter((p) => p.text)
+    setPhraseCount(all.length)
+    // Working set first: what you're practising, then what's new.
+    setDuePhrases(
+      [...all.filter((p) => p.state === "practicando"), ...all.filter((p) => p.state === "nueva")].slice(0, 3),
+    )
   }, [])
 
   const startFresh = useCallback(() => {
@@ -109,40 +110,35 @@ export default function TodayPage() {
         <ChevronRight className="h-4 w-4" />
       </Link>
 
-      {/* Published by whichever module has something for today — currently
-          Grow's daily pack. Read through a shared contract, never by importing
-          module code (see lib/today-highlights.ts). */}
-      {highlights && (
+      {/* Phrases due today — straight from the unified library. */}
+      {duePhrases.length > 0 && (
         <section className="mb-8">
           <div className="mb-3 flex items-center justify-between gap-2">
             <h2 className="flex items-center gap-1.5 font-serif text-base text-foreground">
               <Sprout className="h-4 w-4 text-primary" />
-              Frases de hoy
+              Frases para usar hoy
             </h2>
-            <Link href={highlights.href} className="text-xs font-medium text-primary">
+            <Link href="/app/speak" className="text-xs font-medium text-primary">
               Ver todas →
             </Link>
           </div>
-          <p className="mb-2 text-xs capitalize text-muted-foreground">{highlights.title}</p>
           <ul className="space-y-2">
-            {highlights.phrases.map((phrase, i) => (
+            {duePhrases.map((phrase) => (
               <li
-                key={i}
+                key={phrase.id}
                 className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="font-serif text-[15px] leading-snug text-foreground">
-                    {phrase.spanish}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{phrase.english}</p>
+                  <p className="font-serif text-[15px] leading-snug text-foreground">{phrase.text}</p>
+                  <p className="text-xs text-muted-foreground">{phrase.translation}</p>
                 </div>
                 <button
-                  onClick={() => play(`highlight-${i}`, phrase.spanish)}
-                  aria-label={`Escuchar: ${phrase.spanish}`}
+                  onClick={() => play(phrase.id, phrase.text)}
+                  aria-label={`Escuchar: ${phrase.text}`}
                   className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:text-foreground active:scale-95"
                 >
                   <Volume2
-                    className={`h-4 w-4 ${playingId === `highlight-${i}` ? "animate-pulse text-primary" : ""}`}
+                    className={`h-4 w-4 ${playingId === phrase.id ? "animate-pulse text-primary" : ""}`}
                   />
                 </button>
               </li>
@@ -150,6 +146,15 @@ export default function TodayPage() {
           </ul>
         </section>
       )}
+
+      <Link
+        href="/app/semana"
+        className="mb-8 flex items-center gap-3 rounded-xl px-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <CalendarRange className="h-4 w-4" />
+        Tu semana — patrones y logros
+        <ChevronRight className="h-4 w-4" />
+      </Link>
 
       {/* Daily prompt — a thought to chew on, or a conversation to start. */}
       <section className="mb-8">
@@ -160,7 +165,7 @@ export default function TodayPage() {
         </div>
       </section>
 
-      {phrases.length > 0 && <ReviewCard count={phrases.length} />}
+      {phraseCount > 0 && <ReviewCard count={phraseCount} />}
     </div>
   )
 }

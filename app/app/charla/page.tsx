@@ -11,12 +11,9 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ChevronRight, History, Mic, Shuffle } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
-import {
-  createConversation,
-  countTurns,
-  listResumable,
-  migrateLegacyConversations,
-} from "@/lib/conversations/store"
+import { createConversation, countTurns, listResumable } from "@/lib/conversations/store"
+import { runMigrations } from "@/lib/migrations"
+import { getProfile } from "@/lib/profile/store"
 import type { Conversation } from "@/lib/conversations/types"
 import { voiceTopics } from "@/lib/voice-topics"
 import { conversationTopics, dailyTopics, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
@@ -26,7 +23,8 @@ import { conversationTopics, dailyTopics, PARENT_CHILD_TOPIC_ID } from "@/lib/da
 // subjunctive) and read as invitations; the migrated Practice cards are plain
 // subjects. Both make a conversation — the modality is chosen later, in the
 // thread itself.
-const starters = voiceTopics.filter((t) => !t.requiresChild)
+// Child-scoped topics ("Mi día") join the list when the profile has a child.
+const baseStarters = voiceTopics.filter((t) => !t.requiresChild)
 
 const subjectCards = [
   { heading: "Intereses", topics: conversationTopics },
@@ -44,13 +42,15 @@ export default function CharlaHubPage() {
   const router = useRouter()
   const [resumable, setResumable] = useState<Conversation[]>([])
   const [counts, setCounts] = useState<Record<string, number>>({})
+  const [starters, setStarters] = useState(baseStarters)
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
-    migrateLegacyConversations()
+    runMigrations()
     const rows = listResumable()
     setResumable(rows.slice(0, 3))
     setCounts(Object.fromEntries(rows.map((c) => [c.id, countTurns(c.id)])))
+    if (getProfile().child) setStarters(voiceTopics)
   }, [])
 
   const startConversation = useCallback(

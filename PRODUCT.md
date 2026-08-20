@@ -14,12 +14,12 @@ Hablaba makes daily Spanish practice feel easy and natural. Success looks like a
 
 Four surfaces serve the same parent:
 
-- **Phrases** (`/app/speak`) — ready-to-use phrases for talking to their baby right now, grouped by routine and moment.
-- **Practice** (`/app/practice`, `/app/chat`) — text chat with an AI tutor to build their own fluency.
-- **Charlar** (`/app/charla`, and `/grow/voice` inside Grow) — hands-free *spoken* conversation with a warm Argentine partner. Designed for a parent walking with a pram, phone in a pocket: screen off, one thumb, 5–15 minutes. Sessions are transcribed, kept, and reviewed afterwards — the pattern analysis and weekly report ("Tu semana") turn what they actually said into what to practise next.
-- **Exercises** (`/app/exercises`) — targeted grammar quizzes from teacher content packs. The other surfaces link *into* it: a weakness spotted in a spoken conversation deep-links to the quiz for that exact rule.
+- **Hoy** (`/app/today`) — the daily slice: pick up your conversation, phrases due today, your week at a glance.
+- **Charlar** (`/app/charla`) — conversations with a warm Argentine partner, typed or hands-free spoken in the SAME thread. Designed for a parent walking with a pram: screen off, one thumb, 5–15 minutes. Every conversation is transcribed, kept, and reviewed — the pattern analysis and weekly report ("Tu semana") turn what they actually said into what to practise next.
+- **Phrases** (`/app/speak`) — the phrase library: captured gaps, saved corrections, generated pack phrases, with audio.
+- **Exercises** (`/app/exercises`) — targeted grammar quizzes from teacher content packs. The other surfaces link *into* it: a weakness spotted in conversation deep-links to the quiz for that exact rule.
 
-**Grow** (`/grow`, internal codename Criar) is a bounded module for the bilingual-parenting side: daily Rioplatense phrase packs, capturing gaps hit in real life, sparring, journal, and its own voice mode.
+The bilingual-parenting features (daily phrases for baby moments, capturing gaps hit in real life) are woven into the main surfaces rather than living in a separate module: captures become phrases, moments group the phrase library, and the child lives in the profile.
 
 The loop that matters: speak → get patterns back → practise the gap → speak again.
 

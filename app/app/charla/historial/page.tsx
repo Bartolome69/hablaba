@@ -6,12 +6,8 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight, Mic, MessageSquare, Trash2 } from "lucide-react"
-import {
-  countTurns,
-  deleteConversation,
-  listConversations,
-  migrateLegacyConversations,
-} from "@/lib/conversations/store"
+import { countTurns, deleteConversation, listConversations } from "@/lib/conversations/store"
+import { runMigrations } from "@/lib/migrations"
 import type { Conversation } from "@/lib/conversations/types"
 
 interface Row {
@@ -44,7 +40,7 @@ export default function ConversationHistoryPage() {
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
-    migrateLegacyConversations()
+    runMigrations()
     load()
     setLoaded(true)
   }, [])

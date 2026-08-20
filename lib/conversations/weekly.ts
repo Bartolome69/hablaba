@@ -1,13 +1,13 @@
 "use client"
 
-// Aggregation for the weekly report ("Tu semana"): the 7-day group-by over
-// criar_voice_observations that the whole observation schema was designed
-// around, plus session stats and the speaking streak. Pure reads over the
-// store — the one LLM call (narrative) goes through /api/analyze/weekly.
+// "Tu semana" over the unified stores — every conversation feeds it now, text
+// and voice alike. Ported from the Grow module when it collapsed; the fuller
+// aggregation layer (IA phase 3) will absorb this, but the report must not go
+// dark in the meantime.
 
-import { listRecentVoiceObservations, listVoiceSessions, listVoiceTurns, todayKey } from "../store"
-import type { CriarVoiceObservation, CriarVoiceSession } from "./types"
-import { isPracticeableTag } from "./types"
+import { isPracticeableTag } from "@/lib/voice/types"
+import { listConversations, listRecentObservations, listTurns } from "./store"
+import type { Conversation, ConversationObservation } from "./types"
 
 const WINDOW_DAYS = 7
 
@@ -20,47 +20,51 @@ export interface WeeklyPattern {
 export interface WeeklyData {
   stats: { sessions: number; minutes: number; userTurns: number; streakDays: number }
   patterns: WeeklyPattern[]
-  celebrations: string[] // target phrases actually used
+  celebrations: string[]
   repetitions: { word: string; alternatives?: string }[]
-  /** Every grammar correction of the week — the review stack's material. */
-  corrections: CriarVoiceObservation[]
+  corrections: ConversationObservation[]
   observationCount: number
 }
 
-/**
- * Consecutive days with at least one conversation, counting back from today —
- * or from yesterday, so the streak isn't broken at breakfast before today's
- * walk has happened.
- */
-export function speakingStreakDays(sessions: CriarVoiceSession[], now: Date = new Date()): number {
-  const days = new Set(sessions.map((s) => s.startedAt.slice(0, 10)))
+function dayKey(iso: string): string {
+  return iso.slice(0, 10)
+}
+
+/** Consecutive days with conversation activity, counting back from today or yesterday. */
+export function speakingStreakDays(conversations: Conversation[], now: Date = new Date()): number {
+  const days = new Set<string>()
+  for (const c of conversations) {
+    days.add(dayKey(c.startedAt))
+    days.add(dayKey(c.lastTurnAt))
+  }
   const cursor = new Date(now)
-  if (!days.has(todayKey(cursor))) cursor.setDate(cursor.getDate() - 1)
+  const localKey = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  if (!days.has(localKey(cursor))) cursor.setDate(cursor.getDate() - 1)
   let streak = 0
-  while (days.has(todayKey(cursor))) {
+  while (days.has(localKey(cursor))) {
     streak++
     cursor.setDate(cursor.getDate() - 1)
   }
   return streak
 }
 
-export function computeWeeklyData(childId: string, now: Date = new Date()): WeeklyData {
-  const allSessions = listVoiceSessions(childId)
-  const weekSessions = allSessions.filter(
-    (s) => now.getTime() - new Date(s.startedAt).getTime() <= WINDOW_DAYS * 86400_000,
+export function computeWeeklyData(now: Date = new Date()): WeeklyData {
+  const all = listConversations()
+  const inWindow = all.filter(
+    (c) => now.getTime() - new Date(c.lastTurnAt).getTime() <= WINDOW_DAYS * 86400_000,
   )
 
-  const minutes = Math.round(
-    weekSessions.reduce((sum, s) => sum + (s.durationSeconds ?? 0), 0) / 60,
-  )
-  const userTurns = weekSessions.reduce(
-    (sum, s) => sum + listVoiceTurns(s.id).filter((t) => t.speaker === "user").length,
+  // Voice minutes are exact (accumulated per stretch). Typed minutes arrive
+  // properly in IA phase 4; until then this understates mixed threads.
+  const minutes = Math.round(inWindow.reduce((sum, c) => sum + (c.voiceSeconds ?? 0), 0) / 60)
+  const userTurns = inWindow.reduce(
+    (sum, c) => sum + listTurns(c.id).filter((t) => t.speaker === "user").length,
     0,
   )
 
-  const observations = listRecentVoiceObservations(childId, WINDOW_DAYS)
+  const observations = listRecentObservations(WINDOW_DAYS)
 
-  // The group-by: grammar + avoidance findings bucketed by taxonomy tag.
   const byTag = new Map<string, WeeklyPattern>()
   for (const o of observations) {
     if (o.type !== "error_grammar" && o.type !== "avoidance") continue
@@ -97,10 +101,10 @@ export function computeWeeklyData(childId: string, now: Date = new Date()): Week
 
   return {
     stats: {
-      sessions: weekSessions.length,
+      sessions: inWindow.length,
       minutes,
       userTurns,
-      streakDays: speakingStreakDays(allSessions, now),
+      streakDays: speakingStreakDays(all, now),
     },
     patterns,
     celebrations,
@@ -112,7 +116,7 @@ export function computeWeeklyData(childId: string, now: Date = new Date()): Week
 
 // --- narrative, cached so reopening the report doesn't re-bill ---
 
-const CACHE_KEY = "criar_voice_weekly_cache"
+const CACHE_KEY = "weekly_narrative_cache"
 
 interface WeeklyNarrativeCache {
   key: string
@@ -120,9 +124,9 @@ interface WeeklyNarrativeCache {
   tagLabels: Record<string, string>
 }
 
-/** Regenerate when the day rolls over or new data lands — otherwise serve cached. */
-function cacheKeyFor(data: WeeklyData): string {
-  return `${todayKey()}:${data.stats.sessions}:${data.observationCount}`
+function cacheKeyFor(data: WeeklyData, now: Date = new Date()): string {
+  const d = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
+  return `${d}:${data.stats.sessions}:${data.observationCount}`
 }
 
 export async function fetchWeeklyNarrative(

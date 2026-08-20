@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server"
 import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
-import { buildVoiceInstructions, type VoiceCorrectionLevel } from "@/lib/criar/prompts"
+import { buildVoiceInstructions, type SpanishDialect, type VoiceCorrectionLevel } from "@/lib/voice/prompts"
 import { TOKEN_TTL_SECONDS, isCorrectionLevel } from "@/lib/voice/config"
 import type { VoiceSeedContext } from "@/lib/voice/types"
 
-// Mints a short-lived OpenAI Realtime client secret for the browser. Root
-// route (not /api/criar/) because it now serves every voice surface AND it
-// imports the Grow prompt builder — a shared route may import both sides.
+// Mints a short-lived OpenAI Realtime client secret for the browser.
 //
 // Why this route exists at all: the browser needs to speak WebRTC directly to
 // OpenAI, but must never see OPENAI_API_KEY. It gets an `ek_…` secret instead,
@@ -61,6 +59,7 @@ export async function POST(req: Request) {
           .slice(0, 10),
       },
       correctionLevel,
+      dialect: (body.dialect === "neutral" ? "neutral" : "rioplatense") as SpanishDialect,
       topicId: typeof body.topicId === "string" ? body.topicId : undefined,
       focusAreas: (Array.isArray(body.focusAreas) ? body.focusAreas : [])
         .filter((f): f is string => typeof f === "string")
@@ -115,7 +114,7 @@ export async function POST(req: Request) {
       distinctId: "server",
       event: "llm_call",
       properties: {
-        type: "criar_voice_session_mint",
+        type: "voice_session_mint",
         model: MODEL,
         voice: VOICE,
         correction_level: correctionLevel,
@@ -130,7 +129,7 @@ export async function POST(req: Request) {
       { headers: { "Cache-Control": "no-store" } },
     )
   } catch (err) {
-    console.error("[/api/criar/voice/session]", err)
+    console.error("[/api/voice/session]", err)
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
   }
 }

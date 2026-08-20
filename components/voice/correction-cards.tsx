@@ -3,15 +3,13 @@
 // "Repasá tus correcciones": the week's grammar corrections as tap-to-reveal
 // cards — your own sentence shown first, the natural version revealed on tap.
 // Active recall over your OWN errors, which is the material no generic
-// exercise pack can offer. (A graded quiz version that plugs into the
-// exercises engine is the designed next step; the observation shape already
-// carries everything it needs.)
+// exercise pack can offer.
 
 import { useState } from "react"
 import { Eye } from "lucide-react"
-import type { CriarVoiceObservation } from "@/lib/criar/voice/types"
+import type { VoiceObservationRecord } from "@/lib/voice/types"
 
-export function CorrectionCards({ corrections }: { corrections: CriarVoiceObservation[] }) {
+export function CorrectionCards({ corrections }: { corrections: VoiceObservationRecord[] }) {
   const [revealed, setRevealed] = useState<Set<string>>(new Set())
 
   if (corrections.length === 0) return null

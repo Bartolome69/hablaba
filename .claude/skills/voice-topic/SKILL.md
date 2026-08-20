@@ -18,8 +18,8 @@ slot. Decide what a topic *makes the learner produce* before writing it.
 
 1. Read `lib/voice-topics.ts` — the `VoiceTopic` interface and the existing
    entries. Match their voice and length; don't restructure the file.
-2. Read the **Voice mode** section of `CLAUDE.md` and the voice section of
-   `lib/criar/README.md` for the decisions you must not quietly reverse.
+2. Read the **Voice mode** section of `CLAUDE.md` for the decisions you must
+   not quietly reverse.
 3. Have `lib/exercises/taxonomy.json` open — you need real topic ids for
    `practises`.
 
@@ -56,8 +56,8 @@ slot. Decide what a topic *makes the learner produce* before writing it.
      sentences.
    - `practises` — the ids from step 2.
    - `requiresChild: true` — only if the topic is meaningless without a baby in
-     context. This hides it from `/app/charla`, which has no child. Most topics
-     should NOT set this.
+     context. Such topics are offered only when the profile has a child set.
+     Most topics should NOT set this.
 
 4. **Roleplay only — write `personaPrompt`.** This replaces *who the partner
    is* for the scene. Rules:
@@ -72,11 +72,10 @@ slot. Decide what a topic *makes the learner produce* before writing it.
    - Give the scene *beats* in `prompt` so it doesn't stall: a complication,
      something to decide, a way to extend if the learner finishes fast.
 
-5. **Do not touch the persona or register.** The default partner (warm
-   Argentine, tú, voice `marin`) is the same on every surface — an explicit
-   product decision. Adding a topic must not edit
-   `buildVoiceInstructions`'s persona branch, `VOICE_REGISTER`, or the register
-   blocks in `lib/criar/prompts.ts`. If a request seems to need that, ask first.
+5. **Do not touch the persona or grammar.** The default partner (warm
+   Argentine, tú, voice `marin`) is one product decision. Adding a topic must
+   not edit `buildVoiceInstructions`'s persona branch or the grammar/dialect
+   blocks in `lib/voice/prompts.ts`. If a request seems to need that, ask first.
 
 6. **Verify.** `npx tsc --noEmit` (expect only the two pre-existing
    `app/manifest.ts` errors) and `npm run build`. Then confirm by reading, not

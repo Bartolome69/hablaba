@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, Bookmark, Trash2, GraduationCap } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { Button } from "@/components/ui/button"
 import { FlashcardDeck } from "@/components/review/flashcard-deck"
-import { useSavedPhrases } from "@/hooks/use-saved-phrases"
+import { listPhrases, recordPractice as recordPhrasePractice, removePhrase as removeLibraryPhrase } from "@/lib/phrases/store"
+import { runMigrations } from "@/lib/migrations"
 import type { PracticeResult, SavedPhrase } from "@/lib/types"
 
 // Saved-phrase row with an inline delete confirmation, matching the
@@ -56,8 +57,40 @@ function SavedPhraseRow({ phrase, onRemove }: { phrase: SavedPhrase; onRemove: (
 export default function ReviewPage() {
   const router = useRouter()
   const posthog = usePostHog()
-  const { phrases, recordPractice, removePhrase } = useSavedPhrases()
+  const [phrases, setPhrases] = useState<SavedPhrase[]>([])
   const [practicing, setPracticing] = useState(false)
+
+  // The deck predates the unified phrase library; map library rows into the
+  // shape it renders. Pending captures (no Spanish yet) can't be reviewed.
+  const reload = () => {
+    setPhrases(
+      listPhrases()
+        .filter((p) => p.text)
+        .map((p) => ({
+          id: p.id,
+          spanish: p.text,
+          english: p.translation,
+          savedAt: new Date(p.createdAt),
+          timesPracticed: p.timesPracticed,
+        })),
+    )
+  }
+
+  // localStorage is client-only — load after mount to avoid hydration mismatch
+  useEffect(() => {
+    runMigrations()
+    reload()
+  }, [])
+
+  const recordPractice = (id: string, _result: PracticeResult) => {
+    recordPhrasePractice(id)
+    reload()
+  }
+
+  const removePhrase = (id: string) => {
+    removeLibraryPhrase(id)
+    reload()
+  }
 
   const startPractice = () => {
     posthog.capture("review_started", { phrase_count: phrases.length })
@@ -74,7 +107,7 @@ export default function ReviewPage() {
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
         <button
-          onClick={() => router.push("/app/practice")}
+          onClick={() => router.push("/app/today")}
           className="w-9 h-9 -ml-1.5 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           aria-label="Back"
         >

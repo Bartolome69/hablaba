@@ -1,22 +1,20 @@
 "use client"
 
-// "Tu semana" — the weekly report. A 7-day group-by over the voice
-// observations (computed client-side in lib/criar/voice/weekly.ts) plus one
-// narrative call. This page is why the observation schema exists: patterns
-// link straight into practice via their exercises-taxonomy tags.
+// "Tu semana" — the weekly report over ALL conversations, typed and spoken.
+// Moved here from the Grow module when it collapsed; the IA phase-3
+// aggregation layer will take over the queries behind it.
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Flame, Loader2, Mic, Quote, Repeat } from "lucide-react"
-import { CorrectionCards } from "@/components/criar/voice/correction-cards"
-import { ensureSeeded } from "@/lib/criar/seed"
-import type { CriarChild } from "@/lib/criar/types"
+import { CorrectionCards } from "@/components/voice/correction-cards"
+import { runMigrations } from "@/lib/migrations"
 import {
   computeWeeklyData,
   fetchWeeklyNarrative,
   type WeeklyData,
-} from "@/lib/criar/voice/weekly"
-import { isPracticeableTag } from "@/lib/criar/voice/types"
+} from "@/lib/conversations/weekly"
+import { isPracticeableTag } from "@/lib/voice/types"
 
 function StatTile({ value, label }: { value: string; label: string }) {
   return (
@@ -28,7 +26,6 @@ function StatTile({ value, label }: { value: string; label: string }) {
 }
 
 export default function WeeklyReportPage() {
-  const [child, setChild] = useState<CriarChild | null>(null)
   const [data, setData] = useState<WeeklyData | null>(null)
   const [narrative, setNarrative] = useState<string | null>(null)
   const [tagLabels, setTagLabels] = useState<Record<string, string>>({})
@@ -36,9 +33,8 @@ export default function WeeklyReportPage() {
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
-    const seeded = ensureSeeded()
-    setChild(seeded)
-    const weekly = computeWeeklyData(seeded.id)
+    runMigrations()
+    const weekly = computeWeeklyData()
     setData(weekly)
     if (weekly.stats.sessions > 0) {
       fetchWeeklyNarrative(weekly)
@@ -50,7 +46,7 @@ export default function WeeklyReportPage() {
     }
   }, [])
 
-  if (!child || !data) return <div className="min-h-dvh bg-background" />
+  if (!data) return <div className="min-h-dvh bg-background" />
 
   const labelFor = (tag: string) => tagLabels[tag] ?? tag.replace(/-/g, " ")
 
@@ -58,15 +54,15 @@ export default function WeeklyReportPage() {
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
       <div className="mb-6 flex items-center gap-3">
         <Link
-          href="/grow/voice/historial"
-          aria-label="Volver a tus charlas"
+          href="/app/today"
+          aria-label="Volver a Hoy"
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.98]"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>
           <h1 className="font-serif text-lg font-semibold text-foreground">Tu semana</h1>
-          <p className="text-xs text-muted-foreground">Los últimos 7 días, hablados</p>
+          <p className="text-xs text-muted-foreground">Los últimos 7 días de conversación</p>
         </div>
       </div>
 
@@ -76,19 +72,17 @@ export default function WeeklyReportPage() {
             <Mic className="h-5 w-5 text-muted-foreground" />
           </div>
           <p className="max-w-[26ch] text-sm text-muted-foreground text-balance">
-            Esta semana todavía no charlaste. Una caminata con una conversación alcanza para
-            empezar el informe.
+            Esta semana todavía no charlaste. Una conversación alcanza para empezar el informe.
           </p>
-          <Link href="/grow/voice" className="text-sm font-medium text-primary">
+          <Link href="/app/charla" className="text-sm font-medium text-primary">
             Empezar una charla →
           </Link>
         </div>
       ) : (
         <>
-          {/* Stats */}
           <div className="mb-4 flex gap-2">
             <StatTile value={String(data.stats.sessions)} label="charlas" />
-            <StatTile value={`${data.stats.minutes}′`} label="minutos" />
+            <StatTile value={`${data.stats.minutes}′`} label="minutos hablados" />
             <StatTile value={String(data.stats.userTurns)} label="veces que hablaste" />
           </div>
 
@@ -96,12 +90,11 @@ export default function WeeklyReportPage() {
             <div className="mb-4 flex items-center gap-2 rounded-2xl bg-primary/10 px-4 py-3">
               <Flame className="h-4 w-4 flex-shrink-0 text-primary" />
               <p className="text-sm font-medium text-foreground">
-                {data.stats.streakDays} días seguidos hablando español
+                {data.stats.streakDays} días seguidos con español
               </p>
             </div>
           )}
 
-          {/* Narrative */}
           {narrative ? (
             <p className="mb-6 rounded-2xl border border-border bg-card px-4 py-4 font-serif text-[15px] leading-relaxed text-foreground text-pretty">
               {narrative}
@@ -113,7 +106,6 @@ export default function WeeklyReportPage() {
             </div>
           )}
 
-          {/* Celebrations */}
           {data.celebrations.length > 0 && (
             <section className="mb-6">
               <h2 className="mb-2 text-sm font-semibold text-foreground">
@@ -121,10 +113,7 @@ export default function WeeklyReportPage() {
               </h2>
               <ul className="space-y-1.5">
                 {data.celebrations.map((phrase, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 rounded-xl bg-primary/10 px-3 py-2.5"
-                  >
+                  <li key={i} className="flex items-start gap-2 rounded-xl bg-primary/10 px-3 py-2.5">
                     <Quote className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary" />
                     <p className="text-sm font-medium text-foreground">{phrase}</p>
                   </li>
@@ -133,7 +122,6 @@ export default function WeeklyReportPage() {
             </section>
           )}
 
-          {/* Patterns */}
           {data.patterns.length > 0 && (
             <section className="mb-6">
               <h2 className="mb-2 text-sm font-semibold text-foreground">Patrones de la semana</h2>
@@ -141,9 +129,7 @@ export default function WeeklyReportPage() {
                 {data.patterns.map((p) => (
                   <li key={p.tag} className="rounded-2xl bg-secondary/50 px-4 py-3">
                     <div className="mb-1 flex items-baseline justify-between gap-2">
-                      <p className="text-sm font-medium capitalize text-foreground">
-                        {labelFor(p.tag)}
-                      </p>
+                      <p className="text-sm font-medium capitalize text-foreground">{labelFor(p.tag)}</p>
                       <p className="text-xs tabular-nums text-muted-foreground">×{p.count}</p>
                     </div>
                     {p.examples[0]?.original && p.examples[0]?.corrected && (
@@ -175,7 +161,6 @@ export default function WeeklyReportPage() {
             </section>
           )}
 
-          {/* Vocabulary variety */}
           {data.repetitions.length > 0 && (
             <section className="mb-6">
               <h2 className="mb-2 text-sm font-semibold text-foreground">Para variar</h2>

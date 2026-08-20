@@ -1,38 +1,20 @@
 "use client"
 
-// App-level primary navigation: a persistent bottom tab bar shared by the main
-// app and the Grow module. Replaces the old top underline tabs (AppTabs). The
-// Grow tab is gated by the `criar_enabled` flag. The bar hides on full-screen
-// detail views (chat, sparring) so those keep their own focused chrome.
+// App-level primary navigation: a persistent bottom tab bar. Hides on
+// full-screen conversation views, which keep their own focused chrome.
 
-import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, Dumbbell, MessagesSquare, Sprout, Sun } from "lucide-react"
+import { BookOpen, Dumbbell, MessagesSquare, Sun } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
-import { CRIAR_FLAG_EVENT, isCriarEnabled } from "@/lib/criar-flag"
 
 // Full-screen conversation views keep their own chrome. The Charlar HUB keeps
 // the bar (it's a top-level destination); only a conversation itself hides it.
-const HIDE_ON = ["/app/chat", "/app/charla/", "/grow/sparring", "/grow/voice"]
+const HIDE_ON = ["/app/chat", "/app/charla/"]
 
 export function BottomNav() {
   const pathname = usePathname()
   const router = useRouter()
   const posthog = usePostHog()
-  const [criarEnabled, setCriarEnabled] = useState(false)
-
-  // localStorage is client-only — read after mount to avoid hydration mismatch,
-  // and keep in sync when the Grow toggle flips (Settings) or another tab changes it.
-  useEffect(() => {
-    const sync = () => setCriarEnabled(isCriarEnabled())
-    sync()
-    window.addEventListener(CRIAR_FLAG_EVENT, sync)
-    window.addEventListener("storage", sync)
-    return () => {
-      window.removeEventListener(CRIAR_FLAG_EVENT, sync)
-      window.removeEventListener("storage", sync)
-    }
-  }, [])
 
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null
 
@@ -41,9 +23,6 @@ export function BottomNav() {
     { id: "charla", label: "Charlar", href: "/app/charla", icon: MessagesSquare, active: pathname.startsWith("/app/charla") },
     { id: "speak", label: "Phrases", href: "/app/speak", icon: BookOpen, active: pathname === "/app/speak" },
     { id: "exercises", label: "Exercises", href: "/app/exercises", icon: Dumbbell, active: pathname.startsWith("/app/exercises") },
-    ...(criarEnabled
-      ? [{ id: "criar", label: "Grow", href: "/grow", icon: Sprout, active: pathname.startsWith("/grow") }]
-      : []),
   ]
 
   return (
