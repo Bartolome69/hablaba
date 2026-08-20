@@ -10,7 +10,7 @@ import { useSavedPhrases } from "@/hooks/use-saved-phrases"
 import type { PracticeResult, SavedPhrase } from "@/lib/types"
 
 // Saved-phrase row with an inline delete confirmation, matching the
-// "Pick up where you left off" cards (see components/home/continue-session.tsx).
+// "Seguir donde quedaste" cards on Today and the Charlar hub.
 function SavedPhraseRow({ phrase, onRemove }: { phrase: SavedPhrase; onRemove: () => void }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
 

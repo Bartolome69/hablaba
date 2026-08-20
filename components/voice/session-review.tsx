@@ -9,8 +9,8 @@
 // only — module code never imports exercises code.
 //
 // Surface-agnostic: the caller passes its own `analyze` (Grow's reads the
-// criar_* store; Speak's reads lib/voice/store.ts), so this component never
-// knows whose session it's reviewing.
+// criar_* store; the main app's reads lib/conversations/), so this component
+// never knows whose conversation it's reviewing.
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"

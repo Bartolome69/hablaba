@@ -1,18 +1,23 @@
 "use client"
 
-// Main-app voice session history — the Speak-side sibling of
-// /grow/voice/historial, reading the voice_* tables.
+// Every conversation, newest first. Threads older than the resume window still
+// live here — they just stop being offered as something to pick up.
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, ChevronRight, Mic } from "lucide-react"
-import type { VoiceSessionRecord } from "@/lib/voice/types"
-import { listVoiceSessions, listVoiceTurns } from "@/lib/voice/store"
-import { voiceTopics } from "@/lib/voice-topics"
+import { ArrowLeft, ChevronRight, Mic, MessageSquare, Trash2 } from "lucide-react"
+import {
+  countTurns,
+  deleteConversation,
+  listConversations,
+  migrateLegacyConversations,
+} from "@/lib/conversations/store"
+import type { Conversation } from "@/lib/conversations/types"
 
-interface HistoryRow {
-  session: VoiceSessionRecord
-  userTurns: number
+interface Row {
+  conversation: Conversation
+  turns: number
+  voiceTurns: number
 }
 
 function formatDay(iso: string): string {
@@ -23,29 +28,24 @@ function formatDay(iso: string): string {
   })
 }
 
-function topicEmoji(session: VoiceSessionRecord): string {
-  const topic = voiceTopics.find((t) => t.id === session.seedContext?.topicId)
-  return topic ? `${topic.emoji} ` : ""
-}
-
-function formatDuration(session: VoiceSessionRecord): string {
-  if (session.durationSeconds == null) return "—"
-  const mins = Math.round(session.durationSeconds / 60)
-  return mins < 1 ? "menos de un minuto" : `${mins} min`
-}
-
-export default function CharlaHistoryPage() {
-  const [rows, setRows] = useState<HistoryRow[]>([])
+export default function ConversationHistoryPage() {
+  const [rows, setRows] = useState<Row[]>([])
   const [loaded, setLoaded] = useState(false)
+
+  const load = () => {
+    setRows(
+      listConversations().map((conversation) => ({
+        conversation,
+        turns: countTurns(conversation.id),
+        voiceTurns: countTurns(conversation.id, "voice"),
+      })),
+    )
+  }
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
-    setRows(
-      listVoiceSessions().map((session) => ({
-        session,
-        userTurns: listVoiceTurns(session.id).filter((t) => t.speaker === "user").length,
-      })),
-    )
+    migrateLegacyConversations()
+    load()
     setLoaded(true)
   }, [])
 
@@ -62,18 +62,18 @@ export default function CharlaHistoryPage() {
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>
-          <h1 className="font-serif text-lg font-semibold text-foreground">Charlas</h1>
-          <p className="text-xs text-muted-foreground">Tus conversaciones guardadas</p>
+          <h1 className="font-serif text-lg font-semibold text-foreground">Tus charlas</h1>
+          <p className="text-xs text-muted-foreground">Todo lo que hablaste y escribiste</p>
         </div>
       </div>
 
       {rows.length === 0 ? (
         <div className="mt-12 flex flex-col items-center gap-3 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-            <Mic className="h-5 w-5 text-muted-foreground" />
+            <MessageSquare className="h-5 w-5 text-muted-foreground" />
           </div>
-          <p className="max-w-[24ch] text-sm text-muted-foreground text-balance">
-            Todavía no hay charlas guardadas. Después de tu primera conversación aparece acá.
+          <p className="max-w-[24ch] text-sm text-balance text-muted-foreground">
+            Todavía no hay charlas. Después de la primera aparecen acá.
           </p>
           <Link href="/app/charla" className="text-sm font-medium text-primary">
             Empezar una charla →
@@ -81,24 +81,43 @@ export default function CharlaHistoryPage() {
         </div>
       ) : (
         <ul className="space-y-2">
-          {rows.map(({ session, userTurns }) => (
-            <li key={session.id}>
+          {rows.map(({ conversation, turns, voiceTurns }) => (
+            <li key={conversation.id} className="flex items-center gap-2">
               <Link
-                href={`/app/charla/${session.id}`}
-                className="flex items-center gap-3 rounded-xl bg-secondary/50 px-4 py-3 transition-colors hover:bg-secondary active:scale-[0.99]"
+                href={`/app/charla/${conversation.id}`}
+                className="flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-secondary/50 px-4 py-3 transition-colors hover:bg-secondary active:scale-[0.99]"
               >
+                <span className="text-xl" aria-hidden>
+                  {conversation.emoji}
+                </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium capitalize text-foreground">
-                    {topicEmoji(session)}
-                    {formatDay(session.startedAt)}
+                  <p className="truncate text-sm font-medium text-foreground">
+                    {conversation.title}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatDuration(session)} ·{" "}
-                    {userTurns === 1 ? "hablaste 1 vez" : `hablaste ${userTurns} veces`}
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span className="capitalize">{formatDay(conversation.lastTurnAt)}</span>
+                    <span>· {turns} turnos</span>
+                    {voiceTurns > 0 && (
+                      <>
+                        <Mic className="h-3 w-3" aria-label="con voz" />
+                        {conversation.voiceSeconds > 0 &&
+                          `${Math.max(1, Math.round(conversation.voiceSeconds / 60))}′`}
+                      </>
+                    )}
                   </p>
                 </div>
                 <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
               </Link>
+              <button
+                onClick={() => {
+                  deleteConversation(conversation.id)
+                  load()
+                }}
+                aria-label={`Borrar la charla ${conversation.title}`}
+                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
             </li>
           ))}
         </ul>

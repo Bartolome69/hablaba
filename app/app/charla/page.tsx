@@ -1,298 +1,197 @@
 "use client"
 
-// Voice conversation for the main app — the same hands-free partner as Grow's
-// Charlar, minus the baby premise: child-free topics only, seeds carry no
-// child, and persistence goes to the main app's voice_* tables. Entered from
-// the Speak screen.
+// The conversations hub: pick up a thread, or start a new one.
+//
+// Starters are the old Practice topic cards plus the voice topics, now one list
+// — since a conversation isn't a text thing or a voice thing any more, the
+// choice of what to talk about is separate from how you'll say it.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { History, Mic, MicOff, RotateCcw, Sun, WifiOff } from "lucide-react"
-import { usePostHog } from "posthog-js/react"
-import { LiveTranscript } from "@/components/voice/live-transcript"
-import { TopicPicker } from "@/components/voice/topic-picker"
-import { VoiceOrb } from "@/components/voice/voice-orb"
-import { voiceTopics } from "@/lib/voice-topics"
+import { ChevronRight, History, Mic, Shuffle } from "lucide-react"
+import { AppHeader } from "@/components/home/app-header"
 import {
-  CORRECTION_LEVELS,
-  CORRECTION_LEVEL_KEY,
-  DEFAULT_CORRECTION_LEVEL,
-  isCorrectionLevel,
-  KEEP_AWAKE_KEY,
-  MAX_SESSION_SECONDS,
-  nextOutputGain,
-  OUTPUT_GAIN_KEY,
-  SESSION_WARNING_SECONDS,
-  type CorrectionLevel,
-} from "@/lib/voice/config"
-import { defaultKeepScreenAwake, micPermissionHelp } from "@/lib/voice/platform"
-import { ensureSpeakSessionAnalysis, speakVoicePersistence } from "@/lib/voice/store"
-import { useMediaSession } from "@/lib/voice/use-media-session"
-import { useVoiceSession } from "@/lib/voice/use-voice-session"
-import { useWakeLock } from "@/lib/voice/use-wake-lock"
+  createConversation,
+  countTurns,
+  listResumable,
+  migrateLegacyConversations,
+} from "@/lib/conversations/store"
+import type { Conversation } from "@/lib/conversations/types"
+import { voiceTopics } from "@/lib/voice-topics"
+import { conversationTopics, dailyTopics, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
 
-const MIC_EXPLAINER_SEEN = "voice_mic_explained"
-const TOPIC_KEY = "voice_topic"
-const DEFAULT_TOPIC = "charla"
+// Two families of starter, deliberately kept distinct. The spoken topics carry
+// a grammar intent (Recuerdos pulls past tenses out of you, Opiniones the
+// subjunctive) and read as invitations; the migrated Practice cards are plain
+// subjects. Both make a conversation — the modality is chosen later, in the
+// thread itself.
+const starters = voiceTopics.filter((t) => !t.requiresChild)
 
-// No baby premise on this surface.
-const topics = voiceTopics.filter((t) => !t.requiresChild)
+const subjectCards = [
+  { heading: "Intereses", topics: conversationTopics },
+  { heading: "Vida diaria", topics: dailyTopics },
+]
 
-export default function CharlaPage() {
-  const [showExplainer, setShowExplainer] = useState(false)
-  const [keepAwake, setKeepAwake] = useState(false)
-  const [correctionLevel, setCorrectionLevel] = useState<CorrectionLevel>(DEFAULT_CORRECTION_LEVEL)
-  const [topicId, setTopicId] = useState<string>(DEFAULT_TOPIC)
-  const [ready, setReady] = useState(false)
-  const posthog = usePostHog()
-  const startedRef = useRef(false)
+function relativeDay(iso: string): string {
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400_000)
+  if (days <= 0) return "hoy"
+  if (days === 1) return "ayer"
+  return `hace ${days} días`
+}
 
-  const { state, turns, error, userSpeaking, elapsed, sessionId, start, pause, resume, stop, outputGain, setOutputGain } = useVoiceSession(
-    speakVoicePersistence,
-    "/api/voice/session",
+export default function CharlaHubPage() {
+  const router = useRouter()
+  const [resumable, setResumable] = useState<Conversation[]>([])
+  const [counts, setCounts] = useState<Record<string, number>>({})
+
+  // localStorage is client-only — load after mount to avoid hydration mismatch
+  useEffect(() => {
+    migrateLegacyConversations()
+    const rows = listResumable()
+    setResumable(rows.slice(0, 3))
+    setCounts(Object.fromEntries(rows.map((c) => [c.id, countTurns(c.id)])))
+  }, [])
+
+  const startConversation = useCallback(
+    (starterId: string, title: string, emoji: string) => {
+      const conversation = createConversation({ starterId, title, emoji })
+      router.push(`/app/charla/${conversation.id}`)
+    },
+    [router],
   )
 
-  useWakeLock((state === "live" || state === "paused") && keepAwake)
-  useMediaSession({
-    active: state === "live" || state === "paused",
-    paused: state === "paused",
-    onPause: pause,
-    onResume: resume,
-    onStop: stop,
-  })
-
-  useEffect(() => {
-    try {
-      setShowExplainer(localStorage.getItem(MIC_EXPLAINER_SEEN) !== "1")
-      const stored = localStorage.getItem(KEEP_AWAKE_KEY)
-      setKeepAwake(stored === null ? defaultKeepScreenAwake() : stored === "1")
-      const level = localStorage.getItem(CORRECTION_LEVEL_KEY)
-      if (isCorrectionLevel(level)) setCorrectionLevel(level)
-      const gain = Number(localStorage.getItem(OUTPUT_GAIN_KEY))
-      if (Number.isFinite(gain) && gain >= 1) setOutputGain(gain)
-      const topic = localStorage.getItem(TOPIC_KEY)
-      if (topic && topics.some((t) => t.id === topic)) setTopicId(topic)
-    } catch {
-      setShowExplainer(true)
-      setKeepAwake(defaultKeepScreenAwake())
-    }
-    setReady(true)
-  }, [])
-
-  useEffect(() => {
-    if (state === "live" && !startedRef.current) {
-      startedRef.current = true
-      posthog.capture("charla_voice_session_started")
-    }
-    if (state === "ended" && startedRef.current) {
-      startedRef.current = false
-      posthog.capture("charla_voice_session_ended", { duration_seconds: elapsed, turns: turns.length })
-    }
-    if ((state === "ended" || state === "interrupted") && sessionId) {
-      void ensureSpeakSessionAnalysis(sessionId).catch(() => {})
-    }
-    // elapsed/turns are read at transition time only — not triggers
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, posthog, sessionId])
-
-  const pickCorrectionLevel = useCallback((level: CorrectionLevel) => {
-    setCorrectionLevel(level)
-    try {
-      localStorage.setItem(CORRECTION_LEVEL_KEY, level)
-    } catch {}
-  }, [])
-
-  const pickTopic = useCallback((id: string) => {
-    setTopicId(id)
-    try {
-      localStorage.setItem(TOPIC_KEY, id)
-    } catch {}
-  }, [])
-
-  const cycleGain = useCallback(() => {
-    const next = nextOutputGain(outputGain)
-    setOutputGain(next)
-    try {
-      localStorage.setItem(OUTPUT_GAIN_KEY, String(next))
-    } catch {}
-  }, [outputGain, setOutputGain])
-
-  const toggleKeepAwake = useCallback(() => {
-    setKeepAwake((prev) => {
-      const next = !prev
-      try {
-        localStorage.setItem(KEEP_AWAKE_KEY, next ? "1" : "0")
-      } catch {}
-      return next
-    })
-  }, [])
-
-  const handleStart = () => {
-    if (showExplainer) {
-      try {
-        localStorage.setItem(MIC_EXPLAINER_SEEN, "1")
-      } catch {}
-      setShowExplainer(false)
-    }
-    // Child-free seed: empty names select the generic-learner persona
-    // server-side; no packs or captures exist on this surface (yet).
-    void start({
-      childName: "",
-      ageDescription: "",
-      packPhrases: [],
-      captureLessons: [],
-      correctionLevel,
-      topicId,
-    })
-  }
-
-  const nearLimit = useMemo(
-    () => state === "live" && MAX_SESSION_SECONDS - elapsed <= SESSION_WARNING_SECONDS,
-    [state, elapsed],
-  )
-
-  if (!ready) return <div className="min-h-dvh bg-background" />
+  const surprise = useCallback(() => {
+    const topic = starters[Math.floor(Math.random() * starters.length)]
+    startConversation(topic.id, topic.label, topic.emoji)
+  }, [startConversation])
 
   return (
-    <div className="fixed inset-0 mx-auto flex max-w-lg flex-col bg-background">
-      <div className="flex-shrink-0 px-4 pt-6">
-        <header className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <h1 className="font-serif text-2xl font-semibold leading-tight text-foreground">
-              Charlar
-            </h1>
-            <p className="mt-0.5 text-xs text-muted-foreground">Sin manos · 5–15 min</p>
-          </div>
-          <div className="flex gap-2 pt-1">
-            <Link
-              href="/app/charla/historial"
-              aria-label="Charlas anteriores"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.98]"
-            >
-              <History className="h-4 w-4" />
-            </Link>
-            <button
-              onClick={toggleKeepAwake}
-              aria-label={keepAwake ? "Dejar que la pantalla se apague" : "Mantener la pantalla encendida"}
-              aria-pressed={keepAwake}
-              className={`flex h-10 w-10 items-center justify-center rounded-full bg-secondary transition-all active:scale-[0.98] ${
-                keepAwake ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Sun className={`h-4 w-4 ${keepAwake ? "fill-current" : ""}`} />
-            </button>
-          </div>
-        </header>
-      </div>
+    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
+      <AppHeader title="Charlar" subtitle="Conversá en español — escribiendo o en voz alta" />
 
-      {(state === "idle" || state === "ended" || state === "error") && (
-        <div className="mx-4 mb-3">
-          <TopicPicker topics={topics} selectedId={topicId} onSelect={pickTopic} />
-        </div>
-      )}
-
-      {(state === "idle" || state === "ended" || state === "error") && (
-        <div className="mx-4 mb-2 flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground">Corrígeme</span>
-          <div className="flex flex-1 gap-1 rounded-full bg-secondary p-1">
-            {CORRECTION_LEVELS.map((level) => (
-              <button
-                key={level}
-                onClick={() => pickCorrectionLevel(level)}
-                aria-pressed={correctionLevel === level}
-                className={`flex-1 rounded-full py-1.5 text-center text-xs font-medium transition-colors ${
-                  correctionLevel === level
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+      {resumable.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-3 font-serif text-base text-foreground">Seguir donde quedaste</h2>
+          <div className="space-y-2">
+            {resumable.map((c) => (
+              <Link
+                key={c.id}
+                href={`/app/charla/${c.id}`}
+                className="flex items-center gap-3 rounded-xl bg-secondary/50 px-4 py-3 transition-colors hover:bg-secondary active:scale-[0.99]"
               >
-                {level}
-              </button>
+                <span className="text-xl" aria-hidden>
+                  {c.emoji}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-foreground">{c.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {counts[c.id] ?? 0} turnos · {relativeDay(c.lastTurnAt)}
+                    {c.voiceSeconds > 0 && " · con voz"}
+                  </p>
+                </div>
+                <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+              </Link>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {showExplainer && state === "idle" && (
-        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-secondary/60 px-4 py-3">
-          <Mic className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
-          <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
-            Vamos a usar el micrófono para charlar en voz alta. Tu teléfono te va a pedir permiso
-            una sola vez. Después podés apagar la pantalla y guardarlo en el bolsillo — la
-            conversación sigue.
-          </p>
-        </div>
-      )}
-
-      {state === "interrupted" && (
-        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-amber-500/10 px-4 py-3">
-          <WifiOff className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-500" />
-          <p className="text-sm leading-relaxed text-foreground text-pretty">
-            La conversación se pausó cuando saliste de la pantalla. Lo que hablaste quedó acá abajo
-            — tocá <span className="font-medium">Volver</span> para seguir.
-          </p>
-        </div>
-      )}
-
-      {state === "error" && error && (
-        <div className="mx-4 mb-2 flex items-start gap-3 rounded-xl bg-destructive/10 px-4 py-3">
-          {error.kind === "mic-denied" ? (
-            <MicOff className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
-          ) : (
-            <RotateCcw className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
-          )}
-          <div className="text-sm leading-relaxed text-foreground text-pretty">
-            <p>{error.message}</p>
-            {error.kind === "mic-denied" && (
-              <p className="mt-1 text-muted-foreground">{micPermissionHelp()}</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {state === "ended" && sessionId && (
-        <div className="mx-4 mb-2 rounded-xl bg-secondary/60 px-4 py-3 text-sm text-pretty">
-          <p className="text-foreground">Quedó guardada la charla.</p>
-          <Link
-            href={`/app/charla/${sessionId}`}
-            className="font-medium text-primary underline-offset-2 hover:underline"
-          >
-            Ver la conversación completa →
-          </Link>
-        </div>
-      )}
-
-      {nearLimit && (
-        <p className="mx-4 mb-2 text-center text-xs font-medium text-amber-600 dark:text-amber-500">
-          Estamos por cerrar la sesión — ya casi llegamos a los 15 minutos.
+      <section>
+        <h2 className="mb-1 font-serif text-base text-foreground">Empezar una charla</h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras y seguir hablando.
         </p>
-      )}
 
-      <LiveTranscript
-        turns={turns}
-        hint={
-          state === "idle"
-            ? "Elegí un tema, tocá el micrófono y charlá."
-            : state === "connecting" || state === "requesting-mic"
-              ? "Un segundito…"
-              : undefined
-        }
-      />
+        <button
+          onClick={surprise}
+          className="mb-3 flex w-full items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground transition-all hover:brightness-110 active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-foreground/15">
+            <Shuffle className="h-5 w-5" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold">Sorprendeme</p>
+            <p className="text-xs opacity-75">Que elija ella el tema</p>
+          </div>
+        </button>
 
-      <div className="flex-shrink-0 border-t border-border">
-        <VoiceOrb
-          state={state}
-          userSpeaking={userSpeaking}
-          elapsed={elapsed}
-          nearLimit={nearLimit}
-          onStart={handleStart}
-          onPause={pause}
-          onResume={resume}
-          onStop={stop}
-          outputGain={outputGain}
-          onCycleGain={cycleGain}
-        />
-      </div>
+        <button
+          onClick={() =>
+            startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")
+          }
+          className="mb-6 flex w-full items-center gap-3 rounded-2xl bg-secondary p-4 text-secondary-foreground transition-all hover:bg-secondary/80 active:scale-[0.98]"
+        >
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent/25">
+            <span className="text-lg" aria-hidden>
+              🧸
+            </span>
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold">Con tu peque</p>
+            <p className="text-xs text-muted-foreground">
+              Ella hace de tu hijo, para ensayar los momentos del día
+            </p>
+          </div>
+        </button>
+
+        <div className="mb-6 grid grid-cols-2 gap-3">
+          {starters.map((topic) => (
+            <button
+              key={topic.id}
+              onClick={() => startConversation(topic.id, topic.label, topic.emoji)}
+              className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left transition-all hover:bg-secondary/50 active:scale-[0.98]"
+            >
+              <span className="text-2xl" aria-hidden>
+                {topic.emoji}
+              </span>
+              <div>
+                <p className="text-sm font-medium text-foreground">{topic.label}</p>
+                <p className="text-xs text-muted-foreground">{topic.blurb}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {subjectCards.map(({ heading, topics }) => (
+          <div key={heading} className="mb-6">
+            <h3 className="mb-3 font-serif text-base text-foreground">{heading}</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {topics.map((topic) => (
+                <button
+                  key={topic.id}
+                  onClick={() => startConversation(topic.id, topic.title, topic.emoji)}
+                  className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left transition-all hover:bg-secondary/50 active:scale-[0.98]"
+                >
+                  <span className="text-2xl" aria-hidden>
+                    {topic.emoji}
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{topic.title}</p>
+                    <p className="font-serif text-xs italic text-muted-foreground">
+                      {topic.spanish}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <Link
+        href="/app/charla/historial"
+        className="mt-6 flex items-center gap-3 rounded-xl px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
+      >
+        <History className="h-4 w-4" />
+        <span className="flex-1 text-sm font-medium">Todas tus charlas</span>
+        <ChevronRight className="h-4 w-4" />
+      </Link>
+
+      <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+        <Mic className="h-3 w-3" />
+        Las charlas habladas se revisan al terminar
+      </p>
     </div>
   )
 }

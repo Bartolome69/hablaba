@@ -5,6 +5,7 @@ import type { CriarCapture, CriarChild, CriarPack } from "@/lib/criar/types"
 import { ensureSeeded } from "@/lib/criar/seed"
 import { getPackByDate, listCaptures, todayKey } from "@/lib/criar/store"
 import { describeAge } from "@/lib/criar/stage"
+import { publishTodayHighlights } from "@/lib/today-highlights"
 import { CriarHeader } from "@/components/criar/criar-header"
 import { CaptureButton } from "@/components/criar/capture-button"
 import { PackGenerator } from "@/components/criar/pack-generator"
@@ -23,8 +24,21 @@ export default function CriarHomePage() {
   useEffect(() => {
     const seeded = ensureSeeded()
     setChild(seeded)
-    setPack(getPackByDate(seeded.id, todayKey()))
+    const todaysPack = getPackByDate(seeded.id, todayKey())
+    setPack(todaysPack)
     refreshCaptures(seeded.id)
+
+    // Publish a few of today's phrases for the main app's Today screen. Writing
+    // to a shared contract (not exporting a component) is what keeps the module
+    // boundary intact — see lib/today-highlights.ts.
+    if (todaysPack) {
+      publishTodayHighlights({
+        source: "grow",
+        title: `${seeded.name} · ${todaysPack.moment}`,
+        href: "/grow",
+        phrases: todaysPack.phrases.map((p) => ({ spanish: p.spanish, english: p.english })),
+      })
+    }
   }, [refreshCaptures])
 
   if (!child) {

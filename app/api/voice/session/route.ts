@@ -66,6 +66,15 @@ export async function POST(req: Request) {
         .filter((f): f is string => typeof f === "string")
         .map((f) => f.slice(0, 200))
         .slice(0, 3),
+      // Last stretch of a text thread that's escalating to voice. Trimmed to
+      // the recent tail — enough to continue the thread, not the whole history.
+      priorTurns: (Array.isArray(body.priorTurns) ? body.priorTurns : [])
+        .filter(
+          (t): t is { speaker: "user" | "assistant"; text: string } =>
+            !!t && (t.speaker === "user" || t.speaker === "assistant") && typeof t.text === "string",
+        )
+        .slice(-12)
+        .map((t) => ({ speaker: t.speaker, text: t.text.slice(0, 500) })),
     })
 
     const created = await getOpenAI().realtime.clientSecrets.create({

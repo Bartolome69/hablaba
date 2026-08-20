@@ -127,6 +127,8 @@ export interface VoiceInstructionInput {
   topicId?: string
   /** Last week's weak spots, from the analysis — woven in, never announced. */
   focusAreas?: string[]
+  /** The thread so far, when voice is taking over from a text conversation. */
+  priorTurns?: { speaker: "user" | "assistant"; text: string }[]
   /** Vocabulary flavour only — grammar is tú regardless. */
   dialect?: SpanishDialect
 }
@@ -136,9 +138,18 @@ export function buildVoiceInstructions({
   correctionLevel,
   topicId,
   focusAreas = [],
+  priorTurns = [],
   dialect = DEFAULT_DIALECT,
 }: VoiceInstructionInput): string {
   const topic = getVoiceTopic(topicId)
+
+  // Voice taking over from typing: continue the thread, don't restart it.
+  const prior =
+    priorTurns.length > 0
+      ? `\n\nTHE CONVERSATION SO FAR — you and the learner have already been talking about this IN WRITING, and they have just switched to speaking. Continue naturally from where it left off: pick up the thread, do NOT greet them as if this were a new conversation, and do not recap what was said. Your first spoken turn should follow on as if you had been talking aloud all along.\n${priorTurns
+          .map((t) => `${t.speaker === "user" ? "LEARNER" : "YOU"}: ${t.text}`)
+          .join("\n")}`
+      : ""
 
   const focus =
     focusAreas.length > 0
@@ -189,7 +200,7 @@ YOUR JOB IS TO ELICIT SPEECH, NOT TO TALK. This is a 5–15 minute conversation 
 
 ${CORRECTION_BLOCKS[correctionLevel]}
 
-CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${focus}${vocab}${lessons}`
+CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${prior}${focus}${vocab}${lessons}`
 }
 
 export function buildPackUserPrompt(req: PackApiRequest): string {

@@ -28,13 +28,15 @@ Marketing (route group `app/(marketing)/`, full-width):
 - `/` — Landing page (hero, how it works, features, audience teasers, FAQ)
 - `/for/[slug]` — Programmatic audience pages, content from `lib/marketing/audiences.ts`. Slugs in `audienceSlugs`.
 
-App (under `app/app/`, constrained to `max-w-lg` via its own layout):
-- `/app/practice` — Dashboard with practice mode selector, daily prompt, saved phrases, session resume
-- `/app/speak` — Speak/routine view; entry card into `/app/charla`
-- `/app/chat` — Chat interface, takes `?mode=solo|together` query param
-- `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by voice session reviews)
-- `/app/charla` (+ `historial/`, `[id]/`) — Hands-free voice conversation (see Voice mode below)
-- Legacy `/practice`, `/speak`, `/chat` paths 301-redirect to `/app/*` via `next.config.mjs`.
+App (under `app/app/`, constrained to `max-w-lg` via its own layout). Bottom
+nav is **Today / Charlar / Phrases / Exercises**, plus the gated Grow tab:
+- `/app/today` — Today: big Charlar card (resumes the latest thread, or starts one), Grow's published pack phrases, daily prompt, saved-phrase review
+- `/app/charla` — Conversations hub: resume cards (expire after 14 days), starters, history
+- `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
+- `/app/charla/historial` — Every conversation
+- `/app/speak` — Phrases by routine, with audio
+- `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
+- `/app/practice` and `/app/chat` are **retired** — 301'd to `/app/today` and `/app/charla`. Practice split into Today (the dashboard half) and Charlar (the conversations half); text chat became a conversation thread.
 
 Grow (under `app/grow/`, hidden module, `noindex` — internal codename "Criar", see below):
 - `/grow` — Bilingual-parenting module (daily Rioplatense phrase packs, capture, sparring, journal, voice). Reached via a gated tab (`criar_enabled` localStorage flag). `/criar/*` 301-redirects to `/grow/*` via `next.config.mjs`. Cleanly bounded: see `lib/criar/README.md` for boundary rules before importing anything across the module edge in either direction.
@@ -53,11 +55,32 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.
 - `POST /api/feedback` — Stub, returns 501 (not implemented)
 
+## Conversations (main app)
+
+**A conversation is one entity with two modalities.** `modality: text | voice`
+lives on the TURN, so a thread can be typed at the table, escalate to speech on
+a walk, and come back to typing — one history, one review. `lib/conversations/`
+owns it (`conversations` / `conversation_turns` / `conversation_observations`).
+
+- **Escalation**: the mic button in a thread mints a Realtime session seeded
+  with the thread's recent turns (`priorTurns`), so she continues rather than
+  greeting you cold. Voice turns append to the same thread with offset ordinals;
+  a new spoken stretch clears `analyzedAt` so the review re-runs over everything.
+- **Corrections split by modality, deliberately.** Text keeps inline correction
+  cards. Voice defers every correction to the post-session review — and
+  `/api/analyze` is told that SPOKEN turns are speech-to-text output, so nothing
+  orthographic (accents, punctuation, capitalisation, spelling) may be reported
+  on them. Don't "improve" that by flagging accents on spoken turns.
+- Legacy `hablaba_sessions` + `hablaba_chat_*` and `voice_*` are migrated in on
+  first load (`migrateLegacyConversations`, flag-guarded and non-destructive).
+- **Grow is NOT unified** — it keeps its own sparring, voice mode and criar_*
+  tables behind its module boundary.
+
 ## Voice mode
 
 Hands-free spoken conversation (OpenAI Realtime over WebRTC, speech-to-speech)
 on two surfaces: `/grow/voice` (Grow; seeds pack phrases + captures, criar_*
-tables) and `/app/charla` (main app; child-free topics, voice_* tables).
+tables) and main-app conversations (`/app/charla/[id]`).
 Architecture and platform decisions live in `lib/criar/README.md`; the short
 version:
 
@@ -84,15 +107,14 @@ version:
 **SEO**: `app/sitemap.ts`, `app/robots.ts`, root `app/opengraph-image.tsx` and per-audience `app/(marketing)/for/[slug]/opengraph-image.tsx` generate dynamic OG images.
 
 **Key files**:
-- `hooks/use-chat.ts` — All chat state: messages array, loading, conversation history ref, correction attachment
-- `app/api/chat/route.ts` — OpenAI integration. Uses `openai.responses.create()` with `gpt-4o`, enforces JSON output (`{ reply, correction }`)
-- `lib/types.ts` — All shared types: `Message`, `Correction`, `Session`, `SavedPhrase`, `DailyPrompt`
-- `lib/data.ts` — Mock data only; no database exists yet
-- `lib/api.ts` — Client-side fetch wrappers
+- `lib/conversations/` — the unified conversation entity: store, types, `use-conversation.ts` (text side), `persistence.ts` (voice binding), `analysis.ts`
+- `app/api/chat/route.ts` — OpenAI integration for text turns, streams `{ reply, translation, correction }`
+- `lib/voice/` — the shared voice engine (adapter, `openai-realtime.ts`, platform forks, session hook)
+- `lib/voice-topics.ts` — conversation starters; topic choice doubles as grammar targeting
+- `lib/today-highlights.ts` — the published-view contract that lets Today show Grow's pack **without** the main app importing Grow
+- `lib/types.ts` — shared types: `Message`, `Correction`, `SavedPhrase`, `DailyPrompt`
 
-**Data flow**: `ChatInput` → `use-chat.ts` → `lib/api.ts` → `/api/chat` → OpenAI → response parsed and attached to message history
-
-**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `criar_*` keys in `lib/criar/store.ts` (Grow: children, packs, captures, sparring + voice sessions/turns/observations) and `voice_*` keys in `lib/voice/store.ts` (main-app voice). Exercises progress lives in `lib/exercises/store.ts`. The chat/practice surfaces remain in-memory; the feedback API is a stub.
+**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` in `lib/conversations/store.ts` (main app), `criar_*` keys in `lib/criar/store.ts` (Grow). Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
 
 ## Environment
 

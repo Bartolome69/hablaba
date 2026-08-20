@@ -2,8 +2,9 @@
 
 // Shared client half of the transcript analysis: turns + seed in, tagged
 // observations out, via the stateless /api/analyze route. Store-agnostic —
-// each surface (lib/criar/voice/analysis.ts for Grow, lib/voice/store.ts for
-// Speak) owns persistence and the analyzedAt bookkeeping around this call.
+// each surface (lib/criar/voice/analysis.ts for Grow,
+// lib/conversations/analysis.ts for the main app) owns persistence and the
+// analyzedAt bookkeeping around this call.
 
 import type { VoiceObservationType, VoiceSeedContext, VoiceTurnRecord } from "./types"
 

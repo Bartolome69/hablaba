@@ -7,11 +7,13 @@
 
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, Dumbbell, MessageSquare, Sprout } from "lucide-react"
+import { BookOpen, Dumbbell, MessagesSquare, Sprout, Sun } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { CRIAR_FLAG_EVENT, isCriarEnabled } from "@/lib/criar-flag"
 
-const HIDE_ON = ["/app/chat", "/app/charla", "/grow/sparring", "/grow/voice"]
+// Full-screen conversation views keep their own chrome. The Charlar HUB keeps
+// the bar (it's a top-level destination); only a conversation itself hides it.
+const HIDE_ON = ["/app/chat", "/app/charla/", "/grow/sparring", "/grow/voice"]
 
 export function BottomNav() {
   const pathname = usePathname()
@@ -35,8 +37,9 @@ export function BottomNav() {
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null
 
   const tabs = [
+    { id: "today", label: "Today", href: "/app/today", icon: Sun, active: pathname === "/app/today" },
+    { id: "charla", label: "Charlar", href: "/app/charla", icon: MessagesSquare, active: pathname.startsWith("/app/charla") },
     { id: "speak", label: "Phrases", href: "/app/speak", icon: BookOpen, active: pathname === "/app/speak" },
-    { id: "practice", label: "Practice", href: "/app/practice", icon: MessageSquare, active: pathname === "/app/practice" },
     { id: "exercises", label: "Exercises", href: "/app/exercises", icon: Dumbbell, active: pathname.startsWith("/app/exercises") },
     ...(criarEnabled
       ? [{ id: "criar", label: "Grow", href: "/grow", icon: Sprout, active: pathname.startsWith("/grow") }]
