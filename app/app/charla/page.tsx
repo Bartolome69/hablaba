@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight, History, Mic, Shuffle } from "lucide-react"
+import { ChevronRight, History, Mic } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
 import { createConversation, countTurns, listResumable } from "@/lib/conversations/store"
 import { runMigrations } from "@/lib/migrations"
@@ -61,11 +61,6 @@ export default function CharlaHubPage() {
     [router],
   )
 
-  const surprise = useCallback(() => {
-    const topic = starters[Math.floor(Math.random() * starters.length)]
-    startConversation(topic.id, topic.label, topic.emoji)
-  }, [startConversation])
-
   return (
     <div className="min-h-dvh bg-background px-4 py-6 pb-24">
       <AppHeader title="Charlar" subtitle="Conversá en español — escribiendo o en voz alta" />
@@ -102,19 +97,6 @@ export default function CharlaHubPage() {
         <p className="mb-4 text-sm text-muted-foreground">
           Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras y seguir hablando.
         </p>
-
-        <button
-          onClick={surprise}
-          className="mb-3 flex w-full items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground transition-all hover:brightness-110 active:scale-[0.98]"
-        >
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-foreground/15">
-            <Shuffle className="h-5 w-5" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-semibold">Sorprendeme</p>
-            <p className="text-xs opacity-75">Que elija ella el tema</p>
-          </div>
-        </button>
 
         <button
           onClick={() =>
