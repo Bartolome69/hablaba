@@ -1,10 +1,42 @@
 "use client"
 
+// One typed turn, Clay + calm. Serif text in a raised cream bubble (Hablaba)
+// or a pressed-in green one (you). The English lives as a fold inside the
+// bubble behind a tap, split by a hairline — never a second block competing
+// with the Spanish. Corrections are the screen's one terracotta moment: the
+// mis-said text gets a terracotta underline and a calm "Mejor: …" card sits
+// under the bubble. Never red, never an error icon.
+
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Bookmark, ChevronDown, Languages, Volume2, Loader2 } from "lucide-react"
+import { DuoIcon } from "@/components/icons"
 import type { Message } from "@/lib/types"
 import { useStreamedText } from "@/hooks/use-streamed-text"
+
+function stripFullStop(text: string): string {
+  return text.trim().replace(/\.$/, "")
+}
+
+// The mis-said span gets the terracotta underline; the rest of the sentence
+// stays clean. Falls back to underlining everything when the analysis
+// returned the whole message as "original".
+function underlineSpan(text: string, original: string) {
+  const needle = original.trim().replace(/\.$/, "")
+  const at = needle ? text.indexOf(needle) : -1
+  if (at < 0) {
+    return (
+      <span className="underline decoration-terracotta decoration-2 underline-offset-[3px]">{text}</span>
+    )
+  }
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className="underline decoration-terracotta decoration-2 underline-offset-[3px]">
+        {text.slice(at, at + needle.length)}
+      </span>
+      {text.slice(at + needle.length)}
+    </>
+  )
+}
 
 interface ChatBubbleProps {
   message: Message
@@ -14,7 +46,6 @@ interface ChatBubbleProps {
 }
 
 export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePhrase }: ChatBubbleProps) {
-  const [showCorrection, setShowCorrection] = useState(false)
   const [showTranslation, setShowTranslation] = useState(false)
   const [saved, setSaved] = useState(false)
   const [botSaved, setBotSaved] = useState(false)
@@ -24,11 +55,18 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
   // Smooth typed-out reveal for streaming bot replies.
   const { text: streamedText, caret } = useStreamedText(message.text, isBot && !!message.streaming)
 
-  const handleSave = () => {
-    if (!message.correction) return
-    const spanish = message.correction.corrected
-    const english = message.correction.corrected_translation ?? message.correction.explanation ?? ""
-    onSavePhrase?.(spanish, english, "correction")
+  const correction = message.correction
+  const hasImprovement =
+    !!correction &&
+    correction.original.trim().toLowerCase() !== correction.corrected.trim().toLowerCase()
+
+  const handleSaveCorrection = () => {
+    if (!correction) return
+    onSavePhrase?.(
+      correction.corrected,
+      correction.corrected_translation ?? correction.explanation ?? "",
+      "correction",
+    )
     setSaved(true)
   }
 
@@ -37,124 +75,107 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
     setBotSaved(true)
   }
 
-  return (
-    <div>
-      <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+  if (isUser) {
+    return (
+      <div className="flex flex-col items-end gap-[5px]">
+        <span className="smallcaps pr-1 text-terracotta">Tú</span>
         <div
-          className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-            isUser
-              ? "bg-primary text-primary-foreground rounded-br-md"
-              : "bg-secondary text-secondary-foreground rounded-bl-md"
-          }`}
+          className="max-w-[84%] rounded-[20px] rounded-br-[7px] bg-green px-[15px] py-3.5"
+          style={{ boxShadow: "0 3px 0 var(--hb-green-press)" }}
         >
-          <p className="text-sm leading-relaxed">
-            {isBot ? streamedText : message.text}
-            {isBot && caret && (
-              <span
-                aria-hidden
-                className="ml-0.5 inline-block w-[2px] h-[0.95em] translate-y-[0.12em] rounded-[1px] bg-current animate-pulse"
-              />
-            )}
+          <p className="font-serif text-lg leading-[1.4] text-cream">
+            {hasImprovement ? underlineSpan(message.text, correction.original) : message.text}
           </p>
-          {showTranslation && message.translation && (
-            <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border/50 italic">
-              {message.translation}
-            </p>
-          )}
         </div>
-        {isBot && (
-          <div className="flex flex-col gap-1 ml-1">
-            <button
-              onClick={onPlayRequest}
-              disabled={isPlaying}
-              className="p-2.5 rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary disabled:opacity-50"
-              aria-label="Play audio"
-            >
-              {isPlaying
-                ? <Loader2 className="w-4 h-4 animate-spin" />
-                : <Volume2 className="w-4 h-4" />
-              }
-            </button>
-            <button
-              onClick={() => setShowTranslation(!showTranslation)}
-              className={`p-2.5 rounded-full transition-colors ${
-                showTranslation
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
-              aria-label="Translate"
-            >
-              <Languages className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleSaveBot}
-              disabled={botSaved}
-              className={`p-2.5 rounded-full transition-colors disabled:opacity-100 ${
-                botSaved
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
-              aria-label={botSaved ? "Saved to review" : "Save phrase"}
-            >
-              <Bookmark className={`w-4 h-4 ${botSaved ? "fill-current" : ""}`} />
-            </button>
+
+        {correction && (
+          <div className="max-w-[84%] rounded-2xl bg-terracotta-tint px-[13px] py-[11px]">
+            <div className="flex items-start gap-[9px]">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mt-px flex-none" aria-hidden>
+                <circle cx="12" cy="12" r="9" fill="#C4633E" />
+                <path
+                  d="m8.2 12.4 2.6 2.6 5-5.2"
+                  stroke="#FFF6F1"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-[13px] font-semibold text-terracotta-ink">
+                  {hasImprovement ? "Mejor" : "Así se dice"}: «{stripFullStop(correction.corrected)}».
+                </p>
+                {correction.explanation && (
+                  <p className="text-xs leading-[1.4] text-[#96604A]">{correction.explanation}</p>
+                )}
+                {onSavePhrase && (
+                  <button
+                    onClick={handleSaveCorrection}
+                    disabled={saved}
+                    className="press-chip mt-1 self-start text-[11.5px] font-semibold text-terracotta-ink underline-offset-2 hover:underline disabled:no-underline disabled:opacity-70"
+                  >
+                    {saved ? "Guardada en Frases" : "Guardar en Frases"}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
+    )
+  }
 
-      {isUser && message.correction && (
-        <>
-          <div className="flex justify-end mt-1.5">
-            {(() => {
-              const hasImprovement = message.correction.original.trim().toLowerCase() !== message.correction.corrected.trim().toLowerCase()
-              return (
-                <button
-                  onClick={() => setShowCorrection(!showCorrection)}
-                  className={`flex items-center gap-1 text-xs hover:underline ${hasImprovement ? "text-red-500" : "text-green-600"}`}
-                >
-                  <span>{hasImprovement ? "See improvement" : "Native tip"}</span>
-                  <ChevronDown className={`w-3 h-3 transition-transform ${showCorrection ? "rotate-180" : ""}`} />
-                </button>
-              )
-            })()}
-          </div>
-
-          {showCorrection && (
-            <div className="flex justify-end mt-2">
-              <div className="max-w-[85%] bg-primary/5 border border-primary/20 rounded-xl p-3">
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">You said:</p>
-                    <p className="text-sm text-foreground line-through opacity-60">
-                      {message.correction.original}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">More natural:</p>
-                    <p className="text-sm text-primary font-medium">
-                      {message.correction.corrected}
-                    </p>
-                    {message.correction.corrected_translation && (
-                      <p className="text-xs text-muted-foreground mt-0.5 italic">
-                        {message.correction.corrected_translation}
-                      </p>
-                    )}
-                  </div>
-                  {message.correction.explanation && (
-                    <p className="text-xs text-muted-foreground italic border-t border-border pt-2 mt-2">
-                      {message.correction.explanation}
-                    </p>
-                  )}
-                </div>
-                <Button variant="ghost" size="sm" className="mt-2 h-7 text-xs" onClick={handleSave} disabled={saved}>
-                  <Bookmark className={`w-3 h-3 mr-1 ${saved ? "fill-current" : ""}`} />
-                  {saved ? "Saved!" : "Save phrase"}
-                </Button>
-              </div>
-            </div>
+  return (
+    <div className="flex flex-col items-start gap-[5px]">
+      <span className="smallcaps pl-1 text-ink-faint">Hablaba</span>
+      <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
+        <p
+          onClick={message.translation ? () => setShowTranslation((s) => !s) : undefined}
+          role={message.translation ? "button" : undefined}
+          aria-expanded={message.translation ? showTranslation : undefined}
+          className={`font-serif text-lg leading-[1.4] text-ink ${message.translation ? "cursor-pointer select-none" : ""}`}
+        >
+          {streamedText}
+          {caret && (
+            <span
+              aria-hidden
+              className="ml-0.5 inline-block h-[0.95em] w-[2px] translate-y-[0.12em] rounded-[1px] bg-current animate-pulse"
+            />
           )}
-        </>
-      )}
+        </p>
+
+        {showTranslation && message.translation && (
+          <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-soft">
+            {message.translation}
+          </p>
+        )}
+
+        {!message.streaming && (onPlayRequest || onSavePhrase) && (
+          <div className="mt-2.5 flex gap-2 border-t border-rule-soft pt-2.5">
+            {onPlayRequest && (
+              <button
+                onClick={onPlayRequest}
+                className="press-chip flex h-[30px] items-center gap-1.5 rounded-full bg-sunken px-[11px]"
+                aria-label="Escuchar este mensaje"
+              >
+                <DuoIcon name="escuchar" size={12} className={`text-ink ${isPlaying ? "animate-pulse" : ""}`} />
+                <span className="text-[11.5px] font-semibold text-ink">Escuchar</span>
+              </button>
+            )}
+            {onSavePhrase && (
+              <button
+                onClick={handleSaveBot}
+                disabled={botSaved}
+                className="press-chip flex h-[30px] items-center gap-1.5 rounded-full bg-sunken px-[11px] disabled:opacity-70"
+                aria-label={botSaved ? "Guardada en Frases" : "Guardar en Frases"}
+              >
+                <DuoIcon name="guardada" size={12} className="text-terracotta" />
+                <span className="text-[11.5px] font-semibold text-ink">{botSaved ? "Guardada" : "Guardar"}</span>
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

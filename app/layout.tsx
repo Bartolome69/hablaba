@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Fraunces } from 'next/font/google'
+import { Newsreader, Outfit } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { PwaRegister } from '@/components/pwa-register'
@@ -7,14 +7,17 @@ import { InstallPrompt } from '@/components/install-prompt'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
-const dmSans = DM_Sans({ 
-  subsets: ["latin"],
-  variable: '--font-dm-sans'
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-outfit',
 })
 
-const fraunces = Fraunces({ 
-  subsets: ["latin"],
-  variable: '--font-fraunces'
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-newsreader',
 })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://spanishroutine.com'
@@ -62,7 +65,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#f5efe6',
+  themeColor: '#f8f3eb',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -78,7 +81,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
+      <body className={`${outfit.variable} ${newsreader.variable} font-sans antialiased`}>
         <PostHogProvider>{children}</PostHogProvider>
         <PwaRegister />
         <InstallPrompt />

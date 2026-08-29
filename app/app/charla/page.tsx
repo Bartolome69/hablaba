@@ -9,8 +9,8 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight, History, Mic } from "lucide-react"
 import { AppHeader } from "@/components/home/app-header"
+import { DuoIcon, topicIcon } from "@/components/icons"
 import { createConversation, countTurns, listResumable } from "@/lib/conversations/store"
 import { runMigrations } from "@/lib/migrations"
 import { getProfile } from "@/lib/profile/store"
@@ -62,30 +62,30 @@ export default function CharlaHubPage() {
   )
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
+    <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
       <AppHeader title="Charlar" subtitle="Conversá en español — escribiendo o en voz alta" />
 
       {resumable.length > 0 && (
-        <section className="mb-8">
-          <h2 className="mb-3 font-serif text-base text-foreground">Seguir donde quedaste</h2>
-          <div className="space-y-2">
+        <section className="mb-[26px]">
+          <h2 className="px-1 font-serif text-[19px] text-ink">Seguir donde quedaste</h2>
+          <div className="stagger-children mt-2.5 space-y-2">
             {resumable.map((c) => (
               <Link
                 key={c.id}
                 href={`/app/charla/${c.id}`}
-                className="flex items-center gap-3 rounded-xl bg-secondary/50 px-4 py-3 transition-colors hover:bg-secondary active:scale-[0.99]"
+                className="press-chip flex items-center gap-3 rounded-[18px] bg-sunken px-3.5 py-[13px]"
               >
-                <span className="text-xl" aria-hidden>
-                  {c.emoji}
-                </span>
+                <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-green-tint text-ink">
+                  <DuoIcon name={topicIcon(c.starterId ?? undefined)} size={19} />
+                </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-foreground">{c.title}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="truncate text-[15px] font-semibold text-ink">{c.title}</p>
+                  <p className="text-[12.5px] text-ink-soft">
                     {counts[c.id] ?? 0} turnos · {relativeDay(c.lastTurnAt)}
                     {c.voiceSeconds > 0 && " · con voz"}
                   </p>
                 </div>
-                <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                <DuoIcon name="chevron" size={15} className="flex-none text-ink-soft" />
               </Link>
             ))}
           </div>
@@ -93,64 +93,56 @@ export default function CharlaHubPage() {
       )}
 
       <section>
-        <h2 className="mb-1 font-serif text-base text-foreground">Empezar una charla</h2>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras y seguir hablando.
+        <h2 className="px-1 font-serif text-[19px] text-ink">Empezar una charla</h2>
+        <p className="mt-1.5 px-1 text-[13px] leading-normal text-ink-soft">
+          Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras.
         </p>
 
         <button
-          onClick={() =>
-            startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")
-          }
-          className="mb-6 flex w-full items-center gap-3 rounded-2xl bg-secondary p-4 text-secondary-foreground transition-all hover:bg-secondary/80 active:scale-[0.98]"
+          onClick={() => startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")}
+          className="clay-green mt-3.5 flex w-full items-center gap-[13px] rounded-[22px] p-4 text-left"
         >
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent/25">
-            <span className="text-lg" aria-hidden>
-              🧸
-            </span>
+          <div className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[14px] bg-green-well">
+            <DuoIcon name="familia" size={24} className="text-[#EAF3EB]" />
           </div>
-          <div className="text-left">
-            <p className="text-sm font-semibold">Con tu peque</p>
-            <p className="text-xs text-muted-foreground">
-              Ella hace de tu hijo, para ensayar los momentos del día
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[15.5px] font-semibold text-cream">Con tu peque</p>
+            <p className="text-[12.5px] leading-snug text-green-on-dark">
+              Ella hace de tu hijo, para ensayar el día
             </p>
           </div>
         </button>
 
-        <div className="mb-6 grid grid-cols-2 gap-3">
+        <div className="mt-3 grid grid-cols-2 gap-2.5">
           {starters.map((topic) => (
             <button
               key={topic.id}
               onClick={() => startConversation(topic.id, topic.label, topic.emoji)}
-              className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left transition-all hover:bg-secondary/50 active:scale-[0.98]"
+              className="clay-card flex min-h-[104px] flex-col items-start gap-2.5 rounded-[20px] p-3.5 text-left"
             >
-              <span className="text-2xl" aria-hidden>
-                {topic.emoji}
-              </span>
-              <div>
-                <p className="text-sm font-medium text-foreground">{topic.label}</p>
-                <p className="text-xs text-muted-foreground">{topic.blurb}</p>
+              <DuoIcon name={topicIcon(topic.id)} size={26} className="text-ink" />
+              <div className="flex flex-col gap-0.5">
+                <p className="text-[14.5px] font-semibold text-ink">{topic.label}</p>
+                <p className="text-xs leading-[1.35] text-ink-soft">{topic.blurb}</p>
               </div>
             </button>
           ))}
         </div>
 
         {subjectCards.map(({ heading, topics }) => (
-          <div key={heading} className="mb-6">
-            <h3 className="mb-3 font-serif text-base text-foreground">{heading}</h3>
-            <div className="grid grid-cols-2 gap-3">
+          <div key={heading} className="mt-[26px]">
+            <h3 className="px-1 font-serif text-[19px] text-ink">{heading}</h3>
+            <div className="mt-2.5 grid grid-cols-2 gap-2.5">
               {topics.map((topic) => (
                 <button
                   key={topic.id}
                   onClick={() => startConversation(topic.id, topic.title, topic.emoji)}
-                  className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left transition-all hover:bg-secondary/50 active:scale-[0.98]"
+                  className="clay-card flex min-h-[104px] flex-col items-start gap-2.5 rounded-[20px] p-3.5 text-left"
                 >
-                  <span className="text-2xl" aria-hidden>
-                    {topic.emoji}
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{topic.title}</p>
-                    <p className="font-serif text-xs italic text-muted-foreground">
+                  <DuoIcon name={topicIcon(topic.id)} size={26} className="text-ink" />
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-[14.5px] font-semibold text-ink">{topic.title}</p>
+                    <p className="font-serif text-[12.5px] italic leading-[1.35] text-ink-soft">
                       {topic.spanish}
                     </p>
                   </div>
@@ -163,15 +155,15 @@ export default function CharlaHubPage() {
 
       <Link
         href="/app/charla/historial"
-        className="mt-6 flex items-center gap-3 rounded-xl px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
+        className="mt-6 flex items-center gap-2.5 border-t border-rule px-1 pt-4 text-ink transition-colors"
       >
-        <History className="h-4 w-4" />
+        <DuoIcon name="tiempo" size={18} />
         <span className="flex-1 text-sm font-medium">Todas tus charlas</span>
-        <ChevronRight className="h-4 w-4" />
+        <DuoIcon name="chevron" size={14} className="text-ink-soft" />
       </Link>
 
-      <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
-        <Mic className="h-3 w-3" />
+      <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-ink-soft">
+        <DuoIcon name="micro" size={13} className="text-ink-soft" detail="#8A9188" />
         Las charlas habladas se revisan al terminar
       </p>
     </div>

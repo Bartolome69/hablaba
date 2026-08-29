@@ -5,10 +5,13 @@
 // ever mean one thing. In-app speech-to-text was removed (Aug 2026) — two
 // identical mic icons with different meanings sat side by side, and keyboard
 // dictation (e.g. Wispr Flow) covers typing by voice better anyway.
+//
+// Clay + calm: a recessed input well (pressed into the clay, not floating on
+// it) under a row of quick-ask chips — Repetir / Ayudame / Más lento — that
+// send a ready-made Spanish request, so the ask itself never needs typing.
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Send } from "lucide-react"
+import { DuoIcon, type IconName } from "@/components/icons"
 
 // Common English words that rarely appear in Spanish
 const ENGLISH_STOP_WORDS = new Set([
@@ -26,11 +29,17 @@ function looksLikeEnglish(text: string): boolean {
   return englishCount / words.length > 0.35
 }
 
-// The composer is one `leading-6` line plus `py-2.5`, so a single line is 44px
-// — the same height as the send button next to it. Cap growth at five lines
-// and let the textarea scroll internally beyond that.
+const QUICK_ASKS: { label: string; icon: IconName; text: string }[] = [
+  { label: "Repetir", icon: "escuchar", text: "¿Lo podés repetir?" },
+  { label: "Ayudame", icon: "rayo", text: "Ayudame — ¿cómo lo digo mejor?" },
+  { label: "Más lento", icon: "lento", text: "Más despacio, por favor." },
+]
+
+// The composer is one `leading-6` line plus `py-3`, so a single line is 48px —
+// the recessed well from the handoff. Cap growth at five lines and let the
+// textarea scroll internally beyond that.
 const LINE_HEIGHT = 24
-const VERTICAL_PADDING = 20
+const VERTICAL_PADDING = 24
 const MIN_INPUT_HEIGHT = LINE_HEIGHT + VERTICAL_PADDING
 const MAX_INPUT_HEIGHT = LINE_HEIGHT * 5 + VERTICAL_PADDING
 
@@ -38,10 +47,11 @@ interface ChatInputProps {
   onSend: (message: string) => void
   onFocus?: () => void
   onHeightChange?: () => void
-  suggestions?: string[]
+  /** Show the Repetir / Ayudame / Más lento quick-ask chips. */
+  quickAsks?: boolean
 }
 
-export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }: ChatInputProps) {
+export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }: ChatInputProps) {
   const [value, setValue] = useState("")
   const [languageError, setLanguageError] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -73,8 +83,8 @@ export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }:
     }
   }, [onHeightChange])
 
-  // Layout effect so the height is right before paint — typing, suggestions
-  // and the reset after send all flow through `value`.
+  // Layout effect so the height is right before paint — typing and the reset
+  // after send both flow through `value`.
   useLayoutEffect(() => {
     resize()
   }, [value, resize])
@@ -113,63 +123,60 @@ export function ChatInput({ onSend, onFocus, onHeightChange, suggestions = [] }:
   const hasText = value.trim().length > 0
 
   return (
-    <div className="bg-background border-t border-border">
-      {suggestions.length > 0 && (
-        <div className="px-4 py-2 overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2">
-            {suggestions.map((suggestion) => (
+    <div>
+      {quickAsks && (
+        <div className="scrollbar-hide -mx-5 overflow-x-auto px-5 pb-3">
+          <div className="flex w-max gap-2">
+            {QUICK_ASKS.map((ask) => (
               <button
-                key={suggestion}
-                className="flex-shrink-0 text-xs bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full hover:bg-secondary/80 active:bg-secondary/70 transition-colors"
-                onClick={() => setValue(suggestion)}
+                key={ask.label}
+                onClick={() => onSend(ask.text)}
+                className="press-chip flex h-[34px] flex-none items-center gap-1.5 rounded-full bg-sunken px-[13px]"
               >
-                {suggestion}
+                <DuoIcon name={ask.icon} size={13} className="text-ink" />
+                <span className="text-[12.5px] font-medium text-ink">{ask.label}</span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <div className="px-4 py-3" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-        {languageError && (
-          <p className="text-xs text-destructive mb-2 px-1">
-            ¡Por favor escribe en español! (Please write in Spanish)
-          </p>
-        )}
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={textareaRef}
-            rows={1}
-            value={value}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            onFocus={onFocus}
-            placeholder="Escribe en español..."
-            lang="es"
-            autoCorrect="on"
-            autoCapitalize="sentences"
-            spellCheck
-            // 22px keeps a perfect pill at one line and stays softly rounded
-            // as the box grows, so there's no radius pop mid-transition.
-            className={`flex-1 min-w-0 resize-none overflow-hidden bg-secondary rounded-[22px] px-4 py-2.5 text-sm leading-6 outline-none focus:ring-2 transition-[height,box-shadow] duration-150 ease-out ${
-              languageError
-                ? "ring-2 ring-destructive/50 focus:ring-destructive/50"
-                : "focus:ring-primary/20"
-            }`}
-            style={{ height: MIN_INPUT_HEIGHT }}
-          />
+      {languageError && (
+        <p className="mb-2 px-1 text-xs font-medium text-terracotta-ink">
+          ¡Por favor escribe en español! (Please write in Spanish)
+        </p>
+      )}
 
-          {hasText && (
-            <Button
-              size="icon"
-              className="rounded-full flex-shrink-0 h-11 w-11"
-              onClick={handleSubmit}
-              aria-label="Send message"
-            >
-              <Send className="w-5 h-5" />
-            </Button>
-          )}
-        </div>
+      <div className="flex items-end gap-2.5">
+        <textarea
+          ref={textareaRef}
+          rows={1}
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          onFocus={onFocus}
+          placeholder="Escribí, o hablá…"
+          lang="es"
+          autoCorrect="on"
+          autoCapitalize="sentences"
+          spellCheck
+          // 24px keeps a perfect pill at one line and stays softly rounded
+          // as the box grows, so there's no radius pop mid-transition.
+          className={`clay-recessed min-w-0 flex-1 resize-none overflow-hidden rounded-[24px] px-[18px] py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-faint transition-[height,box-shadow] duration-150 ease-out ${
+            languageError ? "ring-2 ring-terracotta/50" : "focus:ring-1 focus:ring-green/40"
+          }`}
+          style={{ height: MIN_INPUT_HEIGHT }}
+        />
+
+        {hasText && (
+          <button
+            onClick={handleSubmit}
+            aria-label="Enviar"
+            className="clay-green flex h-12 w-12 flex-none items-center justify-center rounded-full"
+          >
+            <DuoIcon name="flecha" size={20} detail="#F7F3EC" />
+          </button>
+        )}
       </div>
     </div>
   )
