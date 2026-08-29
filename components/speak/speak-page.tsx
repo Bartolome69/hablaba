@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import Link from "next/link"
-import { Volume2, Loader2, Mic, ChevronRight } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
+import { DuoIcon, type IconName } from "@/components/icons"
 import { CaptureCard } from "@/components/phrases/capture-card"
 import { MomentPack } from "@/components/phrases/moment-pack"
 import { RoutineCard } from "@/components/speak/routine-card"
@@ -13,16 +12,22 @@ import { useTTS } from "@/hooks/use-tts"
 import { runMigrations } from "@/lib/migrations"
 import { completePendingCaptures } from "@/lib/phrases/pack"
 
-// Flat index of every phrase, used for the progress meter and phrase of the day.
+// Flat index of every phrase, used for the phrase of the day.
 const allPhrases = routines.flatMap((r) =>
   r.phrases.map((p, i) => ({
     id: `${r.id}-${i}`,
     spanish: p.spanish,
     english: p.english,
-    emoji: r.emoji,
     routineName: r.name,
   })),
 )
+
+const CATEGORY_ICONS: Record<string, IconName> = {
+  baby: "peque",
+  smalltalk: "pensamiento",
+  cafe: "taza",
+  travel: "avion",
+}
 
 function dayOfYear(now: Date): number {
   const start = new Date(now.getFullYear(), 0, 0)
@@ -50,90 +55,78 @@ export function SpeakPage() {
   const phraseOfDay = useMemo(() => allPhrases[dayOfYear(new Date()) % allPhrases.length], [])
   const potdPlaying = playingId === phraseOfDay.id
 
-  const handlePlay = (id: string, text: string) => {
-    play(id, text)
-  }
-
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <AppHeader title="Phrases" subtitle="Tap any phrase to hear it aloud" />
+    <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
+      <AppHeader title="Frases" subtitle="Tocá cualquier frase para escucharla" />
 
-      {/* Live voice conversation — hands-free practice with the AI partner */}
-      <Link
-        href="/app/charla"
-        className="mb-4 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/50 active:scale-[0.99]"
-      >
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
-          <Mic className="h-5 w-5 text-primary" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-foreground">Charlar</p>
-          <p className="text-xs text-muted-foreground">
-            Live voice conversation — hands-free, 5–15 min
-          </p>
-        </div>
-        <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-      </Link>
-
-      {/* Phrase of the day */}
-      <div className="mb-4 rounded-2xl bg-primary p-4 text-primary-foreground">
-        <div className="mb-2 flex items-center gap-2">
-          <span className="text-base">{phraseOfDay.emoji}</span>
-          <span className="text-xs font-medium uppercase tracking-wide opacity-80">Phrase of the day</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="font-serif text-lg leading-snug">{phraseOfDay.spanish}</p>
-            <p className="text-sm opacity-80">{phraseOfDay.english}</p>
+      {/* Phrase of the day — the screen's single green block. */}
+      <div className="clay-green-hero flex items-start gap-3.5 rounded-[26px] p-5">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <DuoIcon name="nueva" size={15} />
+            <span className="smallcaps-lg text-green-on-dark">Frase del día</span>
           </div>
-          <button
-            onClick={() => handlePlay(phraseOfDay.id, phraseOfDay.spanish)}
-            aria-label="Play phrase of the day"
-            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform active:scale-95"
-          >
-            {potdPlaying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Volume2 className="h-4 w-4" />}
-          </button>
+          <p className="font-serif text-[25px] leading-[1.2] tracking-[-0.015em] text-cream">
+            {phraseOfDay.spanish}
+          </p>
+          <p className="text-[13px] text-green-on-dark">{phraseOfDay.english}</p>
         </div>
+        <button
+          onClick={() => play(phraseOfDay.id, phraseOfDay.spanish)}
+          aria-label="Escuchar la frase del día"
+          className="press-disc flex h-11 w-11 flex-none items-center justify-center rounded-full bg-green-well"
+        >
+          <DuoIcon
+            name="escuchar"
+            size={20}
+            className={`text-cream ${potdPlaying ? "animate-pulse" : ""}`}
+          />
+        </button>
       </div>
 
       <CaptureCard onCaptured={() => setPackKey((k) => k + 1)} />
 
       <MomentPack key={packKey} />
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {categories.map((category) => {
-          const isActive = category.id === selected
-          const count = routines.filter((r) => r.category === category.id).length
-          return (
-            <button
-              key={category.id}
-              onClick={() => {
-                setSelected(category.id)
-                posthog.capture("category_selected", { category: category.id })
-              }}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground"
-              }`}
-            >
-              <span className="mr-1.5">{category.emoji}</span>
-              {category.label}
-              <span className={`ml-1.5 tabular-nums ${isActive ? "opacity-70" : "opacity-60"}`}>{count}</span>
-            </button>
-          )
-        })}
+      {/* Routine browsing, by situation. */}
+      <div className="mt-8">
+        <h2 className="px-1 font-serif text-[19px] text-ink">Frases por situación</h2>
+        <div className="scrollbar-hide -mx-[22px] mt-3 overflow-x-auto px-[22px]">
+          <div className="flex w-max gap-2">
+            {categories.map((category) => {
+              const isActive = category.id === selected
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setSelected(category.id)
+                    posthog.capture("category_selected", { category: category.id })
+                  }}
+                  aria-pressed={isActive}
+                  className={`flex h-[38px] flex-none items-center gap-[7px] rounded-full px-3.5 transition-transform duration-[120ms] active:translate-y-[2px] ${
+                    isActive ? "bg-green text-cream" : "bg-sunken-2 text-ink"
+                  }`}
+                  style={{
+                    boxShadow: isActive ? "0 3px 0 var(--hb-green-press)" : "0 2px 0 var(--hb-lip-sunken)",
+                  }}
+                >
+                  <DuoIcon name={CATEGORY_ICONS[category.id] ?? "brote"} size={15} />
+                  <span className="text-[13px] font-medium">{category.label}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
-      <h2 className="font-serif text-base text-foreground mb-3">{activeCategory.label}</h2>
-
-      <div className="space-y-3">
+      <div className="mt-4 space-y-2.5">
         {visible.map((routine) => (
           <RoutineCard
             key={routine.id}
             routine={routine}
+            icon={CATEGORY_ICONS[activeCategory.id] ?? "brote"}
             playingId={playingId}
-            onPlay={handlePlay}
+            onPlay={play}
           />
         ))}
       </div>

@@ -5,9 +5,9 @@
 // no waiting for a daily pack to teach it back.
 
 import { useState } from "react"
-import { Loader2, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
+import { DuoIcon } from "@/components/icons"
 import { capturePhrase } from "@/lib/phrases/pack"
 
 export function CaptureCard({ onCaptured }: { onCaptured?: () => void }) {
@@ -38,12 +38,12 @@ export function CaptureCard({ onCaptured }: { onCaptured?: () => void }) {
   }
 
   return (
-    <div className="mb-5 rounded-2xl border border-border bg-card p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <Zap className="h-4 w-4 text-primary" />
-        <p className="text-sm font-medium text-foreground">¿Qué no pudiste decir hoy?</p>
+    <div className="clay-static mt-3.5 rounded-[22px] p-4">
+      <div className="flex items-center gap-2">
+        <DuoIcon name="rayo" size={17} />
+        <p className="text-[14.5px] font-semibold text-ink">¿Qué no pudiste decir hoy?</p>
       </div>
-      <div className="flex gap-2">
+      <div className="mt-3 flex gap-[9px]">
         <input
           type="text"
           value={value}
@@ -51,14 +51,21 @@ export function CaptureCard({ onCaptured }: { onCaptured?: () => void }) {
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder="En cualquier idioma…"
           disabled={busy}
-          className="min-w-0 flex-1 rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary disabled:opacity-60"
+          className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40 disabled:opacity-60"
         />
         <button
           onClick={submit}
           disabled={busy || !value.trim()}
-          className="flex h-10 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition-all active:scale-[0.97] disabled:opacity-50"
+          className="clay-green flex h-11 flex-none items-center justify-center rounded-full px-5 text-[14.5px] font-semibold text-cream disabled:opacity-50"
         >
-          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Dale"}
+          {busy ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-spin" aria-hidden>
+              <circle cx="12" cy="12" r="9" stroke="#F7F3EC" strokeOpacity=".3" strokeWidth="2.6" />
+              <path d="M21 12a9 9 0 0 0-9-9" stroke="#F7F3EC" strokeWidth="2.6" strokeLinecap="round" />
+            </svg>
+          ) : (
+            "Dale"
+          )}
         </button>
       </div>
     </div>

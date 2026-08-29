@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Settings } from "lucide-react"
+import { DuoIcon } from "@/components/icons"
 import { StreakBadge } from "@/components/home/streak-badge"
 import { SettingsSheet } from "@/components/settings-sheet"
 import { useStreak } from "@/hooks/use-streak"
@@ -9,28 +9,32 @@ import { useStreak } from "@/hooks/use-streak"
 interface AppHeaderProps {
   title: string
   subtitle?: string
+  /** Show the streak pill + settings disc — Hoy only, per the handoff. */
+  controls?: boolean
 }
 
-export function AppHeader({ title, subtitle }: AppHeaderProps) {
+export function AppHeader({ title, subtitle, controls = false }: AppHeaderProps) {
   const streak = useStreak()
   const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
     <header className="mb-6 flex items-start justify-between">
-      <div className="flex flex-col">
-        <h1 className="font-serif text-2xl font-semibold text-foreground leading-tight">{title}</h1>
-        {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+      <div className="flex flex-col gap-1">
+        <h1 className="font-serif text-[34px] leading-none tracking-[-0.025em] text-ink">{title}</h1>
+        {subtitle && <p className="text-[13.5px] text-ink-soft">{subtitle}</p>}
       </div>
-      <div className="flex items-center gap-2 pt-1">
-        <StreakBadge count={streak} />
-        <button
-          onClick={() => setSheetOpen(true)}
-          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground active:scale-[0.98] transition-all"
-          aria-label="Settings"
-        >
-          <Settings className="w-4 h-4" />
-        </button>
-      </div>
+      {controls && (
+        <div className="flex items-center gap-2 pt-0.5">
+          <StreakBadge count={streak} />
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="clay-well flex h-[38px] w-[38px] items-center justify-center rounded-full bg-sunken-2 text-ink"
+            aria-label="Ajustes"
+          >
+            <DuoIcon name="ajustes" size={19} />
+          </button>
+        </div>
+      )}
 
       <SettingsSheet open={sheetOpen} onOpenChange={setSheetOpen} />
     </header>

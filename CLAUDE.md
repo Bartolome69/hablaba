@@ -140,7 +140,14 @@ RESEND_AUDIENCE_ID=           # Optional — Resend audience to add waitlist con
 
 ## Styling
 
-Tailwind CSS 4 with `@tailwindcss/postcss`. CSS variables use OKLch color space, defined in `app/globals.css`. Fonts: DM Sans (body) and Fraunces (headings) via `next/font`.
+Tailwind CSS 4 with `@tailwindcss/postcss`. The visual system is **Clay + calm**
+(Aug 2026 handoff — see `DESIGN.md`): fixed hex palette (cream bg `#F8F3EB`,
+forest ink `#1E3D2C`, green `#1B5A2E`, terracotta `#C4633E` as a one-per-screen
+spot colour), press-physics utilities (`clay-card`, `clay-green`,
+`clay-recessed`…) and motion keyframes defined in `app/globals.css`. Fonts:
+Outfit (UI) and Newsreader (display + all Spanish phrase text) via `next/font`.
+Icons are the bespoke duotone set in `components/icons.tsx` — no emoji, no
+icon libraries on app surfaces.
 
 ## Notes
 

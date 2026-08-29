@@ -1,68 +1,70 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, Volume2, Loader2 } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
+import { DuoIcon, type IconName } from "@/components/icons"
 import type { Routine } from "@/lib/routines"
 
 interface RoutineCardProps {
   routine: Routine
+  icon: IconName
   playingId: string | null
   onPlay: (id: string, text: string) => void
 }
 
-export function RoutineCard({ routine, playingId, onPlay }: RoutineCardProps) {
+export function RoutineCard({ routine, icon, playingId, onPlay }: RoutineCardProps) {
   const [expanded, setExpanded] = useState(false)
   const posthog = usePostHog()
 
   return (
-    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <div className="clay-static overflow-hidden rounded-[20px]">
       <button
         onClick={() => {
           const next = !expanded
           if (next) posthog.capture("routine_opened", { routine_id: routine.id, routine_name: routine.name })
           setExpanded(next)
         }}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-secondary/50 active:scale-[0.98] transition-all"
+        aria-expanded={expanded}
+        className="press-chip flex w-full items-center gap-3 p-4 text-left"
       >
-        <span className="text-2xl">{routine.emoji}</span>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-foreground">{routine.name}</p>
-          <p className="text-xs text-muted-foreground">{routine.context}</p>
+        <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-green-tint text-ink">
+          <DuoIcon name={icon} size={19} />
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <ChevronDown
-            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
-              expanded ? "rotate-180" : ""
-            }`}
-          />
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] font-semibold text-ink">{routine.name}</p>
+          <p className="text-[12.5px] text-ink-soft">{routine.context}</p>
         </div>
+        <DuoIcon
+          name="chevron"
+          size={15}
+          className={`flex-none text-ink-soft transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+        />
       </button>
 
       {expanded && (
-        <div className="border-t border-border divide-y divide-border">
+        <div className="divide-y divide-rule-soft border-t border-rule-soft">
           {routine.phrases.map((phrase, i) => {
             const id = `${routine.id}-${i}`
             const isPlaying = playingId === id
             return (
               <div key={id} className="flex items-center gap-3 px-4 py-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{phrase.spanish}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{phrase.english}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{phrase.spanish}</p>
+                  <p className="mt-0.5 text-[12.5px] text-ink-soft">{phrase.english}</p>
                 </div>
                 <button
                   onClick={() => onPlay(id, phrase.spanish)}
-                  className={`flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-colors ${
-                    isPlaying
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  aria-label={`Escuchar: ${phrase.spanish}`}
+                  className={`press-disc flex h-9 w-9 flex-none items-center justify-center rounded-full ${
+                    isPlaying ? "bg-green text-cream" : "bg-sunken-2 text-ink"
                   }`}
                 >
-                  {isPlaying ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Volume2 className="w-3.5 h-3.5" />
-                  )}
+                  <DuoIcon
+                    name="escuchar"
+                    size={17}
+                    detail={isPlaying ? "#8FBE9C" : undefined}
+                    className={isPlaying ? "animate-pulse" : undefined}
+                  />
                 </button>
               </div>
             )

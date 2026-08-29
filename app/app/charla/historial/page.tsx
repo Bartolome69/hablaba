@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, ChevronRight, Mic, MessageSquare, Trash2 } from "lucide-react"
+import { DuoIcon, topicIcon } from "@/components/icons"
 import { countTurns, deleteConversation, listConversations } from "@/lib/conversations/store"
 import { runMigrations } from "@/lib/migrations"
 import type { Conversation } from "@/lib/conversations/types"
@@ -48,61 +48,62 @@ export default function ConversationHistoryPage() {
   if (!loaded) return <div className="min-h-dvh bg-background" />
 
   return (
-    <div className="min-h-dvh bg-background px-4 py-6 pb-24">
-      <div className="mb-6 flex items-center gap-3">
+    <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
+      <div className="mb-6 flex items-center gap-3.5">
         <Link
           href="/app/charla"
           aria-label="Volver a Charlar"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.98]"
+          className="clay-card flex h-9 w-9 items-center justify-center rounded-[13px] text-ink"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <DuoIcon name="volver" size={18} />
         </Link>
         <div>
-          <h1 className="font-serif text-lg font-semibold text-foreground">Tus charlas</h1>
-          <p className="text-xs text-muted-foreground">Todo lo que hablaste y escribiste</p>
+          <h1 className="font-serif text-[22px] leading-tight tracking-[-0.015em] text-ink">Tus charlas</h1>
+          <p className="text-xs text-ink-soft">Todo lo que hablaste y escribiste</p>
         </div>
       </div>
 
       {rows.length === 0 ? (
         <div className="mt-12 flex flex-col items-center gap-3 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-            <MessageSquare className="h-5 w-5 text-muted-foreground" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sunken-2 text-ink">
+            <DuoIcon name="charlar" size={22} />
           </div>
-          <p className="max-w-[24ch] text-sm text-balance text-muted-foreground">
+          <p className="max-w-[24ch] text-sm text-balance text-ink-muted">
             Todavía no hay charlas. Después de la primera aparecen acá.
           </p>
-          <Link href="/app/charla" className="text-sm font-medium text-primary">
-            Empezar una charla →
+          <Link href="/app/charla" className="flex items-center gap-1.5 text-sm font-semibold text-green">
+            Empezar una charla
+            <DuoIcon name="flecha" size={14} />
           </Link>
         </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="stagger-children space-y-2">
           {rows.map(({ conversation, turns, voiceTurns }) => (
             <li key={conversation.id} className="flex items-center gap-2">
               <Link
                 href={`/app/charla/${conversation.id}`}
-                className="flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-secondary/50 px-4 py-3 transition-colors hover:bg-secondary active:scale-[0.99]"
+                className="press-chip flex min-w-0 flex-1 items-center gap-3 rounded-[18px] bg-sunken px-3.5 py-[13px]"
               >
-                <span className="text-xl" aria-hidden>
-                  {conversation.emoji}
-                </span>
+                <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-green-tint text-ink">
+                  <DuoIcon name={topicIcon(conversation.starterId ?? undefined)} size={19} />
+                </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-foreground">
+                  <p className="truncate text-[15px] font-semibold text-ink">
                     {conversation.title}
                   </p>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <p className="flex items-center gap-1 text-[12.5px] text-ink-soft">
                     <span className="capitalize">{formatDay(conversation.lastTurnAt)}</span>
                     <span>· {turns} turnos</span>
                     {voiceTurns > 0 && (
                       <>
-                        <Mic className="h-3 w-3" aria-label="con voz" />
+                        <DuoIcon name="micro" size={12} className="text-ink-soft" detail="#8A9188" />
                         {conversation.voiceSeconds > 0 &&
                           `${Math.max(1, Math.round(conversation.voiceSeconds / 60))}′`}
                       </>
                     )}
                   </p>
                 </div>
-                <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                <DuoIcon name="chevron" size={15} className="flex-none text-ink-soft" />
               </Link>
               <button
                 onClick={() => {
@@ -110,9 +111,17 @@ export default function ConversationHistoryPage() {
                   load()
                 }}
                 aria-label={`Borrar la charla ${conversation.title}`}
-                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                className="press-disc flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-ink-soft transition-colors hover:text-terracotta-ink"
               >
-                <Trash2 className="h-4 w-4" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path
+                    d="M5 6.6h14M9.4 6.6V4.8a1.2 1.2 0 0 1 1.2-1.2h2.8a1.2 1.2 0 0 1 1.2 1.2v1.8M7 6.6l.8 12a1.6 1.6 0 0 0 1.6 1.5h5.2a1.6 1.6 0 0 0 1.6-1.5l.8-12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
             </li>
           ))}

@@ -1,14 +1,17 @@
 "use client"
 
-// The conversation controls. Sized and positioned for a thumb on a phone that's
-// being held one-handed over a pram.
+// The voice console, Clay + calm. Three controls in a row, every one labelled
+// — "cuadrado = terminar y guardar" explained in text is exactly what this
+// replaces — under a live caption bar that shows what the mic is hearing, so
+// the pause disc never covers the conversation and you always know she's
+// listening.
 //
-// The big button is always the thing you most likely want next — start, pause,
-// or resume. Ending is a deliberately separate, smaller target, because ending
-// is the one action you can't undo: reaching for "pause" and hitting "stop"
-// would lose the thread of the conversation.
+// The big disc is always the thing you most likely want next — pause or
+// resume. Ending is a deliberately separate target, because ending is the one
+// action you can't undo: reaching for "pause" and hitting "stop" would lose
+// the thread of the conversation.
 
-import { Loader2, Mic, Play, Square, Volume1, Volume2 } from "lucide-react"
+import { DuoIcon } from "@/components/icons"
 import type { VoiceConnectionState } from "@/lib/voice/types"
 
 const PRIMARY_LABELS: Record<VoiceConnectionState, string> = {
@@ -16,20 +19,20 @@ const PRIMARY_LABELS: Record<VoiceConnectionState, string> = {
   "requesting-mic": "Permitiendo…",
   connecting: "Conectando…",
   live: "Pausar",
-  paused: "Seguir",
+  paused: "Continuar",
   interrupted: "Volver",
   ended: "Empezar de nuevo",
   error: "Reintentar",
 }
 
-const STATUS: Record<VoiceConnectionState, string> = {
+const CAPTION_FALLBACK: Record<VoiceConnectionState, string> = {
   idle: "Listo cuando quieras",
-  "requesting-mic": "Esperando el micrófono",
-  connecting: "Conectando",
-  live: "En línea",
-  paused: "En pausa · micrófono apagado",
-  interrupted: "Se pausó",
-  ended: "Terminada",
+  "requesting-mic": "Esperando el micrófono…",
+  connecting: "Conectando…",
+  live: "Te escucho — hablá cuando quieras",
+  paused: "En pausa · nadie te escucha",
+  interrupted: "Se pausó al salir de la pantalla",
+  ended: "Charla guardada",
   error: "Algo falló",
 }
 
@@ -42,6 +45,7 @@ function formatElapsed(seconds: number): string {
 export function VoiceOrb({
   state,
   userSpeaking,
+  caption,
   elapsed,
   nearLimit,
   onStart,
@@ -53,6 +57,8 @@ export function VoiceOrb({
 }: {
   state: VoiceConnectionState
   userSpeaking: boolean
+  /** Partial transcript of what the parent is saying right now. */
+  caption?: string
   elapsed: number
   nearLimit: boolean
   onStart: () => void
@@ -68,97 +74,114 @@ export function VoiceOrb({
   const inConversation = live || paused
 
   const primaryAction = live ? onPause : paused ? onResume : busy ? onStop : onStart
+  const barsAnimate = live && (userSpeaking || !caption)
 
   return (
-    <div className="flex flex-col items-center gap-3 px-4 pb-6 pt-4">
-      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+    <div
+      className="flex flex-col items-center gap-3.5 px-[22px] pt-[18px]"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom), 1.5rem)" }}
+    >
+      {/* Live caption bar: the proof she's hearing you, without a screen full
+          of transcript between you and the pause button. */}
+      <div className="flex w-full items-center gap-2.5 rounded-2xl bg-sunken px-3.5 py-[9px]">
+        <div className="flex h-[15px] flex-none items-end gap-[3px]" aria-hidden>
+          {[0.4, 0.65, 1, 0.65].map((opacity, i) => (
+            <span
+              key={i}
+              className={`w-[3px] rounded-[2px] ${i === 2 ? "bg-terracotta" : "bg-green"} ${
+                barsAnimate ? "anim-bar" : ""
+              }`}
+              style={{
+                height: barsAnimate ? 15 : 4 + i * 2 - (i === 3 ? 4 : 0),
+                opacity: i === 2 ? 1 : opacity,
+                animationDelay: `${i * 150}ms`,
+              }}
+            />
+          ))}
+        </div>
         <span
-          aria-hidden
-          className={`h-1.5 w-1.5 rounded-full ${
-            live
-              ? "bg-emerald-500"
-              : paused
-                ? "bg-amber-500"
-                : state === "error"
-                  ? "bg-destructive"
-                  : busy
-                    ? "bg-amber-500 animate-pulse"
-                    : "bg-muted-foreground/40"
-          }`}
-        />
-        <span aria-live="polite">{STATUS[state]}</span>
+          aria-live="polite"
+          className="min-w-0 flex-1 truncate font-serif text-[13px] text-ink-muted"
+        >
+          {caption || CAPTION_FALLBACK[state]}
+        </span>
         {inConversation && (
-          <span className={nearLimit ? "text-amber-600 dark:text-amber-500" : undefined}>
-            · {formatElapsed(elapsed)}
+          <span
+            className={`flex-none text-[11px] font-medium tabular-nums ${
+              nearLimit ? "text-terracotta-ink" : "text-ink-soft"
+            }`}
+          >
+            {formatElapsed(elapsed)}
           </span>
         )}
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* Volume sits opposite the end button — it balances the row so the
-            primary button stays optically centred, and it's adjustable
-            mid-conversation (unlike topic or corrígeme, which are baked in when
-            the session is minted). */}
-        {inConversation && (
+      <div className="flex items-center gap-5">
+        {/* Volume: adjustable mid-conversation (unlike topic or corrígeme,
+            which are baked in when the session is minted). */}
+        <div className="flex w-[62px] flex-col items-center gap-1.5">
           <button
             onClick={onCycleGain}
             aria-label={`Volumen ${outputGain}× — tocá para cambiar`}
-            className="flex h-12 w-12 flex-col items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.97]"
+            className="clay-card flex h-14 w-14 items-center justify-center rounded-full text-ink"
           >
-            {outputGain > 1 ? <Volume2 className="h-4 w-4" /> : <Volume1 className="h-4 w-4" />}
-            <span className="text-[10px] font-medium tabular-nums leading-none">
-              {outputGain}×
-            </span>
+            <DuoIcon name="escuchar" size={24} />
           </button>
-        )}
+          <span className="text-[11px] text-ink-soft">Volumen {outputGain}×</span>
+        </div>
 
-        <button
-          onClick={primaryAction}
-          disabled={state === "requesting-mic"}
-          aria-label={PRIMARY_LABELS[state]}
-          className={`relative flex h-20 w-20 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-transform active:scale-[0.96] disabled:opacity-70 ${
-            live ? "bg-foreground" : "bg-primary"
-          }`}
-        >
-          {/* Breathing ring while the parent is being heard — the only feedback
-              that the mic is actually picking them up, at a glance, at arm's length. */}
-          {live && userSpeaking && (
-            <span
-              aria-hidden
-              className="absolute inset-0 animate-ping rounded-full bg-foreground/30"
-            />
-          )}
-          {busy ? (
-            <Loader2 className="h-7 w-7 animate-spin" />
-          ) : live ? (
-            <span aria-hidden className="flex gap-1.5">
-              <span className="h-6 w-[5px] rounded-sm bg-current" />
-              <span className="h-6 w-[5px] rounded-sm bg-current" />
-            </span>
-          ) : paused ? (
-            <Play className="ml-0.5 h-7 w-7 fill-current" />
-          ) : (
-            <Mic className="h-7 w-7" />
-          )}
-        </button>
+        <div className="flex flex-col items-center gap-2">
+          <div className="relative flex h-[112px] w-[112px] items-center justify-center">
+            {live && (
+              <span aria-hidden className="anim-breathe absolute inset-0 rounded-full bg-green-ring" />
+            )}
+            <button
+              onClick={primaryAction}
+              disabled={state === "requesting-mic"}
+              aria-label={PRIMARY_LABELS[state]}
+              className="clay-green-disc relative flex h-[88px] w-[88px] items-center justify-center rounded-full text-cream disabled:opacity-70"
+            >
+              {busy ? (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" className="animate-spin" aria-hidden>
+                  <circle cx="12" cy="12" r="9" stroke="#F7F3EC" strokeOpacity=".3" strokeWidth="2.6" />
+                  <path d="M21 12a9 9 0 0 0-9-9" stroke="#F7F3EC" strokeWidth="2.6" strokeLinecap="round" />
+                </svg>
+              ) : live ? (
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <rect x="7" y="5" width="4" height="14" rx="2" fill="#F7F3EC" />
+                  <rect x="13" y="5" width="4" height="14" rx="2" fill="#F7F3EC" />
+                </svg>
+              ) : paused ? (
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path
+                    d="M8.8 5.4 18 12l-9.2 6.6Z"
+                    fill="#F7F3EC"
+                    stroke="#F7F3EC"
+                    strokeWidth="2.6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <DuoIcon name="micro" size={32} detail="#8FBE9C" />
+              )}
+            </button>
+          </div>
+          <span className="text-[12.5px] font-semibold text-ink" aria-live="polite">
+            {PRIMARY_LABELS[state]}
+          </span>
+        </div>
 
-        {inConversation && (
+        <div className="flex w-[62px] flex-col items-center gap-1.5">
           <button
             onClick={onStop}
             aria-label="Terminar y guardar la charla"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-all hover:text-foreground active:scale-[0.97]"
+            className="clay-card flex h-14 w-14 items-center justify-center rounded-full"
           >
-            <Square className="h-4 w-4 fill-current" />
+            <DuoIcon name="parar" size={22} />
           </button>
-        )}
+          <span className="text-[11px] text-ink-soft">Terminar</span>
+        </div>
       </div>
-
-      <p className="text-sm font-medium text-foreground">{PRIMARY_LABELS[state]}</p>
-      {inConversation && (
-        <p className="-mt-2 text-xs text-muted-foreground">
-          {paused ? "Nadie te escucha · tocá para seguir" : "Cuadrado = terminar y guardar"}
-        </p>
-      )}
     </div>
   )
 }
