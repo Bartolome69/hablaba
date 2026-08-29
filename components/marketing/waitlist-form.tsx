@@ -4,8 +4,6 @@ import { useState } from "react"
 import { usePathname } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 interface WaitlistFormProps {
   audience?: string
@@ -47,25 +45,29 @@ export function WaitlistForm({ audience, placement = "hero", className }: Waitli
 
   if (done) {
     return (
-      <p className={`text-sm text-muted-foreground ${className ?? ""}`}>
-        Thanks — we'll be in touch soon.
+      <p className={`text-sm text-ink-muted ${className ?? ""}`}>
+        Thanks — we&apos;ll be in touch soon.
       </p>
     )
   }
 
   return (
-    <form onSubmit={onSubmit} className={`flex w-full max-w-md flex-col gap-2 sm:flex-row ${className ?? ""}`}>
-      <Input
+    <form onSubmit={onSubmit} className={`flex w-full max-w-md flex-col gap-2.5 sm:flex-row ${className ?? ""}`}>
+      <input
         type="email"
         required
         placeholder="you@example.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="h-11 rounded-full bg-background"
+        className="clay-recessed h-12 min-w-0 flex-1 rounded-full px-5 text-[15px] text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40"
       />
-      <Button type="submit" disabled={submitting} className="h-11 rounded-full px-6">
+      <button
+        type="submit"
+        disabled={submitting}
+        className="clay-green h-12 flex-none rounded-full px-6 text-[15px] font-semibold text-cream disabled:opacity-60"
+      >
         {submitting ? "Joining…" : "Join waitlist"}
-      </Button>
+      </button>
     </form>
   )
 }
