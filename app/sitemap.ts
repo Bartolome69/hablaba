@@ -3,8 +3,7 @@ import { audienceSlugs } from "@/lib/marketing/audiences"
 import { coveredTopics } from "@/lib/exercises/content"
 import { phrasePages } from "@/lib/marketing/phrase-pages"
 import { routines } from "@/lib/routines"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://spanishroutine.com"
+import { SITE_URL } from "@/lib/site"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()

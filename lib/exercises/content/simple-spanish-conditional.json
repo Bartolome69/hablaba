@@ -8,7 +8,7 @@
   "lessons": [
     {
       "topicId": "conditional",
-      "summary": "The conditional (el condicional) is the 'would / could / should' mood. Form it by adding -ía, -ías, -ía, -íamos, -ían to the whole infinitive: hablaría, comería, viviría. 'Could' = poder in the conditional (podría); 'should' = deber in the conditional (debería). Some verbs use an irregular stem — the same stems as the future tense: tener → tendría, hacer → haría, decir → diría, poner → pondría, salir → saldría, venir → vendría, poder → podría, saber → sabría, querer → querría, haber → habría, valer → valdría, caber → cabría.",
+      "summary": "The conditional (el condicional) is the 'would / could / should' mood. Form it by adding -ía, -ías, -ía, -íamos, -ían to the whole infinitive: hablaría, comería, viviría. 'Could' = poder in the conditional (podría); 'should' = deber in the conditional (debería). Some verbs use an irregular stem (the same stems as the future tense): tener → tendría, hacer → haría, decir → diría, poner → pondría, salir → saldría, venir → vendría, poder → podría, saber → sabría, querer → querría, haber → habría, valer → valdría, caber → cabría.",
       "examples": [
         { "spanish": "Podría regresar más tarde.", "english": "I could come back later.", "note": "could = poder in the conditional" },
         { "spanish": "Debería esperar.", "english": "I should wait.", "note": "should = deber in the conditional" },
@@ -115,7 +115,7 @@
       "id": "cond-cl-couldnt",
       "topicId": "conditional",
       "type": "cloze",
-      "prompt": "No ___ hacerlo. (poder — 'I couldn't')",
+      "prompt": "No ___ hacerlo. (poder: 'I couldn't')",
       "promptEnglish": "I couldn't do it.",
       "answers": ["podría"],
       "explanation": "poder in the conditional, yo: podría.",
@@ -125,7 +125,7 @@
       "id": "cond-cl-should-write",
       "topicId": "conditional",
       "type": "cloze",
-      "prompt": "___ escribir con cuidado. (deber, tú — 'you should')",
+      "prompt": "___ escribir con cuidado. (deber, tú: 'you should')",
       "promptEnglish": "You should write carefully.",
       "answers": ["deberías"],
       "explanation": "deber in the conditional, tú: deberías.",
@@ -135,7 +135,7 @@
       "id": "cond-cl-would-tell",
       "topicId": "conditional",
       "type": "cloze",
-      "prompt": "Te lo ___ pero es un secreto. (decir — 'I would tell you')",
+      "prompt": "Te lo ___ pero es un secreto. (decir: 'I would tell you')",
       "promptEnglish": "I would tell you, but it's a secret.",
       "answers": ["diría"],
       "explanation": "decir in the conditional, yo: diría (irregular stem dir-).",
@@ -159,7 +159,7 @@
       "promptEnglish": "Write a conditional sentence about something you would do with more free time.",
       "guidance": "Must be grammatical Spanish using a conditional verb form (-ía/-ías/-ía/-íamos/-ían endings), e.g. 'Viajaría por el mundo.' Mark incorrect if it uses the future ('viajaré') or present instead of the conditional.",
       "sampleAnswer": "Con más tiempo libre, aprendería a tocar la guitarra.",
-      "explanation": "The conditional expresses 'would' — add -ía endings to the infinitive.",
+      "explanation": "The conditional expresses 'would': add -ía endings to the infinitive.",
       "difficulty": 3
     }
   ]

@@ -8,7 +8,7 @@
   "lessons": [
     {
       "topicId": "reflexive-verbs",
-      "summary": "A reflexive verb is one where the subject and the object are the same — the do-er and the receiver are one person (levantar = to raise; levantarse = to raise oneself = to get up). They need reflexive pronouns: me, te, se, nos, se. The pronoun normally goes before the conjugated verb: me llamo, te lavas, se levanta, nos duchamos, se despiertan. After another verb it can attach to the infinitive: quiere peinarse. Careful: me/te/se/nos also work as other kinds of pronoun, so read the sentence before deciding.",
+      "summary": "A reflexive verb is one where the subject and the object are the same: the do-er and the receiver are one person (levantar = to raise; levantarse = to raise oneself = to get up). They need reflexive pronouns: me, te, se, nos, se. The pronoun normally goes before the conjugated verb: me llamo, te lavas, se levanta, nos duchamos, se despiertan. After another verb it can attach to the infinitive: quiere peinarse. Careful: me/te/se/nos also work as other kinds of pronoun, so read the sentence before deciding.",
       "examples": [
         { "spanish": "Me llamo Calvin.", "english": "I'm called Calvin.", "note": "llamarse = to call oneself" },
         { "spanish": "¿A qué hora te levantaste?", "english": "What time did you get up?" },
@@ -57,7 +57,7 @@
       "topicId": "reflexive-verbs",
       "type": "cloze",
       "prompt": "¿Cómo te ___? — Me llamo Ana. (llamarse, tú)",
-      "promptEnglish": "What are you called? — I'm called Ana.",
+      "promptEnglish": "What are you called? I'm called Ana.",
       "answers": ["llamas"],
       "explanation": "llamarse, tú form: te llamas.",
       "difficulty": 1
@@ -66,7 +66,7 @@
       "id": "rf-levanto",
       "topicId": "reflexive-verbs",
       "type": "cloze",
-      "prompt": "Yo ___ a las seis cada día. (levantarse — 'I get up')",
+      "prompt": "Yo ___ a las seis cada día. (levantarse: 'I get up')",
       "promptEnglish": "I get up at six every day.",
       "answers": ["me levanto"],
       "explanation": "Reflexive pronoun 'me' before the conjugated verb 'levanto'.",
@@ -76,7 +76,7 @@
       "id": "rf-lava",
       "topicId": "reflexive-verbs",
       "type": "cloze",
-      "prompt": "Ella ___ las manos con jabón. (lavarse — 'she washes')",
+      "prompt": "Ella ___ las manos con jabón. (lavarse: 'she washes')",
       "promptEnglish": "She washes her hands with soap.",
       "answers": ["se lava"],
       "explanation": "Reflexive pronoun 'se' before 'lava'. (Spanish uses the reflexive, not a possessive, for body parts.)",
@@ -86,7 +86,7 @@
       "id": "rf-despertamos",
       "topicId": "reflexive-verbs",
       "type": "cloze",
-      "prompt": "Nosotros ___ temprano. (despertarse — 'we wake up')",
+      "prompt": "Nosotros ___ temprano. (despertarse: 'we wake up')",
       "promptEnglish": "We wake up early.",
       "answers": ["nos despertamos"],
       "explanation": "Reflexive pronoun 'nos' before 'despertamos'.",
@@ -96,7 +96,7 @@
       "id": "rf-infinitive",
       "topicId": "reflexive-verbs",
       "type": "cloze",
-      "prompt": "Ella quiere ___. (peinarse — 'to comb her hair')",
+      "prompt": "Ella quiere ___. (peinarse: 'to comb her hair')",
       "promptEnglish": "She wants to comb her hair.",
       "answers": ["peinarse", "se peinar"],
       "explanation": "After another verb the reflexive infinitive keeps -se attached: quiere peinarse (also valid: se quiere peinar).",

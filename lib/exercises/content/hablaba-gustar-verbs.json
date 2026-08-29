@@ -1,13 +1,13 @@
 {
   "id": "hablaba-gustar-verbs",
-  "title": "Gustar y Verbos Parecidos — Practice",
-  "description": "Authored A2/B1 practice set for gustar-type verbs: gusta vs gustan, the indirect-object pronoun, the a-mí clarifier, and the family — encantar, doler, molestar, parecer, faltar, quedar.",
+  "title": "Gustar y Verbos Parecidos: Practice",
+  "description": "Authored A2/B1 practice set for gustar-type verbs: gusta vs gustan, the indirect-object pronoun, the a-mí clarifier, and the family: encantar, doler, molestar, parecer, faltar, quedar.",
   "topicIds": ["gustar-verbs"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "gustar-verbs",
-      "summary": "Gustar works backwards from English: the thing liked is the SUBJECT and the person is an indirect object — 'Me gusta el café' is literally \"coffee pleases me\". Two consequences. First, the verb agrees with the THING, not the person: gusta + singular or infinitive ('Me gusta pasear', even with two infinitives: 'Me gusta cocinar y leer'), gustan + plural ('Me gustan los parques'). Second, the person appears as an indirect-object pronoun: me, te, le, nos, os, les. Because le/les is ambiguous, Spanish adds the a-phrase to clarify or emphasise: 'A Teo le encanta el agua', 'A mí me gusta, ¿y a ti?' — note it duplicates the pronoun, never replaces it, and it's 'a mí', never «a yo». The same machinery drives a whole family: encantar (love — no muy/mucho needed, it's already superlative), doler (hurt, o→ue: me duele la cabeza / me duelen los pies), molestar (bother), parecer (seem), faltar (be missing), quedar (suit/fit: te queda bien).",
+      "summary": "Gustar works backwards from English: the thing liked is the SUBJECT and the person is an indirect object: 'Me gusta el café' is literally \"coffee pleases me\". Two consequences. First, the verb agrees with the THING, not the person: gusta + singular or infinitive ('Me gusta pasear', even with two infinitives: 'Me gusta cocinar y leer'), gustan + plural ('Me gustan los parques'). Second, the person appears as an indirect-object pronoun: me, te, le, nos, os, les. Because le/les is ambiguous, Spanish adds the a-phrase to clarify or emphasise: 'A Teo le encanta el agua', 'A mí me gusta, ¿y a ti?'. Note it duplicates the pronoun, never replaces it, and it's 'a mí', never «a yo». The same machinery drives a whole family: encantar (love: no muy/mucho needed, it's already superlative), doler (hurt, o→ue: me duele la cabeza / me duelen los pies), molestar (bother), parecer (seem), faltar (be missing), quedar (suit/fit: te queda bien).",
       "examples": [
         { "spanish": "Me gusta el café con leche.", "english": "I like coffee with milk.", "note": "singular thing → gusta" },
         { "spanish": "Me gustan los días de sol.", "english": "I like sunny days.", "note": "plural thing → gustan" },
@@ -26,7 +26,7 @@
       "promptEnglish": "I like parks with shade.",
       "options": ["gusta", "gustan"],
       "answers": ["gustan"],
-      "explanation": "The subject is los parques (plural), so gustan — the verb agrees with the thing liked.",
+      "explanation": "The subject is los parques (plural), so gustan: the verb agrees with the thing liked.",
       "difficulty": 1
     },
     {
@@ -100,15 +100,15 @@
       "prompt": "¿Qué te ___ si vamos a la plaza? (parecer, presente)",
       "promptEnglish": "What do you think about going to the square?",
       "answers": ["parece"],
-      "explanation": "Parecer: the idea is the subject, you are te — ¿qué te parece?",
+      "explanation": "Parecer: the idea is the subject, you are te. ¿Qué te parece?",
       "difficulty": 1
     },
     {
       "id": "gu-ch-faltan",
       "topicId": "gustar-verbs",
       "type": "choice",
-      "prompt": "Nos ___ los pañales — hay que comprar más.",
-      "promptEnglish": "We're out of nappies — we need to buy more.",
+      "prompt": "Nos ___ los pañales: hay que comprar más.",
+      "promptEnglish": "We're out of nappies. We need to buy more.",
       "options": ["falta", "faltan"],
       "answers": ["faltan"],
       "explanation": "Faltar agrees with what's missing: los pañales → faltan.",
@@ -122,7 +122,7 @@
       "promptEnglish": "My parents like coming to see us.",
       "options": ["les", "le", "los"],
       "answers": ["les"],
-      "explanation": "Mis padres is plural, so les. (Los is a direct-object pronoun — the wrong family.)",
+      "explanation": "Mis padres is plural, so les. (Los is a direct-object pronoun, the wrong family.)",
       "difficulty": 2
     },
     {
@@ -143,7 +143,7 @@
       "promptEnglish": "I absolutely love this park.",
       "options": ["encanta", "encanta mucho", "gusta encantar"],
       "answers": ["encanta"],
-      "explanation": "Encantar is already superlative — «me encanta mucho» over-eggs it. Just me encanta.",
+      "explanation": "Encantar is already superlative: «me encanta mucho» over-eggs it. Just me encanta.",
       "difficulty": 3
     }
   ]

@@ -350,7 +350,7 @@ function Quiz({
             {correctCount}/{items.length}
           </p>
           <p className="text-sm text-ink-muted">
-            {pct}% correctas{pct === 100 ? " — ¡perfecto!" : ""}
+            {pct}% correctas{pct === 100 ? ". ¡Perfecto!" : ""}
           </p>
           <button
             onClick={onExit}

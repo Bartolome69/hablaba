@@ -1,13 +1,13 @@
 {
   "id": "hablaba-preterite-vs-imperfect",
-  "title": "Pretérito o Imperfecto — Practice",
+  "title": "Pretérito o Imperfecto: Practice",
   "description": "Authored B1 practice set for choosing between the two past tenses: completed events vs background and habit, interrupted actions, descriptions of age/time/weather, and the verbs that change meaning (saber, conocer, querer, poder).",
   "topicIds": ["preterite-vs-imperfect"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "preterite-vs-imperfect",
-      "summary": "The preterite reports WHAT HAPPENED: completed events with a start or end, one after another — 'Ayer fuimos al parque, comimos y volvimos'. The imperfect paints the BACKGROUND: what was going on, what used to happen, descriptions — 'Hacía sol, el bebé dormía, siempre paseábamos por ahí'. The classic frame is interruption: imperfect for the ongoing scene, preterite for what cut in — 'Dormía la siesta cuando sonó el teléfono'. Age, clock time, weather and feelings as scene-setting go imperfect: 'Tenía dos años', 'Eran las tres', 'Llovía'. Habit markers (siempre, todos los días, de niño) pull toward imperfect; bounded markers (ayer, una vez, de repente, el lunes) pull toward preterite. Four verbs shift meaning between the tenses: sabía (knew) vs supe (found out); conocía (knew a person/place) vs conocí (met for the first time); quería (wanted) vs quise (tried) / no quise (refused); podía (was able, in general) vs pude (managed to).",
+      "summary": "The preterite reports WHAT HAPPENED: completed events with a start or end, one after another ('Ayer fuimos al parque, comimos y volvimos'). The imperfect paints the BACKGROUND: what was going on, what used to happen, descriptions ('Hacía sol, el bebé dormía, siempre paseábamos por ahí'). The classic frame is interruption: imperfect for the ongoing scene, preterite for what cut in ('Dormía la siesta cuando sonó el teléfono'). Age, clock time, weather and feelings as scene-setting go imperfect: 'Tenía dos años', 'Eran las tres', 'Llovía'. Habit markers (siempre, todos los días, de niño) pull toward imperfect; bounded markers (ayer, una vez, de repente, el lunes) pull toward preterite. Four verbs shift meaning between the tenses: sabía (knew) vs supe (found out); conocía (knew a person/place) vs conocí (met for the first time); quería (wanted) vs quise (tried) / no quise (refused); podía (was able, in general) vs pude (managed to).",
       "examples": [
         { "spanish": "Dormía la siesta cuando sonó el timbre.", "english": "He was napping when the doorbell rang.", "note": "background imperfect, interrupting preterite" },
         { "spanish": "De niña, siempre pasaba los veranos en la playa.", "english": "As a girl, I always spent summers at the beach.", "note": "habit → imperfect" },
@@ -26,7 +26,7 @@
       "promptEnglish": "The baby was sleeping when the phone rang.",
       "options": ["sonaba", "sonó"],
       "answers": ["sonó"],
-      "explanation": "The ongoing nap is imperfect; the ring that interrupts it is a completed event — preterite.",
+      "explanation": "The ongoing nap is imperfect; the ring that interrupts it is a completed event: preterite.",
       "difficulty": 1
     },
     {
@@ -68,7 +68,7 @@
       "promptEnglish": "When she was two, she already talked a lot.",
       "options": ["tuvo", "tenía"],
       "answers": ["tenía"],
-      "explanation": "Age in the past is background description — imperfect.",
+      "explanation": "Age in the past is background description, so it takes the imperfect.",
       "difficulty": 1
     },
     {
@@ -79,7 +79,7 @@
       "promptEnglish": "It was three in the morning when he finally fell asleep.",
       "options": ["Fueron", "Eran"],
       "answers": ["Eran"],
-      "explanation": "Clock time in the past sets the scene — imperfect. The falling asleep is the preterite event.",
+      "explanation": "Clock time in the past sets the scene, so it takes the imperfect. The falling asleep is the preterite event.",
       "difficulty": 2
     },
     {

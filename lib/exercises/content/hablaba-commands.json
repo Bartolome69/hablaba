@@ -1,13 +1,13 @@
 {
   "id": "hablaba-commands",
-  "title": "Mandatos — Practice",
+  "title": "Mandatos: Practice",
   "description": "Authored B1 practice set for commands: affirmative tú forms and the eight irregulars, negative tú commands via the subjunctive, pronoun attachment (dámelo / no me lo des), and polite usted forms.",
   "topicIds": ["commands"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "commands",
-      "summary": "Affirmative tú commands look like the él/ella present: habla, come, abre — 'Habla más despacio', 'Abre la boquita'. Eight verbs go rogue and are worth knowing cold: pon (poner), ten (tener), ven (venir), sal (salir), haz (hacer), di (decir), ve (ir), sé (ser) — 'Ven acá', 'Ten cuidado', 'Dame la mano' (da + me). NEGATIVE tú commands switch to the present subjunctive: no hables, no comas, no toques, no vayas — never «no habla». Pronouns follow a strict geography: they ATTACH to the end of an affirmative command (dámelo, siéntate, lávate las manos — often adding an accent to keep the stress) but go BEFORE a negative one (no me lo des, no te levantes). Usted commands use the subjunctive in both directions: hable / no hable, pase / no pase — the polite register for the doctor's office or a stranger. Around the house with a toddler this is bread and butter: ven, dame, mira, ten cuidado, no toques, siéntate.",
+      "summary": "Affirmative tú commands look like the él/ella present: habla, come, abre: 'Habla más despacio', 'Abre la boquita'. Eight verbs go rogue and are worth knowing cold: pon (poner), ten (tener), ven (venir), sal (salir), haz (hacer), di (decir), ve (ir), sé (ser): 'Ven acá', 'Ten cuidado', 'Dame la mano' (da + me). NEGATIVE tú commands switch to the present subjunctive: no hables, no comas, no toques, no vayas (never «no habla»). Pronouns follow a strict geography: they ATTACH to the end of an affirmative command (dámelo, siéntate, lávate las manos, often adding an accent to keep the stress) but go BEFORE a negative one (no me lo des, no te levantes). Usted commands use the subjunctive in both directions: hable / no hable, pase / no pase: the polite register for the doctor's office or a stranger. Around the house with a toddler this is bread and butter: ven, dame, mira, ten cuidado, no toques, siéntate.",
       "examples": [
         { "spanish": "Ven acá, mi amor.", "english": "Come here, my love.", "note": "irregular tú command: venir → ven" },
         { "spanish": "Dame la manita.", "english": "Give me your little hand.", "note": "da + me attached" },
@@ -64,8 +64,8 @@
       "id": "cm-ch-damelo",
       "topicId": "commands",
       "type": "choice",
-      "prompt": "Eso no es un juguete — ___, por favor.",
-      "promptEnglish": "That's not a toy — give it to me, please.",
+      "prompt": "Eso no es un juguete: ___, por favor.",
+      "promptEnglish": "That's not a toy. Give it to me, please.",
       "options": ["dámelo", "me lo da", "dame lo"],
       "answers": ["dámelo"],
       "explanation": "Pronouns attach to the end of an affirmative command, written as one word with an accent: dá-me-lo.",
@@ -75,8 +75,8 @@
       "id": "cm-ch-nomelodes",
       "topicId": "commands",
       "type": "choice",
-      "prompt": "Está sucio — no ___ a la boca.",
-      "promptEnglish": "It's dirty — don't put it in your mouth.",
+      "prompt": "Está sucio: no ___ a la boca.",
+      "promptEnglish": "It's dirty. Don't put it in your mouth.",
       "options": ["te lo lleves", "llévestelo", "lo te lleves"],
       "answers": ["te lo lleves"],
       "explanation": "With a NEGATIVE command the pronouns go before the verb, in te-lo order: no te lo lleves.",
@@ -139,11 +139,11 @@
       "id": "cm-ch-vete",
       "topicId": "commands",
       "type": "choice",
-      "prompt": "Ya es tarde — ___ a la cama.",
-      "promptEnglish": "It's late now — off to bed.",
+      "prompt": "Ya es tarde: ___ a la cama.",
+      "promptEnglish": "It's late now. Off to bed.",
       "options": ["vete", "te ve", "vas"],
       "answers": ["vete"],
-      "explanation": "Ir(se) → ve + te attached: vete. (Ve alone is also the command for ir — and, confusingly, for ver.)",
+      "explanation": "Ir(se) → ve + te attached: vete. (Ve alone is also the command for ir, and, confusingly, for ver.)",
       "difficulty": 2
     },
     {

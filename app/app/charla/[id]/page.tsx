@@ -250,7 +250,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
 
       {nearLimit && (
         <p className="mx-5 mt-2 text-center text-xs font-medium text-terracotta-ink">
-          Estamos por cerrar la parte hablada — ya casi llegamos a los 15 minutos.
+          Estamos por cerrar la parte hablada: ya casi llegamos a los 15 minutos.
         </p>
       )}
 

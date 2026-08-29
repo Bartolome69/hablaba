@@ -31,7 +31,7 @@ function looksLikeEnglish(text: string): boolean {
 
 const QUICK_ASKS: { label: string; icon: IconName; text: string }[] = [
   { label: "Repetir", icon: "escuchar", text: "¿Lo podés repetir?" },
-  { label: "Ayudame", icon: "rayo", text: "Ayudame — ¿cómo lo digo mejor?" },
+  { label: "Ayudame", icon: "rayo", text: "Ayudame, ¿cómo lo digo mejor?" },
   { label: "Más lento", icon: "lento", text: "Más despacio, por favor." },
 ]
 

@@ -1,13 +1,13 @@
 {
   "id": "hablaba-preterite",
-  "title": "Pretérito — Practice",
+  "title": "Pretérito: Practice",
   "description": "Authored B1 practice set for the preterite: regular forms, the common irregulars (fui, hice, tuve, dije…), and spelling changes (llegué, busqué, empecé, leyó).",
   "topicIds": ["preterite"],
   "ingestedAt": "2026-07-31",
   "lessons": [
     {
       "topicId": "preterite",
-      "summary": "The preterite (pretérito) is the simple past for completed, bounded events — actions that happened at a specific time or a definite number of times. Regular endings — -ar: -é, -aste, -ó, -amos, -asteis, -aron; -er/-ir: -í, -iste, -ió, -imos, -isteis, -ieron. Key irregulars share a special stem with no accents: ser/ir (fui, fuiste, fue, fuimos, fueron — identical), hacer (hice, hizo…), tener (tuve…), estar (estuve…), decir (dije, dijeron…), poder (pude…), poner (puse…), venir (vine…), dar (di, dio…). Spelling changes in 'yo': -car → -qué (buscar→busqué), -gar → -gué (llegar→llegué), -zar → -cé (empezar→empecé); and i→y in the 3rd person of leer/oír (leyó, leyeron).",
+      "summary": "The preterite (pretérito) is the simple past for completed, bounded events: actions that happened at a specific time or a definite number of times. Regular endings for -ar: -é, -aste, -ó, -amos, -asteis, -aron; for -er/-ir: -í, -iste, -ió, -imos, -isteis, -ieron. Key irregulars share a special stem with no accents: ser/ir (identical: fui, fuiste, fue, fuimos, fueron), hacer (hice, hizo…), tener (tuve…), estar (estuve…), decir (dije, dijeron…), poder (pude…), poner (puse…), venir (vine…), dar (di, dio…). Spelling changes in 'yo': -car → -qué (buscar→busqué), -gar → -gué (llegar→llegué), -zar → -cé (empezar→empecé); and i→y in the 3rd person of leer/oír (leyó, leyeron).",
       "examples": [
         { "spanish": "Ayer hablé con ella.", "english": "Yesterday I spoke with her." },
         { "spanish": "Fuimos al cine anoche.", "english": "We went to the cinema last night.", "note": "ir, irregular" },
@@ -23,7 +23,7 @@
     { "id": "pret-comer-yo", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'yo' of comer: ___", "promptEnglish": "I ate", "answers": ["comí"], "explanation": "-er, yo: -í → comí.", "difficulty": 1 },
     { "id": "pret-comer-tu", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'tú' of comer: ___", "promptEnglish": "you ate", "answers": ["comiste"], "explanation": "-er, tú: -iste → comiste.", "difficulty": 1 },
     { "id": "pret-vivir-ellos", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'ellos' of vivir: ___", "promptEnglish": "they lived", "answers": ["vivieron"], "explanation": "-ir, ellos: -ieron → vivieron.", "difficulty": 2 },
-    { "id": "pret-hablar-nosotros", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'nosotros' of hablar: ___", "promptEnglish": "we spoke", "answers": ["hablamos"], "explanation": "-ar nosotros preterite is 'hablamos' — identical to the present; context tells them apart.", "difficulty": 2 },
+    { "id": "pret-hablar-nosotros", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'nosotros' of hablar: ___", "promptEnglish": "we spoke", "answers": ["hablamos"], "explanation": "-ar nosotros preterite is 'hablamos', identical to the present; context tells them apart.", "difficulty": 2 },
     { "id": "pret-ir-yo", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'yo' of ir (irregular): ___", "promptEnglish": "I went", "answers": ["fui"], "explanation": "ir and ser share the same preterite: fui, fuiste, fue, fuimos, fueron.", "difficulty": 2 },
     { "id": "pret-ser-el", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'él' of ser (irregular): ___", "promptEnglish": "he was / it was", "answers": ["fue"], "explanation": "ser = ir in the preterite: fue.", "difficulty": 2 },
     { "id": "pret-hacer-el", "topicId": "preterite", "type": "conjugation", "prompt": "Preterite 'él' of hacer (irregular): ___", "promptEnglish": "he did/made", "answers": ["hizo"], "explanation": "hacer → hizo (c changes to z to keep the sound).", "difficulty": 3 },

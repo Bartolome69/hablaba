@@ -123,7 +123,7 @@ export default function ReviewPage() {
           </div>
           <h2 className="font-serif text-lg text-foreground mb-1">No phrases yet</h2>
           <p className="text-sm text-muted-foreground max-w-xs">
-            Save phrases while you chat — tap the bookmark on a message — and they&apos;ll show up here to
+            Save phrases while you chat (tap the bookmark on a message) and they&apos;ll show up here to
             practise.
           </p>
         </div>

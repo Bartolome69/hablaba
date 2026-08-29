@@ -46,7 +46,7 @@ export function WaitlistForm({ audience, placement = "hero", className }: Waitli
   if (done) {
     return (
       <p className={`text-sm text-ink-muted ${className ?? ""}`}>
-        Thanks — we&apos;ll be in touch soon.
+        Thanks, we&apos;ll be in touch soon.
       </p>
     )
   }

@@ -83,7 +83,7 @@ export function MomentPack() {
 
       {pack.length === 0 ? (
         <p className="mt-4 px-1 text-sm text-ink-muted text-pretty">
-          Todavía no hay frases para este momento — generá unas para empezar.
+          Todavía no hay frases para este momento. Generá unas para empezar.
         </p>
       ) : (
         <ul className="stagger-children mt-4 space-y-[9px]">

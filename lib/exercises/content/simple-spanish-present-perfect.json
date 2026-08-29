@@ -8,10 +8,10 @@
   "lessons": [
     {
       "topicId": "present-perfect",
-      "summary": "The present perfect (pretérito perfecto) is a compound tense — two words: the present tense of haber + the past participle. Use it for the recent past and for past events that still matter now ('¿Has comido?' / '¿Has estado en España?'). Haber here is an auxiliary meaning 'to have'; it is never used like tener — you can't say 'yo he un libro' (that's 'tengo un libro'). Forms of haber: he, has, ha, hemos, habéis, han. Regular participles: -ar → -ado, -er/-ir → -ido.",
+      "summary": "The present perfect (pretérito perfecto) is a compound tense, two words: the present tense of haber + the past participle. Use it for the recent past and for past events that still matter now ('¿Has comido?' / '¿Has estado en España?'). Haber here is an auxiliary meaning 'to have'; it is never used like tener: you can't say 'yo he un libro' (that's 'tengo un libro'). Forms of haber: he, has, ha, hemos, habéis, han. Regular participles: -ar → -ado, -er/-ir → -ido.",
       "examples": [
         { "spanish": "He vivido acá por muchos años.", "english": "I have lived here for many years." },
-        { "spanish": "¿Has comido? — Sí, he comido.", "english": "Have you eaten? — Yes, I have." },
+        { "spanish": "¿Has comido? — Sí, he comido.", "english": "Have you eaten? Yes, I have." },
         { "spanish": "Ella ha escrito la carta.", "english": "She has written the letter.", "note": "escrito is an irregular participle" },
         { "spanish": "No hemos hecho nada.", "english": "We haven't done anything.", "note": "hecho is an irregular participle" },
         { "spanish": "¿Has visto a Tom hoy?", "english": "Have you seen Tom today?", "note": "perfect (relevance now) vs preterite '¿Viste a Tom?'" }
@@ -123,7 +123,7 @@
       "id": "pp-full-broken",
       "topicId": "present-perfect",
       "type": "cloze",
-      "prompt": "Yo no ___ el vaso. (romper — 'I have not broken')",
+      "prompt": "Yo no ___ el vaso. (romper: 'I have not broken')",
       "promptEnglish": "I have not broken the glass.",
       "answers": ["he roto"],
       "explanation": "he (haber, yo) + roto (irregular participle of romper).",
@@ -133,7 +133,7 @@
       "id": "pp-full-said",
       "topicId": "present-perfect",
       "type": "cloze",
-      "prompt": "Ustedes no ___ nada. (decir — 'have said')",
+      "prompt": "Ustedes no ___ nada. (decir: 'have said')",
       "promptEnglish": "You (pl.) have said nothing.",
       "answers": ["han dicho"],
       "explanation": "han (haber, ustedes) + dicho (irregular participle of decir).",
@@ -143,7 +143,7 @@
       "id": "pp-full-written",
       "topicId": "present-perfect",
       "type": "cloze",
-      "prompt": "Ellas todavía no ___ la carta. (escribir — 'have written')",
+      "prompt": "Ellas todavía no ___ la carta. (escribir: 'have written')",
       "promptEnglish": "They still haven't written the letter.",
       "answers": ["han escrito"],
       "explanation": "han (haber, ellas) + escrito (irregular participle of escribir).",

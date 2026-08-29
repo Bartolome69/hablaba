@@ -88,7 +88,7 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
         </div>
         <h2 className="font-serif text-xl text-foreground mb-1">¡Bien hecho!</h2>
         <p className="text-sm text-muted-foreground mb-6">
-          You reviewed {deck.length} {deck.length === 1 ? "phrase" : "phrases"} — {gotItCount} got it.
+          You reviewed {deck.length} {deck.length === 1 ? "phrase" : "phrases"}: {gotItCount} got it.
         </p>
         <Button onClick={onExit}>Done</Button>
       </div>

@@ -1,19 +1,19 @@
 {
   "id": "hablaba-object-pronouns",
-  "title": "Dos Pronombres Juntos — Practice",
+  "title": "Dos Pronombres Juntos: Practice",
   "description": "Authored B1 practice set for double object pronouns: indirect before direct (me lo, te la), le/les becoming se before lo/la, and where the pair goes with commands, infinitives and gerunds.",
   "topicIds": ["object-pronouns"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "object-pronouns",
-      "summary": "When both pronouns show up, the order is fixed: INDIRECT first, DIRECT second — me lo, te la, nos los. '¿Me pasas el babero?' → '¿Me lo pasas?'. The famous twist: le and les turn into SE before lo/la/los/las — 'Le doy el chupete' → 'Se lo doy' (never «le lo»). Spanish simply refuses two l-pronouns in a row. Since se could be him, her, them or usted, add an a-phrase when it matters: 'Se lo di a la maestra'. Placement mirrors single pronouns, but the pair never splits: before a conjugated verb ('Te lo preparo ahora'), attached to an affirmative command ('Dámelo', 'Pásamela'), before a negative one ('No se lo des'), and with an infinitive or gerund you choose — both attached ('Voy a dárselo', accent added) or both in front ('Se lo voy a dar') — never one on each side.",
+      "summary": "When both pronouns show up, the order is fixed: INDIRECT first, DIRECT second (me lo, te la, nos los). '¿Me pasas el babero?' → '¿Me lo pasas?'. The famous twist: le and les turn into SE before lo/la/los/las: 'Le doy el chupete' → 'Se lo doy' (never «le lo»). Spanish simply refuses two l-pronouns in a row. Since se could be him, her, them or usted, add an a-phrase when it matters: 'Se lo di a la maestra'. Placement mirrors single pronouns, but the pair never splits: before a conjugated verb ('Te lo preparo ahora'), attached to an affirmative command ('Dámelo', 'Pásamela'), before a negative one ('No se lo des'), and with an infinitive or gerund you choose: both attached ('Voy a dárselo', accent added) or both in front ('Se lo voy a dar'), never one on each side.",
       "examples": [
         { "spanish": "¿El babero? Te lo paso ahora.", "english": "The bib? I'll pass it to you now.", "note": "indirect (te) before direct (lo)" },
         { "spanish": "¿El chupete? Se lo doy antes de dormir.", "english": "The dummy? I give it to him before sleep.", "note": "le + lo → se lo" },
-        { "spanish": "Ese es mi libro — dámelo, porfa.", "english": "That's my book — give it to me, please.", "note": "both attached to the command" },
+        { "spanish": "Ese es mi libro: dámelo, porfa.", "english": "That's my book: give it to me, please.", "note": "both attached to the command" },
         { "spanish": "Es su juguete favorito, no se lo quites.", "english": "It's his favourite toy, don't take it from him.", "note": "before a negative command" },
-        { "spanish": "Se la voy a leer esta noche. / Voy a leérsela esta noche.", "english": "I'm going to read it to her tonight.", "note": "both in front, or both attached — never split" }
+        { "spanish": "Se la voy a leer esta noche. / Voy a leérsela esta noche.", "english": "I'm going to read it to her tonight.", "note": "both in front, or both attached, never split" }
       ]
     }
   ],
@@ -37,7 +37,7 @@
       "promptEnglish": "The dummy? I only give it to him for sleeping.",
       "options": ["Se lo", "Le lo", "Lo le"],
       "answers": ["Se lo"],
-      "explanation": "Le + lo is forbidden — le becomes se before lo/la: se lo doy.",
+      "explanation": "Le + lo is forbidden. Le becomes se before lo/la: se lo doy.",
       "difficulty": 1
     },
     {
@@ -54,8 +54,8 @@
       "id": "op-ch-damelo",
       "topicId": "object-pronouns",
       "type": "choice",
-      "prompt": "Eso es de papá — ___, porfa.",
-      "promptEnglish": "That's daddy's — give it to me, please.",
+      "prompt": "Eso es de papá: ___, porfa.",
+      "promptEnglish": "That's daddy's: give it to me, please.",
       "options": ["dámelo", "me lo da", "dale me lo"],
       "answers": ["dámelo"],
       "explanation": "With an affirmative command both pronouns attach, in me-lo order: dá-me-lo.",
@@ -65,8 +65,8 @@
       "id": "op-ch-noselodes",
       "topicId": "object-pronouns",
       "type": "choice",
-      "prompt": "Todavía no puede comer eso — no ___ des.",
-      "promptEnglish": "He can't eat that yet — don't give it to him.",
+      "prompt": "Todavía no puede comer eso: no ___ des.",
+      "promptEnglish": "He can't eat that yet. Don't give it to him.",
       "options": ["se lo", "le lo", "dále lo"],
       "answers": ["se lo"],
       "explanation": "Negative command: pronouns in front, and le → se before lo: no se lo des.",
@@ -80,7 +80,7 @@
       "promptEnglish": "The story? I'm going to read it to him tonight.",
       "options": ["Se lo voy a leer", "Le voy a leerlo", "Lo voy a leerle"],
       "answers": ["Se lo voy a leer"],
-      "explanation": "The pair stays together: both before (se lo voy a leer) or both attached (voy a leérselo) — never one each side.",
+      "explanation": "The pair stays together: both before (se lo voy a leer) or both attached (voy a leérselo), never one each side.",
       "difficulty": 3
     },
     {
@@ -97,8 +97,8 @@
       "id": "op-ch-quien",
       "topicId": "object-pronouns",
       "type": "choice",
-      "prompt": "«Se lo di ___.» — ¿cómo aclaras que fue a la maestra?",
-      "promptEnglish": "\"I gave it to her.\" — how do you clarify it was the teacher?",
+      "prompt": "«Se lo di ___.» ¿Cómo aclaras que fue a la maestra?",
+      "promptEnglish": "\"I gave it to her.\" How do you clarify it was the teacher?",
       "options": ["a la maestra", "la maestra", "para la maestra"],
       "answers": ["a la maestra"],
       "explanation": "Se is ambiguous, so you clarify with an a-phrase: se lo di a la maestra.",
@@ -108,8 +108,8 @@
       "id": "op-ch-pasamela",
       "topicId": "object-pronouns",
       "type": "choice",
-      "prompt": "La pelota, ___ — ¡es mi turno!",
-      "promptEnglish": "The ball, pass it to me — it's my turn!",
+      "prompt": "La pelota, ___: ¡es mi turno!",
+      "promptEnglish": "The ball, pass it to me. It's my turn!",
       "options": ["pásamela", "pásalame", "me la pasa"],
       "answers": ["pásamela"],
       "explanation": "Attached to the command in me-la order: pása-me-la. «Pásalame» scrambles the order.",

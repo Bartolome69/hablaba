@@ -60,7 +60,7 @@
     "emoji": "✅",
     "cefr": "B1",
     "area": "tenses",
-    "blurb": "He hablado — talking about recent and life-experience past."
+    "blurb": "He hablado: talking about recent and life-experience past."
   },
   {
     "id": "future-tense",
@@ -141,7 +141,7 @@
     "emoji": "🎯",
     "cefr": "A2",
     "area": "pronouns",
-    "blurb": "Lo, la, los, las — replacing the thing the verb acts on."
+    "blurb": "Lo, la, los, las: replacing the thing the verb acts on."
   },
   {
     "id": "indirect-object-pronouns",
@@ -150,7 +150,7 @@
     "emoji": "📮",
     "cefr": "B1",
     "area": "pronouns",
-    "blurb": "Le and les — saying to whom or for whom something is done."
+    "blurb": "Le and les: saying to whom or for whom something is done."
   },
   {
     "id": "object-pronouns",
@@ -186,7 +186,7 @@
     "emoji": "🎯",
     "cefr": "B1",
     "area": "usage",
-    "blurb": "The adverb bien vs the adjective bueno/buen/buena — and when each pairs with estar or ser."
+    "blurb": "The adverb bien vs the adjective bueno/buen/buena, and when each pairs with estar or ser."
   },
   {
     "id": "muy-vs-mucho",
@@ -195,7 +195,7 @@
     "emoji": "📏",
     "cefr": "B1",
     "area": "usage",
-    "blurb": "Muy before adjectives and adverbs, mucho with nouns and verbs — plus the tener/hacer expressions."
+    "blurb": "Muy before adjectives and adverbs, mucho with nouns and verbs, plus the tener/hacer expressions."
   },
   {
     "id": "si-clauses",
@@ -213,6 +213,6 @@
     "emoji": "🌒",
     "cefr": "B2",
     "area": "mood",
-    "blurb": "The -ra forms from the ellos preterite: quisiera, fuera, tuviera — for the past, politeness and hypotheticals."
+    "blurb": "The -ra forms from the ellos preterite (quisiera, fuera, tuviera) for the past, politeness and hypotheticals."
   }
 ]

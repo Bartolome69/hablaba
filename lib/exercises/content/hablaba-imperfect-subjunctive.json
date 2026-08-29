@@ -1,13 +1,13 @@
 {
   "id": "hablaba-imperfect-subjunctive",
-  "title": "Imperfecto de Subjuntivo — Practice",
+  "title": "Imperfecto de Subjuntivo: Practice",
   "description": "Authored B2 practice set for the imperfect subjunctive: forming it from the ellos preterite, past-tense triggers (quería que, era importante que), como si, and quisiera for politeness.",
   "topicIds": ["imperfect-subjunctive"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "imperfect-subjunctive",
-      "summary": "The imperfect subjunctive is built on one reliable trick: take the ELLOS form of the preterite, drop -ron, add -ra endings — hablaron → hablara, comieron → comiera, fueron → fuera, tuvieron → tuviera, pudieron → pudiera, dijeron → dijera, hicieron → hiciera. Every preterite irregularity carries over for free, which is why the trick beats memorising. (The -se forms — hablase, fuese — mean the same; the -ra set is more common in speech.) When do you need it? Wherever the present subjunctive would appear, but shifted to the PAST: 'Quiero que duermas' → 'Quería que durmieras'; 'Es importante que coma' → 'Era importante que comiera'. Plus three frames of its own: hypothetical si clauses ('si tuviera…'), como si + imperfect subjunctive always ('como si fuera'), and quisiera as the polite want — 'Quisiera una mesa para dos' softens 'quiero'. The nosotros form carries an accent: habláramos, fuéramos.",
+      "summary": "The imperfect subjunctive is built on one reliable trick: take the ELLOS form of the preterite, drop -ron, add -ra endings (hablaron → hablara, comieron → comiera, fueron → fuera, tuvieron → tuviera, pudieron → pudiera, dijeron → dijera, hicieron → hiciera). Every preterite irregularity carries over for free, which is why the trick beats memorising. (The -se forms, hablase and fuese, mean the same; the -ra set is more common in speech.) When do you need it? Wherever the present subjunctive would appear, but shifted to the PAST: 'Quiero que duermas' → 'Quería que durmieras'; 'Es importante que coma' → 'Era importante que comiera'. Plus three frames of its own: hypothetical si clauses ('si tuviera…'), como si + imperfect subjunctive always ('como si fuera'), and quisiera as the polite want ('Quisiera una mesa para dos' softens 'quiero'). The nosotros form carries an accent: habláramos, fuéramos.",
       "examples": [
         { "spanish": "Quería que el bebé durmiera un poco más.", "english": "I wanted the baby to sleep a bit longer.", "note": "past trigger → imperfect subjunctive" },
         { "spanish": "Era importante que comiera algo antes de salir.", "english": "It was important that he ate something before going out.", "note": "impersonal past trigger" },
@@ -57,7 +57,7 @@
       "promptEnglish": "At the pharmacy: \"I'd like something for the baby's sniffles, please.\"",
       "options": ["Quiero que", "Quisiera", "Quería que"],
       "answers": ["Quisiera"],
-      "explanation": "Quisiera is the polite want — softer than quiero, and it stands alone before a noun or infinitive.",
+      "explanation": "Quisiera is the polite want, softer than quiero, and it stands alone before a noun or infinitive.",
       "difficulty": 1
     },
     {
@@ -78,7 +78,7 @@
       "promptEnglish": "It was important that he ate vegetables every day.",
       "options": ["comiera", "comía", "coma"],
       "answers": ["comiera"],
-      "explanation": "Era importante que — an impersonal trigger in the past — takes comiera, not the present subjunctive coma.",
+      "explanation": "Era importante que (an impersonal trigger in the past) takes comiera, not the present subjunctive coma.",
       "difficulty": 2
     },
     {
@@ -110,7 +110,7 @@
       "promptEnglish": "Which form does \"estuviera\" come from?",
       "options": ["estaban", "estuvieron", "estarán"],
       "answers": ["estuvieron"],
-      "explanation": "The rule: ellos-preterite minus -ron plus -ra. Estuvieron → estuviera — the preterite irregularity carries over.",
+      "explanation": "The rule: ellos-preterite minus -ron plus -ra. Estuvieron → estuviera, and the preterite irregularity carries over.",
       "difficulty": 2
     },
     {

@@ -8,7 +8,7 @@ import { coveredTopics } from "@/lib/exercises/content"
 import type { GrammarArea } from "@/lib/exercises/types"
 
 export const metadata: Metadata = {
-  title: "Free Spanish grammar exercises — A2 to B2, with clear rules",
+  title: "Free Spanish grammar exercises, A2 to B2",
   description:
     "Ser vs estar, por vs para, the subjunctive, commands and more: clear rules, real examples and hundreds of free practice questions, built for parents learning Spanish for daily life.",
   alternates: { canonical: "/gramatica" },
@@ -49,8 +49,8 @@ export default function GrammarIndexPage() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-ink-muted sm:text-lg">
           {covered.length} topics from A2 to B2, each with the rule in plain English, real
-          examples, and free practice questions — {totalQuestions} in all. No account, no
-          streaks, no pressure.
+          examples, and free practice questions ({totalQuestions} in all). No account needed and
+          nothing tracks you.
         </p>
       </header>
 
@@ -90,8 +90,8 @@ export default function GrammarIndexPage() {
           Grammar that comes from your own conversations
         </h2>
         <p className="mt-2 max-w-xl text-[14.5px] leading-relaxed text-green-on-dark">
-          In Hablaba, you talk — typed or out loud — and the app notices which of these rules
-          you actually fumble, then sends you to exactly the right quiz. That loop is the app.
+          In Hablaba you talk, typed or out loud, and the app notices which of these rules you
+          actually fumble, then sends you to exactly the right quiz.
         </p>
         <Link
           href="/app/today"
