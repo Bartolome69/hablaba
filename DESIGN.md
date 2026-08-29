@@ -195,9 +195,11 @@ hairline — never a competing block.
   holding a baby.
 - **Do** use the recessed well (`clay-recessed`) for every text input —
   inputs are pressed into the clay, raised things are buttons.
-- **Do** wrap chip rows onto multiple lines so every pill shows whole, lip
-  included. (Deliberate departure from the handoff, which ran chip rows off
-  the right edge as a scroll cue — Bart preferred full pills, Aug 2026.)
+- **Do** keep chip rows on a single scrolling line, but never hard-slice a
+  pill: use `ChipRow` (components/chip-row.tsx), which fades the clipped edge
+  and only shows a fade where more content is hiding. (Refines the handoff's
+  bare run-off-the-edge scroll cue — Bart found the hard clip looked broken,
+  Aug 2026.)
 
 ### Don't:
 - **Don't** use emoji, lucide, or any icon library on app surfaces.

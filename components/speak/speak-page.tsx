@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
+import { ChipRow } from "@/components/chip-row"
 import { DuoIcon, type IconName } from "@/components/icons"
 import { CaptureCard } from "@/components/phrases/capture-card"
 import { MomentPack } from "@/components/phrases/moment-pack"
@@ -91,7 +92,7 @@ export function SpeakPage() {
       {/* Routine browsing, by situation. */}
       <div className="mt-8">
         <h2 className="px-1 font-serif text-[19px] text-ink">Frases por situación</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <ChipRow className="mt-3">
           {categories.map((category) => {
               const isActive = category.id === selected
               return (
@@ -114,7 +115,7 @@ export function SpeakPage() {
                 </button>
               )
             })}
-        </div>
+        </ChipRow>
       </div>
 
       <div className="mt-4 space-y-2.5">

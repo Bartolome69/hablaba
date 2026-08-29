@@ -10,6 +10,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
+import { ChipRow } from "@/components/chip-row"
 import { DuoIcon, momentIcon } from "@/components/icons"
 import { useTTS } from "@/hooks/use-tts"
 import { fillPackForMoment, queryPackForMoment } from "@/lib/phrases/pack"
@@ -58,7 +59,7 @@ export function MomentPack() {
         Tu biblioteca, filtrada por lo que estás por hacer.
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <ChipRow className="mt-3">
         {PHRASE_MOMENTS.map((m) => {
             const active = m === moment
             return (
@@ -78,7 +79,7 @@ export function MomentPack() {
               </button>
             )
           })}
-      </div>
+      </ChipRow>
 
       {pack.length === 0 ? (
         <p className="mt-4 px-1 text-sm text-ink-muted text-pretty">
