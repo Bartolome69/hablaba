@@ -23,6 +23,13 @@ import directObjectPronouns from "./content/hablaba-direct-object-pronouns.json"
 import indirectObjectPronouns from "./content/hablaba-indirect-object-pronouns.json"
 import comparatives from "./content/hablaba-comparatives.json"
 import superlatives from "./content/hablaba-superlatives.json"
+import bienVsBuen from "./content/hablaba-bien-vs-buen.json"
+import muyVsMucho from "./content/hablaba-muy-vs-mucho.json"
+import serVsEstar from "./content/hablaba-ser-vs-estar.json"
+import preteriteVsImperfect from "./content/hablaba-preterite-vs-imperfect.json"
+import gustarVerbs from "./content/hablaba-gustar-verbs.json"
+import siClauses from "./content/hablaba-si-clauses.json"
+import imperfectSubjunctive from "./content/hablaba-imperfect-subjunctive.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -41,6 +48,13 @@ export const sources = [
   indirectObjectPronouns,
   comparatives,
   superlatives,
+  bienVsBuen,
+  muyVsMucho,
+  serVsEstar,
+  preteriteVsImperfect,
+  gustarVerbs,
+  siClauses,
+  imperfectSubjunctive,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)

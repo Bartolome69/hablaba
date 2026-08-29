@@ -1,0 +1,171 @@
+{
+  "id": "hablaba-preterite-vs-imperfect",
+  "title": "Pretérito o Imperfecto — Practice",
+  "description": "Authored B1 practice set for choosing between the two past tenses: completed events vs background and habit, interrupted actions, descriptions of age/time/weather, and the verbs that change meaning (saber, conocer, querer, poder).",
+  "topicIds": ["preterite-vs-imperfect"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "preterite-vs-imperfect",
+      "summary": "The preterite reports WHAT HAPPENED: completed events with a start or end, one after another — 'Ayer fuimos al parque, comimos y volvimos'. The imperfect paints the BACKGROUND: what was going on, what used to happen, descriptions — 'Hacía sol, el bebé dormía, siempre paseábamos por ahí'. The classic frame is interruption: imperfect for the ongoing scene, preterite for what cut in — 'Dormía la siesta cuando sonó el teléfono'. Age, clock time, weather and feelings as scene-setting go imperfect: 'Tenía dos años', 'Eran las tres', 'Llovía'. Habit markers (siempre, todos los días, de niño) pull toward imperfect; bounded markers (ayer, una vez, de repente, el lunes) pull toward preterite. Four verbs shift meaning between the tenses: sabía (knew) vs supe (found out); conocía (knew a person/place) vs conocí (met for the first time); quería (wanted) vs quise (tried) / no quise (refused); podía (was able, in general) vs pude (managed to).",
+      "examples": [
+        { "spanish": "Dormía la siesta cuando sonó el timbre.", "english": "He was napping when the doorbell rang.", "note": "background imperfect, interrupting preterite" },
+        { "spanish": "De niña, siempre pasaba los veranos en la playa.", "english": "As a girl, I always spent summers at the beach.", "note": "habit → imperfect" },
+        { "spanish": "Ayer el bebé dio sus primeros pasos.", "english": "Yesterday the baby took his first steps.", "note": "completed event → preterite" },
+        { "spanish": "Hacía frío y no había nadie en la plaza.", "english": "It was cold and there was nobody at the square.", "note": "scene-setting → imperfect" },
+        { "spanish": "Ayer supe que estás embarazada. ¡Felicidades!", "english": "Yesterday I found out you're pregnant. Congratulations!", "note": "saber in preterite = found out" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "pi-ch-sono",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "El bebé dormía cuando ___ el teléfono.",
+      "promptEnglish": "The baby was sleeping when the phone rang.",
+      "options": ["sonaba", "sonó"],
+      "answers": ["sonó"],
+      "explanation": "The ongoing nap is imperfect; the ring that interrupts it is a completed event — preterite.",
+      "difficulty": 1
+    },
+    {
+      "id": "pi-ch-dormia",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "___ tranquilamente cuando el perro empezó a ladrar.",
+      "promptEnglish": "She was sleeping peacefully when the dog started barking.",
+      "options": ["Durmió", "Dormía"],
+      "answers": ["Dormía"],
+      "explanation": "The scene in progress goes imperfect; empezó is the interruption.",
+      "difficulty": 1
+    },
+    {
+      "id": "pi-cl-siempre",
+      "topicId": "preterite-vs-imperfect",
+      "type": "cloze",
+      "prompt": "De niño, siempre ___ a casa de mis abuelos los domingos. (ir)",
+      "promptEnglish": "As a kid, I always went to my grandparents' on Sundays.",
+      "answers": ["iba"],
+      "explanation": "Siempre + childhood habit → imperfect: iba.",
+      "difficulty": 1
+    },
+    {
+      "id": "pi-cl-primeros-pasos",
+      "topicId": "preterite-vs-imperfect",
+      "type": "cloze",
+      "prompt": "Ayer Teo ___ sus primeros pasos. (dar)",
+      "promptEnglish": "Yesterday Teo took his first steps.",
+      "answers": ["dio"],
+      "explanation": "A one-off completed event with a time marker (ayer) → preterite: dio.",
+      "difficulty": 1
+    },
+    {
+      "id": "pi-ch-tenia",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "Cuando ___ dos años, ya hablaba muchísimo.",
+      "promptEnglish": "When she was two, she already talked a lot.",
+      "options": ["tuvo", "tenía"],
+      "answers": ["tenía"],
+      "explanation": "Age in the past is background description — imperfect.",
+      "difficulty": 1
+    },
+    {
+      "id": "pi-ch-eran",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "___ las tres de la mañana cuando por fin se durmió.",
+      "promptEnglish": "It was three in the morning when he finally fell asleep.",
+      "options": ["Fueron", "Eran"],
+      "answers": ["Eran"],
+      "explanation": "Clock time in the past sets the scene — imperfect. The falling asleep is the preterite event.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-cl-llovia",
+      "topicId": "preterite-vs-imperfect",
+      "type": "cloze",
+      "prompt": "___ mucho, así que nos quedamos en casa. (llover)",
+      "promptEnglish": "It was raining a lot, so we stayed home.",
+      "answers": ["llovía"],
+      "explanation": "Weather as backdrop → imperfect; the decision (nos quedamos) is the event.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-ch-conoci",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "___ a mi mujer en una fiesta en 2019.",
+      "promptEnglish": "I met my wife at a party in 2019.",
+      "options": ["Conocía", "Conocí"],
+      "answers": ["Conocí"],
+      "explanation": "Conocer in the preterite = met for the first time. Conocía = already knew her.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-ch-supe",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "Ayer ___ que vamos a tener otro bebé.",
+      "promptEnglish": "Yesterday we found out we're having another baby.",
+      "options": ["sabíamos", "supimos"],
+      "answers": ["supimos"],
+      "explanation": "Saber in the preterite = found out. Sabíamos = we already knew.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-ch-noquiso",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "Le ofrecí el puré, pero no ___ comer nada.",
+      "promptEnglish": "I offered him the purée, but he refused to eat anything.",
+      "options": ["quería", "quiso"],
+      "answers": ["quiso"],
+      "explanation": "No querer in the preterite = refused. No quería would just describe a lack of appetite.",
+      "difficulty": 3
+    },
+    {
+      "id": "pi-cl-pude",
+      "topicId": "preterite-vs-imperfect",
+      "type": "cloze",
+      "prompt": "Por fin ___ dormirlo sin el chupete. (poder, yo)",
+      "promptEnglish": "I finally managed to get him to sleep without the dummy.",
+      "answers": ["pude"],
+      "explanation": "Poder in the preterite = managed to, on that occasion. Podía = was generally able.",
+      "difficulty": 3
+    },
+    {
+      "id": "pi-ch-mientras",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "Mientras el bebé ___, preparé la cena.",
+      "promptEnglish": "While the baby was napping, I made dinner.",
+      "options": ["durmió", "dormía"],
+      "answers": ["dormía"],
+      "explanation": "Mientras introduces the ongoing background (imperfect); preparé is the completed action inside it.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-cl-habia",
+      "topicId": "preterite-vs-imperfect",
+      "type": "cloze",
+      "prompt": "No ___ nadie en la plaza porque hacía frío. (haber)",
+      "promptEnglish": "There was nobody at the square because it was cold.",
+      "answers": ["había"],
+      "explanation": "Existence as scene description → imperfect: había.",
+      "difficulty": 2
+    },
+    {
+      "id": "pi-ch-secuencia",
+      "topicId": "preterite-vs-imperfect",
+      "type": "choice",
+      "prompt": "Ayer lo bañé, le ___ el pijama y le leí un cuento.",
+      "promptEnglish": "Yesterday I bathed him, put his pyjamas on and read him a story.",
+      "options": ["ponía", "puse"],
+      "answers": ["puse"],
+      "explanation": "A chain of completed actions, one after another, all go preterite: bañé, puse, leí.",
+      "difficulty": 1
+    }
+  ]
+}

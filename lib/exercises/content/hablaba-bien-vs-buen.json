@@ -1,0 +1,203 @@
+{
+  "id": "hablaba-bien-vs-buen",
+  "title": "Bien y Bueno — Practice",
+  "description": "Authored B1 practice set for bien (adverb) vs bueno/buen/buena (adjective): which verbs each follows, the buen apocope before masculine nouns, estar bien vs ser bueno, and mejor covering both.",
+  "topicIds": ["bien-vs-buen"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "bien-vs-buen",
+      "summary": "Bien is an ADVERB: it describes how something is done, so it follows verbs — 'Cocinas bien', 'Dormí bien', 'Estoy bien'. It never changes form. Bueno is an ADJECTIVE: it describes a noun and agrees with it — 'una buena idea', 'un café bueno', 'unos días buenos'. Before a MASCULINE SINGULAR noun, bueno shortens to buen: 'un buen padre', 'buen provecho' (but 'una buena madre' — no shortening in the feminine). The ser/estar pairing follows from that: estar bien = to be well/fine/OK (a state: health, mood, correctness), ser bueno = to be good (a quality: character, skill — 'ser bueno en algo'). Two extras worth drilling: with food, 'estar bueno/buena' means it tastes good right now ('¡Esta sopa está buena!'), while 'estar bien' means fine/enough ('Así está bien' — that's enough). And the comparative of BOTH words is mejor: 'Cocinas mejor que yo' (never 'más bien'), 'Este café es mejor' (never 'más bueno').",
+      "examples": [
+        { "spanish": "El bebé durmió bien anoche.", "english": "The baby slept well last night.", "note": "bien after a verb — how he slept" },
+        { "spanish": "Es una buena idea.", "english": "It's a good idea.", "note": "bueno agreeing with a feminine noun" },
+        { "spanish": "Eres un buen padre.", "english": "You're a good dad.", "note": "buen before a masculine singular noun" },
+        { "spanish": "¿Estás bien? Te veo cansado.", "english": "Are you OK? You look tired.", "note": "estar bien = state" },
+        { "spanish": "Hablas español mejor que antes.", "english": "You speak Spanish better than before.", "note": "mejor, never «más bien»" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "bb-ch-cocinas",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Cocinas muy ___.",
+      "promptEnglish": "You cook very well.",
+      "options": ["bien", "bueno"],
+      "answers": ["bien"],
+      "explanation": "Cocinar is a verb, and how you do a verb takes the adverb bien.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-ch-idea",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Es una ___ idea.",
+      "promptEnglish": "It's a good idea.",
+      "options": ["bien", "buena", "buen"],
+      "answers": ["buena"],
+      "explanation": "Idea is a feminine noun, so it takes the adjective buena — bien can't describe a noun.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-ch-padre",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Eres un ___ padre.",
+      "promptEnglish": "You're a good dad.",
+      "options": ["bueno", "buen", "bien"],
+      "answers": ["buen"],
+      "explanation": "Before a masculine singular noun, bueno drops the -o: un buen padre.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-cl-dormi",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "Anoche el bebé durmió ___. (bien / bueno)",
+      "promptEnglish": "The baby slept well last night.",
+      "answers": ["bien"],
+      "explanation": "Dormir is a verb — how he slept is the adverb bien.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-cl-libro",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "Es un libro muy ___. (bien / bueno)",
+      "promptEnglish": "It's a very good book.",
+      "answers": ["bueno"],
+      "explanation": "Libro is a noun, so it needs the adjective. After the noun there's no shortening: un libro bueno.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-ch-estas",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "—¿Cómo estás? —Estoy ___, gracias.",
+      "promptEnglish": "—How are you? —I'm fine, thanks.",
+      "options": ["bien", "bueno"],
+      "answers": ["bien"],
+      "explanation": "Estar bien = to be well/fine. «Estoy bueno» means something quite different — that you find yourself attractive.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-ch-persona",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Mi vecina ___ muy buena — siempre nos ayuda.",
+      "promptEnglish": "My neighbour is very good (kind) — she always helps us.",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "Ser bueno/a = good as a quality of character. Estar buena would comment on her looks — not what you want to say about the neighbour.",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-cl-sopa",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "¡Probá la sopa! Está muy ___. (rica de sabor)",
+      "promptEnglish": "Try the soup! It tastes really good.",
+      "answers": ["buena", "rica"],
+      "explanation": "With food, estar bueno/buena = it tastes good right now. Agrees with la sopa → buena.",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-ch-asi",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "—¿Más agua? —No, así está ___.",
+      "promptEnglish": "—More water? —No, that's fine / that's enough.",
+      "options": ["bien", "bueno", "buena"],
+      "answers": ["bien"],
+      "explanation": "Así está bien is the fixed way to say \"that's fine / that's enough\".",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-ch-mejor",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Hablas español ___ que el año pasado.",
+      "promptEnglish": "You speak Spanish better than last year.",
+      "options": ["más bien", "mejor", "más bueno"],
+      "answers": ["mejor"],
+      "explanation": "The comparative of bien is mejor — «más bien» and «más bueno» are the classic traps.",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-cl-cafe-mejor",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "Este café es ___ que el del kiosco. (comparativo de bueno)",
+      "promptEnglish": "This coffee is better than the one from the kiosk.",
+      "answers": ["mejor"],
+      "explanation": "Bueno also uses mejor as its comparative — never «más bueno» in standard speech.",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-ch-provecho",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "¡___ provecho!",
+      "promptEnglish": "Enjoy your meal!",
+      "options": ["Bien", "Buen", "Bueno"],
+      "answers": ["Buen"],
+      "explanation": "Provecho is masculine singular, so the shortened buen: ¡buen provecho! Same pattern as buen viaje, buen día.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-cl-portarse",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "Hoy Teo se portó muy ___ en el paseo. (bien / bueno)",
+      "promptEnglish": "Teo behaved really well on the walk today.",
+      "answers": ["bien"],
+      "explanation": "Portarse bien = to behave well; behaving is a verb, so the adverb.",
+      "difficulty": 1
+    },
+    {
+      "id": "bb-ch-noticia",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "¡Qué ___ noticia!",
+      "promptEnglish": "What good news!",
+      "options": ["buena", "buen", "bien"],
+      "answers": ["buena"],
+      "explanation": "Noticia is feminine, so buena — the shortening to buen only happens before masculine singular nouns.",
+      "difficulty": 2
+    },
+    {
+      "id": "bb-ch-huele",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Mmm, la cena huele muy ___.",
+      "promptEnglish": "Mmm, dinner smells really good.",
+      "options": ["bien", "buena", "bueno"],
+      "answers": ["bien"],
+      "explanation": "Oler is a verb, so how it smells is bien — English \"smells good\" pulls you toward the adjective, Spanish resists.",
+      "difficulty": 3
+    },
+    {
+      "id": "bb-cl-dia",
+      "topicId": "bien-vs-buen",
+      "type": "cloze",
+      "prompt": "¡Que tengas un ___ día! (forma corta de bueno)",
+      "promptEnglish": "Have a good day!",
+      "answers": ["buen"],
+      "explanation": "Día is masculine (el día) even though it ends in -a, so it takes buen.",
+      "difficulty": 3
+    },
+    {
+      "id": "bb-ch-pasarlo",
+      "topicId": "bien-vs-buen",
+      "type": "choice",
+      "prompt": "Lo pasamos muy ___ en la plaza.",
+      "promptEnglish": "We had a really good time at the playground.",
+      "options": ["bien", "bueno"],
+      "answers": ["bien"],
+      "explanation": "Pasarlo bien = to have a good time; a verb phrase, so the adverb.",
+      "difficulty": 2
+    }
+  ]
+}

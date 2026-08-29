@@ -178,5 +178,41 @@
     "cefr": "B1",
     "area": "comparison",
     "blurb": "El más… de, and the absolute superlative in -ísimo."
+  },
+  {
+    "id": "bien-vs-buen",
+    "title": "Bien vs Bueno",
+    "spanish": "Bien y bueno",
+    "emoji": "🎯",
+    "cefr": "B1",
+    "area": "usage",
+    "blurb": "The adverb bien vs the adjective bueno/buen/buena — and when each pairs with estar or ser."
+  },
+  {
+    "id": "muy-vs-mucho",
+    "title": "Muy vs Mucho",
+    "spanish": "Muy y mucho",
+    "emoji": "📏",
+    "cefr": "B1",
+    "area": "usage",
+    "blurb": "Muy before adjectives and adverbs, mucho with nouns and verbs — plus the tener/hacer expressions."
+  },
+  {
+    "id": "si-clauses",
+    "title": "Si Clauses",
+    "spanish": "Condicionales con si",
+    "emoji": "🔀",
+    "cefr": "B2",
+    "area": "mood",
+    "blurb": "Real conditions (si + presente) vs hypotheticals (si + imperfecto de subjuntivo + condicional)."
+  },
+  {
+    "id": "imperfect-subjunctive",
+    "title": "Imperfect Subjunctive",
+    "spanish": "Imperfecto de subjuntivo",
+    "emoji": "🌒",
+    "cefr": "B2",
+    "area": "mood",
+    "blurb": "The -ra forms from the ellos preterite: quisiera, fuera, tuviera — for the past, politeness and hypotheticals."
   }
 ]

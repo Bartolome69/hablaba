@@ -1,0 +1,148 @@
+{
+  "id": "hablaba-imperfect-subjunctive",
+  "title": "Imperfecto de Subjuntivo — Practice",
+  "description": "Authored B2 practice set for the imperfect subjunctive: forming it from the ellos preterite, past-tense triggers (quería que, era importante que), como si, and quisiera for politeness.",
+  "topicIds": ["imperfect-subjunctive"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "imperfect-subjunctive",
+      "summary": "The imperfect subjunctive is built on one reliable trick: take the ELLOS form of the preterite, drop -ron, add -ra endings — hablaron → hablara, comieron → comiera, fueron → fuera, tuvieron → tuviera, pudieron → pudiera, dijeron → dijera, hicieron → hiciera. Every preterite irregularity carries over for free, which is why the trick beats memorising. (The -se forms — hablase, fuese — mean the same; the -ra set is more common in speech.) When do you need it? Wherever the present subjunctive would appear, but shifted to the PAST: 'Quiero que duermas' → 'Quería que durmieras'; 'Es importante que coma' → 'Era importante que comiera'. Plus three frames of its own: hypothetical si clauses ('si tuviera…'), como si + imperfect subjunctive always ('como si fuera'), and quisiera as the polite want — 'Quisiera una mesa para dos' softens 'quiero'. The nosotros form carries an accent: habláramos, fuéramos.",
+      "examples": [
+        { "spanish": "Quería que el bebé durmiera un poco más.", "english": "I wanted the baby to sleep a bit longer.", "note": "past trigger → imperfect subjunctive" },
+        { "spanish": "Era importante que comiera algo antes de salir.", "english": "It was important that he ate something before going out.", "note": "impersonal past trigger" },
+        { "spanish": "Me trata como si fuera su hermano.", "english": "He treats me as if I were his brother.", "note": "como si, always" },
+        { "spanish": "Quisiera un turno para mañana, por favor.", "english": "I'd like an appointment for tomorrow, please.", "note": "quisiera = polite quiero" },
+        { "spanish": "hablaron → hablara · tuvieron → tuviera · fueron → fuera", "english": "they spoke → I/he spoke (subj.) · they had → had (subj.) · they went/were → were (subj.)", "note": "the ellos-preterite trick" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "is-cl-durmieras",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "Quería que ___ un poco más, pero se despertó a las seis. (dormir, él)",
+      "promptEnglish": "I wanted him to sleep a bit longer, but he woke at six.",
+      "answers": ["durmiera", "durmiese"],
+      "explanation": "Past trigger (quería que) → imperfect subjunctive. Durmieron → durmiera.",
+      "difficulty": 2
+    },
+    {
+      "id": "is-ch-fuera",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "Habla del fútbol como si ___ entrenador profesional.",
+      "promptEnglish": "He talks about football as if he were a professional coach.",
+      "options": ["es", "fuera", "sería"],
+      "answers": ["fuera"],
+      "explanation": "Como si always takes the imperfect subjunctive: fueron → fuera.",
+      "difficulty": 2
+    },
+    {
+      "id": "is-cl-tuvieramos",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "Ojalá ___ más horas de sueño. (tener, nosotros)",
+      "promptEnglish": "If only we had more hours of sleep.",
+      "answers": ["tuviéramos", "tuviésemos"],
+      "explanation": "Ojalá + imperfect subjunctive for a present wish that isn't true. Tuvieron → tuviéramos, with the accent on the nosotros form.",
+      "difficulty": 3
+    },
+    {
+      "id": "is-ch-quisiera",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "En la farmacia: «___ algo para los mocos del bebé, por favor.»",
+      "promptEnglish": "At the pharmacy: \"I'd like something for the baby's sniffles, please.\"",
+      "options": ["Quiero que", "Quisiera", "Quería que"],
+      "answers": ["Quisiera"],
+      "explanation": "Quisiera is the polite want — softer than quiero, and it stands alone before a noun or infinitive.",
+      "difficulty": 1
+    },
+    {
+      "id": "is-cl-dijera",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "La pediatra nos pidió que le ___ cualquier cambio. (decir, nosotros)",
+      "promptEnglish": "The paediatrician asked us to tell her about any change.",
+      "answers": ["dijéramos", "dijésemos"],
+      "explanation": "Pidió que (past request) → imperfect subjunctive. Dijeron → dijéramos.",
+      "difficulty": 3
+    },
+    {
+      "id": "is-ch-comiera",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "Era importante que ___ verdura todos los días.",
+      "promptEnglish": "It was important that he ate vegetables every day.",
+      "options": ["comiera", "comía", "coma"],
+      "answers": ["comiera"],
+      "explanation": "Era importante que — an impersonal trigger in the past — takes comiera, not the present subjunctive coma.",
+      "difficulty": 2
+    },
+    {
+      "id": "is-cl-hiciera",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "Me sorprendió que ___ tanto calor en octubre. (hacer)",
+      "promptEnglish": "I was surprised it was so hot in October.",
+      "answers": ["hiciera", "hiciese"],
+      "explanation": "Emotion in the past (me sorprendió que) → imperfect subjunctive. Hicieron → hiciera.",
+      "difficulty": 3
+    },
+    {
+      "id": "is-ch-pudieras",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "Te llamé para que ___ escuchar sus primeras palabras.",
+      "promptEnglish": "I called you so you could hear his first words.",
+      "options": ["podías", "pudieras", "puedas"],
+      "answers": ["pudieras"],
+      "explanation": "Para que after a past main verb → imperfect subjunctive. Pudieron → pudieras.",
+      "difficulty": 3
+    },
+    {
+      "id": "is-ch-formacion",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "¿De qué forma sale «estuviera»?",
+      "promptEnglish": "Which form does \"estuviera\" come from?",
+      "options": ["estaban", "estuvieron", "estarán"],
+      "answers": ["estuvieron"],
+      "explanation": "The rule: ellos-preterite minus -ron plus -ra. Estuvieron → estuviera — the preterite irregularity carries over.",
+      "difficulty": 2
+    },
+    {
+      "id": "is-cl-llorara",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "No había nada que ___ su llanto esa noche. (calmar)",
+      "promptEnglish": "There was nothing that would calm his crying that night.",
+      "answers": ["calmara", "calmase"],
+      "explanation": "A nonexistent antecedent in the past (no había nada que…) → imperfect subjunctive: calmara.",
+      "difficulty": 3
+    },
+    {
+      "id": "is-ch-fueras",
+      "topicId": "imperfect-subjunctive",
+      "type": "choice",
+      "prompt": "Mi abuela siempre quiso que ___ músico.",
+      "promptEnglish": "My grandmother always wanted me to be a musician.",
+      "options": ["fuera", "sea", "era"],
+      "answers": ["fuera"],
+      "explanation": "Quiso que (past) → imperfect subjunctive of ser: fuera.",
+      "difficulty": 2
+    },
+    {
+      "id": "is-cl-vinieran",
+      "topicId": "imperfect-subjunctive",
+      "type": "cloze",
+      "prompt": "Les dije a mis padres que ___ a conocer al bebé. (venir, ellos)",
+      "promptEnglish": "I told my parents to come and meet the baby.",
+      "answers": ["vinieran", "viniesen"],
+      "explanation": "Decir as a request in the past → imperfect subjunctive. Vinieron → vinieran.",
+      "difficulty": 3
+    }
+  ]
+}
