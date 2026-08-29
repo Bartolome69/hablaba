@@ -1,0 +1,150 @@
+{
+  "id": "hablaba-haber-uses",
+  "title": "Los Usos de Haber — Practice",
+  "description": "Authored B1 practice set for haber: hay vs está/están for existence vs location, hay always singular, hay que for impersonal obligation, había vs hubo, and haber as the auxiliary of the perfect tenses.",
+  "topicIds": ["haber-uses"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "haber-uses",
+      "summary": "Haber wears three hats. EXISTENCE: hay = there is / there are — and it stays singular whatever follows: 'Hay un parque', 'Hay muchos niños' (never «hayn»). The split with estar: hay introduces something NEW and indefinite ('Hay una farmacia cerca'), está/están locates something already known and definite ('La farmacia está en la esquina') — so hay never takes el/la or a name. In the past, había describes the scene ('Había mucha gente'), hubo reports an occurrence ('Hubo un apagón'). OBLIGATION: hay que + infinitive = one must, impersonally — 'Hay que cambiar el pañal' says the nappy needs changing without pointing at anyone (compare tener que, which names the person: 'Tengo que cambiarlo'). AUXILIARY: haber builds the perfect tenses with a participle — he comido, has estado, hemos dormido, había salido — and nothing can slip between them ('He comido ya', never «he ya comido»).",
+      "examples": [
+        { "spanish": "Hay una plaza con juegos cerca de casa.", "english": "There's a playground near our place.", "note": "new, indefinite → hay" },
+        { "spanish": "La plaza está al lado del mercado.", "english": "The playground is next to the market.", "note": "known, definite → está" },
+        { "spanish": "Hay muchos niños hoy.", "english": "There are lots of kids today.", "note": "hay stays singular" },
+        { "spanish": "Hay que esterilizar los biberones.", "english": "The bottles need sterilising.", "note": "impersonal obligation" },
+        { "spanish": "Todavía no ha dicho su primera palabra.", "english": "He hasn't said his first word yet.", "note": "auxiliary + participle" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "hb-ch-farmacia",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "¿___ una farmacia por acá?",
+      "promptEnglish": "Is there a pharmacy around here?",
+      "options": ["Hay", "Está", "Es"],
+      "answers": ["Hay"],
+      "explanation": "Asking whether something exists (indefinite: una farmacia) takes hay.",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-ch-lafarmacia",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "La farmacia ___ en la esquina, al lado del café.",
+      "promptEnglish": "The pharmacy is on the corner, next to the café.",
+      "options": ["hay", "está", "es"],
+      "answers": ["está"],
+      "explanation": "A known, definite thing (LA farmacia) is located with estar — hay can't take el/la.",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-ch-ninos",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "Hoy ___ muchos niños en la plaza.",
+      "promptEnglish": "There are lots of kids at the playground today.",
+      "options": ["hay", "hayn", "están"],
+      "answers": ["hay"],
+      "explanation": "Hay is invariable — singular or plural, it's always hay. «Hayn» doesn't exist.",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-cl-hayque",
+      "topicId": "haber-uses",
+      "type": "cloze",
+      "prompt": "___ que cambiar el pañal antes de salir. (haber, presente)",
+      "promptEnglish": "The nappy needs changing before we go out.",
+      "answers": ["hay"],
+      "explanation": "Hay que + infinitive: impersonal obligation, nobody named.",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-ch-tengoque",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "¿Cuál dice que TE toca a ti hacerlo?",
+      "promptEnglish": "Which one says it's YOUR job to do it?",
+      "options": ["Hay que bañarlo.", "Tengo que bañarlo."],
+      "answers": ["Tengo que bañarlo."],
+      "explanation": "Tener que names the person (tengo = I); hay que leaves it impersonal.",
+      "difficulty": 2
+    },
+    {
+      "id": "hb-cl-habia",
+      "topicId": "haber-uses",
+      "type": "cloze",
+      "prompt": "___ mucha gente en el mercado esta mañana. (haber, descripción en pasado)",
+      "promptEnglish": "There were a lot of people at the market this morning.",
+      "answers": ["había"],
+      "explanation": "Scene description in the past → había (imperfect). And still singular: había mucha gente.",
+      "difficulty": 2
+    },
+    {
+      "id": "hb-ch-hubo",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "Anoche ___ una tormenta enorme.",
+      "promptEnglish": "Last night there was a huge storm.",
+      "options": ["había", "hubo", "era"],
+      "answers": ["hubo"],
+      "explanation": "A completed occurrence — something that happened — takes hubo (preterite).",
+      "difficulty": 2
+    },
+    {
+      "id": "hb-cl-hadicho",
+      "topicId": "haber-uses",
+      "type": "cloze",
+      "prompt": "Todavía no ___ dicho «papá». (haber, presente, él)",
+      "promptEnglish": "He still hasn't said \"dada\".",
+      "answers": ["ha"],
+      "explanation": "The perfect builds on haber: ha + dicho. (Dicho is the irregular participle of decir.)",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-ch-hemos",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "Esta semana ___ dormido fatal.",
+      "promptEnglish": "This week we've slept terribly.",
+      "options": ["hemos", "habemos", "hay"],
+      "answers": ["hemos"],
+      "explanation": "Nosotros auxiliary is hemos: hemos dormido. «Habemos» isn't standard.",
+      "difficulty": 1
+    },
+    {
+      "id": "hb-ch-yacomido",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "¿Cuál es la frase correcta?",
+      "promptEnglish": "Which sentence is correct?",
+      "options": ["Ya he comido.", "He ya comido.", "He comido ya he."],
+      "answers": ["Ya he comido."],
+      "explanation": "Nothing squeezes between haber and the participle: ya goes outside — ya he comido.",
+      "difficulty": 2
+    },
+    {
+      "id": "hb-cl-habiasalido",
+      "topicId": "haber-uses",
+      "type": "cloze",
+      "prompt": "Cuando llegamos, el médico ya ___ salido. (haber, pluscuamperfecto)",
+      "promptEnglish": "When we arrived, the doctor had already left.",
+      "answers": ["había"],
+      "explanation": "Past-before-past: había + participle (the pluperfect rides on haber too).",
+      "difficulty": 2
+    },
+    {
+      "id": "hb-ch-hayvs",
+      "topicId": "haber-uses",
+      "type": "choice",
+      "prompt": "En la heladera no ___ nada para la cena.",
+      "promptEnglish": "There's nothing in the fridge for dinner.",
+      "options": ["hay", "está", "tiene"],
+      "answers": ["hay"],
+      "explanation": "Existence (or here, absence) of something indefinite → hay. «La heladera no tiene nada» works too, but with no subject stated it's hay.",
+      "difficulty": 2
+    }
+  ]
+}

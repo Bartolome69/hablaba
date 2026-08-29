@@ -30,6 +30,9 @@ import preteriteVsImperfect from "./content/hablaba-preterite-vs-imperfect.json"
 import gustarVerbs from "./content/hablaba-gustar-verbs.json"
 import siClauses from "./content/hablaba-si-clauses.json"
 import imperfectSubjunctive from "./content/hablaba-imperfect-subjunctive.json"
+import commands from "./content/hablaba-commands.json"
+import haberUses from "./content/hablaba-haber-uses.json"
+import objectPronouns from "./content/hablaba-object-pronouns.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -55,6 +58,9 @@ export const sources = [
   gustarVerbs,
   siClauses,
   imperfectSubjunctive,
+  commands,
+  haberUses,
+  objectPronouns,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)
