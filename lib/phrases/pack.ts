@@ -4,15 +4,17 @@
 //
 // Selection order for a moment: captured gaps first (they came from real
 // life), then phrases already being practised, then new ones — most recent
-// first within each band. Only when the library runs short does generation
-// fill the gap, weighted toward recent observations.
+// first within each band. When the library runs short the pack is topped up
+// from the authored starter set (read-only, never written to the library);
+// generation only replaces starters with personalised phrases on request.
 
 import { assembleFocusAreas } from "@/lib/conversations/focus"
 import { getProfile } from "@/lib/profile/store"
-import { addPhrase, listPhrases, updatePhrase } from "./store"
+import { getStarterPhrases } from "./starter"
+import { addPhrase, listPhrases, normalizePhraseText, updatePhrase } from "./store"
 import type { Phrase, PhraseMoment } from "./types"
 
-const PACK_SIZE = 8
+const PACK_SIZE = 12
 
 const SOURCE_PRIORITY: Record<Phrase["source"], number> = {
   captured: 0,
@@ -26,8 +28,8 @@ function packOrder(a: Phrase, b: Phrase): number {
   return b.createdAt.localeCompare(a.createdAt)
 }
 
-/** The library's current pack for a moment — no generation, pure read. */
-export function queryPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Phrase[] {
+/** The library's own rows for a moment — no starters, no generation. */
+function libraryPackForMoment(moment: PhraseMoment, size: number): Phrase[] {
   return listPhrases()
     .filter((p) => p.text && p.state !== "usada" && (p.moment === moment || !p.moment))
     .sort(packOrder)
@@ -35,14 +37,36 @@ export function queryPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Phra
 }
 
 /**
- * Fill the moment's pack to size, generating only the shortfall. Returns the
- * full pack (existing + newly generated). Throws on network failure so the
- * caller can offer a retry; the pure query above still works offline.
+ * The pack the UI shows: library rows first, topped up to size with authored
+ * starter phrases. Starters are materialised at read time and never stored,
+ * so they can't leak into conversation seeding or the review deck; any the
+ * library already holds (verbatim or re-generated) are skipped.
+ */
+export function queryPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Phrase[] {
+  const library = libraryPackForMoment(moment, size)
+  if (library.length >= size) return library
+  const taken = new Set(
+    listPhrases()
+      .map((p) => normalizePhraseText(p.text))
+      .filter(Boolean),
+  )
+  const starters = getStarterPhrases(moment).filter(
+    (s) => !taken.has(normalizePhraseText(s.text)),
+  )
+  return [...library, ...starters.slice(0, size - library.length)]
+}
+
+/**
+ * Fill the moment's pack to size with PERSONALISED phrases, generating only
+ * the library's shortfall (starters don't count — they're the floor, and
+ * fresh generated rows displace them). Returns the full pack. Throws on
+ * network failure so the caller can offer a retry; the pure query above
+ * still works offline.
  */
 export async function fillPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Promise<Phrase[]> {
-  const current = queryPackForMoment(moment, size)
+  const current = libraryPackForMoment(moment, size)
   const shortfall = size - current.length
-  if (shortfall <= 0) return current
+  if (shortfall <= 0) return queryPackForMoment(moment, size)
 
   const profile = getProfile()
   const res = await fetch("/api/phrases/generate", {

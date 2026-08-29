@@ -14,6 +14,7 @@ import { ChipRow } from "@/components/chip-row"
 import { DuoIcon, momentIcon } from "@/components/icons"
 import { useTTS } from "@/hooks/use-tts"
 import { fillPackForMoment, queryPackForMoment } from "@/lib/phrases/pack"
+import { isStarterPhrase } from "@/lib/phrases/starter"
 import { PHRASE_MOMENTS, type Phrase, type PhraseMoment } from "@/lib/phrases/types"
 
 const MOMENT_LABELS: Record<PhraseMoment, string> = {
@@ -93,7 +94,8 @@ export function MomentPack() {
                 <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{phrase.text}</p>
                 <div className="flex flex-wrap items-center gap-[7px]">
                   <span className="text-[12.5px] text-ink-soft">{phrase.translation}</span>
-                  {phrase.state === "nueva" ? (
+                  {/* Starter rows are the built-in floor, not learner activity — no state tag. */}
+                  {isStarterPhrase(phrase) ? null : phrase.state === "nueva" ? (
                     <span className="rounded-full bg-terracotta-tint px-[7px] py-[3px] text-[9.5px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
                       nueva
                     </span>
@@ -134,7 +136,7 @@ export function MomentPack() {
         ) : (
           <DuoIcon name="rayo" size={14} />
         )}
-        {filling ? "Generando…" : "Generar frases para este momento"}
+        {filling ? "Generando…" : "Generar frases personalizadas"}
       </button>
     </section>
   )
