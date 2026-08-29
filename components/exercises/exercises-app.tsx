@@ -15,7 +15,7 @@ import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
 import { getTopic } from "@/lib/exercises/taxonomy"
-import type { ExerciseItem, MasteryBand, TopicMastery } from "@/lib/exercises/types"
+import type { ExerciseItem, GrammarArea, MasteryBand, TopicMastery } from "@/lib/exercises/types"
 
 const SESSION_SIZE = 10
 
@@ -40,6 +40,28 @@ const BAND_SEGMENTS: Record<MasteryBand, number> = {
   mislearned: 1,
   learning: 2,
   confident: 3,
+}
+
+// Topics group by their taxonomy grammar area — learner-facing Spanish names,
+// ordered from "the verbs themselves" outward.
+const AREA_ORDER: GrammarArea[] = [
+  "verbs",
+  "tenses",
+  "mood",
+  "prepositions",
+  "pronouns",
+  "comparison",
+  "usage",
+]
+
+const AREA_NAMES: Record<GrammarArea, string> = {
+  verbs: "Verbos",
+  tenses: "Tiempos verbales",
+  mood: "Subjuntivo y mandatos",
+  prepositions: "Preposiciones",
+  pronouns: "Pronombres",
+  comparison: "Comparaciones",
+  usage: "Palabras confusas",
 }
 
 type View = { name: "home" } | { name: "quiz"; title: string; items: ExerciseItem[] }
@@ -122,20 +144,30 @@ export function ExercisesApp() {
         </div>
       </button>
 
-      <div className="mt-[26px] flex items-baseline justify-between px-1 pb-3">
+      <div className="mt-[26px] flex items-baseline justify-between px-1">
         <h2 className="font-serif text-[19px] text-ink">Temas</h2>
         <span className="text-[12.5px] text-ink-soft">{totalQuestions} preguntas</span>
       </div>
-      <div className="stagger-children space-y-2">
-        {covered.map((c) => (
-          <TopicCard
-            key={c.topic.id}
-            covered={c}
-            mastery={mastery[c.topic.id]}
-            onClick={() => startTopic(c.topic.id, c.topic.title)}
-          />
-        ))}
-      </div>
+
+      {AREA_ORDER.map((area) => {
+        const group = covered.filter((c) => c.topic.area === area)
+        if (group.length === 0) return null
+        return (
+          <section key={area} className="mt-5">
+            <h3 className="smallcaps px-1 pb-2.5 text-ink-faint">{AREA_NAMES[area]}</h3>
+            <div className="stagger-children space-y-2">
+              {group.map((c) => (
+                <TopicCard
+                  key={c.topic.id}
+                  covered={c}
+                  mastery={mastery[c.topic.id]}
+                  onClick={() => startTopic(c.topic.id, c.topic.title)}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }
@@ -163,7 +195,9 @@ function TopicCard({
         </p>
       </div>
       <div className="flex flex-none flex-col items-end gap-1.5">
-        <span className="text-[12.5px] text-ink-soft">{covered.quizCount} P</span>
+        <span className="text-[12.5px] text-ink-soft">
+          <span className="font-medium text-ink-faint">{covered.topic.cefr}</span> · {covered.quizCount} P
+        </span>
         <span className="flex items-center gap-1.5">
           <span className="flex items-center gap-[3px]" aria-hidden>
             {[0, 1, 2].map((i) => (

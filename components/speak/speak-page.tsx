@@ -91,9 +91,8 @@ export function SpeakPage() {
       {/* Routine browsing, by situation. */}
       <div className="mt-8">
         <h2 className="px-1 font-serif text-[19px] text-ink">Frases por situación</h2>
-        <div className="scrollbar-hide -mx-[22px] mt-3 overflow-x-auto px-[22px]">
-          <div className="flex w-max gap-2">
-            {categories.map((category) => {
+        <div className="mt-3 flex flex-wrap gap-2">
+          {categories.map((category) => {
               const isActive = category.id === selected
               return (
                 <button
@@ -115,7 +114,6 @@ export function SpeakPage() {
                 </button>
               )
             })}
-          </div>
         </div>
       </div>
 

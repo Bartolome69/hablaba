@@ -195,7 +195,9 @@ hairline — never a competing block.
   holding a baby.
 - **Do** use the recessed well (`clay-recessed`) for every text input —
   inputs are pressed into the clay, raised things are buttons.
-- **Do** let horizontal chip rows run off the right edge — it's the scroll cue.
+- **Do** wrap chip rows onto multiple lines so every pill shows whole, lip
+  included. (Deliberate departure from the handoff, which ran chip rows off
+  the right edge as a scroll cue — Bart preferred full pills, Aug 2026.)
 
 ### Don't:
 - **Don't** use emoji, lucide, or any icon library on app surfaces.

@@ -125,19 +125,17 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
   return (
     <div>
       {quickAsks && (
-        <div className="scrollbar-hide -mx-5 overflow-x-auto px-5 pb-3">
-          <div className="flex w-max gap-2">
-            {QUICK_ASKS.map((ask) => (
-              <button
-                key={ask.label}
-                onClick={() => onSend(ask.text)}
-                className="press-chip flex h-[34px] flex-none items-center gap-1.5 rounded-full bg-sunken px-[13px]"
-              >
-                <DuoIcon name={ask.icon} size={13} className="text-ink" />
-                <span className="text-[12.5px] font-medium text-ink">{ask.label}</span>
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2 pb-3">
+          {QUICK_ASKS.map((ask) => (
+            <button
+              key={ask.label}
+              onClick={() => onSend(ask.text)}
+              className="press-chip flex h-[34px] flex-none items-center gap-1.5 rounded-full bg-sunken px-[13px]"
+            >
+              <DuoIcon name={ask.icon} size={13} className="text-ink" />
+              <span className="text-[12.5px] font-medium text-ink">{ask.label}</span>
+            </button>
+          ))}
         </div>
       )}
 

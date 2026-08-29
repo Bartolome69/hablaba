@@ -58,9 +58,8 @@ export function MomentPack() {
         Tu biblioteca, filtrada por lo que estás por hacer.
       </p>
 
-      <div className="scrollbar-hide -mx-[22px] mt-3 overflow-x-auto px-[22px]">
-        <div className="flex w-max gap-2">
-          {PHRASE_MOMENTS.map((m) => {
+      <div className="mt-3 flex flex-wrap gap-2">
+        {PHRASE_MOMENTS.map((m) => {
             const active = m === moment
             return (
               <button
@@ -79,7 +78,6 @@ export function MomentPack() {
               </button>
             )
           })}
-        </div>
       </div>
 
       {pack.length === 0 ? (
