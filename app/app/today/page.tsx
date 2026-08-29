@@ -67,7 +67,7 @@ export default function TodayPage() {
       <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
         {resume
           ? `${resumeTurns} turnos · escribí o seguí en voz alta`
-          : "Escribí, o hablá con las manos libres — 5 a 15 minutos"}
+          : "Escribí, o hablá con las manos libres. 5 a 15 minutos."}
       </span>
       <span className="clay-cream mt-[18px] flex h-[46px] items-center justify-center gap-2 rounded-full">
         <span className="text-[15px] font-semibold text-green">
@@ -143,7 +143,7 @@ export default function TodayPage() {
         className="mt-6 flex items-center gap-2.5 border-t border-rule px-1 pt-4 text-ink transition-colors"
       >
         <DuoIcon name="calendario" size={18} />
-        <span className="flex-1 text-sm font-medium">Tu semana — patrones y logros</span>
+        <span className="flex-1 text-sm font-medium">Tu semana: patrones y logros</span>
         <DuoIcon name="chevron" size={14} className="text-ink-soft" />
       </Link>
     </div>

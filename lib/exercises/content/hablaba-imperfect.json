@@ -1,13 +1,13 @@
 {
   "id": "hablaba-imperfect",
-  "title": "Imperfecto — Practice",
-  "description": "Authored B1 practice set for the imperfect: regular forms, the three irregulars (ser, ir, ver), and its core uses — habits, ongoing background, description, time and age.",
+  "title": "Imperfecto: Practice",
+  "description": "Authored B1 practice set for the imperfect: regular forms, the three irregulars (ser, ir, ver), and its core uses (habits, ongoing background, description, time and age).",
   "topicIds": ["imperfect"],
   "ingestedAt": "2026-07-31",
   "lessons": [
     {
       "topicId": "imperfect",
-      "summary": "The imperfect (imperfecto) describes the past without a defined endpoint: habits ('used to'), ongoing background actions ('was …ing'), descriptions, and time, age, weather and feelings. Regular endings — -ar verbs: -aba, -abas, -aba, -ábamos, -aban; -er/-ir verbs: -ía, -ías, -ía, -íamos, -ían. Only three verbs are irregular: ser (era, eras, era, éramos, eran), ir (iba, ibas, iba, íbamos, iban) and ver (veía, veías, veía, veíamos, veían).",
+      "summary": "The imperfect (imperfecto) describes the past without a defined endpoint: habits ('used to'), ongoing background actions ('was …ing'), descriptions, and time, age, weather and feelings. Regular endings for -ar verbs: -aba, -abas, -aba, -ábamos, -aban; for -er/-ir verbs: -ía, -ías, -ía, -íamos, -ían. Only three verbs are irregular: ser (era, eras, era, éramos, eran), ir (iba, ibas, iba, íbamos, iban) and ver (veía, veías, veía, veíamos, veían).",
       "examples": [
         { "spanish": "Cuando era niño, jugaba al fútbol todos los días.", "english": "When I was a child, I used to play football every day.", "note": "habit" },
         { "spanish": "Llovía y hacía frío.", "english": "It was raining and it was cold.", "note": "background / weather" },

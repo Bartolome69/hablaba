@@ -8,7 +8,7 @@ export const contentType = "image/png"
 export default async function OGImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const audience = audiences[slug]
-  const headline = audience?.headline ?? "Hablaba — Spanish for daily life"
+  const headline = audience?.headline ?? "Hablaba · Spanish for daily life"
   const eyebrow = audience?.eyebrow ?? "Spanish for daily life"
 
   return new ImageResponse(

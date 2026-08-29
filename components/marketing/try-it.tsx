@@ -70,7 +70,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
           {correctCount}/{items.length}
         </p>
         <p className="mt-1 text-sm text-ink-muted">
-          {correctCount === items.length ? "¡Perfecto! Ready for the harder ones?" : "Good start — the full set will lock it in."}
+          {correctCount === items.length ? "¡Perfecto! Ready for the harder ones?" : "Good start. The full set will lock it in."}
         </p>
         <Link
           href={`/app/exercises?topic=${topicId}`}
@@ -85,7 +85,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
   return (
     <div className="clay-static rounded-[26px] p-5 sm:p-8">
       <div className="flex items-center justify-between">
-        <span className="smallcaps text-ink-faint">Try it — question {idx + 1} of {items.length}</span>
+        <span className="smallcaps text-ink-faint">Try it: question {idx + 1} of {items.length}</span>
         <span className="flex items-center gap-[3px]" aria-hidden>
           {items.map((_, i) => (
             <span key={i} className={`h-[5px] w-[14px] rounded-full ${i < idx || (i === idx && checked) ? "bg-green" : "bg-segment-empty"}`} />

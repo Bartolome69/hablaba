@@ -11,7 +11,7 @@ import { phrasePages } from "@/lib/marketing/phrase-pages"
 import { routines } from "@/lib/routines"
 
 export const metadata: Metadata = {
-  title: "Hablaba — Speak Spanish with your little one",
+  title: "Hablaba: speak Spanish with your little one",
   description:
     "Hablaba helps parents raise bilingual kids: real conversations with a warm Spanish partner, phrases for bath time and bedtime, and grammar practice built from what you actually say.",
   alternates: { canonical: "/" },
@@ -44,13 +44,13 @@ export default function HomePage() {
     <>
       <Hero
         eyebrow="Spanish for bilingual parenting"
-        headline="Speak Spanish with your little one — even if you're still learning."
+        headline="Speak Spanish with your little one, even if you're still learning."
         subhead="Hablaba is the patient, warm Spanish companion for parents raising bilingual kids. Real conversations by text or voice, phrases for the moments your day is made of, and gentle corrections that never feel like a red pen."
       />
 
       <HowItWorks
         steps={[
-          { title: "Talk about your day", body: "Type at the kitchen table or go hands-free on a walk with the pram — one conversation, your real life." },
+          { title: "Talk about your day", body: "Type at the kitchen table, or go hands-free on a walk with the pram. It's one conversation about your real life." },
           { title: "Get patterns back", body: "Hablaba notices what you fumbled and what you nailed, and turns it into gentle, specific practice." },
           { title: "Bring it home", body: "Phrases for bath time and bedtime land in your library, ready to use with your peque tonight." },
         ]}
@@ -64,8 +64,8 @@ export default function HomePage() {
               Phrases for the moments that matter
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-              Free packs of the Spanish parents actually say — nappy changes, the bath, lights
-              out. English translations included.
+              Free packs of the Spanish parents actually say at nappy changes, in the bath, and at
+              lights out. English translations included.
             </p>
             <div className="mt-5 space-y-2">
               {teaserRoutines.map((r) => (
@@ -94,7 +94,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
               {covered.length} topics from A2 to B2 with clear rules, real examples and{" "}
-              {totalQuestions} free questions — try them right on the page.
+              {totalQuestions} free questions you can try right on the page.
             </p>
             <div className="mt-5 space-y-2">
               {teaserTopics.map(({ topic, totalCount }) => (
@@ -144,10 +144,10 @@ export default function HomePage() {
 
       <Faq
         items={[
-          { q: "What level is Hablaba for?", a: "We're built for B1-ish learners — you can read a menu and survive a chat, but you freeze in real conversation. We also support beginners with a bilingual partner." },
+          { q: "What level is Hablaba for?", a: "We're built for B1-ish learners: you can read a menu and survive a chat, but you freeze in real conversation. We also support beginners with a bilingual partner." },
           { q: "Does my child need to use it?", a: "No. Hablaba is for the parent: you practise the Spanish, then bring it into bath time, bedtime and the walk to nursery yourself. There's even a mode where your partner plays your little one so you can rehearse the day." },
-          { q: "How long per session?", a: "Five minutes is the sweet spot. Short, daily sessions beat long, occasional ones — and voice conversations work hands-free while you push the pram." },
-          { q: "Do I need to install anything?", a: "No — Hablaba runs in your browser, and you can add it to your home screen as an app in one tap." },
+          { q: "How long per session?", a: "Five minutes is the sweet spot. Short, daily sessions beat long, occasional ones, and voice conversations work hands-free while you push the pram." },
+          { q: "Do I need to install anything?", a: "No. Hablaba runs in your browser, and you can add it to your home screen as an app in one tap." },
           { q: "How much does it cost?", a: "Hablaba is free during the early access period, and the grammar and phrase libraries on this site are free forever. Join the waitlist to be the first in." },
         ]}
       />

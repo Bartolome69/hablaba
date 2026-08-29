@@ -1,13 +1,13 @@
 {
   "id": "hablaba-muy-vs-mucho",
-  "title": "Muy y Mucho — Practice",
+  "title": "Muy y Mucho: Practice",
   "description": "Authored B1 practice set for muy vs mucho: muy before adjectives and adverbs, mucho with nouns (agreeing) and after verbs, the tener/hacer expressions where English says \"very\", and mucho before comparatives.",
   "topicIds": ["muy-vs-mucho"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "muy-vs-mucho",
-      "summary": "Muy goes before ADJECTIVES and ADVERBS and never changes: 'muy cansado', 'muy bien', 'muy tarde'. Mucho does two jobs. Before a NOUN it's an adjective and agrees: 'mucho trabajo', 'mucha leche', 'muchos juguetes', 'muchas veces'. After a VERB it's an adverb and stays mucho: 'Llora mucho', 'Te quiero mucho'. The trap zone is the tener/hacer expressions, where Spanish uses a NOUN and English uses \"very\": tengo mucha hambre (not «muy hambre»), hace mucho calor, tengo mucho sueño, tenemos mucha prisa. Two more corners: before mejor/peor/más/menos you intensify with mucho, not muy — 'Hoy está mucho mejor', 'mucho más grande'; and muy can never end a sentence alone — if nothing follows, use mucho ('¿Te gusta? — Sí, mucho') or switch to muchísimo for emphasis.",
+      "summary": "Muy goes before ADJECTIVES and ADVERBS and never changes: 'muy cansado', 'muy bien', 'muy tarde'. Mucho does two jobs. Before a NOUN it's an adjective and agrees: 'mucho trabajo', 'mucha leche', 'muchos juguetes', 'muchas veces'. After a VERB it's an adverb and stays mucho: 'Llora mucho', 'Te quiero mucho'. The trap zone is the tener/hacer expressions, where Spanish uses a NOUN and English uses \"very\": tengo mucha hambre (not «muy hambre»), hace mucho calor, tengo mucho sueño, tenemos mucha prisa. Two more corners: before mejor/peor/más/menos you intensify with mucho, not muy: 'Hoy está mucho mejor', 'mucho más grande'; and muy can never end a sentence alone. If nothing follows, use mucho ('¿Te gusta? — Sí, mucho') or switch to muchísimo for emphasis.",
       "examples": [
         { "spanish": "Estoy muy cansada hoy.", "english": "I'm very tired today.", "note": "muy + adjective" },
         { "spanish": "El bebé llora mucho de noche.", "english": "The baby cries a lot at night.", "note": "verb + mucho" },
@@ -22,8 +22,8 @@
       "id": "mm-ch-cansado",
       "topicId": "muy-vs-mucho",
       "type": "choice",
-      "prompt": "Estoy ___ cansado — el peque se despertó tres veces.",
-      "promptEnglish": "I'm very tired — the little one woke up three times.",
+      "prompt": "Estoy ___ cansado: el peque se despertó tres veces.",
+      "promptEnglish": "I'm very tired. The little one woke up three times.",
       "options": ["muy", "mucho"],
       "answers": ["muy"],
       "explanation": "Cansado is an adjective, and adjectives take muy.",
@@ -37,7 +37,7 @@
       "promptEnglish": "The baby cries a lot when he's sleepy.",
       "options": ["muy", "mucho"],
       "answers": ["mucho"],
-      "explanation": "After a verb, the intensifier is mucho — muy can't stand alone after llora.",
+      "explanation": "After a verb, the intensifier is mucho: muy can't stand alone after llora.",
       "difficulty": 1
     },
     {
@@ -47,7 +47,7 @@
       "prompt": "Tengo ___ hambre. (muy / mucho / mucha)",
       "promptEnglish": "I'm very hungry.",
       "answers": ["mucha"],
-      "explanation": "Hambre is a (feminine) noun, so it takes mucha — Spanish says \"I have much hunger\", never «muy hambre».",
+      "explanation": "Hambre is a (feminine) noun, so it takes mucha: Spanish says \"I have much hunger\", never «muy hambre».",
       "difficulty": 2
     },
     {
@@ -57,7 +57,7 @@
       "prompt": "Hoy hace ___ calor para el paseo. (muy / mucho / mucha)",
       "promptEnglish": "It's very hot for the walk today.",
       "answers": ["mucho"],
-      "explanation": "Calor is a noun after hacer, so mucho calor — «muy calor» is the classic English-speaker slip.",
+      "explanation": "Calor is a noun after hacer, so mucho calor: «muy calor» is the classic English-speaker slip.",
       "difficulty": 2
     },
     {
@@ -118,8 +118,8 @@
       "id": "mm-cl-sueno",
       "topicId": "muy-vs-mucho",
       "type": "cloze",
-      "prompt": "El peque tiene ___ sueño — mejor vamos a casa. (muy / mucho / mucha)",
-      "promptEnglish": "The little one is very sleepy — we'd better go home.",
+      "prompt": "El peque tiene ___ sueño: mejor vamos a casa. (muy / mucho / mucha)",
+      "promptEnglish": "The little one is very sleepy. We'd better go home.",
       "answers": ["mucho"],
       "explanation": "Sueño is a masculine noun: tener mucho sueño. Another tener-expression where English says \"very\".",
       "difficulty": 2
@@ -128,8 +128,8 @@
       "id": "mm-ch-prisa",
       "topicId": "muy-vs-mucho",
       "type": "choice",
-      "prompt": "Perdón, tenemos ___ prisa — la guardería cierra en diez minutos.",
-      "promptEnglish": "Sorry, we're in a big hurry — the nursery closes in ten minutes.",
+      "prompt": "Perdón, tenemos ___ prisa: la guardería cierra en diez minutos.",
+      "promptEnglish": "Sorry, we're in a big hurry. The nursery closes in ten minutes.",
       "options": ["mucha", "mucho", "muy"],
       "answers": ["mucha"],
       "explanation": "Prisa is feminine: tener mucha prisa.",
@@ -139,8 +139,8 @@
       "id": "mm-ch-muchisimo",
       "topicId": "muy-vs-mucho",
       "type": "choice",
-      "prompt": "Gracias por cuidarlo — te lo agradezco ___.",
-      "promptEnglish": "Thanks for looking after him — I really appreciate it.",
+      "prompt": "Gracias por cuidarlo, te lo agradezco ___.",
+      "promptEnglish": "Thanks for looking after him, I really appreciate it.",
       "options": ["muchísimo", "muy", "muy mucho"],
       "answers": ["muchísimo"],
       "explanation": "For extra emphasis after a verb, Spanish stacks the -ísimo onto mucho: muchísimo. «Muy mucho» doesn't exist.",

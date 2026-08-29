@@ -1,6 +1,6 @@
 {
   "id": "jennifer-por-para",
-  "title": "Por y Para — Lecciones with Jennifer",
+  "title": "Por y Para: Lecciones with Jennifer",
   "teacher": "Jennifer",
   "description": "Por vs para handout: a brief rule summary, fill-in and multiple-choice drills, a short analysis text, and written production.",
   "topicIds": ["por-vs-para"],
@@ -10,7 +10,7 @@
       "topicId": "por-vs-para",
       "summary": "Jennifer's rule. Use PARA for: destino (destination), objetivo o finalidad (purpose/goal), fecha límite (deadline), and opinión. Use POR for: causa o razón (cause/reason), medio (means), intercambio (exchange), movimiento por un lugar (movement through a place), tiempo aproximado (approximate time), and agente (the doer, in passive sentences). Shorthand: PARA looks ahead to a goal or endpoint; POR looks back to the cause or the means.",
       "examples": [
-        { "spanish": "Salí de casa por la mañana para ir a la oficina.", "english": "I left home in the morning to go to the office.", "note": "por = approximate time; para = purpose — both in one sentence" },
+        { "spanish": "Salí de casa por la mañana para ir a la oficina.", "english": "I left home in the morning to go to the office.", "note": "por = approximate time; para = purpose, both in one sentence" },
         { "spanish": "Compré una pulsera por diez euros.", "english": "I bought a bracelet for ten euros.", "note": "por = exchange (price)" },
         { "spanish": "Llegué tarde por el tráfico.", "english": "I arrived late because of the traffic.", "note": "por = cause" },
         { "spanish": "Entregué el informe para las tres.", "english": "I handed in the report by three o'clock.", "note": "para = deadline" },
@@ -26,7 +26,7 @@
       "prompt": "Este café es ___ ti.",
       "promptEnglish": "This coffee is for you.",
       "answers": ["para"],
-      "explanation": "PARA marks the destination — the person the coffee is intended for.",
+      "explanation": "PARA marks the destination: the person the coffee is intended for.",
       "difficulty": 1
     },
     {
@@ -107,7 +107,7 @@
       "promptEnglish": "Shall we walk around the centre today?",
       "options": ["por", "para"],
       "answers": ["por"],
-      "explanation": "POR expresses movement through a place — walking around/through the centre.",
+      "explanation": "POR expresses movement through a place: walking around/through the centre.",
       "difficulty": 1
     },
     {
@@ -129,7 +129,7 @@
       "promptEnglish": "I couldn't go because of the rain.",
       "options": ["por", "para"],
       "answers": ["por"],
-      "explanation": "POR marks the cause — the rain is the reason.",
+      "explanation": "POR marks the cause: the rain is the reason.",
       "difficulty": 1
     },
     {
@@ -151,7 +151,7 @@
       "promptEnglish": "I'll swap my shift for yours.",
       "options": ["por", "para"],
       "answers": ["por"],
-      "explanation": "POR marks an exchange (intercambio) — one thing traded for another.",
+      "explanation": "POR marks an exchange (intercambio): one thing traded for another.",
       "difficulty": 1
     },
     {
@@ -171,7 +171,7 @@
       "prompt": "Compré una pulsera ___ diez euros.",
       "promptEnglish": "I bought a bracelet for ten euros.",
       "answers": ["por"],
-      "explanation": "POR marks exchange — the price paid in return.",
+      "explanation": "POR marks exchange: the price paid in return.",
       "difficulty": 2
     },
     {
@@ -181,7 +181,7 @@
       "prompt": "Llegué tarde ___ el tráfico.",
       "promptEnglish": "I arrived late because of the traffic.",
       "answers": ["por"],
-      "explanation": "POR marks the cause — the traffic is the reason for arriving late.",
+      "explanation": "POR marks the cause: the traffic is the reason for arriving late.",
       "difficulty": 2
     },
     {
@@ -191,7 +191,7 @@
       "prompt": "Entregué el informe ___ las tres.",
       "promptEnglish": "I handed in the report by three o'clock.",
       "answers": ["para"],
-      "explanation": "PARA marks a deadline (fecha límite) — the time by which it was done.",
+      "explanation": "PARA marks a deadline (fecha límite): the time by which it was done.",
       "difficulty": 2
     },
     {
@@ -212,7 +212,7 @@
       "promptEnglish": "Write a sentence with PARA expressing purpose or destination.",
       "guidance": "The sentence must be grammatical Spanish and use 'para' to express either purpose (para + infinitive, or para que + subjunctive) or a destination/recipient (e.g. 'Estudio para ser ingeniero' or 'Este libro es para María'). Mark incorrect if it uses 'por', or uses 'para' for a meaning that should take 'por' (cause, exchange, means, movement).",
       "sampleAnswer": "Compré flores para mi madre.",
-      "explanation": "PARA marks purpose (finalidad) and destination/recipient — where something is headed or what it's for.",
+      "explanation": "PARA marks purpose (finalidad) and destination/recipient: where something is headed or what it's for.",
       "difficulty": 3
     },
     {

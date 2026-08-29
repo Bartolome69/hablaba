@@ -26,7 +26,7 @@ export function CorrectionCards({ corrections }: { corrections: VoiceObservation
     <section className="mb-6">
       <h2 className="px-1 font-serif text-[19px] text-ink">Repasá tus correcciones</h2>
       <p className="mt-1 px-1 text-[12.5px] text-ink-soft">
-        Lo que dijiste esta semana — tocá para ver la forma natural.
+        Lo que dijiste esta semana. Tocá para ver la forma natural.
       </p>
       <ul className="mt-3 space-y-2">
         {corrections.map((c) => {

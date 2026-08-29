@@ -1,13 +1,13 @@
 {
   "id": "hablaba-si-clauses",
-  "title": "Condicionales con Si — Practice",
-  "description": "Authored B2 practice set for si clauses: real conditions (si + presente → futuro/presente/imperativo), hypotheticals (si + imperfecto de subjuntivo → condicional), and the two things si never takes — the future and the conditional.",
+  "title": "Condicionales con Si: Practice",
+  "description": "Authored B2 practice set for si clauses: real conditions (si + presente → futuro/presente/imperativo), hypotheticals (si + imperfecto de subjuntivo → condicional), and the two things si never takes: the future and the conditional.",
   "topicIds": ["si-clauses"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "si-clauses",
-      "summary": "Spanish si clauses come in two everyday shapes. REAL (likely) conditions: si + PRESENTE in the if-half, and future, present or an imperative in the result — 'Si llueve, nos quedamos en casa', 'Si duerme bien, mañana estará de buen humor', 'Si llegas antes, avisame'. HYPOTHETICAL (unlikely or contrary to fact): si + IMPERFECTO DE SUBJUNTIVO, result in CONDICIONAL — 'Si tuviera más tiempo, estudiaría más', 'Si fuera vos, lo llevaría al médico'. The iron rules: after si you NEVER use the future ('si lloverá' is impossible — say 'si llueve') and NEVER the conditional ('si tendría' is a well-known error — say 'si tuviera'). Also worth having: 'como si' always takes the imperfect subjunctive ('Habla como si supiera todo'), and the set phrase 'si fuera tú / yo que tú' for giving advice.",
+      "summary": "Spanish si clauses come in two everyday shapes. REAL (likely) conditions: si + PRESENTE in the if-half, and future, present or an imperative in the result: 'Si llueve, nos quedamos en casa', 'Si duerme bien, mañana estará de buen humor', 'Si llegas antes, avisame'. HYPOTHETICAL (unlikely or contrary to fact): si + IMPERFECTO DE SUBJUNTIVO, result in CONDICIONAL: 'Si tuviera más tiempo, estudiaría más', 'Si fuera vos, lo llevaría al médico'. The iron rules: after si you NEVER use the future ('si lloverá' is impossible, say 'si llueve') and NEVER the conditional ('si tendría' is a well-known error, say 'si tuviera'). Also worth having: 'como si' always takes the imperfect subjunctive ('Habla como si supiera todo'), and the set phrase 'si fuera tú / yo que tú' for giving advice.",
       "examples": [
         { "spanish": "Si llueve, nos quedamos en casa.", "english": "If it rains, we'll stay home.", "note": "real: si + presente" },
         { "spanish": "Si duerme la siesta, después está de mejor humor.", "english": "If he naps, he's in a better mood afterwards.", "note": "general truth: presente + presente" },
@@ -26,7 +26,7 @@
       "promptEnglish": "If it rains tomorrow, we're not going to the square.",
       "options": ["llueve", "lloverá", "llovería"],
       "answers": ["llueve"],
-      "explanation": "Real condition: si + presente. Si never takes the future — even when the meaning is future.",
+      "explanation": "Real condition: si + presente. Si never takes the future, even when the meaning is future.",
       "difficulty": 1
     },
     {
@@ -86,8 +86,8 @@
       "id": "si-ch-comosi",
       "topicId": "si-clauses",
       "type": "choice",
-      "prompt": "Camina como si ya ___ caminar perfecto — y tiene un año.",
-      "promptEnglish": "He walks as if he already knew how to walk perfectly — and he's one.",
+      "prompt": "Camina como si ya ___ caminar perfecto, y tiene un año.",
+      "promptEnglish": "He walks as if he already knew how to walk perfectly, and he's one.",
       "options": ["sabe", "supiera", "sabría"],
       "answers": ["supiera"],
       "explanation": "Como si ALWAYS takes the imperfect subjunctive, whatever the tense around it.",

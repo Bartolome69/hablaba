@@ -8,7 +8,7 @@ import { phrasePages } from "@/lib/marketing/phrase-pages"
 import { categories, routines } from "@/lib/routines"
 
 export const metadata: Metadata = {
-  title: "Spanish phrases for real life with a baby — free routine packs",
+  title: "Spanish phrases for real life with a baby",
   description:
     "Nappy changes, bath time, bedtime, the café, the playground: the Spanish parents actually say, in free phrase packs with English translations. For raising a bilingual baby one routine at a time.",
   alternates: { canonical: "/frases" },
@@ -42,8 +42,8 @@ export default function PhrasesIndexPage() {
           The Spanish your day is actually made of.
         </h1>
         <p className="mt-4 text-base leading-relaxed text-ink-muted sm:text-lg">
-          Not textbook dialogues — the lines parents really say at the changing table, in the
-          bath, at the swings and in the café queue. Every pack is free, with English
+          These are the lines parents really say at the changing table, in the bath, at the
+          swings and in the café queue. Every pack is free, with English
           translations and a tip for making it stick.
         </p>
       </header>
@@ -79,12 +79,12 @@ export default function PhrasesIndexPage() {
 
       <section className="clay-green-hero mt-14 rounded-[26px] p-6 sm:p-8">
         <h2 className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-cream">
-          Phrases are the start — the conversation is the point
+          Take the phrases into a real conversation
         </h2>
         <p className="mt-2 max-w-xl text-[14.5px] leading-relaxed text-green-on-dark">
           Hablaba puts every pack in your pocket with audio, tracks which phrases you've
-          actually used, and gives you a warm Argentine partner to try them on — typed at the
-          kitchen table, or hands-free on a walk with the pram.
+          actually used, and gives you a warm Argentine partner to try them on, typed at the
+          kitchen table or hands-free on a walk with the pram.
         </p>
         <Link
           href="/app/speak"

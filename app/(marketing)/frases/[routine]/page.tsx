@@ -9,8 +9,7 @@ import { DuoIcon, type IconName } from "@/components/icons"
 import { WaitlistForm } from "@/components/marketing/waitlist-form"
 import { phrasePages } from "@/lib/marketing/phrase-pages"
 import { categories, routines } from "@/lib/routines"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://spanishroutine.com"
+import { SITE_URL } from "@/lib/site"
 
 const CATEGORY_ICONS: Record<string, IconName> = {
   baby: "peque",
@@ -98,8 +97,8 @@ export default async function PhrasePage({ params }: PageProps) {
         </h2>
         <p className="mt-2 text-[14.5px] leading-relaxed text-green-on-dark">
           In Hablaba every one of these phrases has audio, lives in your own library, and comes
-          back at the right moment — plus a warm Spanish-speaking partner to practise them on,
-          by text or out loud.
+          back at the right moment. There's also a warm Spanish-speaking partner to practise
+          them on, by text or out loud.
         </p>
         <Link
           href="/app/speak"

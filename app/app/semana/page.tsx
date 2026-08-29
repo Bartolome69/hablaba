@@ -175,7 +175,7 @@ export default function WeeklyReportPage() {
                     <p className="text-sm leading-relaxed text-ink">
                       <span className="font-serif text-[16px]">«{r.word}»</span>
                       {r.alternatives && (
-                        <span className="text-ink-muted"> — probá {r.alternatives}</span>
+                        <span className="text-ink-muted">: probá {r.alternatives}</span>
                       )}
                     </p>
                   </li>

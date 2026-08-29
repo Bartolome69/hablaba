@@ -1,6 +1,6 @@
 {
   "id": "por-vs-para-example",
-  "title": "Por vs Para — worked example",
+  "title": "Por vs Para: worked example",
   "teacher": "(sample)",
   "date": "2026-07-23",
   "description": "A hand-written reference pack showing every exercise type. Safe to delete once a real PDF has been ingested; the /ingest-pdf skill mirrors this shape.",
@@ -27,7 +27,7 @@
       "promptEnglish": "This gift is for you.",
       "options": ["por", "para"],
       "answers": ["para"],
-      "explanation": "PARA marks the recipient — the person the gift is destined for.",
+      "explanation": "PARA marks the recipient: the person the gift is destined for.",
       "difficulty": 1
     },
     {
@@ -38,7 +38,7 @@
       "promptEnglish": "Thanks for coming to my party.",
       "options": ["por", "para"],
       "answers": ["por"],
-      "explanation": "POR expresses the reason you are grateful — the cause of the thanks.",
+      "explanation": "POR expresses the reason you are grateful, the cause of the thanks.",
       "difficulty": 1
     },
     {
@@ -58,7 +58,7 @@
       "prompt": "Pagué veinte euros ___ este libro.",
       "promptEnglish": "I paid twenty euros for this book.",
       "answers": ["por"],
-      "explanation": "POR marks exchange — money given in return for something.",
+      "explanation": "POR marks exchange: money given in return for something.",
       "difficulty": 2
     },
     {
@@ -79,7 +79,7 @@
       "promptEnglish": "Write a sentence using \"por\" to express duration of time.",
       "guidance": "The sentence must be grammatical Spanish and use 'por' to express a length of time (e.g. 'Viví en Madrid por dos años'). Mark incorrect if it uses 'para', or uses 'por' for a non-duration meaning.",
       "sampleAnswer": "Estudié por tres horas anoche.",
-      "explanation": "POR expresses duration — the span of time an action lasts.",
+      "explanation": "POR expresses duration: the span of time an action lasts.",
       "difficulty": 3
     }
   ]

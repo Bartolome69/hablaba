@@ -12,8 +12,7 @@ import { WaitlistForm } from "@/components/marketing/waitlist-form"
 import { coveredTopics, itemsForTopic, lessonsForTopic } from "@/lib/exercises/content"
 import { isClientGradable } from "@/lib/exercises/grade"
 import { getTopic, topics } from "@/lib/exercises/taxonomy"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://spanishroutine.com"
+import { SITE_URL } from "@/lib/site"
 
 interface PageProps {
   params: Promise<{ topic: string }>
@@ -28,8 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const topic = getTopic(id)
   if (!topic) return {}
   const count = itemsForTopic(id).length
-  const title = `${topic.title} in Spanish (${topic.spanish}) — rules, examples & free exercises`
-  const description = `${topic.blurb} Clear rules, real examples, and ${count} free practice questions at ${topic.cefr} level — built for parents learning Spanish for daily life.`
+  const title = `${topic.title} in Spanish: rules and free exercises`
+  const description = `${topic.blurb} Clear rules, real examples, and ${count} free practice questions at ${topic.cefr} level, made for parents learning Spanish for daily life.`
   return {
     title,
     description,
@@ -126,7 +125,7 @@ export default async function GrammarTopicPage({ params }: PageProps) {
               <p className="font-serif text-[19px] leading-snug text-ink">{e.spanish}</p>
               <p className="mt-1 text-[13.5px] text-ink-soft">
                 {e.english}
-                {e.note && <span className="text-ink-faint"> — {e.note}</span>}
+                {e.note && <span className="text-ink-faint"> ({e.note})</span>}
               </p>
             </li>
           ))}
@@ -137,7 +136,7 @@ export default async function GrammarTopicPage({ params }: PageProps) {
         <section className="mt-10">
           <h2 className="font-serif text-[24px] tracking-[-0.01em] text-ink">Try it yourself</h2>
           <p className="mb-4 mt-1 text-sm text-ink-muted">
-            Three quick questions, straight from the app — no sign-up needed.
+            Three quick questions, straight from the app. No sign-up needed.
           </p>
           <TryIt items={tryItems} topicId={id} topicTitle={topic.title} />
         </section>
@@ -148,8 +147,8 @@ export default async function GrammarTopicPage({ params }: PageProps) {
           All {items.length} {topic.title} questions, free in Hablaba
         </h2>
         <p className="mt-2 text-[14.5px] leading-relaxed text-green-on-dark">
-          Hablaba spots this exact rule in your real conversations and sends you back here to
-          practise it — grammar drills wired into speaking, built for parents raising bilingual kids.
+          Hablaba spots this exact rule in your real conversations and points you back to the
+          quiz for it. The drills feed the speaking, which is the point of the whole app.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <Link

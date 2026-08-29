@@ -97,7 +97,7 @@ export function SessionReview({
       <div className="mb-6 flex items-center gap-3 rounded-[18px] bg-sunken px-4 py-4">
         <DuoIcon name="logrado" size={17} className="flex-shrink-0 text-green" />
         <p className="text-sm text-ink text-pretty">
-          Nada para corregir esta vez — hablaste muy bien. Dale, otra charla mañana.
+          Nada para corregir esta vez: hablaste muy bien. Dale, otra charla mañana.
         </p>
       </div>
     )

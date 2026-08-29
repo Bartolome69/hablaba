@@ -63,7 +63,7 @@ export default function CharlaHubPage() {
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
-      <AppHeader title="Charlar" subtitle="Conversá en español — escribiendo o en voz alta" />
+      <AppHeader title="Charlar" subtitle="Conversá en español, escribiendo o en voz alta" />
 
       {resumable.length > 0 && (
         <section className="mb-[26px]">

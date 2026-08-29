@@ -9,7 +9,7 @@ export function Footer() {
           <div>
             <p className="font-serif text-[26px] tracking-[-0.02em] text-green">Hablaba</p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-muted">
-              Spanish for daily life — for parents raising bilingual kids and learners getting
+              Spanish for daily life, for parents raising bilingual kids and learners getting
               past B1.
             </p>
             <div className="mt-5">

@@ -1,13 +1,13 @@
 {
   "id": "hablaba-ser-vs-estar",
-  "title": "Ser y Estar — Practice",
+  "title": "Ser y Estar: Practice",
   "description": "Authored A2/B1 practice set for ser vs estar: identity and origin vs location and state, the progressive, events with ser, and the adjectives that change meaning (listo, aburrido, rico).",
   "topicIds": ["ser-vs-estar"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "ser-vs-estar",
-      "summary": "Ser is for WHAT something is: identity ('Soy Bart'), origin ('Es de Madrid'), profession ('Es maestra'), characteristics ('El cuento es corto'), time and dates ('Son las tres', 'Hoy es martes'), and possession ('Es de Teo'). Estar is for HOW and WHERE something is: location ('Estamos en la plaza'), states and moods ('Está dormido', 'Estoy cansada'), results of change ('La puerta está abierta'), and the progressive ('Está llorando'). Two corners catch everyone. First, EVENTS take ser even though they feel like location — 'La fiesta es en casa de Ana', '¿Dónde es la reunión?' — because you're saying where it takes place, not where a thing sits. Second, a set of adjectives changes meaning with the verb: ser listo = clever / estar listo = ready; ser aburrido = boring / estar aburrido = bored; ser rico = wealthy / estar rico = tasty; ser malo = bad / estar malo = ill or gone off. And permanence is NOT the rule: 'Está muerto' takes estar because death is a state, however permanent.",
+      "summary": "Ser is for WHAT something is: identity ('Soy Bart'), origin ('Es de Madrid'), profession ('Es maestra'), characteristics ('El cuento es corto'), time and dates ('Son las tres', 'Hoy es martes'), and possession ('Es de Teo'). Estar is for HOW and WHERE something is: location ('Estamos en la plaza'), states and moods ('Está dormido', 'Estoy cansada'), results of change ('La puerta está abierta'), and the progressive ('Está llorando'). Two corners catch everyone. First, EVENTS take ser even though they feel like location ('La fiesta es en casa de Ana', '¿Dónde es la reunión?') because you're saying where it takes place, not where a thing sits. Second, a set of adjectives changes meaning with the verb: ser listo = clever / estar listo = ready; ser aburrido = boring / estar aburrido = bored; ser rico = wealthy / estar rico = tasty; ser malo = bad / estar malo = ill or gone off. And permanence is NOT the rule: 'Está muerto' takes estar because death is a state, however permanent.",
       "examples": [
         { "spanish": "Teo es mi hijo.", "english": "Teo is my son.", "note": "identity → ser" },
         { "spanish": "El cochecito está en el pasillo.", "english": "The pram is in the hallway.", "note": "location of a thing → estar" },
@@ -47,7 +47,7 @@
       "prompt": "Shhh, el bebé ___ dormido. (ser / estar, presente)",
       "promptEnglish": "Shhh, the baby is asleep.",
       "answers": ["está"],
-      "explanation": "Being asleep is a state — estar.",
+      "explanation": "Being asleep is a state: estar.",
       "difficulty": 1
     },
     {
@@ -69,7 +69,7 @@
       "promptEnglish": "Where is the baby swimming class (held)?",
       "options": ["es", "está"],
       "answers": ["es"],
-      "explanation": "A class is an event — ¿dónde es? asks where it happens. ¿Dónde está? would ask where an object sits.",
+      "explanation": "A class is an event: ¿dónde es? asks where it happens. ¿Dónde está? would ask where an object sits.",
       "difficulty": 3
     },
     {
@@ -86,8 +86,8 @@
       "id": "se-ch-cansada",
       "topicId": "ser-vs-estar",
       "type": "choice",
-      "prompt": "Hoy ___ muy cansada — fue una noche larga.",
-      "promptEnglish": "I'm really tired today — it was a long night.",
+      "prompt": "Hoy ___ muy cansada: fue una noche larga.",
+      "promptEnglish": "I'm really tired today. It was a long night.",
       "options": ["soy", "estoy"],
       "answers": ["estoy"],
       "explanation": "Tiredness is a state, so estar. «Soy cansada» would claim it as a permanent trait.",
@@ -112,15 +112,15 @@
       "promptEnglish": "Is the baby bag ready yet?",
       "options": ["es", "está"],
       "answers": ["está"],
-      "explanation": "Estar listo = ready. Ser listo = clever — a bag can't be that.",
+      "explanation": "Estar listo = ready. Ser listo = clever (a bag can't be that).",
       "difficulty": 2
     },
     {
       "id": "se-ch-aburrido",
       "topicId": "ser-vs-estar",
       "type": "choice",
-      "prompt": "Esta película ___ aburrida — mejor pongo música.",
-      "promptEnglish": "This film is boring — I'd better put music on.",
+      "prompt": "Esta película ___ aburrida: mejor pongo música.",
+      "promptEnglish": "This film is boring. I'd better put music on.",
       "options": ["es", "está"],
       "answers": ["es"],
       "explanation": "Ser aburrido = boring (a characteristic). Estar aburrido = bored (how someone feels).",
@@ -140,8 +140,8 @@
       "id": "se-cl-hora",
       "topicId": "ser-vs-estar",
       "type": "cloze",
-      "prompt": "___ las ocho — hora del baño. (ser / estar, presente)",
-      "promptEnglish": "It's eight o'clock — bath time.",
+      "prompt": "___ las ocho: hora del baño. (ser / estar, presente)",
+      "promptEnglish": "It's eight o'clock: bath time.",
       "answers": ["son"],
       "explanation": "Clock time takes ser, plural with hours after one: son las ocho.",
       "difficulty": 1
@@ -150,8 +150,8 @@
       "id": "se-ch-abierta",
       "topicId": "ser-vs-estar",
       "type": "choice",
-      "prompt": "Cerrá — la ventana ___ abierta y hace frío.",
-      "promptEnglish": "Close it — the window is open and it's cold.",
+      "prompt": "Cerrá, la ventana ___ abierta y hace frío.",
+      "promptEnglish": "Close it, the window is open and it's cold.",
       "options": ["es", "está"],
       "answers": ["está"],
       "explanation": "The result of an action (opened → open) is a state: estar abierta.",
@@ -184,7 +184,7 @@
       "topicId": "ser-vs-estar",
       "type": "cloze",
       "prompt": "Hoy ___ martes, toca pediatra. (ser / estar, presente)",
-      "promptEnglish": "Today is Tuesday — paediatrician day.",
+      "promptEnglish": "Today is Tuesday: paediatrician day.",
       "answers": ["es"],
       "explanation": "Days and dates take ser.",
       "difficulty": 1

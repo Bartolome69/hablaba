@@ -1,13 +1,13 @@
 {
   "id": "hablaba-haber-uses",
-  "title": "Los Usos de Haber — Practice",
+  "title": "Los Usos de Haber: Practice",
   "description": "Authored B1 practice set for haber: hay vs está/están for existence vs location, hay always singular, hay que for impersonal obligation, había vs hubo, and haber as the auxiliary of the perfect tenses.",
   "topicIds": ["haber-uses"],
   "ingestedAt": "2026-08-29",
   "lessons": [
     {
       "topicId": "haber-uses",
-      "summary": "Haber wears three hats. EXISTENCE: hay = there is / there are — and it stays singular whatever follows: 'Hay un parque', 'Hay muchos niños' (never «hayn»). The split with estar: hay introduces something NEW and indefinite ('Hay una farmacia cerca'), está/están locates something already known and definite ('La farmacia está en la esquina') — so hay never takes el/la or a name. In the past, había describes the scene ('Había mucha gente'), hubo reports an occurrence ('Hubo un apagón'). OBLIGATION: hay que + infinitive = one must, impersonally — 'Hay que cambiar el pañal' says the nappy needs changing without pointing at anyone (compare tener que, which names the person: 'Tengo que cambiarlo'). AUXILIARY: haber builds the perfect tenses with a participle — he comido, has estado, hemos dormido, había salido — and nothing can slip between them ('He comido ya', never «he ya comido»).",
+      "summary": "Haber wears three hats. EXISTENCE: hay = there is / there are, and it stays singular whatever follows: 'Hay un parque', 'Hay muchos niños' (never «hayn»). The split with estar: hay introduces something NEW and indefinite ('Hay una farmacia cerca'), está/están locates something already known and definite ('La farmacia está en la esquina'), so hay never takes el/la or a name. In the past, había describes the scene ('Había mucha gente'), hubo reports an occurrence ('Hubo un apagón'). OBLIGATION: hay que + infinitive = one must, impersonally: 'Hay que cambiar el pañal' says the nappy needs changing without pointing at anyone (compare tener que, which names the person: 'Tengo que cambiarlo'). AUXILIARY: haber builds the perfect tenses with a participle (he comido, has estado, hemos dormido, había salido), and nothing can slip between them ('He comido ya', never «he ya comido»).",
       "examples": [
         { "spanish": "Hay una plaza con juegos cerca de casa.", "english": "There's a playground near our place.", "note": "new, indefinite → hay" },
         { "spanish": "La plaza está al lado del mercado.", "english": "The playground is next to the market.", "note": "known, definite → está" },
@@ -37,7 +37,7 @@
       "promptEnglish": "The pharmacy is on the corner, next to the café.",
       "options": ["hay", "está", "es"],
       "answers": ["está"],
-      "explanation": "A known, definite thing (LA farmacia) is located with estar — hay can't take el/la.",
+      "explanation": "A known, definite thing (LA farmacia) is located with estar. Hay can't take el/la.",
       "difficulty": 1
     },
     {
@@ -48,7 +48,7 @@
       "promptEnglish": "There are lots of kids at the playground today.",
       "options": ["hay", "hayn", "están"],
       "answers": ["hay"],
-      "explanation": "Hay is invariable — singular or plural, it's always hay. «Hayn» doesn't exist.",
+      "explanation": "Hay is invariable: singular or plural, it's always hay. «Hayn» doesn't exist.",
       "difficulty": 1
     },
     {
@@ -90,7 +90,7 @@
       "promptEnglish": "Last night there was a huge storm.",
       "options": ["había", "hubo", "era"],
       "answers": ["hubo"],
-      "explanation": "A completed occurrence — something that happened — takes hubo (preterite).",
+      "explanation": "A completed occurrence (something that happened) takes hubo (preterite).",
       "difficulty": 2
     },
     {
@@ -122,7 +122,7 @@
       "promptEnglish": "Which sentence is correct?",
       "options": ["Ya he comido.", "He ya comido.", "He comido ya he."],
       "answers": ["Ya he comido."],
-      "explanation": "Nothing squeezes between haber and the participle: ya goes outside — ya he comido.",
+      "explanation": "Nothing squeezes between haber and the participle: ya goes outside: ya he comido.",
       "difficulty": 2
     },
     {

@@ -6,6 +6,7 @@ import { PwaRegister } from '@/components/pwa-register'
 import { InstallPrompt } from '@/components/install-prompt'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
+import { SITE_URL } from '@/lib/site'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -20,20 +21,18 @@ const newsreader = Newsreader({
   variable: '--font-newsreader',
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://spanishroutine.com'
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Hablaba — Speak Spanish with your little one',
+    default: 'Hablaba: speak Spanish with your little one',
     template: '%s · Hablaba',
   },
-  description: 'Hablaba helps parents raise bilingual kids and B1 learners practice real conversation. Warm, calm, encouraging — Spanish for daily life.',
+  description: 'Hablaba helps parents raise bilingual kids and B1 learners practice real conversation. Warm, calm and encouraging Spanish for daily life.',
   applicationName: 'Hablaba',
   keywords: ['spanish for parents', 'bilingual parenting', 'spanish practice', 'b1 spanish', 'spanish ai tutor', 'learn spanish'],
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Hablaba — Speak Spanish with your little one',
+    title: 'Hablaba: speak Spanish with your little one',
     description: 'Raise a bilingual kid. Practice your Spanish. Warm, calm, encouraging.',
     siteName: 'Hablaba',
     type: 'website',
@@ -42,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hablaba — Speak Spanish with your little one',
+    title: 'Hablaba: speak Spanish with your little one',
     description: 'Raise a bilingual kid. Practice your Spanish. Warm, calm, encouraging.',
   },
   icons: {
