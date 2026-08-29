@@ -6,7 +6,7 @@
 // the content lives here either way.
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Volume2, Loader2, Check } from "lucide-react"
+import { DuoIcon } from "@/components/icons"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { playAudio, ttsUrl } from "@/lib/audio"
 import { voices, type VoiceId } from "@/lib/voices"
@@ -97,16 +97,16 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl px-6 pt-6 pb-8">
+      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-[26px] border-rule bg-background px-6 pt-6 pb-8">
         <SheetHeader className="mb-5 p-0 text-left">
-          <SheetTitle>Settings</SheetTitle>
+          <SheetTitle className="font-serif text-[22px] font-normal tracking-[-0.015em] text-ink">
+            Ajustes
+          </SheetTitle>
         </SheetHeader>
 
         {profile && (
           <>
-            <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Spanish
-            </h3>
+            <h3 className="smallcaps mb-3 text-ink-faint">Spanish</h3>
             <div className="mb-4 grid grid-cols-2 gap-2">
               {DIALECT_OPTIONS.map((d) => {
                 const selected = profile.dialect === d.id
@@ -115,22 +115,23 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                     key={d.id}
                     onClick={() => patchProfile({ dialect: d.id })}
                     aria-pressed={selected}
-                    className={`rounded-2xl border p-3 text-left transition-all active:scale-[0.98] ${
-                      selected ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-secondary/50"
+                    className={`rounded-[18px] p-3 text-left transition-all duration-[120ms] active:scale-[0.98] ${
+                      selected ? "bg-[#EAF1EA]" : "clay-card"
                     }`}
+                    style={selected ? { boxShadow: "inset 0 0 0 1.5px var(--hb-green), 0 2px 0 #CFDECF" } : undefined}
                   >
-                    <p className={`text-sm font-semibold ${selected ? "text-primary" : "text-foreground"}`}>
+                    <p className={`text-sm font-semibold ${selected ? "text-green" : "text-ink"}`}>
                       {d.label}
                     </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{d.blurb}</p>
+                    <p className="mt-0.5 text-xs text-ink-soft">{d.blurb}</p>
                   </button>
                 )
               })}
             </div>
 
             <div className="mb-1 flex items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Corrígeme</span>
-              <div className="flex flex-1 gap-1 rounded-full bg-secondary p-1">
+              <span className="text-xs font-medium text-ink-muted">Corrígeme</span>
+              <div className="clay-recessed flex flex-1 gap-1 rounded-full p-1">
                 {CORRECTION_OPTIONS.map((level) => (
                   <button
                     key={level}
@@ -138,8 +139,8 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                     aria-pressed={profile.correctionLevel === level}
                     className={`flex-1 rounded-full py-1.5 text-center text-xs font-medium transition-colors ${
                       profile.correctionLevel === level
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-green text-cream"
+                        : "text-ink-muted hover:text-ink"
                     }`}
                   >
                     {level}
@@ -148,15 +149,13 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
             </div>
 
-            <h3 className="mb-3 mt-7 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Your little one
-            </h3>
-            <p className="mb-3 text-xs text-muted-foreground">
+            <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Your little one</h3>
+            <p className="mb-3 text-xs text-ink-soft">
               Optional — with a child set, she can talk about your day with them by name.
             </p>
             <div className="space-y-3">
               <div>
-                <label htmlFor="profile-child-name" className="mb-1.5 block text-xs text-muted-foreground">
+                <label htmlFor="profile-child-name" className="mb-1.5 block text-xs text-ink-muted">
                   Name
                 </label>
                 <input
@@ -171,11 +170,11 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                       })
                     }
                   }}
-                  className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                  className="clay-recessed w-full rounded-[14px] px-3.5 py-2.5 text-sm text-ink outline-none focus:ring-1 focus:ring-green/40"
                 />
               </div>
               <div>
-                <label htmlFor="profile-child-birthdate" className="mb-1.5 block text-xs text-muted-foreground">
+                <label htmlFor="profile-child-birthdate" className="mb-1.5 block text-xs text-ink-muted">
                   Birthdate
                 </label>
                 <input
@@ -188,14 +187,14 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                       patchProfile({ child: { name: profile.child.name, birthdate } })
                     }
                   }}
-                  className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                  className="clay-recessed w-full rounded-[14px] px-3.5 py-2.5 text-sm text-ink outline-none focus:ring-1 focus:ring-green/40"
                 />
               </div>
             </div>
           </>
         )}
 
-        <h3 className="mb-3 mt-7 text-xs font-medium uppercase tracking-wide text-muted-foreground">Voice</h3>
+        <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Voice</h3>
         <div className="space-y-2">
           {voices.map((voice) => {
             const isSelected = voiceId === voice.id
@@ -207,35 +206,37 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                   posthog.capture("voice_changed", { voice_id: voice.id, voice_name: voice.name })
                   setVoiceId(voice.id)
                 }}
-                className={`flex items-center gap-3 p-3 rounded-2xl border cursor-pointer transition-all active:scale-[0.98] ${
-                  isSelected
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-card hover:bg-secondary/50"
+                className={`flex cursor-pointer items-center gap-3 rounded-[18px] p-3 transition-all duration-[120ms] active:scale-[0.98] ${
+                  isSelected ? "bg-[#EAF1EA]" : "clay-card"
                 }`}
+                style={isSelected ? { boxShadow: "inset 0 0 0 1.5px var(--hb-green), 0 2px 0 #CFDECF" } : undefined}
               >
                 <div className="flex-1">
-                  <p className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                  <p className={`text-sm font-semibold ${isSelected ? "text-green" : "text-ink"}`}>
                     {voice.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">{voice.descriptor}</p>
+                  <p className="text-xs text-ink-soft">{voice.descriptor}</p>
                 </div>
 
-                {isSelected && <Check className="w-4 h-4 text-primary" />}
+                {isSelected && (
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green">
+                    <DuoIcon name="check" size={12} className="text-cream" />
+                  </span>
+                )}
 
                 <button
                   onClick={(e) => { e.stopPropagation(); preview(voice.id) }}
                   aria-label={`Preview ${voice.name}`}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                    isPreviewing
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  className={`press-disc flex h-9 w-9 items-center justify-center rounded-full ${
+                    isPreviewing ? "bg-green text-cream" : "bg-sunken-2 text-ink"
                   }`}
                 >
-                  {isPreviewing ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Volume2 className="w-3.5 h-3.5" />
-                  )}
+                  <DuoIcon
+                    name="escuchar"
+                    size={16}
+                    detail={isPreviewing ? "#8FBE9C" : undefined}
+                    className={isPreviewing ? "animate-pulse" : undefined}
+                  />
                 </button>
               </div>
             )

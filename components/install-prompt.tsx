@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { usePostHog } from "posthog-js/react"
-import { X } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -53,29 +51,35 @@ export function InstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-2xl border border-border bg-background p-4 shadow-lg">
+    <div className="clay-static fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-[20px] p-4">
       <div className="flex items-start gap-3">
         <div className="flex-1">
-          <p className="font-serif text-base font-semibold">Add Hablaba to your home screen</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Open it in one tap, build a daily routine.
-          </p>
+          <p className="font-serif text-[17px] leading-snug text-ink">Add Hablaba to your home screen</p>
+          <p className="mt-1 text-[13px] text-ink-soft">Open it in one tap, build a daily routine.</p>
         </div>
         <button
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="text-muted-foreground hover:text-foreground"
+          className="press-disc -mr-1 -mt-1 flex h-8 w-8 items-center justify-center rounded-full text-ink-soft hover:text-ink"
         >
-          <X className="h-4 w-4" />
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
       <div className="mt-3 flex gap-2">
-        <Button onClick={onInstall} size="sm" className="flex-1 rounded-full">
+        <button
+          onClick={onInstall}
+          className="clay-green h-10 flex-1 rounded-full text-sm font-semibold text-cream"
+        >
           Install
-        </Button>
-        <Button onClick={onDismiss} size="sm" variant="ghost" className="rounded-full">
+        </button>
+        <button
+          onClick={onDismiss}
+          className="press-chip h-10 rounded-full bg-sunken px-4 text-sm font-medium text-ink"
+        >
           Not now
-        </Button>
+        </button>
       </div>
     </div>
   )
