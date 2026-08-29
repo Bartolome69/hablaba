@@ -21,28 +21,28 @@ export default async function OGImage({ params }: { params: Promise<{ slug: stri
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "80px",
-          background: "#f5efe6",
+          background: "#f8f3eb",
           fontFamily: "serif",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: 36, color: "#7a6a4f", letterSpacing: -0.5 }}>Hablaba</div>
+          <div style={{ fontSize: 36, color: "#1b5a2e", letterSpacing: -0.5 }}>Hablaba</div>
           <div
             style={{
               fontSize: 22,
-              color: "#7a6a4f",
+              color: "#8a4527",
               textTransform: "uppercase",
               letterSpacing: 2,
-              border: "2px solid #d4c4a8",
+              background: "#f4dfcc",
               borderRadius: 999,
-              padding: "8px 20px",
+              padding: "10px 22px",
             }}
           >
             {eyebrow}
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 76, lineHeight: 1.05, color: "#1f1a13", letterSpacing: -2 }}>
+          <div style={{ fontSize: 76, lineHeight: 1.05, color: "#1e3d2c", letterSpacing: -2 }}>
             {headline}
           </div>
         </div>
