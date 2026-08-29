@@ -18,16 +18,16 @@ interface FaqProps {
 export function Faq({ heading = "Questions", items }: FaqProps) {
   return (
     <section className="mx-auto max-w-3xl px-5 py-16 sm:py-24">
-      <h2 className="mb-8 text-center font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
+      <h2 className="mb-8 text-center font-serif text-[32px] tracking-[-0.02em] text-ink sm:text-[40px]">
         {heading}
       </h2>
       <Accordion type="single" collapsible className="w-full">
         {items.map((item, i) => (
-          <AccordionItem key={i} value={`item-${i}`}>
-            <AccordionTrigger className="text-left font-serif text-base">
+          <AccordionItem key={i} value={`item-${i}`} className="border-rule">
+            <AccordionTrigger className="text-left font-serif text-[17px] text-ink hover:no-underline">
               {item.q}
             </AccordionTrigger>
-            <AccordionContent className="text-sm text-muted-foreground">
+            <AccordionContent className="text-sm leading-relaxed text-ink-muted">
               {item.a}
             </AccordionContent>
           </AccordionItem>

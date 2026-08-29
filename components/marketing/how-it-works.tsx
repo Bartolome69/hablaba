@@ -10,19 +10,22 @@ interface HowItWorksProps {
 
 export function HowItWorks({ heading = "How it works", steps }: HowItWorksProps) {
   return (
-    <section className="bg-secondary/40 border-y border-border">
+    <section className="border-y border-rule bg-sunken/50">
       <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
-        <h2 className="mb-10 text-center font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 className="mb-10 text-center font-serif text-[32px] tracking-[-0.02em] text-ink sm:text-[40px]">
           {heading}
         </h2>
-        <ol className="grid gap-6 sm:grid-cols-3">
+        <ol className="grid gap-5 sm:grid-cols-3">
           {steps.map((s, i) => (
-            <li key={s.title} className="rounded-2xl bg-background p-6 shadow-sm">
-              <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+            <li key={s.title} className="clay-static rounded-[22px] p-6">
+              <div
+                className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-green font-serif text-lg text-cream"
+                style={{ boxShadow: "0 3px 0 var(--hb-green-press)" }}
+              >
                 {i + 1}
               </div>
-              <h3 className="font-serif text-lg font-semibold">{s.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
+              <h3 className="font-serif text-[20px] tracking-[-0.01em] text-ink">{s.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">{s.body}</p>
             </li>
           ))}
         </ol>
