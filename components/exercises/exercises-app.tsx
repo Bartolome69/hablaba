@@ -12,6 +12,7 @@ import { AppHeader } from "@/components/home/app-header"
 import { DuoIcon, grammarIcon } from "@/components/icons"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
+import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
 import { getTopic } from "@/lib/exercises/taxonomy"
 import type { ExerciseItem, MasteryBand, TopicMastery } from "@/lib/exercises/types"
@@ -222,7 +223,10 @@ function Quiz({
     const correct = gradeAnswer(item, answer)
     setWasCorrect(correct)
     setChecked(true)
-    if (correct) setCorrectCount((c) => c + 1)
+    if (correct) {
+      setCorrectCount((c) => c + 1)
+      playCorrect()
+    }
     recordAttempt({
       itemId: item.id,
       topicId: item.topicId,
@@ -235,6 +239,7 @@ function Quiz({
   const next = () => {
     if (idx + 1 >= items.length) {
       setDone(true)
+      playFinish()
       return
     }
     setIdx(idx + 1)

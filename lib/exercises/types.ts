@@ -19,6 +19,7 @@ export type GrammarArea =
   | "verbs"
   | "pronouns"
   | "comparison"
+  | "usage"
 export type Cefr = "A1" | "A2" | "B1" | "B2"
 
 export interface ExerciseTopic {

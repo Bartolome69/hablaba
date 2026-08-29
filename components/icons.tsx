@@ -771,6 +771,10 @@ const GRAMMAR_ICONS: Record<string, IconName> = {
   "object-pronouns": "eslabon",
   comparatives: "balanza",
   superlatives: "trofeo",
+  "bien-vs-buen": "logrado",
+  "muy-vs-mucho": "onda",
+  "si-clauses": "intercambio",
+  "imperfect-subjunctive": "luna",
 }
 
 export function grammarIcon(id: string): IconName {

@@ -1,0 +1,154 @@
+{
+  "id": "hablaba-si-clauses",
+  "title": "Condicionales con Si — Practice",
+  "description": "Authored B2 practice set for si clauses: real conditions (si + presente → futuro/presente/imperativo), hypotheticals (si + imperfecto de subjuntivo → condicional), and the two things si never takes — the future and the conditional.",
+  "topicIds": ["si-clauses"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "si-clauses",
+      "summary": "Spanish si clauses come in two everyday shapes. REAL (likely) conditions: si + PRESENTE in the if-half, and future, present or an imperative in the result — 'Si llueve, nos quedamos en casa', 'Si duerme bien, mañana estará de buen humor', 'Si llegas antes, avisame'. HYPOTHETICAL (unlikely or contrary to fact): si + IMPERFECTO DE SUBJUNTIVO, result in CONDICIONAL — 'Si tuviera más tiempo, estudiaría más', 'Si fuera vos, lo llevaría al médico'. The iron rules: after si you NEVER use the future ('si lloverá' is impossible — say 'si llueve') and NEVER the conditional ('si tendría' is a well-known error — say 'si tuviera'). Also worth having: 'como si' always takes the imperfect subjunctive ('Habla como si supiera todo'), and the set phrase 'si fuera tú / yo que tú' for giving advice.",
+      "examples": [
+        { "spanish": "Si llueve, nos quedamos en casa.", "english": "If it rains, we'll stay home.", "note": "real: si + presente" },
+        { "spanish": "Si duerme la siesta, después está de mejor humor.", "english": "If he naps, he's in a better mood afterwards.", "note": "general truth: presente + presente" },
+        { "spanish": "Si tuviéramos jardín, pasaríamos más tiempo afuera.", "english": "If we had a garden, we'd spend more time outside.", "note": "hypothetical: imperf. subj. + conditional" },
+        { "spanish": "Si fuera tú, hablaría con la pediatra.", "english": "If I were you, I'd talk to the paediatrician.", "note": "advice frame" },
+        { "spanish": "Gasta como si fuera millonario.", "english": "He spends as if he were a millionaire.", "note": "como si + imperfect subjunctive, always" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "si-ch-llueve",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si ___ mañana, no vamos a la plaza.",
+      "promptEnglish": "If it rains tomorrow, we're not going to the square.",
+      "options": ["llueve", "lloverá", "llovería"],
+      "answers": ["llueve"],
+      "explanation": "Real condition: si + presente. Si never takes the future — even when the meaning is future.",
+      "difficulty": 1
+    },
+    {
+      "id": "si-ch-tuviera",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si ___ más tiempo, estudiaría español todos los días.",
+      "promptEnglish": "If I had more time, I'd study Spanish every day.",
+      "options": ["tendría", "tuviera", "tengo"],
+      "answers": ["tuviera"],
+      "explanation": "Hypothetical: si + imperfecto de subjuntivo (tuviera) → condicional. «Si tendría» is the famous error.",
+      "difficulty": 2
+    },
+    {
+      "id": "si-cl-fuera-tu",
+      "topicId": "si-clauses",
+      "type": "cloze",
+      "prompt": "Si ___ tú, lo llevaría al pediatra hoy mismo. (ser, imperfecto de subjuntivo)",
+      "promptEnglish": "If I were you, I'd take him to the paediatrician today.",
+      "answers": ["fuera", "fuese"],
+      "explanation": "The advice frame is fixed: si fuera tú (or si fuese tú) + conditional.",
+      "difficulty": 2
+    },
+    {
+      "id": "si-ch-avisame",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si ___ tarde del trabajo, avisame y ceno sin ti.",
+      "promptEnglish": "If you're leaving work late, let me know and I'll eat without you.",
+      "options": ["salieras", "sales", "saldrás"],
+      "answers": ["sales"],
+      "explanation": "A likely, everyday condition stays real: si + presente, with an imperative in the result.",
+      "difficulty": 2
+    },
+    {
+      "id": "si-ch-compraria",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si ganara más, ___ un piso con jardín.",
+      "promptEnglish": "If I earned more, I'd buy a flat with a garden.",
+      "options": ["compraré", "compraría", "compro"],
+      "answers": ["compraría"],
+      "explanation": "The result half of a hypothetical takes the conditional: compraría.",
+      "difficulty": 2
+    },
+    {
+      "id": "si-cl-pudieras",
+      "topicId": "si-clauses",
+      "type": "cloze",
+      "prompt": "Si ___ vivir en cualquier ciudad, ¿cuál elegirías? (poder, imperfecto de subjuntivo, tú)",
+      "promptEnglish": "If you could live in any city, which would you choose?",
+      "answers": ["pudieras", "pudieses"],
+      "explanation": "Hypothetical question: si + pudieras (imperfect subjunctive of poder).",
+      "difficulty": 2
+    },
+    {
+      "id": "si-ch-comosi",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Camina como si ya ___ caminar perfecto — y tiene un año.",
+      "promptEnglish": "He walks as if he already knew how to walk perfectly — and he's one.",
+      "options": ["sabe", "supiera", "sabría"],
+      "answers": ["supiera"],
+      "explanation": "Como si ALWAYS takes the imperfect subjunctive, whatever the tense around it.",
+      "difficulty": 3
+    },
+    {
+      "id": "si-ch-duerme",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si el bebé ___ la siesta, salimos a pasear después.",
+      "promptEnglish": "If the baby naps, we go for a walk afterwards.",
+      "options": ["durmiera", "duerme", "dormirá"],
+      "answers": ["duerme"],
+      "explanation": "A routine, perfectly possible condition: si + presente. The subjunctive would make it sound unlikely.",
+      "difficulty": 1
+    },
+    {
+      "id": "si-cl-estaria",
+      "topicId": "si-clauses",
+      "type": "cloze",
+      "prompt": "Si viviéramos más cerca de los abuelos, todo ___ más fácil. (ser, condicional)",
+      "promptEnglish": "If we lived closer to the grandparents, everything would be easier.",
+      "answers": ["sería"],
+      "explanation": "Hypothetical result → conditional: sería.",
+      "difficulty": 2
+    },
+    {
+      "id": "si-ch-nofuture",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "¿Cuál es la frase correcta?",
+      "promptEnglish": "Which sentence is correct?",
+      "options": [
+        "Si tendré tiempo, te llamo.",
+        "Si tengo tiempo, te llamo.",
+        "Si tendría tiempo, te llamo."
+      ],
+      "answers": ["Si tengo tiempo, te llamo."],
+      "explanation": "After si: no future, no conditional. The real condition is si + presente.",
+      "difficulty": 1
+    },
+    {
+      "id": "si-cl-hicieras",
+      "topicId": "si-clauses",
+      "type": "cloze",
+      "prompt": "¿Qué harías si tu hijo no ___ dormir nunca? (querer, imperfecto de subjuntivo)",
+      "promptEnglish": "What would you do if your son never wanted to sleep?",
+      "answers": ["quisiera", "quisiese"],
+      "explanation": "Hypothetical: si + quisiera, matching the conditional harías.",
+      "difficulty": 3
+    },
+    {
+      "id": "si-ch-general",
+      "topicId": "si-clauses",
+      "type": "choice",
+      "prompt": "Si le ___ música, se calma enseguida.",
+      "promptEnglish": "If you put music on for him, he calms down right away.",
+      "options": ["pusieras", "pones", "pondrás"],
+      "answers": ["pones"],
+      "explanation": "A general truth about what always works: si + presente, presente.",
+      "difficulty": 1
+    }
+  ]
+}

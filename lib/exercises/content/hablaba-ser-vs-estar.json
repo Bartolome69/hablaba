@@ -1,0 +1,193 @@
+{
+  "id": "hablaba-ser-vs-estar",
+  "title": "Ser y Estar — Practice",
+  "description": "Authored A2/B1 practice set for ser vs estar: identity and origin vs location and state, the progressive, events with ser, and the adjectives that change meaning (listo, aburrido, rico).",
+  "topicIds": ["ser-vs-estar"],
+  "ingestedAt": "2026-08-29",
+  "lessons": [
+    {
+      "topicId": "ser-vs-estar",
+      "summary": "Ser is for WHAT something is: identity ('Soy Bart'), origin ('Es de Madrid'), profession ('Es maestra'), characteristics ('El cuento es corto'), time and dates ('Son las tres', 'Hoy es martes'), and possession ('Es de Teo'). Estar is for HOW and WHERE something is: location ('Estamos en la plaza'), states and moods ('Está dormido', 'Estoy cansada'), results of change ('La puerta está abierta'), and the progressive ('Está llorando'). Two corners catch everyone. First, EVENTS take ser even though they feel like location — 'La fiesta es en casa de Ana', '¿Dónde es la reunión?' — because you're saying where it takes place, not where a thing sits. Second, a set of adjectives changes meaning with the verb: ser listo = clever / estar listo = ready; ser aburrido = boring / estar aburrido = bored; ser rico = wealthy / estar rico = tasty; ser malo = bad / estar malo = ill or gone off. And permanence is NOT the rule: 'Está muerto' takes estar because death is a state, however permanent.",
+      "examples": [
+        { "spanish": "Teo es mi hijo.", "english": "Teo is my son.", "note": "identity → ser" },
+        { "spanish": "El cochecito está en el pasillo.", "english": "The pram is in the hallway.", "note": "location of a thing → estar" },
+        { "spanish": "La fiesta es en casa de los abuelos.", "english": "The party is at the grandparents' house.", "note": "events → ser" },
+        { "spanish": "Está durmiendo, no hagas ruido.", "english": "He's sleeping, don't make noise.", "note": "progressive → estar" },
+        { "spanish": "¿Ya estás listo? — Sí, vamos.", "english": "Are you ready? — Yes, let's go.", "note": "estar listo = ready; ser listo = clever" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "se-ch-madre",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "Mi madre ___ enfermera.",
+      "promptEnglish": "My mother is a nurse.",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "Professions are identity, so ser.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-cochecito",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "El cochecito ___ en la entrada.",
+      "promptEnglish": "The pram is in the entrance.",
+      "options": ["es", "está"],
+      "answers": ["está"],
+      "explanation": "Where a thing is located takes estar.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-cl-dormido",
+      "topicId": "ser-vs-estar",
+      "type": "cloze",
+      "prompt": "Shhh, el bebé ___ dormido. (ser / estar, presente)",
+      "promptEnglish": "Shhh, the baby is asleep.",
+      "answers": ["está"],
+      "explanation": "Being asleep is a state — estar.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-fiesta",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "El cumpleaños ___ en casa de la abuela.",
+      "promptEnglish": "The birthday party is at grandma's house.",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "Events take ser even though it looks like location: you're saying where it takes place.",
+      "difficulty": 3
+    },
+    {
+      "id": "se-ch-donde-reunion",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "¿Dónde ___ la clase de natación para bebés?",
+      "promptEnglish": "Where is the baby swimming class (held)?",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "A class is an event — ¿dónde es? asks where it happens. ¿Dónde está? would ask where an object sits.",
+      "difficulty": 3
+    },
+    {
+      "id": "se-cl-de-donde",
+      "topicId": "ser-vs-estar",
+      "type": "cloze",
+      "prompt": "Nosotros ___ de Inglaterra, pero vivimos acá. (ser / estar, presente)",
+      "promptEnglish": "We're from England, but we live here.",
+      "answers": ["somos"],
+      "explanation": "Origin takes ser: ser de + place.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-cansada",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "Hoy ___ muy cansada — fue una noche larga.",
+      "promptEnglish": "I'm really tired today — it was a long night.",
+      "options": ["soy", "estoy"],
+      "answers": ["estoy"],
+      "explanation": "Tiredness is a state, so estar. «Soy cansada» would claim it as a permanent trait.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-llorando",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "¿Por qué ___ llorando? ¿Tiene hambre?",
+      "promptEnglish": "Why is he crying? Is he hungry?",
+      "options": ["es", "está"],
+      "answers": ["está"],
+      "explanation": "The progressive (-ando/-iendo) always builds on estar.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-listo-ready",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "¿Ya ___ listo el bolso del bebé?",
+      "promptEnglish": "Is the baby bag ready yet?",
+      "options": ["es", "está"],
+      "answers": ["está"],
+      "explanation": "Estar listo = ready. Ser listo = clever — a bag can't be that.",
+      "difficulty": 2
+    },
+    {
+      "id": "se-ch-aburrido",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "Esta película ___ aburrida — mejor pongo música.",
+      "promptEnglish": "This film is boring — I'd better put music on.",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "Ser aburrido = boring (a characteristic). Estar aburrido = bored (how someone feels).",
+      "difficulty": 2
+    },
+    {
+      "id": "se-cl-rico",
+      "topicId": "ser-vs-estar",
+      "type": "cloze",
+      "prompt": "¡Mmm, este puré ___ muy rico! (ser / estar, presente)",
+      "promptEnglish": "Mmm, this purée is really tasty!",
+      "answers": ["está"],
+      "explanation": "Estar rico = tastes good right now. Ser rico = wealthy.",
+      "difficulty": 2
+    },
+    {
+      "id": "se-cl-hora",
+      "topicId": "ser-vs-estar",
+      "type": "cloze",
+      "prompt": "___ las ocho — hora del baño. (ser / estar, presente)",
+      "promptEnglish": "It's eight o'clock — bath time.",
+      "answers": ["son"],
+      "explanation": "Clock time takes ser, plural with hours after one: son las ocho.",
+      "difficulty": 1
+    },
+    {
+      "id": "se-ch-abierta",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "Cerrá — la ventana ___ abierta y hace frío.",
+      "promptEnglish": "Close it — the window is open and it's cold.",
+      "options": ["es", "está"],
+      "answers": ["está"],
+      "explanation": "The result of an action (opened → open) is a state: estar abierta.",
+      "difficulty": 2
+    },
+    {
+      "id": "se-ch-guardado",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "Tranquilo, los juguetes ya ___ guardados.",
+      "promptEnglish": "Relax, the toys are already put away.",
+      "options": ["son", "están"],
+      "answers": ["están"],
+      "explanation": "Estar + participle for a resulting state: están guardados.",
+      "difficulty": 2
+    },
+    {
+      "id": "se-ch-como-es",
+      "topicId": "ser-vs-estar",
+      "type": "choice",
+      "prompt": "—¿Cómo ___ tu hijo? —Alegre y muy curioso.",
+      "promptEnglish": "—What's your son like? —Cheerful and very curious.",
+      "options": ["es", "está"],
+      "answers": ["es"],
+      "explanation": "¿Cómo es? asks about character (ser); ¿cómo está? asks how he's doing today.",
+      "difficulty": 2
+    },
+    {
+      "id": "se-cl-martes",
+      "topicId": "ser-vs-estar",
+      "type": "cloze",
+      "prompt": "Hoy ___ martes, toca pediatra. (ser / estar, presente)",
+      "promptEnglish": "Today is Tuesday — paediatrician day.",
+      "answers": ["es"],
+      "explanation": "Days and dates take ser.",
+      "difficulty": 1
+    }
+  ]
+}

@@ -25,6 +25,7 @@ const AREA_ORDER: GrammarArea[] = [
   "prepositions",
   "pronouns",
   "comparison",
+  "usage",
 ]
 
 export const AREA_LABELS: Record<GrammarArea, string> = {
@@ -34,6 +35,7 @@ export const AREA_LABELS: Record<GrammarArea, string> = {
   prepositions: "Prepositions",
   pronouns: "Pronouns",
   comparison: "Comparison",
+  usage: "Usage",
 }
 
 /** Topics grouped by area in display order — the shape the topic map UI wants. */
