@@ -33,7 +33,7 @@ export function Footer() {
               <Link href="/for/b1-learners" className="text-ink-muted hover:text-ink">B1 learners</Link>
               <Link href="/for/travelers" className="text-ink-muted hover:text-ink">Travelers</Link>
               <p className="smallcaps mt-3 text-ink-faint">Product</p>
-              <Link href="/app/today" className="text-ink-muted hover:text-ink">Try it free</Link>
+              <Link href="/#waitlist" className="text-ink-muted hover:text-ink">Join the waitlist</Link>
             </div>
           </nav>
         </div>

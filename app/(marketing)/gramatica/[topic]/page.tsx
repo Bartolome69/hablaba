@@ -152,12 +152,12 @@ export default async function GrammarTopicPage({ params }: PageProps) {
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <Link
-            href={`/app/exercises?topic=${id}`}
+            href="#get-updates"
             className="clay-cream inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
           >
-            Start the quiz
+            Join the waitlist
           </Link>
-          <span className="text-sm text-green-on-dark">No account needed</span>
+          <span className="text-sm text-green-on-dark">Free while in early access</span>
         </div>
       </section>
 
@@ -179,7 +179,7 @@ export default async function GrammarTopicPage({ params }: PageProps) {
         </section>
       )}
 
-      <div className="mt-12 border-t border-rule pt-8">
+      <div id="get-updates" className="mt-12 scroll-mt-24 border-t border-rule pt-8">
         <p className="mb-3 text-sm font-medium text-ink">Get one new rule like this each week:</p>
         <WaitlistForm placement="grammar-page" />
       </div>

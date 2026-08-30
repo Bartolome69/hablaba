@@ -94,10 +94,10 @@ export default function GrammarIndexPage() {
           actually fumble, then sends you to exactly the right quiz.
         </p>
         <Link
-          href="/app/today"
+          href="/#waitlist"
           className="clay-cream mt-5 inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
         >
-          Try Hablaba free
+          Join the waitlist
         </Link>
       </section>
     </div>

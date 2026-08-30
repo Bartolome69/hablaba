@@ -86,12 +86,17 @@ export default function PhrasesIndexPage() {
           actually used, and gives you a warm Argentine partner to try them on, typed at the
           kitchen table or hands-free on a walk with the pram.
         </p>
-        <Link
-          href="/app/speak"
-          className="clay-cream mt-5 inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
-        >
-          Try Hablaba free
-        </Link>
+        <div className="mt-5 flex flex-wrap items-center gap-4">
+          <Link
+            href="/#waitlist"
+            className="clay-cream inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
+          >
+            Join the waitlist
+          </Link>
+          <Link href="/gramatica" className="text-sm font-semibold text-green-on-dark underline-offset-4 hover:underline">
+            Try the free exercises
+          </Link>
+        </div>
       </section>
     </div>
   )

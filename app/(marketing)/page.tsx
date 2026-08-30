@@ -60,18 +60,22 @@ export default function HomePage() {
         ]}
       />
 
-      {/* The waitlist moved out of the hero: the app is free and instant, so
-          the fold sells the app and this band catches the not-yet crowd. */}
+      {/* The email form lives in the hero; this band is the taste of the
+          product: the free on-site exercises. */}
       <section className="mx-auto max-w-2xl px-5 py-14 text-center sm:py-16">
         <h2 className="font-serif text-[26px] tracking-[-0.015em] text-ink sm:text-[30px]">
-          Not ready to dive in?
+          Try it before you sign up
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-          Get one new routine of parent Spanish a week by email, free.
+          {totalQuestions} free practice questions across {covered.length} grammar topics, graded
+          right on the page. No account, no app.
         </p>
-        <div className="mt-5 flex justify-center">
-          <WaitlistForm placement="post-how" />
-        </div>
+        <Link
+          href="/gramatica"
+          className="clay-green mt-5 inline-flex h-12 items-center justify-center rounded-full px-7 text-[15px] font-semibold text-cream"
+        >
+          Try the free exercises
+        </Link>
       </section>
 
       {/* Free content — the SEO families, front and centre. */}
@@ -169,6 +173,19 @@ export default function HomePage() {
           { q: "How much does it cost?", a: "Hablaba is free during the early access period, and the grammar and phrase libraries on this site are free forever. Join the waitlist to be the first in." },
         ]}
       />
+
+      {/* The page ends where it began: on the one conversion. */}
+      <section className="mx-auto max-w-2xl px-5 pb-20 text-center">
+        <h2 className="font-serif text-[26px] tracking-[-0.015em] text-ink sm:text-[30px]">
+          Be first in when invites go out
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+          Early access to Hablaba, plus one new routine of parent Spanish a week. Free.
+        </p>
+        <div className="mt-5 flex justify-center">
+          <WaitlistForm placement="page-end" />
+        </div>
+      </section>
     </>
   )
 }
