@@ -539,6 +539,22 @@ const draw: Record<string, Drawer> = {
       />
     </>
   ),
+  // Stroke-based clock (reads on green AND cream chips, unlike the filled
+  // relojAtras) with the terracotta "just happened" dot.
+  reciente: (d) => (
+    <>
+      <circle cx="12" cy="12.6" r="7.8" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path
+        d="M12 8.8v3.8l2.6 1.7"
+        stroke="currentColor"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <circle cx="19" cy="4.6" r="2" fill={d} />
+    </>
+  ),
   ola: () => (
     <path
       d="M3.6 14.4c2-4 4.4-4 6.4 0s4.4 4 6.4 0 3.4-2.6 4 0"

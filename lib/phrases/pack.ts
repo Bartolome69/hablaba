@@ -2,17 +2,19 @@
 
 // The daily pack is a QUERY over the phrase library, not a stored object.
 //
-// Selection order for a moment: captured gaps first (they came from real
-// life), then phrases already being practised, then new ones — most recent
-// first within each band. When the library runs short the pack is topped up
-// from the authored starter set (read-only, never written to the library);
-// generation only replaces starters with personalised phrases on request.
+// Two kinds of pack. "Recientes" is the learner's own rows — captures, saves,
+// generated phrases — newest activity first, whatever moment they belong to.
+// A MOMENT pack holds only rows tagged with that moment (captured gaps first,
+// then saved, then generated; most recent first within each band), topped up
+// from the authored starter set when the library runs short. Starters are
+// read-only and never written to the library; generation only replaces them
+// with personalised phrases on request.
 
 import { assembleFocusAreas } from "@/lib/conversations/focus"
 import { getProfile } from "@/lib/profile/store"
 import { getStarterPhrases } from "./starter"
 import { addPhrase, listPhrases, normalizePhraseText, updatePhrase } from "./store"
-import type { Phrase, PhraseMoment } from "./types"
+import { PHRASE_MOMENTS, type Phrase, type PhraseMoment } from "./types"
 
 const PACK_SIZE = 12
 
@@ -28,10 +30,24 @@ function packOrder(a: Phrase, b: Phrase): number {
   return b.createdAt.localeCompare(a.createdAt)
 }
 
-/** The library's own rows for a moment — no starters, no generation. */
+/**
+ * The learner's own recent rows — captured, saved and generated phrases in
+ * lastTouchedAt order, any moment, no starters. The "Recientes" pack.
+ */
+export function queryRecentPhrases(size = PACK_SIZE): Phrase[] {
+  return listPhrases()
+    .filter((p) => p.text)
+    .slice(0, size)
+}
+
+/**
+ * The library's own rows for a moment — no starters, no generation. Strict
+ * moment match: momentless rows (older captures, saved phrases) belong to
+ * Recientes, not to every pack — that leak made the pills look broken.
+ */
 function libraryPackForMoment(moment: PhraseMoment, size: number): Phrase[] {
   return listPhrases()
-    .filter((p) => p.text && p.state !== "usada" && (p.moment === moment || !p.moment))
+    .filter((p) => p.text && p.state !== "usada" && p.moment === moment)
     .sort(packOrder)
     .slice(0, size)
 }
@@ -92,7 +108,16 @@ export async function fillPackForMoment(moment: PhraseMoment, size = PACK_SIZE):
   return queryPackForMoment(moment, size)
 }
 
-/** Capture a real-life gap: generate the Spanish immediately and store it. */
+/** A moment id from the API, validated against the closed vocabulary. */
+function asMoment(value: unknown): PhraseMoment | undefined {
+  return PHRASE_MOMENTS.includes(value as PhraseMoment) ? (value as PhraseMoment) : undefined
+}
+
+/**
+ * Capture a real-life gap: generate the Spanish immediately and store it.
+ * The API also classifies the capture into a daily moment, so what the
+ * learner asked for shows up under the matching pill, not just Recientes.
+ */
 export async function capturePhrase(captureText: string): Promise<Phrase | null> {
   const profile = getProfile()
   const res = await fetch("/api/phrases/generate", {
@@ -105,12 +130,15 @@ export async function capturePhrase(captureText: string): Promise<Phrase | null>
     }),
   })
   if (!res.ok) throw new Error(`Capture generation error: ${res.status}`)
-  const data = (await res.json()) as { phrases: { text: string; translation: string }[] }
+  const data = (await res.json()) as {
+    phrases: { text: string; translation: string; moment?: string }[]
+  }
   const generated = data.phrases?.[0]
   if (!generated) return null
   return addPhrase({
     text: generated.text,
     translation: generated.translation,
+    moment: asMoment(generated.moment),
     source: "captured",
   })
 }
@@ -136,10 +164,16 @@ export async function completePendingCaptures(): Promise<number> {
         }),
       })
       if (!res.ok) continue
-      const data = (await res.json()) as { phrases: { text: string; translation: string }[] }
+      const data = (await res.json()) as {
+        phrases: { text: string; translation: string; moment?: string }[]
+      }
       const generated = data.phrases?.[0]
       if (!generated) continue
-      updatePhrase(p.id, { text: generated.text, translation: generated.translation })
+      updatePhrase(p.id, {
+        text: generated.text,
+        translation: generated.translation,
+        moment: p.moment ?? asMoment(generated.moment),
+      })
       completed++
     } catch {
       // Leave pending; the next library visit retries.

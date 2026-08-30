@@ -74,7 +74,11 @@ Grammar is tú, always — never voseo, never vosotros. ${DIALECT_BLOCK[dialect]
 Phrases must be short enough to say naturally while holding a baby, warm, and varied in structure. Each needs a natural English gloss. Respond with a JSON object: {"phrases": [{"text": "...", "translation": "..."}]}`
 
     const user = isCapture
-      ? `The parent hit a real-life gap — they wanted to say: "${body.capture!.trim().slice(0, 300)}". Give the ONE most natural way to say it (as they would to their baby or about their baby). "translation" = a natural English gloss of your Spanish.`
+      ? `The parent hit a real-life gap — they wanted to say: "${body.capture!.trim().slice(0, 300)}". Give the ONE most natural way to say it (as they would to their baby or about their baby). "translation" = a natural English gloss of your Spanish. Also add "moment": which daily moment the phrase belongs to, chosen from ${Object.entries(
+          MOMENT_DESCRIPTIONS,
+        )
+          .map(([id, desc]) => `"${id}" (${desc})`)
+          .join(", ")} — or null if none fits.`
       : `Generate ${count} phrases for this moment: ${MOMENT_DESCRIPTIONS[moment!] ?? moment}.${
           focusAreas.length
             ? `\n\nWhere natural, prefer structures the parent needs practice with:\n${focusAreas.map((f) => `- ${f}`).join("\n")}`
@@ -96,10 +100,18 @@ Phrases must be short enough to say naturally while holding a baby, warm, and va
 
     const raw = response.choices[0]?.message?.content
     if (!raw) throw new Error("Empty response from phrase model")
-    const data = JSON.parse(raw) as { phrases?: { text?: string; translation?: string }[] }
+    const data = JSON.parse(raw) as {
+      phrases?: { text?: string; translation?: string; moment?: string | null }[]
+    }
     const phrases = (data.phrases ?? [])
-      .filter((p): p is { text: string; translation: string } => !!p?.text && !!p?.translation)
+      .filter((p): p is { text: string; translation: string; moment?: string | null } => !!p?.text && !!p?.translation)
       .slice(0, count)
+      .map((p) => ({
+        text: p.text,
+        translation: p.translation,
+        // Only a moment from the closed vocabulary survives; anything else drops.
+        moment: typeof p.moment === "string" && p.moment in MOMENT_DESCRIPTIONS ? p.moment : undefined,
+      }))
 
     posthog?.capture({
       distinctId: "server",
