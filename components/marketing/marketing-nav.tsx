@@ -32,11 +32,11 @@ export function MarketingNav() {
             </Link>
           ))}
           <Link
-            href="/app/today"
-            onClick={() => posthog?.capture("try_app_clicked", { source: pathname, placement: "nav" })}
-            className="clay-green ml-1 inline-flex h-10 items-center rounded-full px-5 text-sm font-semibold text-cream"
+            href="/#waitlist"
+            onClick={() => posthog?.capture("waitlist_cta_clicked", { source: pathname, placement: "nav" })}
+            className="clay-green ml-1 inline-flex h-10 items-center whitespace-nowrap rounded-full px-5 text-sm font-semibold text-cream"
           >
-            Try it free
+            Join waitlist
           </Link>
         </div>
       </div>

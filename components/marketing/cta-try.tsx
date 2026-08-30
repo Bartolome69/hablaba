@@ -1,10 +1,13 @@
 "use client"
 
+// The site's only "try" action: the free on-site exercises. The app itself
+// is behind the waitlist, so marketing surfaces never deep-link into /app.
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 
-interface CtaTryProps {
+interface CtaExercisesProps {
   audience?: string
   placement?: string
   variant?: "solid" | "ghost"
@@ -12,7 +15,7 @@ interface CtaTryProps {
   className?: string
 }
 
-export function CtaTry({ audience, placement = "hero", variant = "solid", children, className }: CtaTryProps) {
+export function CtaExercises({ audience, placement = "hero", variant = "solid", children, className }: CtaExercisesProps) {
   const pathname = usePathname()
   const posthog = usePostHog()
 
@@ -23,11 +26,11 @@ export function CtaTry({ audience, placement = "hero", variant = "solid", childr
 
   return (
     <Link
-      href="/app/today"
-      onClick={() => posthog?.capture("try_app_clicked", { source: pathname, audience, placement })}
+      href="/gramatica"
+      onClick={() => posthog?.capture("try_exercises_clicked", { source: pathname, audience, placement })}
       className={`inline-flex items-center justify-center rounded-full text-[15px] font-semibold ${styles} ${className ?? ""}`}
     >
-      {children ?? "Try it free"}
+      {children ?? "Try the free exercises"}
     </Link>
   )
 }

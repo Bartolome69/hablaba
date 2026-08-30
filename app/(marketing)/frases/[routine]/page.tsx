@@ -98,14 +98,19 @@ export default async function PhrasePage({ params }: PageProps) {
         <p className="mt-2 text-[14.5px] leading-relaxed text-green-on-dark">
           In Hablaba every one of these phrases has audio, lives in your own library, and comes
           back at the right moment. There's also a warm Spanish-speaking partner to practise
-          them on, by text or out loud.
+          them on, by text or out loud. Early access invites go out by email.
         </p>
-        <Link
-          href="/app/speak"
-          className="clay-cream mt-5 inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
-        >
-          Open the phrase library free
-        </Link>
+        <div className="mt-5 flex flex-wrap items-center gap-4">
+          <Link
+            href="#get-updates"
+            className="clay-cream inline-flex h-12 items-center rounded-full px-7 text-[15px] font-semibold text-green"
+          >
+            Join the waitlist
+          </Link>
+          <Link href="/gramatica" className="text-sm font-semibold text-green-on-dark underline-offset-4 hover:underline">
+            Try the free exercises
+          </Link>
+        </div>
       </section>
 
       {related.length > 0 && (
@@ -125,7 +130,7 @@ export default async function PhrasePage({ params }: PageProps) {
         </section>
       )}
 
-      <div className="mt-12 border-t border-rule pt-8">
+      <div id="get-updates" className="mt-12 scroll-mt-24 border-t border-rule pt-8">
         <p className="mb-3 text-sm font-medium text-ink">One new routine like this each week, free:</p>
         <WaitlistForm placement="phrase-page" />
       </div>

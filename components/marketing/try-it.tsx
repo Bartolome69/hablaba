@@ -9,6 +9,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePostHog } from "posthog-js/react"
 import { DuoIcon } from "@/components/icons"
+import { WaitlistForm } from "@/components/marketing/waitlist-form"
 import { gradeAnswer, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import type { ExerciseItem } from "@/lib/exercises/types"
@@ -72,11 +73,19 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
         <p className="mt-1 text-sm text-ink-muted">
           {correctCount === items.length ? "¡Perfecto! Ready for the harder ones?" : "Good start. The full set will lock it in."}
         </p>
+        <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">
+          The full {topicTitle} set lives in Hablaba, along with a partner to practise on.
+          Early access goes out by email:
+        </p>
+        <div className="mt-3 flex justify-center">
+          <WaitlistForm placement="tryit-score" />
+        </div>
         <Link
-          href={`/app/exercises?topic=${topicId}`}
-          className="clay-green mt-5 inline-flex h-12 items-center justify-center rounded-full px-7 text-[15px] font-semibold text-cream"
+          href="/gramatica"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-green"
         >
-          Keep practising {topicTitle} free
+          Or try another topic
+          <DuoIcon name="flecha" size={13} />
         </Link>
       </div>
     )

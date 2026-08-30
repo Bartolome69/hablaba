@@ -1,13 +1,15 @@
 import Link from "next/link"
-import { CtaTry } from "@/components/marketing/cta-try"
 import { DuoIcon } from "@/components/icons"
+import { WaitlistForm } from "@/components/marketing/waitlist-form"
 
 // The homepage above-the-fold. One job: a tired parent, one thumb, five
-// seconds. It answers everything without a scroll: what changes (headline),
-// what this is and what's inside (subhead), who it's for (eyebrow), that it's
-// free and starts right now in the browser (fact row), why to trust it
-// (real content numbers + who builds it), what to do next (Empieza gratis)
-// and where the longer story lives (jump link to #how-it-works).
+// seconds. The site's single conversion is the email address, so the form IS
+// the primary CTA; the free on-site exercises are the taste of the product
+// (the only "try" the site offers), and the app itself is gated behind the
+// waitlist. Everything is answered without a scroll: what changes (headline),
+// what this is and what's inside (subhead), who it's for (eyebrow), what it
+// costs and how access works (fact row), why to trust it (real content
+// numbers + who builds it), where the longer story lives (#how-it-works).
 // The app peek is real markup in the real design system, not a screenshot:
 // on mobile it crops at the fold as the scroll cue.
 
@@ -43,21 +45,29 @@ export function HomeHero({ stats }: { stats: HomeHeroStats }) {
             grammar practice built from what you actually say.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-7 sm:gap-3.5">
-            <CtaTry placement="hero" className="h-[52px] px-8 text-base">
-              Start speaking free
-            </CtaTry>
+          <div id="waitlist" className="mt-6 scroll-mt-24 sm:mt-7">
+            <WaitlistForm placement="hero" />
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 sm:mt-5">
+            <Link
+              href="/gramatica"
+              className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-green"
+            >
+              Or try the free exercises
+              <DuoIcon name="flecha" size={14} />
+            </Link>
             <Link
               href="#how-it-works"
-              className="press-chip inline-flex h-[52px] items-center gap-2 rounded-full px-5 text-[15px] font-semibold text-green"
+              className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-muted"
             >
-              See how it works
-              <DuoIcon name="chevron" size={14} className="rotate-90" />
+              How it works
+              <DuoIcon name="chevron" size={13} className="rotate-90" />
             </Link>
           </div>
 
           <p className="mt-4 text-[13px] text-ink-soft sm:mt-5 sm:text-[13.5px]">
-            Free in early access · No account, nothing to install · Works on your phone
+            Free while in early access · Invites go out by email · Works on your phone
           </p>
 
           {/* Desktop keeps the proof under the copy; on mobile it moves below

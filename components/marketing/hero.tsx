@@ -1,4 +1,4 @@
-import { CtaTry } from "@/components/marketing/cta-try"
+import { CtaExercises } from "@/components/marketing/cta-try"
 import { WaitlistForm } from "@/components/marketing/waitlist-form"
 
 interface HeroProps {
@@ -24,9 +24,9 @@ export function Hero({ eyebrow, headline, subhead, audience }: HeroProps) {
         <WaitlistForm audience={audience} placement="hero" />
         <div className="flex items-center gap-1 text-sm text-ink-soft">
           <span>or</span>
-          <CtaTry audience={audience} placement="hero" variant="ghost">
-            try it free now →
-          </CtaTry>
+          <CtaExercises audience={audience} placement="hero" variant="ghost">
+            try the free exercises →
+          </CtaExercises>
         </div>
       </div>
     </section>
