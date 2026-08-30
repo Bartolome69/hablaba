@@ -397,3 +397,10 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Anchor jumps (hero → #how-it-works) glide unless the user asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
