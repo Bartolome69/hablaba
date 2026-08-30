@@ -6,11 +6,13 @@ interface Step {
 interface HowItWorksProps {
   heading?: string
   steps: Step[]
+  /** Anchor target for the hero's "See how it works" jump link. */
+  id?: string
 }
 
-export function HowItWorks({ heading = "How it works", steps }: HowItWorksProps) {
+export function HowItWorks({ heading = "How it works", steps, id }: HowItWorksProps) {
   return (
-    <section className="border-y border-rule bg-sunken/50">
+    <section id={id} className="scroll-mt-16 border-y border-rule bg-sunken/50">
       <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
         <h2 className="mb-10 text-center font-serif text-[32px] tracking-[-0.02em] text-ink sm:text-[40px]">
           {heading}

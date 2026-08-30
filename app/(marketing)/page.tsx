@@ -1,8 +1,9 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { DuoIcon, grammarIcon } from "@/components/icons"
-import { Hero } from "@/components/marketing/hero"
+import { HomeHero } from "@/components/marketing/home-hero"
 import { HowItWorks } from "@/components/marketing/how-it-works"
+import { WaitlistForm } from "@/components/marketing/waitlist-form"
 import { FeatureGrid } from "@/components/marketing/feature-grid"
 import { Faq } from "@/components/marketing/faq"
 import { audiences } from "@/lib/marketing/audiences"
@@ -42,19 +43,36 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero
-        eyebrow="Spanish for bilingual parenting"
-        headline="Speak Spanish with your little one, even if you're still learning."
-        subhead="Hablaba is the patient, warm Spanish companion for parents raising bilingual kids. Real conversations by text or voice, phrases for the moments your day is made of, and gentle corrections that never feel like a red pen."
+      <HomeHero
+        stats={{
+          phrases: routines.reduce((n, r) => n + r.phrases.length, 0),
+          topics: covered.length,
+          questions: totalQuestions,
+        }}
       />
 
       <HowItWorks
+        id="how-it-works"
         steps={[
           { title: "Talk about your day", body: "Type at the kitchen table, or go hands-free on a walk with the pram. It's one conversation about your real life." },
           { title: "Get patterns back", body: "Hablaba notices what you fumbled and what you nailed, and turns it into gentle, specific practice." },
           { title: "Bring it home", body: "Phrases for bath time and bedtime land in your library, ready to use with your peque tonight." },
         ]}
       />
+
+      {/* The waitlist moved out of the hero: the app is free and instant, so
+          the fold sells the app and this band catches the not-yet crowd. */}
+      <section className="mx-auto max-w-2xl px-5 py-14 text-center sm:py-16">
+        <h2 className="font-serif text-[26px] tracking-[-0.015em] text-ink sm:text-[30px]">
+          Not ready to dive in?
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+          Get one new routine of parent Spanish a week by email, free.
+        </p>
+        <div className="mt-5 flex justify-center">
+          <WaitlistForm placement="post-how" />
+        </div>
+      </section>
 
       {/* Free content — the SEO families, front and centre. */}
       <section className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
