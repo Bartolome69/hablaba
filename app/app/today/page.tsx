@@ -19,6 +19,7 @@ import { runMigrations } from "@/lib/migrations"
 import { listPhrases } from "@/lib/phrases/store"
 import type { Phrase } from "@/lib/phrases/types"
 import { DEFAULT_VOICE_TOPIC_ID, getVoiceTopic } from "@/lib/voice-topics"
+import { countWords } from "@/lib/vocab/store"
 
 export default function TodayPage() {
   const router = useRouter()
@@ -26,6 +27,7 @@ export default function TodayPage() {
   const [resume, setResume] = useState<Conversation | null>(null)
   const [resumeTurns, setResumeTurns] = useState(0)
   const [duePhrases, setDuePhrases] = useState<Phrase[]>([])
+  const [wordCount, setWordCount] = useState(0)
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function TodayPage() {
     setDuePhrases(
       [...all.filter((p) => p.state === "practicando"), ...all.filter((p) => p.state === "nueva")].slice(0, 2),
     )
+    setWordCount(countWords())
   }, [])
 
   const startFresh = useCallback(() => {
@@ -138,9 +141,25 @@ export default function TodayPage() {
         </section>
       )}
 
+      {wordCount > 0 && (
+        <Link
+          href="/app/palabras"
+          className="mt-6 flex items-center gap-2.5 border-t border-rule px-1 pt-4 text-ink transition-colors"
+        >
+          <DuoIcon name="palabras" size={18} />
+          <span className="flex-1 text-sm font-medium">
+            Repasá tus palabras
+            <span className="text-ink-soft"> · {wordCount} guardadas</span>
+          </span>
+          <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+        </Link>
+      )}
+
       <Link
         href="/app/semana"
-        className="mt-6 flex items-center gap-2.5 border-t border-rule px-1 pt-4 text-ink transition-colors"
+        className={`flex items-center gap-2.5 px-1 text-ink transition-colors ${
+          wordCount > 0 ? "mt-4 pt-0" : "mt-6 border-t border-rule pt-4"
+        }`}
       >
         <DuoIcon name="calendario" size={18} />
         <span className="flex-1 text-sm font-medium">Tu semana: patrones y logros</span>

@@ -694,6 +694,38 @@ const draw: Record<string, Drawer> = {
       <rect x="8" y="17.6" width="8" height="2.8" rx="1.2" fill={d} />
     </>
   ),
+  // ── vocabulary ────────────────────────────────────────────────────────────
+  palabras: (d) => (
+    <>
+      <rect x="3" y="4.6" width="18" height="14.8" rx="3.4" stroke="currentColor" strokeWidth="1.9" fill="none" />
+      <path d="M7.2 15.4 10.4 8.6l3.2 6.8M8.3 13.2h4.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="16.9" cy="14.4" r="1.7" fill={d} />
+    </>
+  ),
+  cuerpo: (d) => (
+    <>
+      <circle cx="12" cy="5.1" r="2.5" fill="currentColor" />
+      <path d="M12 8.4v6.2M12 14.6 9 21M12 14.6 15 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6.4 10.6 12 11.9l5.6-1.3" stroke={d} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  animal: (d) => (
+    <>
+      <path d="M5.4 12.9c0-3.2 2.9-5.6 6.6-5.6s6.6 2.4 6.6 5.6c0 3.6-3 5.9-6.6 5.9s-6.6-2.3-6.6-5.9Z" fill="currentColor" />
+      <path d="M6.6 7.7 5.1 4.1l3.5 1.7M17.4 7.7l1.5-3.6-3.5 1.7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <circle cx="9.5" cy="12.4" r="1.1" fill={CREAM} />
+      <circle cx="14.5" cy="12.4" r="1.1" fill={CREAM} />
+      <circle cx="12" cy="15.3" r="1.4" fill={d} />
+    </>
+  ),
+  manzana: (d) => (
+    <>
+      <path d="M12 8.3c-1-.8-2.1-1.2-3.2-1.2C6.4 7.1 4.8 9.2 4.8 12c0 3.9 2.8 8 5.1 8 .7 0 1.4-.4 2.1-.4s1.4.4 2.1.4c2.3 0 5.1-4.1 5.1-8 0-2.8-1.6-4.9-4-4.9-1.1 0-2.2.4-3.2 1.2Z" fill="currentColor" />
+      <path d="M12 7.6V4.4" stroke={d} strokeWidth="1.9" strokeLinecap="round" />
+      <path d="M12.3 5.4c1-1.6 2.6-2.1 4-1.9.2 1.6-.8 3-2.4 3.4" fill={d} />
+    </>
+  ),
+
 }
 
 export type IconName = keyof typeof draw
@@ -795,4 +827,16 @@ const GRAMMAR_ICONS: Record<string, IconName> = {
 
 export function grammarIcon(id: string): IconName {
   return GRAMMAR_ICONS[id] ?? "libro"
+}
+
+/** Vocabulary sets (the Palabras chip row). */
+const VOCAB_SET_ICONS: Record<string, IconName> = {
+  cuerpo: "cuerpo",
+  animales: "animal",
+  comida: "manzana",
+  propias: "brote",
+}
+
+export function vocabSetIcon(id: string): IconName {
+  return VOCAB_SET_ICONS[id] ?? "palabras"
 }

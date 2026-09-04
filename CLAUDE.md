@@ -13,6 +13,9 @@ Domain model:
 - **Observation** — derived from a conversation by the analysis pass
 - **Phrase** — one library (`lib/phrases/`): text, translation, moment, source
   (captured | saved | generated), state (nueva → practicando → usada), timesUsed
+- **Word** — the vocabulary list (`lib/vocab/`): spanish, article, gender,
+  english, set, source (catalogo | propia). A peer of Phrase, not a subset:
+  say vs. name, and progress is counters rather than a state machine
 - **Profile** — dialect, correction style, child (`lib/profile/`)
 - **Exercise topic** — grammar drills; the one spine not derived from conversations
 
@@ -39,12 +42,13 @@ Marketing (route group `app/(marketing)/`, full-width):
 - `/for/[slug]` — Programmatic audience pages, content from `lib/marketing/audiences.ts`. Slugs in `audienceSlugs`.
 
 App (under `app/app/`, constrained to `max-w-lg` via its own layout). Bottom
-nav is **Today / Charlar / Phrases / Exercises**:
+nav is **Today / Charlar / Phrases / Palabras / Exercises**:
 - `/app/today` — Today: big Charlar card (resumes the latest thread, or starts one), phrases due today, daily prompt, saved-phrase review
 - `/app/charla` — Conversations hub: resume cards (expire after 14 days), starters, history
 - `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
 - `/app/charla/historial` — Every conversation
 - `/app/speak` — Phrases: capture, the moment pack (a live query over the library), routine browsing with audio
+- `/app/palabras` — Palabras: the vocabulary surface. A tappable body diagram, authored sets (el cuerpo / los animales / la comida), your own words (type English, get the Spanish), and a flashcard review over everything you've kept. See `lib/vocab/README.md`
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
 - `/app/practice` and `/app/chat` are **retired** — 301'd to `/app/today` and `/app/charla`. Practice split into Today (the dashboard half) and Charlar (the conversations half); text chat became a conversation thread.
@@ -65,6 +69,7 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/analyze` — Conversation transcript in, tagged observations out (imports the exercises taxonomy for tag validation)
 - `POST /api/analyze/weekly` — Weekly-report narrative + taxonomy tag labels
 - `POST /api/translate` — One turn of Spanish → English (tap-to-translate)
+- `POST /api/vocab/translate` — One English word → the Spanish, with **article and gender as fields** (the part a B1 learner gets wrong), plus an example sentence. The en→es counterpart to the above
 - `POST /api/tts` — Text-to-speech (optional `register=rioplatense`)
 - `POST /api/transcribe` — Speech-to-text (optional `language=auto`)
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.
@@ -107,7 +112,10 @@ inside conversations (`/app/charla/[id]`). The short version:
   *flavour* (vocabulary, warmth, porteño TTS voice) layered on tú grammar,
   selectable in the profile. `SpanishDialect` lives in `lib/profile/store.ts`,
   the dialect flavour blocks in `lib/voice/prompts.ts`; never reintroduce a
-  grammar flag.
+  grammar flag. The rule governs the Spanish being **taught** — content packs,
+  vocabulary sets, chat and voice. The app's own UI chrome ("Tocá", "Probá de
+  nuevo", "Repasá tus palabras") is porteño and does use voseo; that split is
+  deliberate, so don't "fix" either side into the other.
 - Post-session analysis (`/api/analyze`) tags observations with
   **exercises-taxonomy topic ids** — the closed vocabulary that makes session
   reviews and the weekly report link into `/app/exercises?topic=…`. Keep tags
@@ -125,7 +133,7 @@ inside conversations (`/app/charla/[id]`). The short version:
 - `lib/voice-topics.ts` — conversation starters; topic choice doubles as grammar targeting
 - `lib/types.ts` — shared types: `Message`, `Correction`, `SavedPhrase`, `DailyPrompt`
 
-**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` (`lib/conversations/store.ts`), `phrases` (`lib/phrases/store.ts`), `profile` (`lib/profile/store.ts`). Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
+**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` (`lib/conversations/store.ts`), `phrases` (`lib/phrases/store.ts`), `vocab_words` (`lib/vocab/store.ts`), `profile` (`lib/profile/store.ts`). Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
 
 ## Environment
 

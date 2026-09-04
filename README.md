@@ -13,6 +13,7 @@ Deployed on Vercel at [spanishroutine.com](https://spanishroutine.com).
 | **Phrases** (`/app/speak`) | Ready-to-say phrases grouped by daily routine, with audio |
 | **Practice** (`/app/practice`, `/app/chat`) | Text conversation with an AI tutor that corrects as you go |
 | **Charlar** (`/app/charla`) | Hands-free *spoken* conversation, screen-off — transcribed, reviewed afterwards |
+| **Palabras** (`/app/palabras`) | Vocabulary: a tappable body diagram, sets for animals and food, your own words translated on the spot, and a flashcard review |
 | **Exercises** (`/app/exercises`) | Grammar quizzes generated from teacher handouts |
 | **Grow** (`/grow`) | Bounded bilingual-parenting module: daily Rioplatense phrase packs, gap capture, sparring, journal, voice |
 
@@ -67,6 +68,9 @@ mic instead and gets an explicit paused state.
 - **Grow is a deliberately bounded module** with rules about what may cross its
   edge in either direction. Read `lib/criar/README.md` before importing across
   it.
+- **Vocabulary is a separate table from phrases** (`lib/vocab/`), because a word
+  carries an article and a gender and a phrase doesn't. Read
+  `lib/vocab/README.md` before merging the two.
 - The **voice engine** is shared (`lib/voice/`), and
   `lib/voice/openai-realtime.ts` is the only file that knows about WebRTC or
   OpenAI event names — so the provider stays swappable.

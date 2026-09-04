@@ -25,13 +25,14 @@ export function BottomNav() {
     { id: "today", label: "Hoy", href: "/app/today", icon: "hoy", active: pathname === "/app/today" },
     { id: "charla", label: "Charlar", href: "/app/charla", icon: "charlar", active: pathname.startsWith("/app/charla") },
     { id: "speak", label: "Frases", href: "/app/speak", icon: "libro", active: pathname === "/app/speak" },
+    { id: "palabras", label: "Palabras", href: "/app/palabras", icon: "palabras", active: pathname.startsWith("/app/palabras") },
     { id: "exercises", label: "Práctica", href: "/app/exercises", icon: "practica", active: pathname.startsWith("/app/exercises") },
   ]
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-background">
       <div
-        className="mx-auto flex max-w-lg items-start justify-around px-[22px] pt-3.5"
+        className="mx-auto flex max-w-lg items-start justify-around px-3 pt-3.5"
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 14px)" }}
       >
         {tabs.map((tab) => (
@@ -42,7 +43,7 @@ export function BottomNav() {
               router.push(tab.href)
             }}
             aria-current={tab.active ? "page" : undefined}
-            className={`press-chip flex min-w-14 flex-col items-center gap-[5px] pb-1 ${
+            className={`press-chip flex min-w-[52px] flex-col items-center gap-[5px] pb-1 ${
               tab.active ? "text-green" : "text-ink opacity-[.42]"
             }`}
           >
