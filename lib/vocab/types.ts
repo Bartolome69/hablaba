@@ -82,8 +82,15 @@ export interface VocabWord {
   catalogId?: string
   /** Flashcard reviews, same meaning as Phrase.timesPracticed. */
   timesPracticed: number
-  /** Reviews where the learner said they knew it — drives deck ordering. */
+  /** Reviews where the learner said they knew it. */
   timesKnown: number
+  /**
+   * Leitner box, 0..MAX_BOX. Climbs on "lo sabía", drops one on "otra vez".
+   * See lib/vocab/schedule.ts.
+   */
+  box: number
+  /** When this word next surfaces in a review. ISO datetime. */
+  dueAt: string
   createdAt: string // ISO datetime
   lastTouchedAt: string // ISO datetime
 }

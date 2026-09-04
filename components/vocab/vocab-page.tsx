@@ -25,11 +25,13 @@ import { SETS, SET_ORDER, wordOfTheDay, wordsByGroup } from "@/lib/vocab/catalog
 import {
   addCatalogWord,
   buildDeck,
+  countDue,
   listWords,
   removeCatalogWord,
   removeWord,
   savedCatalogIds,
 } from "@/lib/vocab/store"
+import { BAND_LABELS, bandFor, describeDue, isDue } from "@/lib/vocab/schedule"
 import { withArticle, type CatalogWord, type VocabSetId, type VocabWord } from "@/lib/vocab/types"
 import type { WordRowData } from "@/components/vocab/word-row"
 
@@ -59,12 +61,14 @@ export function VocabPage() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
   const [saved, setSaved] = useState<Set<string>>(new Set())
   const [mine, setMine] = useState<VocabWord[]>([])
+  const [dueCount, setDueCount] = useState(0)
   const [studying, setStudying] = useState<VocabWord[] | null>(null)
 
   // localStorage is client-only — load after mount to avoid hydration mismatch.
   const reload = useCallback(() => {
     setSaved(savedCatalogIds())
     setMine(listWords())
+    setDueCount(countDue())
   }, [])
   useEffect(reload, [reload])
 
@@ -80,8 +84,9 @@ export function VocabPage() {
     reload()
   }
 
-  const startStudy = () => {
-    const deck = buildDeck(undefined, 20)
+  /** `anyway` ignores the schedule — the way out of the all-caught-up state. */
+  const startStudy = (anyway = false) => {
+    const deck = buildDeck(undefined, 20, { includeNotDue: anyway })
     if (deck.length > 0) setStudying(deck)
   }
 
@@ -108,11 +113,13 @@ export function VocabPage() {
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
       <AppHeader title="Palabras" subtitle="Tocá una palabra para escucharla" />
 
-      {/* The one green block. Study once there's a list; a taste of the sets
-          before that — an empty deck button would be a dead hero. */}
-      {mine.length > 0 ? (
+      {/* The one green block, in three states: words waiting, everything
+          resting, or nothing saved yet. The middle one is the whole point of
+          the ladder — an empty queue is a good day, not a nag, so it reads as
+          "al día" and the way to practise anyway is a quiet line underneath. */}
+      {dueCount > 0 ? (
         <button
-          onClick={startStudy}
+          onClick={() => startStudy()}
           className="clay-green-hero block w-full rounded-[26px] p-[22px] text-left"
         >
           <div className="flex items-center gap-[9px]">
@@ -123,14 +130,33 @@ export function VocabPage() {
             Repasá tus palabras
           </p>
           <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
-            {mine.length} {mine.length === 1 ? "palabra guardada" : "palabras guardadas"} · las que
-            menos practicaste, primero
+            {dueCount} {dueCount === 1 ? "lista para hoy" : "listas para hoy"}
+            {mine.length > dueCount ? ` · ${mine.length - dueCount} descansando` : ""}
           </span>
           <span className="clay-cream mt-[18px] flex h-[46px] items-center justify-center gap-2 rounded-full">
             <span className="text-[15px] font-semibold text-green">Empezar</span>
             <DuoIcon name="flecha" size={16} />
           </span>
         </button>
+      ) : mine.length > 0 ? (
+        <div className="clay-green-hero rounded-[26px] p-[22px]">
+          <div className="flex items-center gap-[9px]">
+            <DuoIcon name="logrado" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
+            <span className="smallcaps-lg text-green-on-dark">Tu lista</span>
+          </div>
+          <p className="mt-3.5 font-serif text-[26px] leading-tight tracking-[-0.015em] text-cream">
+            Estás al día
+          </p>
+          <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
+            Tus {mine.length} palabras están descansando. Te las voy trayendo de a poco.
+          </span>
+          <button
+            onClick={() => startStudy(true)}
+            className="mt-3 text-[13.5px] font-medium text-cream underline underline-offset-4"
+          >
+            Repasar igual
+          </button>
+        </div>
       ) : (
         <div className="clay-green-hero flex items-start gap-3.5 rounded-[26px] p-5">
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
@@ -296,13 +322,19 @@ function MyWords({
         {words.map((word) => (
           <li key={word.id} className="clay-static flex items-start gap-3 rounded-[20px] px-4 py-[15px]">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{withArticle(word)}</p>
+              <p className="flex items-center gap-2 font-serif text-[17.5px] leading-[1.32] text-ink">
+                {withArticle(word)}
+                {isDue(word) && (
+                  <span
+                    className="h-[7px] w-[7px] flex-none rounded-full bg-terracotta"
+                    aria-label="Lista para repasar"
+                  />
+                )}
+              </p>
               <p className="text-[12.5px] leading-snug text-ink-soft">{word.english}</p>
-              {word.timesPracticed > 0 && (
-                <p className="mt-1 text-[11.5px] text-ink-faint">
-                  {word.timesKnown}/{word.timesPracticed} en el repaso
-                </p>
-              )}
+              <p className="mt-1 text-[11.5px] text-ink-faint">
+                {BAND_LABELS[bandFor(word)]} · {describeDue(word)}
+              </p>
             </div>
             <div className="flex flex-none items-center gap-1.5">
               <button

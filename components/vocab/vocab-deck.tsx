@@ -57,7 +57,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         </h2>
         <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-ink-soft">
           {deck.length} {deck.length === 1 ? "palabra" : "palabras"} · sabías {knownCount}. Las que
-          no, vuelven primero la próxima vez.
+          sabés vuelven más adelante; las que no, enseguida.
         </p>
         <button
           onClick={onFinished}

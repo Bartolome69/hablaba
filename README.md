@@ -13,7 +13,7 @@ Deployed on Vercel at [spanishroutine.com](https://spanishroutine.com).
 | **Phrases** (`/app/speak`) | Ready-to-say phrases grouped by daily routine, with audio |
 | **Practice** (`/app/practice`, `/app/chat`) | Text conversation with an AI tutor that corrects as you go |
 | **Charlar** (`/app/charla`) | Hands-free *spoken* conversation, screen-off — transcribed, reviewed afterwards |
-| **Palabras** (`/app/palabras`) | Vocabulary: a tappable body diagram, sets for animals and food, your own words translated on the spot, and a flashcard review |
+| **Palabras** (`/app/palabras`) | Vocabulary: a tappable body diagram, sets for animals and food, your own words translated on the spot, and a spaced-repetition review that rests a word once you know it and brings it back weeks later |
 | **Exercises** (`/app/exercises`) | Grammar quizzes generated from teacher handouts |
 | **Grow** (`/grow`) | Bounded bilingual-parenting module: daily Rioplatense phrase packs, gap capture, sparring, journal, voice |
 

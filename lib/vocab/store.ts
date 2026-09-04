@@ -8,14 +8,27 @@
 // nobody can observe you knowing "la rodilla", so the honest signal is how
 // often you've practised it and how often you got it. The deck reads both.
 
+import { initialSchedule, isDue, nextSchedule } from "./schedule"
 import type { CatalogWord, Gender, VocabSetId, VocabSource, VocabWord } from "./types"
 
 const KEY = "vocab_words"
 
+/**
+ * Rows written before scheduling existed have no box or dueAt. Normalising on
+ * READ rather than running a migration keeps this store self-healing and
+ * matches how the phrase library handles its own legacy shapes: a word saved
+ * last week simply arrives at box 0, due now.
+ */
+function normalize(row: VocabWord): VocabWord {
+  if (typeof row.box === "number" && typeof row.dueAt === "string") return row
+  const seeded = initialSchedule(new Date(row.createdAt))
+  return { ...row, box: row.box ?? seeded.box, dueAt: row.dueAt ?? seeded.dueAt }
+}
+
 function readAll(): VocabWord[] {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? (JSON.parse(raw) as VocabWord[]) : []
+    return raw ? (JSON.parse(raw) as VocabWord[]).map(normalize) : []
   } catch {
     return []
   }
@@ -35,10 +48,6 @@ export function listWords(): VocabWord[] {
 
 export function listWordsInSet(set: VocabSetId): VocabWord[] {
   return listWords().filter((w) => w.set === set)
-}
-
-export function countWords(): number {
-  return readAll().length
 }
 
 /** Case/accent-insensitive form used for dedupe. Mirrors normalizePhraseText. */
@@ -80,6 +89,7 @@ export function addWord(input: {
   if (!norm || rows.some((w) => normalizeWord(w.spanish) === norm)) return null
 
   const now = new Date().toISOString()
+  const schedule = initialSchedule(new Date(now))
   const word: VocabWord = {
     id: crypto.randomUUID(),
     spanish: input.spanish,
@@ -93,6 +103,8 @@ export function addWord(input: {
     catalogId: input.catalogId,
     timesPracticed: 0,
     timesKnown: 0,
+    box: schedule.box,
+    dueAt: schedule.dueAt,
     createdAt: now,
     lastTouchedAt: now,
   }
@@ -124,36 +136,57 @@ export function removeCatalogWord(catalogId: string) {
   writeAll(readAll().filter((w) => w.catalogId !== catalogId))
 }
 
-/** One flashcard review. `known` is the learner's own call, not a grade. */
+/**
+ * One flashcard review. `known` is the learner's own call, not a grade — it
+ * moves the word up or down the Leitner ladder and sets when it comes back.
+ */
 export function recordReview(id: string, known: boolean) {
-  const now = new Date().toISOString()
+  const at = new Date()
+  const now = at.toISOString()
   writeAll(
-    readAll().map((w) =>
-      w.id === id
-        ? {
-            ...w,
-            timesPracticed: w.timesPracticed + 1,
-            timesKnown: known ? w.timesKnown + 1 : w.timesKnown,
-            lastTouchedAt: now,
-          }
-        : w,
-    ),
+    readAll().map((w) => {
+      if (w.id !== id) return w
+      const schedule = nextSchedule({ box: w.box, dueAt: w.dueAt }, known, at)
+      return {
+        ...w,
+        timesPracticed: w.timesPracticed + 1,
+        timesKnown: known ? w.timesKnown + 1 : w.timesKnown,
+        box: schedule.box,
+        dueAt: schedule.dueAt,
+        lastTouchedAt: now,
+      }
+    }),
   )
 }
 
-/**
- * The deck for a study session: least-practised first, and within that the
- * ones you've got least often. Words you've never missed sink; words you keep
- * missing surface. Pass a set to study just that one.
- */
-export function buildDeck(set?: VocabSetId, size = 20): VocabWord[] {
+/** Words ready to come back — everything whose dueAt has passed. */
+export function listDueWords(set?: VocabSetId, at = new Date()): VocabWord[] {
   const pool = set ? listWordsInSet(set) : listWords()
+  return pool.filter((w) => isDue({ box: w.box, dueAt: w.dueAt }, at))
+}
+
+export function countDue(set?: VocabSetId, at = new Date()): number {
+  return listDueWords(set, at).length
+}
+
+/**
+ * The deck for a study session: the words that are DUE, lowest box first so
+ * the shakiest come while attention is freshest. Words in a high box aren't
+ * here at all — that's the point of the ladder, and it's what stops a list of
+ * eighty words turning every session into the same eighty cards.
+ *
+ * `includeNotDue` builds a deck anyway, ignoring the schedule, for the "practise
+ * anyway" route out of the all-caught-up state. It never records differently —
+ * an early review still moves the word up or down.
+ */
+export function buildDeck(
+  set?: VocabSetId,
+  size = 20,
+  opts?: { includeNotDue?: boolean },
+): VocabWord[] {
+  const at = new Date()
+  const pool = opts?.includeNotDue ? (set ? listWordsInSet(set) : listWords()) : listDueWords(set, at)
   return [...pool]
-    .sort(
-      (a, b) =>
-        a.timesPracticed - b.timesPracticed ||
-        a.timesKnown - b.timesKnown ||
-        b.createdAt.localeCompare(a.createdAt),
-    )
+    .sort((a, b) => a.box - b.box || a.dueAt.localeCompare(b.dueAt))
     .slice(0, size)
 }

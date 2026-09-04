@@ -14,8 +14,9 @@ Domain model:
 - **Phrase** — one library (`lib/phrases/`): text, translation, moment, source
   (captured | saved | generated), state (nueva → practicando → usada), timesUsed
 - **Word** — the vocabulary list (`lib/vocab/`): spanish, article, gender,
-  english, set, source (catalogo | propia). A peer of Phrase, not a subset:
-  say vs. name, and progress is counters rather than a state machine
+  english, set, source (catalogo | propia), plus a Leitner box and dueAt. A peer
+  of Phrase, not a subset: say vs. name, and progress is a review schedule
+  rather than a conversation-driven state machine
 - **Profile** — dialect, correction style, child (`lib/profile/`)
 - **Exercise topic** — grammar drills; the one spine not derived from conversations
 
@@ -48,7 +49,7 @@ nav is **Today / Charlar / Phrases / Palabras / Exercises**:
 - `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
 - `/app/charla/historial` — Every conversation
 - `/app/speak` — Phrases: capture, the moment pack (a live query over the library), routine browsing with audio
-- `/app/palabras` — Palabras: the vocabulary surface. A tappable body diagram, authored sets (el cuerpo / los animales / la comida), your own words (type English, get the Spanish), and a flashcard review over everything you've kept. See `lib/vocab/README.md`
+- `/app/palabras` — Palabras: the vocabulary surface. A tappable body diagram, authored sets (el cuerpo / los animales / la comida), your own words (type English, get the Spanish), and a spaced-repetition review. A deck holds only what's DUE (Leitner ladder, `lib/vocab/schedule.ts`); when nothing is due the screen says "Estás al día" rather than nagging. See `lib/vocab/README.md`
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
 - `/app/practice` and `/app/chat` are **retired** — 301'd to `/app/today` and `/app/charla`. Practice split into Today (the dashboard half) and Charlar (the conversations half); text chat became a conversation thread.

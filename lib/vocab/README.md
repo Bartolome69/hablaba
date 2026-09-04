@@ -13,8 +13,44 @@ A word carries grammar a phrase doesn't — a gender and the article that agrees
 with it. Folding words into `phrases` would mean every phrase row carrying
 always-null `article`/`gender` columns, and the phrase state machine (nueva →
 practicando → usada, driven by conversation observations) doesn't describe
-learning a noun: nobody can *observe* you knowing "la rodilla". So progress here
-is counters (`timesPracticed`, `timesKnown`), not states.
+learning a noun: nobody can *observe* you knowing "la rodilla". Progress here is
+a review schedule instead.
+
+## The ladder
+
+`schedule.ts` — a Leitner ladder. Each word sits in a box, and each box waits
+longer before showing the word again:
+
+| Box | Waits | Band shown |
+| --- | --- | --- |
+| 0 | due now | Nueva |
+| 1 | 1 day | Practicando |
+| 2 | 3 days | Practicando |
+| 3 | 7 days | Practicando |
+| 4 | 16 days | Sabida |
+| 5 | 35 days | Sabida (resting) |
+
+"Lo sabía" climbs a box. "Otra vez" drops **one** box *and* makes the word due
+immediately — two separate mercies, and it needs both. Dropping one box rather
+than resetting to zero means a blank doesn't wipe weeks of knowing the word;
+being due now means the word you just failed comes back next session rather
+than disappearing for three days, which is what dropping a box alone would do.
+
+Five "lo sabía" from new takes a word to the top box, ~97 days end to end.
+After that it rests for over a month before surfacing to check it stuck.
+
+Chosen over SM-2 because SM-2 wants a graded recall quality (0–5) and this deck
+asks one honest binary. Inventing a quality score from a yes/no would be
+modelling precision that isn't there.
+
+**A deck holds only what's DUE.** That's the whole point — it's what stops a
+list of eighty words making every session the same eighty cards. When nothing
+is due the hero says "Estás al día" rather than nagging, with a quiet "Repasar
+igual" for anyone who wants to practise anyway. No streak, no guilt: an empty
+queue is a good day.
+
+Rows written before scheduling existed are normalised on **read** (`box: 0`,
+`dueAt: createdAt`) rather than by a migration, so the store is self-healing.
 
 ## Content vs progress
 
@@ -37,7 +73,8 @@ it at runtime.
 | `content/*.json` | The authored sets. One file per set |
 | `catalog.ts` | Typed access, set metadata, grouping, word of the day |
 | `body-map.ts` | Geometry for the tappable diagram — data, not JSX |
-| `store.ts` | The `vocab_words` table + `buildDeck()` |
+| `schedule.ts` | The Leitner ladder: intervals, `nextSchedule()`, `isDue()`, the band labels. Pure — no storage, no React |
+| `store.ts` | The `vocab_words` table, `listDueWords()`, `countDue()`, `buildDeck()` |
 | `add.ts` | English in → Spanish out → onto the list (the mirror of `capturePhrase`) |
 | `app/api/vocab/translate/` | The en→es route. Returns article and gender as **fields**, not prose |
 
@@ -74,7 +111,7 @@ split is deliberate, and it's the same one `lib/voice/prompts.ts` draws.
 
 - Seed conversations with recent words the way phrases are seeded, so a word
   you saved gets *used* rather than only reviewed.
-- Move `buildDeck` from least-practised ordering to real spaced repetition once
-  there's enough review history to justify it.
+- Revisit the intervals once there's real review history — they're a reasoned
+  starting point, not a measured one.
 - Swap `store.ts` for Supabase when progress needs to cross devices. The key is
   table-shaped, so it's a drop-in.
