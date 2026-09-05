@@ -1,7 +1,5 @@
 import { getOpenAI } from "@/lib/openai"
-import type { VoiceId } from "@/lib/voices"
-
-const validVoices: VoiceId[] = ["nova", "shimmer", "alloy", "onyx", "echo", "fable"]
+import { resolveVoiceId, type VoiceId } from "@/lib/voices"
 
 const VOICE_INSTRUCTIONS =
   "Speak in clear, natural Spanish at a conversational pace, like a warm and patient tutor. Use natural prosody and gentle emphasis on key words."
@@ -22,7 +20,10 @@ async function handleTTS(
     return new Response("Text is required", { status: 400 })
   }
 
-  const voice = voiceParam && validVoices.includes(voiceParam) ? voiceParam : "nova"
+  // One resolver, shared with /api/voice/session, so the speaker button and
+  // voice mode cannot drift apart again. It also carries legacy ids across,
+  // which matters here because TTS urls are cached for a year.
+  const voice = resolveVoiceId(voiceParam)
   const instructions = (register && REGISTER_INSTRUCTIONS[register]) || VOICE_INSTRUCTIONS
 
   const response = await getOpenAI().audio.speech.create({

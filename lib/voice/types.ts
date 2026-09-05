@@ -12,6 +12,8 @@
 // — each surface binds its own scope (lib/criar/voice/types.ts adds childId
 // for Grow's criar_* tables).
 
+import type { VoiceId } from "@/lib/voices"
+
 export type VoiceSpeaker = "user" | "assistant"
 
 /**
@@ -98,6 +100,17 @@ export interface VoiceSeedContext {
   focusAreas?: string[]
   /** Vocabulary flavour from the profile — grammar is tú regardless. */
   dialect?: "rioplatense" | "neutral"
+  /**
+   * Which voice she speaks in — the SAME preference the speaker button uses
+   * (`hablaba_voice`), so one partner sounds like one person however you're
+   * talking to her. The server still validates it; see /api/voice/session.
+   *
+   * This does not breach the engine boundary above: the seed context is a
+   * payload the adapter forwards verbatim to the mint route, never something
+   * engine code reads. `VoiceId` is the app's voice catalogue (Elena, Sofía…),
+   * and a second engine would map it in its own mint route.
+   */
+  voice?: VoiceId
   /**
    * The thread so far, when speech is taking over from typing mid-conversation.
    * Lets the partner continue what was already being discussed instead of

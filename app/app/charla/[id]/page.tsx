@@ -19,6 +19,7 @@ import { SessionReview } from "@/components/voice/session-review"
 import { SettingsSheet } from "@/components/settings-sheet"
 import { VoiceOrb } from "@/components/voice/voice-orb"
 import { useTTS } from "@/hooks/use-tts"
+import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { assembleFocusAreas } from "@/lib/conversations/focus"
 import { getConversationSeedPhrases } from "@/lib/phrases/pack"
 import { addPhrase, markSeeded } from "@/lib/phrases/store"
@@ -49,6 +50,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
   const bottomRef = useRef<HTMLDivElement>(null)
   const posthog = usePostHog()
   const { play, playingId } = useTTS("chat")
+  const { voiceId } = useVoicePreference()
 
   const { turns, isLoading, sendMessage, reload } = useConversation(
     loaded && conversation ? id : null,
@@ -128,6 +130,8 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
         .map((p) => ({ request: p.translation, spanish: p.text })),
       correctionLevel: profile.correctionLevel,
       dialect: profile.dialect,
+      // The same voice the speaker button on a message uses.
+      voice: voiceId,
       topicId: conversation.starterId ?? undefined,
       focusAreas: assembleFocusAreas(),
       priorTurns,
