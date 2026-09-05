@@ -26,7 +26,18 @@ export function useConversation(
   topicTitle?: string,
   /** Starter id — forwarded so /api/chat can pick a topic-specific persona. */
   topicId?: string,
+  /**
+   * Fired once per FINISHED assistant turn — never for a streaming partial, so
+   * a caller can't end up speaking a half-sentence. The read-aloud setting
+   * hangs off this; the hook stays about the thread and knows nothing about
+   * audio.
+   */
+  onAssistantTurn?: (turn: ConversationTurn) => void,
 ) {
+  // Held in a ref so a caller can pass an inline closure without the opener
+  // effect re-running (and re-fetching) on every render.
+  const onAssistantTurnRef = useRef(onAssistantTurn)
+  onAssistantTurnRef.current = onAssistantTurn
   const [turns, setTurns] = useState<ConversationTurn[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const initializedRef = useRef<string | null>(null)
@@ -76,7 +87,7 @@ export function useConversation(
         return r.json()
       })
       .then(({ reply, translation }) => {
-        persist({
+        const turn: ConversationTurn = {
           id: crypto.randomUUID(),
           conversationId,
           speaker: "assistant",
@@ -85,7 +96,9 @@ export function useConversation(
           translation: translation ?? undefined,
           createdAt: new Date().toISOString(),
           ordinal: 0,
-        })
+        }
+        persist(turn)
+        onAssistantTurnRef.current?.(turn)
       })
       .catch(() => {
         toast.error("No se pudo empezar", { description: "Check your connection and try again." })
@@ -165,7 +178,7 @@ export function useConversation(
         }
         const reply = data.reply ?? extractReply(raw) ?? ""
 
-        persist({
+        const botTurn: ConversationTurn = {
           id: botId,
           conversationId,
           speaker: "assistant",
@@ -174,7 +187,9 @@ export function useConversation(
           translation: data.translation ?? undefined,
           createdAt: new Date().toISOString(),
           ordinal: botOrdinal,
-        })
+        }
+        persist(botTurn)
+        onAssistantTurnRef.current?.(botTurn)
 
         // Corrections attach to the user's turn, which is where they're read.
         if (data.correction && data.correction.corrected !== data.correction.original) {

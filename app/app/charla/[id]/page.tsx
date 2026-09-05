@@ -50,18 +50,41 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
   const bottomRef = useRef<HTMLDivElement>(null)
   const posthog = usePostHog()
   const { play, playingId } = useTTS("chat")
-  const { voiceId } = useVoicePreference()
+  const { voiceId, readAloud } = useVoicePreference()
+
+  // Read through refs, not closure: the callback fires when a reply lands, so
+  // it must see the setting and the voice state AT THAT MOMENT, not whatever
+  // they were on the render that created it.
+  const readAloudRef = useRef(readAloud)
+  readAloudRef.current = readAloud
+  const inVoiceRef = useRef(false)
+
+  const speakIfReadAloud = useCallback(
+    (turn: ConversationTurn) => {
+      // Voice mode is already speaking her, so reading the same turn aloud
+      // would play two of her at once. The composer is hidden whenever a
+      // session is up, so there's no route to this today — it's here because
+      // the callback is async (state can move between send and reply) and
+      // because the day someone loosens that visibility rule, the failure is
+      // duplicated audio, which is both awful and easy to miss in review.
+      if (!readAloudRef.current || inVoiceRef.current) return
+      void play(turn.id, turn.text)
+    },
+    [play],
+  )
 
   const { turns, isLoading, sendMessage, reload } = useConversation(
     loaded && conversation ? id : null,
     conversation?.title,
     conversation?.starterId ?? undefined,
+    speakIfReadAloud,
   )
 
   const persistence = useMemo(() => conversationVoicePersistence(id), [id])
   const voice = useVoiceSession(persistence, "/api/voice/session")
 
   const inVoice = voice.state !== "idle" && voice.state !== "ended"
+  inVoiceRef.current = inVoice
   useWakeLock(voice.state === "live" || voice.state === "paused")
   useMediaSession({
     active: voice.state === "live" || voice.state === "paused",

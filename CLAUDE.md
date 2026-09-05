@@ -106,7 +106,20 @@ inside conversations (`/app/charla/[id]`). The short version:
   persistence via `lib/conversations/persistence.ts`. `lib/voice/openai-realtime.ts`
   is the only file allowed to know about WebRTC/OpenAI event names.
 - **One persona app-wide** (decided with Bart): the same warm Argentine
-  partner — voice `marin`. Don't split the persona per surface without asking.
+  partner. Don't split the persona per surface without asking.
+- **One voice set, both engines.** `lib/voices.ts` is the whole catalogue, and
+  every id in it is valid on BOTH `gpt-4o-mini-tts` and `gpt-realtime` (alloy,
+  ash, ballad, coral, echo, sage, shimmer, verse, marin, cedar). Adding a voice
+  only one engine supports re-splits the app, which is the bug this replaced:
+  TTS read this file while `/api/voice/session` had `marin` hardcoded, so the
+  speaker button and voice mode were different people. Both now resolve the
+  learner's `hablaba_voice` preference through `resolveVoiceId`, server-side.
+  Default is `marin` ("Elena"). Legacy ids (nova, onyx, fable) are migrated on
+  read — Realtime cannot speak them at all.
+- **Read-aloud is opt-in** (`hablaba_read_aloud`, off by default): text chat
+  speaks her replies only if the parent asked for it. Sound is something you
+  request, never something that happens to you on a bus. Voice mode is
+  unaffected — it speaks either way.
 - **Grammar is tú everywhere, full stop.** Voseo is not a mode and there is no
   register switch — one system for the learner to hold, across written content,
   text chat and voice alike. **Dialect** is the separate axis: Rioplatense is a

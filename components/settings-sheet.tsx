@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { playAudio, ttsUrl } from "@/lib/audio"
-import { voices, type VoiceId } from "@/lib/voices"
+import { getVoice, voices, type VoiceId } from "@/lib/voices"
 import { useVoicePreference } from "@/hooks/use-voice-preference"
 import {
   getProfile,
@@ -35,7 +35,7 @@ interface SettingsSheetProps {
 }
 
 export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
-  const { voiceId, setVoiceId } = useVoicePreference()
+  const { voiceId, setVoiceId, readAloud, setReadAloud } = useVoicePreference()
   const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -241,6 +241,36 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
             )
           })}
+        </div>
+
+        {/* Off by default, and the copy says what it does rather than naming a
+            feature — the parent needs to know whether the phone is about to
+            make noise. Voice mode speaks regardless; this is text chat only. */}
+        <div className="clay-card mt-3 flex items-center gap-3 rounded-[18px] p-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-ink">Leer las respuestas</p>
+            <p className="text-xs leading-snug text-ink-soft">
+              En el chat escrito, {getVoice(voiceId).name} lee sus mensajes sola.
+            </p>
+          </div>
+          <button
+            role="switch"
+            aria-checked={readAloud}
+            aria-label="Leer las respuestas en voz alta"
+            onClick={() => {
+              posthog.capture("read_aloud_toggled", { on: !readAloud })
+              setReadAloud(!readAloud)
+            }}
+            className={`relative h-[30px] w-[52px] flex-none rounded-full transition-colors duration-[120ms] ${
+              readAloud ? "bg-green" : "bg-sunken-2"
+            }`}
+            style={{ boxShadow: readAloud ? "0 2px 0 var(--hb-green-press)" : "inset 0 2px 4px rgba(30,61,44,.08)" }}
+          >
+            <span
+              className="absolute top-[3px] h-6 w-6 rounded-full bg-surface transition-[left] duration-[120ms]"
+              style={{ left: readAloud ? 25 : 3, boxShadow: "0 1px 2px rgba(30,61,44,.18)" }}
+            />
+          </button>
         </div>
       </SheetContent>
     </Sheet>
