@@ -8,9 +8,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { playAudio, ttsUrl } from "@/lib/audio"
-import { getVoice, voices, type VoiceId } from "@/lib/voices"
-import { useVoicePreference } from "@/hooks/use-voice-preference"
+import { PARTNER_NAME } from "@/lib/voices"
+import { useReadAloud } from "@/hooks/use-read-aloud"
 import {
   getProfile,
   saveProfile,
@@ -20,7 +19,6 @@ import {
 } from "@/lib/profile/store"
 import { usePostHog } from "posthog-js/react"
 
-const SAMPLE_TEXT = "Hola, ¿cómo estás? Me alegra practicar español contigo."
 
 const CORRECTION_OPTIONS: CorrectionLevel[] = ["mucho", "normal", "poco"]
 
@@ -35,11 +33,8 @@ interface SettingsSheetProps {
 }
 
 export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
-  const { voiceId, setVoiceId, readAloud, setReadAloud } = useVoicePreference()
-  const [previewingId, setPreviewingId] = useState<VoiceId | null>(null)
+  const { readAloud, setReadAloud } = useReadAloud()
   const [profile, setProfile] = useState<Profile | null>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const abortRef = useRef<AbortController | null>(null)
   const posthog = usePostHog()
 
   // Re-read each time the sheet opens — another surface may have migrated data in.
@@ -55,45 +50,6 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
     },
     [posthog],
   )
-
-  const stopPreview = useCallback(() => {
-    abortRef.current?.abort()
-    abortRef.current = null
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current = null
-    }
-    setPreviewingId(null)
-  }, [])
-
-  const preview = async (id: VoiceId) => {
-    const wasPreviewing = previewingId === id
-    stopPreview()
-    if (wasPreviewing) return
-
-    setPreviewingId(id)
-    const controller = new AbortController()
-    abortRef.current = controller
-    try {
-      const audio = await playAudio(ttsUrl(SAMPLE_TEXT, id), controller.signal)
-      if (controller.signal.aborted) {
-        audio.pause()
-        return
-      }
-      audioRef.current = audio
-      audio.onended = () => { setPreviewingId(null); audioRef.current = null }
-    } catch {
-      if (controller.signal.aborted) return
-      setPreviewingId(null)
-    }
-  }
-
-  // Stop the preview when the sheet closes (or the component unmounts) so it
-  // doesn't keep playing while the user is doing something else in the app.
-  useEffect(() => {
-    if (!open) stopPreview()
-  }, [open, stopPreview])
-  useEffect(() => stopPreview, [stopPreview])
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -151,7 +107,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
             <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Your little one</h3>
             <p className="mb-3 text-xs text-ink-soft">
-              Optional — with a child set, she can talk about your day with them by name.
+              Optional — with a child set, {PARTNER_NAME} can talk about your day with them by name.
             </p>
             <div className="space-y-3">
               <div>
@@ -194,54 +150,11 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
           </>
         )}
 
-        <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Voice</h3>
-        <div className="space-y-2">
-          {voices.map((voice) => {
-            const isSelected = voiceId === voice.id
-            const isPreviewing = previewingId === voice.id
-            return (
-              <div
-                key={voice.id}
-                onClick={() => {
-                  posthog.capture("voice_changed", { voice_id: voice.id, voice_name: voice.name })
-                  setVoiceId(voice.id)
-                }}
-                className={`flex cursor-pointer items-center gap-3 rounded-[18px] p-3 transition-all duration-[120ms] active:scale-[0.98] ${
-                  isSelected ? "bg-[#EAF1EA]" : "clay-card"
-                }`}
-                style={isSelected ? { boxShadow: "inset 0 0 0 1.5px var(--hb-green), 0 2px 0 #CFDECF" } : undefined}
-              >
-                <div className="flex-1">
-                  <p className={`text-sm font-semibold ${isSelected ? "text-green" : "text-ink"}`}>
-                    {voice.name}
-                  </p>
-                  <p className="text-xs text-ink-soft">{voice.descriptor}</p>
-                </div>
-
-                {isSelected && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green">
-                    <DuoIcon name="check" size={12} className="text-cream" />
-                  </span>
-                )}
-
-                <button
-                  onClick={(e) => { e.stopPropagation(); preview(voice.id) }}
-                  aria-label={`Preview ${voice.name}`}
-                  className={`press-disc flex h-9 w-9 items-center justify-center rounded-full ${
-                    isPreviewing ? "bg-green text-cream" : "bg-sunken-2 text-ink"
-                  }`}
-                >
-                  <DuoIcon
-                    name="escuchar"
-                    size={16}
-                    detail={isPreviewing ? "#8FBE9C" : undefined}
-                    className={isPreviewing ? "animate-pulse" : undefined}
-                  />
-                </button>
-              </div>
-            )
-          })}
-        </div>
+        {/* Her name, not a category. She has one voice (lib/voices.ts), so the
+            only thing left here is whether she reads to you — and the sheet's
+            three headings now read as the three things the app is about:
+            Spanish, your little one, and her. */}
+        <h3 className="smallcaps mb-3 mt-7 text-ink-faint">{PARTNER_NAME}</h3>
 
         {/* Off by default, and the copy says what it does rather than naming a
             feature — the parent needs to know whether the phone is about to
@@ -250,7 +163,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
           <div className="flex-1">
             <p className="text-sm font-semibold text-ink">Leer las respuestas</p>
             <p className="text-xs leading-snug text-ink-soft">
-              En el chat escrito, {getVoice(voiceId).name} lee sus mensajes sola.
+              En el chat escrito, {PARTNER_NAME} lee sus mensajes sola.
             </p>
           </div>
           <button

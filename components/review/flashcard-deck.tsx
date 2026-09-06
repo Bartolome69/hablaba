@@ -5,7 +5,6 @@ import { Volume2, Loader2, Check, RotateCcw, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { playAudio } from "@/lib/audio"
-import { useVoicePreference } from "@/hooks/use-voice-preference"
 import type { PracticeResult, SavedPhrase } from "@/lib/types"
 
 interface FlashcardDeckProps {
@@ -26,7 +25,6 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
     [],
   )
 
-  const { voiceId } = useVoicePreference()
   const [index, setIndex] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [gotItCount, setGotItCount] = useState(0)
@@ -47,7 +45,7 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text, voice: voiceId }),
+          body: JSON.stringify({ text }),
         })
         if (!res.ok) throw new Error("TTS failed")
         const blob = await res.blob()
@@ -64,7 +62,7 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
         toast.error("No se pudo reproducir el audio")
       }
     },
-    [voiceId],
+    [],
   )
 
   const handleResult = (result: PracticeResult) => {

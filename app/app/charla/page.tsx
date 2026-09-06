@@ -17,6 +17,7 @@ import { getProfile } from "@/lib/profile/store"
 import type { Conversation } from "@/lib/conversations/types"
 import { voiceTopics } from "@/lib/voice-topics"
 import { conversationTopics, dailyTopics, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
+import { PARTNER_NAME } from "@/lib/voices"
 
 // Two families of starter, deliberately kept distinct. The spoken topics carry
 // a grammar intent (Recuerdos pulls past tenses out of you, Opiniones the
@@ -108,7 +109,7 @@ export default function CharlaHubPage() {
           <div className="flex flex-col gap-0.5">
             <p className="text-[15.5px] font-semibold text-cream">Con tu peque</p>
             <p className="text-[12.5px] leading-snug text-green-on-dark">
-              Ella hace de tu hijo, para ensayar el día
+              {PARTNER_NAME} hace de tu hijo, para ensayar el día
             </p>
           </div>
         </button>

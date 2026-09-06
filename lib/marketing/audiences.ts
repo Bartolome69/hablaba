@@ -37,7 +37,7 @@ export const audiences: Record<string, Audience> = {
     faq: [
       { q: "I only know a little Spanish. Is this for me?", a: "Yes. Hablaba is built for B1-ish learners: you can read a menu and survive a conversation, but you freeze with a toddler. We start where you are." },
       { q: "Does my child need to use it?", a: "No. Hablaba is for the parent. You learn the phrases, then bring them into your home naturally." },
-      { q: "What dialect of Spanish?", a: "Neutral Latin American Spanish by default, with optional Castilian voices. You can switch anytime." },
+      { q: "What dialect of Spanish?", a: "Rioplatense by default — Argentine vocabulary and a porteño accent — or neutral Latin American if you prefer, switchable in settings. Grammar is tú either way, never vosotros." },
     ],
   },
   toddlers: {

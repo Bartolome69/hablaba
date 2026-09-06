@@ -4,7 +4,7 @@ import { posthog } from "@/lib/posthog-server"
 import { buildVoiceInstructions, type SpanishDialect, type VoiceCorrectionLevel } from "@/lib/voice/prompts"
 import { TOKEN_TTL_SECONDS, isCorrectionLevel } from "@/lib/voice/config"
 import type { VoiceSeedContext } from "@/lib/voice/types"
-import { resolveVoiceId } from "@/lib/voices"
+import { PARTNER_VOICE } from "@/lib/voices"
 
 // Mints a short-lived OpenAI Realtime client secret for the browser.
 //
@@ -29,15 +29,10 @@ export const runtime = "nodejs"
 
 const MODEL = "gpt-realtime"
 
-// The voice comes from the learner's preference (`lib/voices.ts`), the same one
-// the speaker button uses — one partner should not sound like two people
-// depending on how you're talking to her. It used to be hardcoded here, which
-// is exactly how the split happened.
-//
-// Still resolved SERVER-side: every id in that catalogue is valid on both
-// gpt-realtime and gpt-4o-mini-tts, and resolveVoiceId falls back to the
-// default rather than trusting a client string. The porteño accent comes from
-// the instructions, not the voice id.
+// Her voice — the same constant /api/tts uses, so the speaker button and voice
+// mode are the same person. It's fixed server-side (like the model and the
+// instructions) because she has one voice; the porteño accent comes from the
+// instructions, not the voice id.
 
 export async function POST(req: Request) {
   try {
@@ -46,8 +41,6 @@ export async function POST(req: Request) {
     const correctionLevel: VoiceCorrectionLevel = isCorrectionLevel(body.correctionLevel)
       ? body.correctionLevel
       : "normal"
-
-    const voice = resolveVoiceId(body.voice)
 
     const instructions = buildVoiceInstructions({
       context: {
@@ -113,7 +106,7 @@ export async function POST(req: Request) {
             // lever is prompt-side ("wait for me"), not a fixed delay.
             turn_detection: { type: "semantic_vad", eagerness: "low" },
           },
-          output: { voice },
+          output: { voice: PARTNER_VOICE },
         },
       },
     })
@@ -124,7 +117,7 @@ export async function POST(req: Request) {
       properties: {
         type: "voice_session_mint",
         model: MODEL,
-        voice,
+        voice: PARTNER_VOICE,
         correction_level: correctionLevel,
         topic_id: body.topicId ?? null,
         pack_phrases: body.packPhrases?.length ?? 0,
@@ -133,7 +126,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json(
-      { clientSecret: created.value, model: MODEL, voice },
+      { clientSecret: created.value, model: MODEL, voice: PARTNER_VOICE },
       { headers: { "Cache-Control": "no-store" } },
     )
   } catch (err) {

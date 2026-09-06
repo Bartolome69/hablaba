@@ -1,5 +1,5 @@
 import { getOpenAI } from "@/lib/openai"
-import { resolveVoiceId, type VoiceId } from "@/lib/voices"
+import { PARTNER_VOICE } from "@/lib/voices"
 
 const VOICE_INSTRUCTIONS =
   "Speak in clear, natural Spanish at a conversational pace, like a warm and patient tutor. Use natural prosody and gentle emphasis on key words."
@@ -11,19 +11,16 @@ const REGISTER_INSTRUCTIONS: Record<string, string> = {
     "Speak in Rioplatense Argentine Spanish with a Buenos Aires (porteño) accent: pronounce 'll' and 'y' as 'sh' (sheísmo, e.g. 'yo' as 'sho', 'calle' as 'cashe'), with the characteristic Italian-influenced rising-and-falling intonation. Warm, natural and conversational.",
 }
 
-async function handleTTS(
-  text: string | undefined,
-  voiceParam: VoiceId | null,
-  register?: string | null,
-) {
+async function handleTTS(text: string | undefined, register?: string | null) {
   if (!text?.trim()) {
     return new Response("Text is required", { status: 400 })
   }
 
-  // One resolver, shared with /api/voice/session, so the speaker button and
-  // voice mode cannot drift apart again. It also carries legacy ids across,
-  // which matters here because TTS urls are cached for a year.
-  const voice = resolveVoiceId(voiceParam)
+  // Her voice, not a request parameter — the same constant /api/voice/session
+  // uses, so the speaker button and voice mode cannot drift apart. A `voice`
+  // in the query is ignored rather than rejected: urls are cached for a year,
+  // so old ones with the parameter still resolve to her.
+  const voice = PARTNER_VOICE
   const instructions = (register && REGISTER_INSTRUCTIONS[register]) || VOICE_INSTRUCTIONS
 
   const response = await getOpenAI().audio.speech.create({
@@ -46,8 +43,7 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
     const text = url.searchParams.get("text") ?? undefined
-    const voiceParam = url.searchParams.get("voice") as VoiceId | null
-    return await handleTTS(text, voiceParam, url.searchParams.get("register"))
+    return await handleTTS(text, url.searchParams.get("register"))
   } catch (err) {
     console.error("[/api/tts]", err)
     return new Response("Failed to generate audio", { status: 500 })
@@ -56,8 +52,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { text, voice, register } = await req.json()
-    return await handleTTS(text, voice as VoiceId | null, register as string | null)
+    const { text, register } = await req.json()
+    return await handleTTS(text, register as string | null)
   } catch (err) {
     console.error("[/api/tts]", err)
     return new Response("Failed to generate audio", { status: 500 })

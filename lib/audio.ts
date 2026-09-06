@@ -53,8 +53,11 @@ export function playAudio(url: string, signal?: AbortSignal): Promise<HTMLAudioE
   })
 }
 
-export function ttsUrl(text: string, voice: string, register?: string): string {
-  const params = new URLSearchParams({ text, voice })
+// No voice parameter: she has one voice and the server owns it, so the client
+// can't ask for a different one and these urls can't fragment the year-long
+// cache across voices that no longer exist.
+export function ttsUrl(text: string, register?: string): string {
+  const params = new URLSearchParams({ text })
   if (register) params.set("register", register)
   return `/api/tts?${params.toString()}`
 }

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
-import { useVoicePreference } from "@/hooks/use-voice-preference"
 import { playAudio, ttsUrl } from "@/lib/audio"
 
 export function useTTS(
@@ -11,7 +10,6 @@ export function useTTS(
   opts?: { register?: string },
 ) {
   const register = opts?.register
-  const { voiceId } = useVoicePreference()
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
@@ -37,11 +35,11 @@ export function useTTS(
     }
 
     setPlayingId(id)
-    posthog.capture("tts_played", { context, voice_id: voiceId })
+    posthog.capture("tts_played", { context })
     const controller = new AbortController()
     abortRef.current = controller
     try {
-      const audio = await playAudio(ttsUrl(text, voiceId, register), controller.signal)
+      const audio = await playAudio(ttsUrl(text, register), controller.signal)
       // Navigated away / superseded while the clip was loading.
       if (controller.signal.aborted) {
         audio.pause()
@@ -62,7 +60,7 @@ export function useTTS(
         },
       })
     }
-  }, [voiceId, playingId, context, posthog, register, stop])
+  }, [playingId, context, posthog, register, stop])
 
   // Kill audio if the component using this hook unmounts mid-playback.
   useEffect(() => stop, [stop])
