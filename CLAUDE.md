@@ -116,6 +116,15 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
+- **TTS delivery has two axes** (`/api/tts`): `dialect` is her accent and
+  follows the profile; `manner` is what the line is for. `conversational`
+  (Repetir, read-aloud) echoes the VOICE block in `lib/voice/prompts.ts` so a
+  replayed line sounds like the voice-mode performance; `clear` (Frases,
+  Palabras, flashcards) gives study material room without changing who she is.
+  Before this, one instruction told her to be "a warm and patient tutor" for
+  every line, and the porteño path was dead — its only caller was Grow, retired
+  in the August restructure, so the dialect setting had stopped reaching TTS
+  entirely. If TTS ever sounds unlike voice mode, compare these two blocks.
 - **Read-aloud is opt-in** (`hablaba_read_aloud`, off by default): text chat
   speaks her replies only if the parent asked for it. Sound is something you
   request, never something that happens to you on a bus. Voice mode is

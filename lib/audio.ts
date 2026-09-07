@@ -54,10 +54,16 @@ export function playAudio(url: string, signal?: AbortSignal): Promise<HTMLAudioE
 }
 
 // No voice parameter: she has one voice and the server owns it, so the client
-// can't ask for a different one and these urls can't fragment the year-long
-// cache across voices that no longer exist.
-export function ttsUrl(text: string, register?: string): string {
+// can't ask for a different one. `dialect` is her accent (from the profile) and
+// `manner` is what this line is for — both are part of the cache key, which is
+// what we want: the same sentence read conversationally and read clearly are
+// different audio and should be cached separately.
+export function ttsUrl(
+  text: string,
+  opts?: { dialect?: "rioplatense" | "neutral"; manner?: "conversational" | "clear" },
+): string {
   const params = new URLSearchParams({ text })
-  if (register) params.set("register", register)
+  if (opts?.dialect) params.set("dialect", opts.dialect)
+  if (opts?.manner) params.set("manner", opts.manner)
   return `/api/tts?${params.toString()}`
 }

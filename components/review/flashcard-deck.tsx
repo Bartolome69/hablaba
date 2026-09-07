@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { playAudio } from "@/lib/audio"
 import type { PracticeResult, SavedPhrase } from "@/lib/types"
+import { getProfile } from "@/lib/profile/store"
 
 interface FlashcardDeckProps {
   phrases: SavedPhrase[]
@@ -45,7 +46,8 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text }),
+          // A flashcard is study material: her accent, given room.
+          body: JSON.stringify({ text, dialect: getProfile().dialect, manner: "clear" }),
         })
         if (!res.ok) throw new Error("TTS failed")
         const blob = await res.blob()
