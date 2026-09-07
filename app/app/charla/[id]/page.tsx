@@ -287,7 +287,14 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
           <ConversationTranscript
             turns={displayTurns}
             playingId={playingId}
-            onPlayRequest={play}
+            /* No tap-to-replay while she's live on the mic. It played a
+               SEPARATE tts clip over the top of her Realtime voice — two of
+               her at once — and the open mic then heard the clip, took it for
+               the parent's turn, and had her answer herself. In a live
+               conversation the way to hear something again is to ask her, out
+               loud, which is what hands-free is for; the text is on screen
+               either way. The chip comes back the moment the session ends. */
+            onPlayRequest={inVoice ? undefined : play}
             onSavePhrase={(spanish, english) => {
               addPhrase({ text: spanish, translation: english, source: "saved" })
               toast.success("Guardada")
