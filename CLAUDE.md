@@ -164,7 +164,7 @@ inside conversations (`/app/charla/[id]`). The short version:
 - `lib/conversations/` — the unified conversation entity: store, types, `use-conversation.ts` (text side), `persistence.ts` (voice binding), `analysis.ts`
 - `app/api/chat/route.ts` — OpenAI integration for text turns, streams `{ reply, translation, correction }`
 - `lib/voice/` — the shared voice engine (adapter, `openai-realtime.ts`, platform forks, session hook)
-- `lib/voice-topics.ts` — conversation starters; topic choice doubles as grammar targeting
+- `lib/voice-topics.ts` — conversation starters. `voiceTopics` are the curated starters; `subjectVoiceTopics` gives the "Intereses"/"Vida diaria" subject cards (`lib/data.ts`) their spoken prompts. Both resolve through `getVoiceTopic`, which falls back to "dia" for an unknown id — so a topic WITHOUT an entry silently becomes the baby-day conversation. Every id offered anywhere in the picker must have one; `isKnownVoiceTopic` says whether it does
 - `lib/types.ts` — shared types: `Message`, `Correction`, `SavedPhrase`, `DailyPrompt`
 
 **Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` (`lib/conversations/store.ts`), `phrases` (`lib/phrases/store.ts`), `vocab_words` (`lib/vocab/store.ts`), `profile` (`lib/profile/store.ts`). Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
