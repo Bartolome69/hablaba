@@ -9,14 +9,37 @@ const conversationTopicIds = new Set([
   "morning","dinner","shopping","endofday","house","coffee",
 ])
 
-const SYSTEM_PROMPT = `You are a friendly Spanish conversation partner and tutor helping an intermediate (B1) learner practice conversational Spanish.
+// Her regional flavour, from the learner's profile — the SAME axis voice mode
+// uses (DIALECT_FLAVOUR in lib/voice/prompts.ts). It used to be hardcoded
+// Colombian/Mexican here, so she was Argentine on the mic and Colombian in
+// writing, and the Rioplatense setting in Ajustes did nothing to text chat.
+//
+// Grammar is tú on both sides regardless: dialect is vocabulary flavour, never
+// a grammar switch.
+export type ChatDialect = "rioplatense" | "neutral"
 
-Use clear, natural Latin American Spanish (Colombian/Mexican), addressing the user as "tú". Specifically:
+const DIALECT_BLOCK: Record<ChatDialect, string> = {
+  rioplatense: `Use natural Argentine (Rioplatense) Spanish, addressing the user as "tú". Specifically:
+- Use "tú" (not "vos") and standard tú verb forms (tienes, quieres, mira) — the flavour is Argentine, the grammar is not
+- Use "ustedes" instead of "vosotros"
+- Argentine vocabulary: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re"
+- Peninsular words are errors ("vale", "guay", "coger", "ordenador", "zumo")
+- Keep vocabulary approachable for a B1 learner`,
+  neutral: `Use clear, natural Latin American Spanish, addressing the user as "tú". Specifically:
 - Use "tú" (not "vos") and standard tú verb forms (tienes, quieres, mira)
 - Use "ustedes" instead of "vosotros"
 - Use "carro" instead of "coche", "computadora" instead of "ordenador"
-- Avoid Spain-specific slang or vocabulary
-- Keep vocabulary approachable for a B1 learner
+- Avoid Spain-specific slang and strongly region-marked vocabulary
+- Keep vocabulary approachable for a B1 learner`,
+}
+
+function asDialect(value: unknown): ChatDialect {
+  return value === "neutral" ? "neutral" : "rioplatense"
+}
+
+const partnerPrompt = (dialect: ChatDialect) => `You are a friendly Spanish conversation partner and tutor helping an intermediate (B1) learner practice conversational Spanish.
+
+${DIALECT_BLOCK[dialect]}
 
 Rules:
 - Always respond in Spanish, naturally and conversationally
@@ -45,13 +68,9 @@ Always include the "correction" field for every user message — even if their S
 Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
-const SYSTEM_PROMPT_PARENT_CHILD = `You are roleplaying as the user's own young child (around 4-6 years old), so the user — a parent doing "one parent, one language" practice — can rehearse natural everyday Spanish conversation with their kid.
+const childPrompt = (dialect: ChatDialect) => `You are roleplaying as the user's own young child (around 4-6 years old), so the user — a parent doing "one parent, one language" practice — can rehearse natural everyday Spanish conversation with their kid.
 
-Use clear, natural Latin American Spanish (Colombian/Mexican), addressing the parent as "tú". Specifically:
-- Use "tú" (not "vos") and standard tú verb forms
-- Use "ustedes" instead of "vosotros"
-- Use "carro" instead of "coche", "computadora" instead of "ordenador"
-- Avoid Spain-specific slang or vocabulary
+${DIALECT_BLOCK[dialect]}
 
 Rules:
 - Stay fully in character as the child: simple vocabulary, short excited sentences, genuine kid concerns and curiosity
@@ -84,16 +103,18 @@ Do not include any text outside the JSON object.`
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { message, history, opener, topic, topicId } = body as {
+    const { message, history, opener, topic, topicId, dialect } = body as {
       message?: string
       history: { role: "user" | "assistant"; content: string }[]
       opener?: boolean
       topic?: string
       topicId?: string
+      dialect?: string
     }
 
     const isParentChild = topicId === PARENT_CHILD_TOPIC_ID
-    const systemPrompt = isParentChild ? SYSTEM_PROMPT_PARENT_CHILD : SYSTEM_PROMPT
+    const chatDialect = asDialect(dialect)
+    const systemPrompt = isParentChild ? childPrompt(chatDialect) : partnerPrompt(chatDialect)
 
     // Opener mode: bot asks the first question for a topic
     if (opener && topic) {

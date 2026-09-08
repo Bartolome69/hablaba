@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import type { Correction } from "@/lib/types"
 import { extractReply } from "@/lib/utils"
+import { getProfile } from "@/lib/profile/store"
 import { listTurns, nextOrdinal, saveTurn } from "./store"
 import type { ConversationTurn } from "./types"
 
@@ -80,7 +81,7 @@ export function useConversation(
     fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ opener: true, topic: topicTitle, topicId, history: [] }),
+      body: JSON.stringify({ opener: true, topic: topicTitle, topicId, history: [], dialect: getProfile().dialect }),
     })
       .then((r) => {
         if (!r.ok) throw new Error(`Chat API error: ${r.status}`)
@@ -155,7 +156,7 @@ export function useConversation(
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history }),
+          body: JSON.stringify({ message: text, history, dialect: getProfile().dialect }),
         })
         if (!res.ok || !res.body) throw new Error("Chat API error")
 

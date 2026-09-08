@@ -30,7 +30,7 @@ const MANNER: Record<TtsManner, string> = {
   // Deliberately echoes the VOICE block in lib/voice/prompts.ts, so a line she
   // said in voice mode sounds like the same performance when it's replayed.
   conversational:
-    "You are speech, not text: contractions, natural rhythm, unhurried but not slow. Say it the way you would in conversation, not the way you would read it out.",
+    "You are speech, not text. Say this the way you would say it mid-conversation to a friend: brisk and fluid, contractions, words running together the way they naturally do, no pause between clauses. Do NOT enunciate, do NOT slow down for clarity, do NOT read it out like a lesson — this is a line you already said and are simply repeating.",
   // Study material — a phrase or a single word the learner is working on. Same
   // person, same accent, just given room.
   clear:

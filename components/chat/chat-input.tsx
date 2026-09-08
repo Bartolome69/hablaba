@@ -29,9 +29,18 @@ function looksLikeEnglish(text: string): boolean {
   return englishCount / words.length > 0.35
 }
 
+// These become the LEARNER'S OWN MESSAGE, so they follow the tú rule like every
+// other bit of Spanish the app teaches — the app's porteño chrome ("Escribí, o
+// hablá…") stops at the send button.
+//
+// They used to be voseo: "¿Lo podés repetir?" (tú: puedes) and "Ayudame" (tú:
+// ayúdame — an esdrújula, so the accent isn't optional). The chat model
+// correctly applies the tú rule, so it flagged them as mistakes: the app put
+// voseo in the parent's mouth and then corrected them for it. Don't write these
+// in the chrome's voice.
 const QUICK_ASKS: { label: string; icon: IconName; text: string }[] = [
-  { label: "Repetir", icon: "escuchar", text: "¿Lo podés repetir?" },
-  { label: "Ayudame", icon: "rayo", text: "Ayudame, ¿cómo lo digo mejor?" },
+  { label: "Repetir", icon: "escuchar", text: "¿Lo puedes repetir?" },
+  { label: "Ayúdame", icon: "rayo", text: "Ayúdame, ¿cómo lo digo mejor?" },
   { label: "Más lento", icon: "lento", text: "Más despacio, por favor." },
 ]
 

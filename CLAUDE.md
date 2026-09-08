@@ -116,6 +116,17 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
+- **Dialect reaches every surface.** Voice mode, `/api/tts` AND `/api/chat` all
+  take the profile dialect. Text chat used to be hardcoded Colombian/Mexican
+  ("carro", "computadora"), so she was Argentine on the mic and Colombian in
+  writing. Grammar is tú on all of them regardless — dialect is vocabulary
+  flavour, never a grammar switch.
+- **App-authored Spanish that becomes the LEARNER'S message follows the tú
+  rule**, not the app's porteño chrome. The quick-ask chips in
+  `components/chat/chat-input.tsx` were voseo ("¿Lo podés repetir?",
+  "Ayudame"), so the chat model correctly flagged them as errors — the app put
+  voseo in the parent's mouth and then corrected them for it. Chrome voice
+  stops at the send button.
 - **TTS delivery has two axes** (`/api/tts`): `dialect` is her accent and
   follows the profile; `manner` is what the line is for. `conversational`
   (Repetir, read-aloud) echoes the VOICE block in `lib/voice/prompts.ts` so a
