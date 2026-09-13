@@ -48,6 +48,7 @@ interface ChatBubbleProps {
 export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePhrase }: ChatBubbleProps) {
   const [showTranslation, setShowTranslation] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [showCorrection, setShowCorrection] = useState(false)
   const [botSaved, setBotSaved] = useState(false)
   const isUser = message.type === "user"
   const isBot = message.type === "bot"
@@ -88,38 +89,78 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
           </p>
         </div>
 
+        {/* Collapsed by default. A correction on every message — the chat
+            route asks for one even when the Spanish was already right — turned
+            the thread into alternating bubbles and cards, and pushed what she
+            actually said off the screen. The underline inside the bubble is
+            already the at-a-glance signal that something was recast; this is
+            the detail, and detail is opt-in.
+
+            Still terracotta, still the one spot colour for the state that
+            matters — just folded until you want it. */}
         {correction && (
-          <div className="max-w-[84%] rounded-2xl bg-terracotta-tint px-[13px] py-[11px]">
-            <div className="flex items-start gap-[9px]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mt-px flex-none" aria-hidden>
+          showCorrection ? (
+            <div className="anim-settle max-w-[84%] rounded-2xl bg-terracotta-tint px-[13px] py-[11px]">
+              <div className="flex items-start gap-[9px]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mt-px flex-none" aria-hidden>
+                  <circle cx="12" cy="12" r="9" fill="#C4633E" />
+                  <path
+                    d="m8.2 12.4 2.6 2.6 5-5.2"
+                    stroke="#FFF6F1"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <p className="text-[13px] font-semibold text-terracotta-ink">
+                    {hasImprovement ? "Mejor" : "Así se dice"}: «{stripFullStop(correction.corrected)}».
+                  </p>
+                  {correction.explanation && (
+                    <p className="text-xs leading-[1.4] text-[#96604A]">{correction.explanation}</p>
+                  )}
+                  <div className="mt-1 flex items-center gap-3">
+                    {onSavePhrase && (
+                      <button
+                        onClick={handleSaveCorrection}
+                        disabled={saved}
+                        className="press-chip text-[11.5px] font-semibold text-terracotta-ink underline-offset-2 hover:underline disabled:no-underline disabled:opacity-70"
+                      >
+                        {saved ? "Guardada en Frases" : "Guardar en Frases"}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setShowCorrection(false)}
+                      aria-expanded
+                      className="press-chip text-[11.5px] font-medium text-[#96604A]"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowCorrection(true)}
+              aria-expanded={false}
+              className="press-chip flex h-[28px] max-w-[84%] items-center gap-[7px] rounded-full bg-terracotta-tint pl-2 pr-3"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="flex-none" aria-hidden>
                 <circle cx="12" cy="12" r="9" fill="#C4633E" />
                 <path
                   d="m8.2 12.4 2.6 2.6 5-5.2"
                   stroke="#FFF6F1"
-                  strokeWidth="2.4"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-              <div className="flex min-w-0 flex-col gap-0.5">
-                <p className="text-[13px] font-semibold text-terracotta-ink">
-                  {hasImprovement ? "Mejor" : "Así se dice"}: «{stripFullStop(correction.corrected)}».
-                </p>
-                {correction.explanation && (
-                  <p className="text-xs leading-[1.4] text-[#96604A]">{correction.explanation}</p>
-                )}
-                {onSavePhrase && (
-                  <button
-                    onClick={handleSaveCorrection}
-                    disabled={saved}
-                    className="press-chip mt-1 self-start text-[11.5px] font-semibold text-terracotta-ink underline-offset-2 hover:underline disabled:no-underline disabled:opacity-70"
-                  >
-                    {saved ? "Guardada en Frases" : "Guardar en Frases"}
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+              <span className="text-[11.5px] font-semibold text-terracotta-ink">
+                {hasImprovement ? "Ver la mejora" : "Ya estaba bien"}
+              </span>
+            </button>
+          )
         )}
       </div>
     )

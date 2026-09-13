@@ -88,7 +88,7 @@ Observation types:
 Topic ids (the ONLY valid grammar tags):
 ${topicList}
 
-detail.note: one short encouraging sentence in Spanish (tú register, warm, never scolding — "casi lo tenés" energy without voseo, e.g. "¡Muy cerca! Solo cambia el tiempo verbal."). Every observation needs a note.
+detail.note: one short encouraging sentence in Spanish (tú register, warm, never scolding — encouraging "you almost had it" energy, in tú — never voseo, e.g. "¡Muy cerca! Solo cambia el tiempo verbal."). Every observation needs a note.
 
 detail.corrected must use tú forms, never voseo, never peninsular vocabulary.
 

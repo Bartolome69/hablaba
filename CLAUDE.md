@@ -116,6 +116,11 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
+- **Never name her Spanish after the dialect in a prompt.** "Use natural
+  Argentine (Rioplatense) Spanish" outranked the tú bullet under it and made
+  `/api/chat` speak voseo AND rewrite the learner's correct tú into it
+  ("pones" → "ponés"). Keep the structure `lib/voice/prompts.ts` uses: grammar
+  is its own emphatic block, the dialect block names VOCABULARY only.
 - **Dialect reaches every surface.** Voice mode, `/api/tts` AND `/api/chat` all
   take the profile dialect. Text chat used to be hardcoded Colombian/Mexican
   ("carro", "computadora"), so she was Argentine on the mic and Colombian in

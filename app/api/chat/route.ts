@@ -9,28 +9,30 @@ const conversationTopicIds = new Set([
   "morning","dinner","shopping","endofday","house","coffee",
 ])
 
-// Her regional flavour, from the learner's profile — the SAME axis voice mode
-// uses (DIALECT_FLAVOUR in lib/voice/prompts.ts). It used to be hardcoded
-// Colombian/Mexican here, so she was Argentine on the mic and Colombian in
-// writing, and the Rioplatense setting in Ajustes did nothing to text chat.
+// Two separate blocks, and the order matters.
 //
-// Grammar is tú on both sides regardless: dialect is vocabulary flavour, never
-// a grammar switch.
+// These were briefly ONE block that opened "Use natural Argentine
+// (Rioplatense) Spanish, addressing the user as tú". Rioplatense IS voseo, so
+// naming the dialect that way outweighed the tú bullet underneath it: she
+// started speaking voseo AND rewriting the learner's correct tú into it —
+// "pones" marked wrong and "corrected" to "ponés". Teaching the opposite of
+// the rule, and calling right answers mistakes.
+//
+// So it's structured the way lib/voice/prompts.ts does it, which has never had
+// the problem: grammar is its own emphatic block, and the dialect block only
+// ever names VOCABULARY. Never describe her Spanish as "Argentine Spanish" or
+// "Rioplatense Spanish" here — that phrase carries the grammar with it.
 export type ChatDialect = "rioplatense" | "neutral"
 
-const DIALECT_BLOCK: Record<ChatDialect, string> = {
-  rioplatense: `Use natural Argentine (Rioplatense) Spanish, addressing the user as "tú". Specifically:
-- Use "tú" (not "vos") and standard tú verb forms (tienes, quieres, mira) — the flavour is Argentine, the grammar is not
-- Use "ustedes" instead of "vosotros"
-- Argentine vocabulary: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re"
-- Peninsular words are errors ("vale", "guay", "coger", "ordenador", "zumo")
-- Keep vocabulary approachable for a B1 learner`,
-  neutral: `Use clear, natural Latin American Spanish, addressing the user as "tú". Specifically:
-- Use "tú" (not "vos") and standard tú verb forms (tienes, quieres, mira)
-- Use "ustedes" instead of "vosotros"
-- Use "carro" instead of "coche", "computadora" instead of "ordenador"
-- Avoid Spain-specific slang and strongly region-marked vocabulary
-- Keep vocabulary approachable for a B1 learner`,
+const TU_GRAMMAR = `REGISTER — grammar is tú, always. This outranks every flavour note below.
+- Use tú forms: "tienes", "quieres", "pones", "puedes", "sabes"; tú imperatives "mira", "cuéntame", "dime", "ayúdame"
+- NEVER voseo. Not "tenés", "querés", "ponés", "hacés", "sabés", "animás", "contame", "mirá", "ayudame". Not "vos"
+- NEVER vosotros — use "ustedes"
+- This governs the "correction" field too. A correct tú form is CORRECT: never rewrite "pones" as "ponés", "tienes" as "tenés", or any tú form into voseo. Doing that marks a right answer wrong and teaches the learner the opposite of the rule`
+
+const DIALECT_FLAVOUR: Record<ChatDialect, string> = {
+  rioplatense: `FLAVOUR — Argentine VOCABULARY on tú grammar: pañal, chupete, upa, mamadera, cochecito, "che", "dale", "qué lindo", "re". Peninsular words are errors ("vale", "guay", "coger", "ordenador", "zumo"). Keep it approachable for a B1 learner.`,
+  neutral: `FLAVOUR — neutral Latin American vocabulary: clear and widely understood ("carro", "computadora"). Avoid strongly region-marked slang; peninsular words are errors ("vale", "guay", "coger", "ordenador", "zumo"). Keep it approachable for a B1 learner.`,
 }
 
 function asDialect(value: unknown): ChatDialect {
@@ -39,7 +41,9 @@ function asDialect(value: unknown): ChatDialect {
 
 const partnerPrompt = (dialect: ChatDialect) => `You are a friendly Spanish conversation partner and tutor helping an intermediate (B1) learner practice conversational Spanish.
 
-${DIALECT_BLOCK[dialect]}
+${TU_GRAMMAR}
+
+${DIALECT_FLAVOUR[dialect]}
 
 Rules:
 - Always respond in Spanish, naturally and conversationally
@@ -70,7 +74,9 @@ Do not include any text outside the JSON object.`
 
 const childPrompt = (dialect: ChatDialect) => `You are roleplaying as the user's own young child (around 4-6 years old), so the user — a parent doing "one parent, one language" practice — can rehearse natural everyday Spanish conversation with their kid.
 
-${DIALECT_BLOCK[dialect]}
+${TU_GRAMMAR}
+
+${DIALECT_FLAVOUR[dialect]}
 
 Rules:
 - Stay fully in character as the child: simple vocabulary, short excited sentences, genuine kid concerns and curiosity
