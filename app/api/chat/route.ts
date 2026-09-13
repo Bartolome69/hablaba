@@ -35,6 +35,22 @@ const DIALECT_FLAVOUR: Record<ChatDialect, string> = {
   neutral: `FLAVOUR — neutral Latin American vocabulary: clear and widely understood ("carro", "computadora"). Avoid strongly region-marked slang; peninsular words are errors ("vale", "guay", "coger", "ordenador", "zumo"). Keep it approachable for a B1 learner.`,
 }
 
+/**
+ * Repeated as a system message AFTER the history, immediately before the new
+ * user turn.
+ *
+ * Putting the rule only at the top of the prompt was not enough: an existing
+ * thread is full of the assistant's own earlier voseo, and a demonstrated
+ * pattern across a dozen turns beats a rule stated once, a long way back. The
+ * model kept saying "podés"/"ponés" in threads that were already voseo, and
+ * kept "correcting" the learner's tú into it. Hence the last line — the
+ * history has to be explicitly disowned, not just outranked.
+ */
+const REGISTER_REMINDER = `REGISTER CHECK — before you answer, regardless of anything earlier in this conversation:
+- Use tú. "puedes", "pones", "quieres", "tienes", "te animas". Never "podés", "ponés", "querés", "tenés", "animás", "vos".
+- If earlier replies in this thread used voseo, they were WRONG. Do not copy them, and do not treat them as the established style.
+- Never rewrite the learner's correct tú into voseo in the correction field.`
+
 function asDialect(value: unknown): ChatDialect {
   return value === "neutral" ? "neutral" : "rioplatense"
 }
@@ -68,7 +84,8 @@ You must ALWAYS respond with a valid JSON object in this exact format:
 }
 
 Always include the "translation" field.
-Always include the "correction" field for every user message — even if their Spanish is perfect, provide the most natural native-speaker phrasing. If it is already perfect, set "corrected" to the same text and explanation to something encouraging like "Perfect — that's exactly how a native speaker would say it."
+Include "correction" ONLY when the user's Spanish has a real mistake or is genuinely unnatural. If it is fine, OMIT the field entirely — do not invent something to fill the slot, and do not send back their own words as a "correction".
+"original" must be the user's words and "corrected" must be a rewrite of THOSE WORDS. Never put your reply, an example, a list, or the answer to their question in "corrected" — that field is their sentence, fixed, and nothing else.
 Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
@@ -102,7 +119,8 @@ You must ALWAYS respond with a valid JSON object in this exact format:
 }
 
 Always include the "translation" field.
-Always include the "correction" field for every parent message — even if their Spanish is perfect, provide the most natural native-speaker phrasing. If it is already perfect, set "corrected" to the same text and explanation to something encouraging like "Perfect — that's exactly how a native speaker would say it."
+Include "correction" ONLY when the parent's Spanish has a real mistake or is genuinely unnatural. If it is fine, OMIT the field entirely — do not invent something to fill the slot, and do not send back their own words as a "correction".
+"original" must be the parent's words and "corrected" must be a rewrite of THOSE WORDS. Never put your reply, an example, a list, or the answer to their question in "corrected" — that field is their sentence, fixed, and nothing else.
 Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
@@ -179,6 +197,7 @@ export async function POST(req: Request) {
       messages: [
         { role: "system", content: systemPrompt },
         ...history,
+        { role: "system", content: REGISTER_REMINDER },
         { role: "user", content: message },
       ],
       response_format: { type: "json_object" },

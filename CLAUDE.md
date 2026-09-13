@@ -116,6 +116,19 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
+- **The tú rule has a runtime guard, not just a prompt.** `lib/voseo.ts`
+  blocks a correction that would put voseo in the learner's mouth their own
+  message didn't have. Prompts alone failed twice: a thread full of the
+  assistant's earlier voseo out-votes a rule at the top of the system prompt,
+  so `/api/chat` also repeats `REGISTER_REMINDER` as a system message AFTER the
+  history, which explicitly disowns the thread's own style. The blocklist is
+  whole-word and deliberately NOT morphological — "-ás" is future-tense tú
+  ("podrás", "serás") as often as it is voseo.
+- **Corrections are conditional.** The prompt used to demand one for every
+  message "even if their Spanish is perfect"; with nothing to correct the model
+  filled the field with its own reply. Now: omit the field unless there's a
+  real mistake, and "corrected" must be a rewrite of the learner's words and
+  nothing else.
 - **Never name her Spanish after the dialect in a prompt.** "Use natural
   Argentine (Rioplatense) Spanish" outranked the tú bullet under it and made
   `/api/chat` speak voseo AND rewrite the learner's correct tú into it
