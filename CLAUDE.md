@@ -116,13 +116,18 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
-- **Corrections never mention accents, punctuation or capitalisation** — typed
-  OR spoken. Bart types on a phone with no accent layout, so "Que decimos?" is
-  not a mistake he can act on, and flagging it burns the one correction a
-  message gets. `shouldShowCorrection` (`lib/corrections.ts`) is the gate the
-  chat client uses; `/api/analyze` already had the same rule for spoken turns.
-  Known cost, accepted: "hablo"/"habló" and "esta"/"está" stop being flagged,
-  because from text alone they're indistinguishable from a missing accent.
+- **Accents are never corrected, and are inferred from context instead.** Bart
+  types on a phone with no accent layout, so they're absent from everything he
+  writes; prompts on `/api/chat` and `/api/analyze` both say to take the
+  obvious reading ("Que decimos ?" → "¿Qué decimos?") and answer that, rather
+  than flag it or ask which he meant. `shouldShowCorrection`
+  (`lib/corrections.ts`) enforces it in code, because the prompt alone is not
+  trusted here.
+  **Tense and person still get caught — in VOICE mode.** Spoken turns are
+  judged on grammar, and "hablo"/"habló" are genuinely different words when
+  said aloud, so `/api/analyze` reports those. That is the deliberate division:
+  typing loses the distinction and says nothing about it, speaking keeps it and
+  is where it's taught.
 - **The tú rule has a runtime guard, not just a prompt.** `lib/voseo.ts`
   blocks a correction that would put voseo in the learner's mouth their own
   message didn't have. Prompts alone failed twice: a thread full of the

@@ -73,8 +73,9 @@ function buildSystemPrompt(): string {
   return `You analyze the transcript of a Spanish practice conversation. The learner ("user" turns) is an English-speaking parent at B1 level, learning Argentine Spanish in the tú register (NOT voseo). The "assistant" turns are the AI partner — never analyze those; they are context only.
 
 Each turn is marked SPOKEN or TYPED. That distinction is binding:
-- SPOKEN turns are speech-to-text output. Their spelling is the transcriber's, not the learner's, so NEVER report anything orthographic about them — no missing or wrong accents, no punctuation, no capitalisation, no spelling. Judge only grammar, word choice and structure. Mis-heard words and filler are transcription noise, not errors.
-- TYPED turns were written by the learner, so orthography is fair game — but even there, prefer a substantive grammar or usage point over an accent unless the accent changes the word's meaning or tense (e.g. hablo/habló).
+- SPOKEN turns are speech-to-text output. Their spelling is the transcriber's, not the learner's, so NEVER report anything orthographic about them — no missing or wrong accents, no punctuation, no capitalisation, no spelling. Judge grammar, word choice and structure. Mis-heard words and filler are transcription noise, not errors.
+  Tense and person ARE fair game on a spoken turn even where writing would have marked them with an accent: the learner SAID it, so "hablo" and "habló" are two different words they pronounced differently, and the wrong one is a real grammar error worth reporting. This is where those get caught — see the typed rule below.
+- TYPED turns were written on a phone with no accent layout, so accents and Spanish punctuation are missing from all of them. Read them with context and take the obvious reading ("Que decimos ?" is "¿Qué decimos?", "esta bien" is "está bien"). NEVER report a missing or wrong accent, punctuation or capitalisation on a typed turn — not even when the accent would change the tense, because you can tell which one they meant from the context and they cannot type it either way. Judge grammar, word choice and structure, exactly as for spoken turns.
 
 Produce at most ${MAX_OBSERVATIONS} observations, ordered most useful first. Prefer PATTERNS (something that happened 2+ times) over one-off slips.
 
