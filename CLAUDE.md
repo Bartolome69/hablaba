@@ -116,6 +116,13 @@ inside conversations (`/app/charla/[id]`). The short version:
   cannot speak. If her voice ever changes it must change to another id valid on
   BOTH engines: alloy, ash, ballad, coral, echo, sage, shimmer, verse, marin,
   cedar.
+- **Corrections never mention accents, punctuation or capitalisation** — typed
+  OR spoken. Bart types on a phone with no accent layout, so "Que decimos?" is
+  not a mistake he can act on, and flagging it burns the one correction a
+  message gets. `shouldShowCorrection` (`lib/corrections.ts`) is the gate the
+  chat client uses; `/api/analyze` already had the same rule for spoken turns.
+  Known cost, accepted: "hablo"/"habló" and "esta"/"está" stop being flagged,
+  because from text alone they're indistinguishable from a missing accent.
 - **The tú rule has a runtime guard, not just a prompt.** `lib/voseo.ts`
   blocks a correction that would put voseo in the learner's mouth their own
   message didn't have. Prompts alone failed twice: a thread full of the

@@ -14,7 +14,7 @@ import { toast } from "sonner"
 import type { Correction } from "@/lib/types"
 import { extractReply } from "@/lib/utils"
 import { getProfile } from "@/lib/profile/store"
-import { correctionIntroducesVoseo } from "@/lib/voseo"
+import { shouldShowCorrection } from "@/lib/corrections"
 import { listTurns, nextOrdinal, saveTurn } from "./store"
 import type { ConversationTurn } from "./types"
 
@@ -194,16 +194,9 @@ export function useConversation(
         onAssistantTurnRef.current?.(botTurn)
 
         // Corrections attach to the user's turn, which is where they're read.
-        //
-        // A correction that introduces voseo is dropped rather than shown: the
-        // grammar is tú, so "me pones" → "me ponés" marks a right answer wrong
-        // and teaches the opposite of the rule. The prompt already forbids it;
-        // this is the guard for when the model does it anyway, which it has.
-        if (
-          data.correction &&
-          data.correction.corrected !== data.correction.original &&
-          !correctionIntroducesVoseo(data.correction)
-        ) {
+        // shouldShowCorrection is the gate (lib/corrections.ts): it drops
+        // no-ops, anything that would teach voseo, and accent-only "fixes".
+        if (shouldShowCorrection(data.correction)) {
           persist({ ...userTurn, correction: data.correction })
         }
       } catch (err) {
