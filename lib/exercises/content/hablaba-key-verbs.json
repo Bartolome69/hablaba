@@ -1,0 +1,215 @@
+{
+  "id": "hablaba-key-verbs",
+  "title": "Verbos Clave: Practice",
+  "description": "Authored B1/B2 practice set for five workhorse verbs a parent reaches for daily: enfrentar (face), averiguar (find out), aprovechar (make the most of), superar (overcome/exceed) and alcanzar (reach/be enough). Each verb is drilled across its different senses so it becomes usable in conversation, not just recognisable.",
+  "topicIds": ["key-verbs"],
+  "ingestedAt": "2026-09-19",
+  "lessons": [
+    {
+      "topicId": "key-verbs",
+      "summary": "Five verbs that do a lot of work in adult conversation, each with more than one job. ENFRENTAR = to face something hard: 'enfrentar los berrinches'; reflexive with a, 'enfrentarse a un problema'. AVERIGUAR = to find out by asking or checking (not saber, which is already knowing, and not conocer): 'Voy a averiguar a qué hora abre.' APROVECHAR = to make the most of, with a direct object and NO preposition: 'aprovechar la siesta', 'aprovecho para ducharme', 'aprovechando que duerme...'. The reflexive aprovecharse DE means to take unfair advantage of someone, a different verb in practice. SUPERAR = to overcome ('superó el miedo al agua'), to exceed ('superó mis expectativas'), to get over ('ya lo superé'); superarse = to outdo yourself. ALCANZAR = to reach ('no alcanza el estante'), to catch up with someone ('te alcanzo en la plaza'), alcanzar a + infinitive = to manage in time ('no alcancé a verlo'), and the gustar-style 'no me alcanza' = it isn't enough (time, money, patience).",
+      "examples": [
+        { "spanish": "No sé cómo enfrentar los berrinches todavía.", "english": "I still don't know how to deal with the tantrums.", "note": "enfrentar + the hard thing" },
+        { "spanish": "Voy a averiguar si la guardería tiene lugar.", "english": "I'm going to find out if the nursery has a spot.", "note": "averiguar = find out, not saber" },
+        { "spanish": "Aprovecho la siesta para ducharme.", "english": "I use nap time to take a shower.", "note": "aprovechar + direct object, no de" },
+        { "spanish": "Por fin superamos las noches sin dormir.", "english": "We finally got past the sleepless nights.", "note": "superar = get past / overcome" },
+        { "spanish": "Hoy no me alcanzó el tiempo para nada.", "english": "Today I didn't have time for anything.", "note": "gustar-style: the time is the subject" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "kv-ch-enfrentar-berrinche",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "No sé cómo ___ los berrinches de la tarde.",
+      "promptEnglish": "I don't know how to deal with the afternoon tantrums.",
+      "options": ["enfrentar", "averiguar", "alcanzar"],
+      "answers": ["enfrentar"],
+      "explanation": "Facing something hard is enfrentar: enfrentar un problema, un berrinche, una etapa.",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-cl-enfrentarse",
+      "topicId": "key-verbs",
+      "type": "cloze",
+      "prompt": "Mañana me enfrento ___ mi primera mañana solo con la beba. (preposición)",
+      "promptEnglish": "Tomorrow I face my first morning alone with the baby.",
+      "answers": ["a"],
+      "explanation": "The reflexive form takes a: enfrentarse A un reto, A un problema.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-enfrentar-evitar",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Prefiero ___ el tema ahora y no dejarlo crecer.",
+      "promptEnglish": "I'd rather face the issue now and not let it grow.",
+      "options": ["enfrentar", "evitar", "esconder"],
+      "answers": ["enfrentar"],
+      "explanation": "Enfrentar is the opposite of avoiding: you face the issue head on.",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-ch-averiguar-saber",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Voy a ___ a qué hora abre la guardería.",
+      "promptEnglish": "I'm going to find out what time the nursery opens.",
+      "options": ["averiguar", "saber", "conocer"],
+      "answers": ["averiguar"],
+      "explanation": "Averiguar is the ACT of finding out (asking, checking). Saber is already knowing; conocer is being familiar with.",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-cl-averiguaste",
+      "topicId": "key-verbs",
+      "type": "cloze",
+      "prompt": "¿Ya ___ cuánto cuesta la clase de natación? (averiguar, pretérito, tú)",
+      "promptEnglish": "Did you find out how much the swimming class costs?",
+      "answers": ["averiguaste"],
+      "explanation": "Averiguar is regular in the preterite: averiguaste. A very natural checking-in question between parents.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-averiguar-enterarse",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Me ___ ayer de que cierran el parque. Ahora tengo que ___ adónde ir.",
+      "promptEnglish": "I heard yesterday that they're closing the park. Now I have to find out where to go.",
+      "options": ["enteré … averiguar", "averigüé … enterarme", "supe … conocer"],
+      "answers": ["enteré … averiguar"],
+      "explanation": "Enterarse = news reaches you. Averiguar = you go and dig the answer out yourself.",
+      "difficulty": 3
+    },
+    {
+      "id": "kv-ch-aprovechar-siesta",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "___ la siesta para adelantar el trabajo.",
+      "promptEnglish": "I make the most of nap time to get ahead on work.",
+      "options": ["Aprovecho", "Aprovecho de", "Me aprovecho"],
+      "answers": ["Aprovecho"],
+      "explanation": "Aprovechar takes a direct object with no preposition: aprovecho la siesta. «Aprovechar de» is the classic slip.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-cl-aprovechando",
+      "topicId": "key-verbs",
+      "type": "cloze",
+      "prompt": "___ que duerme, voy a cocinar. (aprovechar, gerundio)",
+      "promptEnglish": "While he's asleep (taking advantage of it), I'm going to cook.",
+      "answers": ["aprovechando"],
+      "explanation": "Aprovechando que + clause is the everyday way to say \"seizing the chance that…\".",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-aprovecharse",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "El vendedor se ___ de que yo no entendía los precios.",
+      "promptEnglish": "The seller took advantage of the fact that I didn't understand the prices.",
+      "options": ["aprovechó", "superó", "alcanzó"],
+      "answers": ["aprovechó"],
+      "explanation": "Reflexive aprovecharse DE = take unfair advantage of someone. Plain aprovechar (no de) is the positive one.",
+      "difficulty": 3
+    },
+    {
+      "id": "kv-ch-aprovecha",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "—Está tranquilo el bebé. —¡___ ahora y date una ducha!",
+      "promptEnglish": "—The baby's calm. —Make the most of it now and take a shower!",
+      "options": ["Aprovecha", "Averigua", "Supera"],
+      "answers": ["Aprovecha"],
+      "explanation": "The tú command aprovecha is how Spanish says \"seize the moment\": ¡aprovecha ahora!",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-ch-superar-miedo",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Teo por fin ___ el miedo al agua.",
+      "promptEnglish": "Teo finally got over his fear of the water.",
+      "options": ["superó", "enfrentó", "alcanzó"],
+      "answers": ["superó"],
+      "explanation": "You enfrentas a fear while it's still there; once it's behind you, lo superaste.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-cl-supera",
+      "topicId": "key-verbs",
+      "type": "cloze",
+      "prompt": "Ser papá ___ todas mis expectativas. (superar, presente)",
+      "promptEnglish": "Being a dad exceeds all my expectations.",
+      "answers": ["supera"],
+      "explanation": "Second sense of superar: to exceed. Superar las expectativas, superar el límite.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-superarse",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Cada semana dice una palabra nueva: este niño se ___ solo.",
+      "promptEnglish": "Every week he says a new word: this kid keeps outdoing himself.",
+      "options": ["supera", "averigua", "enfrenta"],
+      "answers": ["supera"],
+      "explanation": "Reflexive superarse = to outdo yourself, to keep improving.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-superar-etapa",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Fue una etapa dura, pero ya la ___.",
+      "promptEnglish": "It was a rough phase, but we're past it now.",
+      "options": ["superamos", "alcanzamos", "aprovechamos"],
+      "answers": ["superamos"],
+      "explanation": "Getting past a rough patch is superar: ya lo superé, ya la superamos.",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-ch-alcanzar-estante",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Ya ___ el estante de los juguetes: hay que subir todo.",
+      "promptEnglish": "He can already reach the toy shelf: everything has to go higher.",
+      "options": ["alcanza", "supera", "averigua"],
+      "answers": ["alcanza"],
+      "explanation": "First sense of alcanzar: to physically reach something.",
+      "difficulty": 1
+    },
+    {
+      "id": "kv-cl-mealcanza",
+      "topicId": "key-verbs",
+      "type": "cloze",
+      "prompt": "Con un bebé, no me ___ el día para todo. (alcanzar, presente)",
+      "promptEnglish": "With a baby, the day isn't long enough for everything.",
+      "answers": ["alcanza"],
+      "explanation": "Gustar-style alcanzar: the day is the subject and you are me. No me alcanza el tiempo, no nos alcanza la plata.",
+      "difficulty": 2
+    },
+    {
+      "id": "kv-ch-alcanzar-a",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "No ___ a ver su primer paso: estaba en la cocina.",
+      "promptEnglish": "I didn't manage to see his first step: I was in the kitchen.",
+      "options": ["alcancé", "superé", "aproveché"],
+      "answers": ["alcancé"],
+      "explanation": "Alcanzar a + infinitive = to manage (in time) to do something: no alcancé a verlo.",
+      "difficulty": 3
+    },
+    {
+      "id": "kv-ch-tealcanzo",
+      "topicId": "key-verbs",
+      "type": "choice",
+      "prompt": "Adelántate con el cochecito, ahora te ___.",
+      "promptEnglish": "Go ahead with the stroller, I'll catch up with you in a minute.",
+      "options": ["alcanzo", "averiguo", "enfrento"],
+      "answers": ["alcanzo"],
+      "explanation": "Alcanzar a alguien = to catch up with someone: te alcanzo en la plaza.",
+      "difficulty": 2
+    }
+  ]
+}

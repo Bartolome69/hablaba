@@ -823,6 +823,7 @@ const GRAMMAR_ICONS: Record<string, IconName> = {
   "muy-vs-mucho": "onda",
   "si-clauses": "intercambio",
   "imperfect-subjunctive": "luna",
+  "key-verbs": "llave",
 }
 
 export function grammarIcon(id: string): IconName {

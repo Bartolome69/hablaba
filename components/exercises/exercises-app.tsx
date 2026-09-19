@@ -13,8 +13,10 @@ import { DuoIcon, grammarIcon } from "@/components/icons"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
+import { practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
 import { getTopic } from "@/lib/exercises/taxonomy"
+import { addPhrase } from "@/lib/phrases/store"
 import type { ExerciseItem, GrammarArea, MasteryBand, TopicMastery } from "@/lib/exercises/types"
 
 const SESSION_SIZE = 10
@@ -344,7 +346,7 @@ function Quiz({
       </div>
 
       {done ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-[22px] text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-[22px] py-6 text-center">
           <DuoIcon name="logrado" size={44} className="text-green" />
           <p className="font-serif text-5xl text-ink">
             {correctCount}/{items.length}
@@ -352,9 +354,10 @@ function Quiz({
           <p className="text-sm text-ink-muted">
             {pct}% correctas{pct === 100 ? ". ¡Perfecto!" : ""}
           </p>
+          <PracticeBridge topicIds={[...new Set(items.map((i) => i.topicId))]} />
           <button
             onClick={onExit}
-            className="clay-green mt-4 h-14 rounded-full px-8 text-base font-semibold text-cream"
+            className="clay-green mt-2 h-14 rounded-full px-8 text-base font-semibold text-cream"
           >
             Volver a los temas
           </button>
@@ -501,6 +504,52 @@ function Quiz({
             )}
           </div>
         </>
+      )}
+    </div>
+  )
+}
+
+// The results-screen bridge into the speaking loop: topics with a practice
+// set let the learner save conversation-ready phrases straight into the
+// library. The seeded charla does the prompting from there (see
+// lib/exercises/practice-phrases.ts).
+function PracticeBridge({ topicIds }: { topicIds: string[] }) {
+  const [savedCount, setSavedCount] = useState<number | null>(null)
+  const phrases = useMemo(() => practicePhrasesForTopics(topicIds), [topicIds])
+  if (phrases.length === 0) return null
+
+  const save = () => {
+    // addPhrase dedupes by normalized text, so re-saving after a repeat quiz
+    // only adds what the library doesn't already hold.
+    const added = phrases.filter(
+      (p) => addPhrase({ text: p.text, translation: p.translation, source: "generated" }) !== null,
+    ).length
+    setSavedCount(added)
+  }
+
+  return (
+    <div className="clay-static mt-3 w-full rounded-[22px] p-5 text-left">
+      <p className="smallcaps text-ink-faint">Llevalo a la conversación</p>
+      {savedCount === null ? (
+        <>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+            Guardá {phrases.length} frases con estos verbos en tu biblioteca. Tu partner las va
+            a ir metiendo en las próximas charlas hasta que salgan solas.
+          </p>
+          <button
+            onClick={save}
+            className="press-chip mt-3.5 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
+          >
+            <DuoIcon name="frases" size={15} />
+            Guardar las frases
+          </button>
+        </>
+      ) : (
+        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+          {savedCount > 0
+            ? `${savedCount === 1 ? "1 frase nueva" : `${savedCount} frases nuevas`} en tu biblioteca. Aparecen en Frases y en tu próxima charla.`
+            : "Ya las tenías todas en tu biblioteca. Aparecen en tu próxima charla."}
+        </p>
       )}
     </div>
   )
