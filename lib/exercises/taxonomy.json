@@ -214,5 +214,14 @@
     "cefr": "B2",
     "area": "mood",
     "blurb": "The -ra forms from the ellos preterite (quisiera, fuera, tuviera) for the past, politeness and hypotheticals."
+  },
+  {
+    "id": "key-verbs",
+    "title": "Key Verbs, Many Uses",
+    "spanish": "Verbos clave",
+    "emoji": "🗝️",
+    "cefr": "B1",
+    "area": "verbs",
+    "blurb": "Five workhorse verbs (enfrentar, averiguar, aprovechar, superar, alcanzar) and the different job each one does in a sentence."
   }
 ]
