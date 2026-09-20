@@ -56,7 +56,7 @@ export function normalizeWord(text: string): string {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
-    .replace(/[¡!¿?.,;:'"«»]/g, "")
+    .replace(/[¡!¿?.,;:'"«»“”‘’]/g, "")
     .replace(/\s+/g, " ")
     .trim()
 }

@@ -41,10 +41,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /**
  * Split a long lesson summary into readable paragraphs. Splits only after a
  * full stop followed by a capital — a lossless split, so quoted Spanish
- * («¡Esta sopa está buena!») can never be mangled.
+ * (“¡Esta sopa está buena!”) can never be mangled.
  */
 function paragraphs(summary: string): string[] {
-  const sentences = summary.split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¡¿«])/)
+  const sentences = summary.split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ¡¿«“])/)
   const paraCount = Math.min(3, Math.max(1, Math.ceil(sentences.length / 4)))
   const perPara = Math.ceil(sentences.length / paraCount)
   const out: string[] = []

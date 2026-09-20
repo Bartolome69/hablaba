@@ -130,7 +130,7 @@ export function SessionReview({
             )}
             {obs.detail.original && !obs.detail.corrected && (
               <p className="mb-1 font-serif text-[17px] leading-[1.4] text-ink">
-                «{obs.detail.original}»
+                “{obs.detail.original}”
               </p>
             )}
             {obs.detail.note && (

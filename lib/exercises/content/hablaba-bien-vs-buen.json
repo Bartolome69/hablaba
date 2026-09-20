@@ -13,7 +13,7 @@
         { "spanish": "Es una buena idea.", "english": "It's a good idea.", "note": "bueno agreeing with a feminine noun" },
         { "spanish": "Eres un buen padre.", "english": "You're a good dad.", "note": "buen before a masculine singular noun" },
         { "spanish": "¿Estás bien? Te veo cansado.", "english": "Are you OK? You look tired.", "note": "estar bien = state" },
-        { "spanish": "Hablas español mejor que antes.", "english": "You speak Spanish better than before.", "note": "mejor, never «más bien»" }
+        { "spanish": "Hablas español mejor que antes.", "english": "You speak Spanish better than before.", "note": "mejor, never “más bien”" }
       ]
     }
   ],
@@ -79,7 +79,7 @@
       "promptEnglish": "—How are you? —I'm fine, thanks.",
       "options": ["bien", "bueno"],
       "answers": ["bien"],
-      "explanation": "Estar bien = to be well/fine. «Estoy bueno» means something quite different: that you find yourself attractive.",
+      "explanation": "Estar bien = to be well/fine. “Estoy bueno” means something quite different: that you find yourself attractive.",
       "difficulty": 1
     },
     {
@@ -122,7 +122,7 @@
       "promptEnglish": "You speak Spanish better than last year.",
       "options": ["más bien", "mejor", "más bueno"],
       "answers": ["mejor"],
-      "explanation": "The comparative of bien is mejor: «más bien» and «más bueno» are the classic traps.",
+      "explanation": "The comparative of bien is mejor: “más bien” and “más bueno” are the classic traps.",
       "difficulty": 2
     },
     {
@@ -132,7 +132,7 @@
       "prompt": "Este café es ___ que el del kiosco. (comparativo de bueno)",
       "promptEnglish": "This coffee is better than the one from the kiosk.",
       "answers": ["mejor"],
-      "explanation": "Bueno also uses mejor as its comparative, never «más bueno» in standard speech.",
+      "explanation": "Bueno also uses mejor as its comparative, never “más bueno” in standard speech.",
       "difficulty": 2
     },
     {

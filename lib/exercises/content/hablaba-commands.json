@@ -7,7 +7,7 @@
   "lessons": [
     {
       "topicId": "commands",
-      "summary": "Affirmative tú commands look like the él/ella present: habla, come, abre: 'Habla más despacio', 'Abre la boquita'. Eight verbs go rogue and are worth knowing cold: pon (poner), ten (tener), ven (venir), sal (salir), haz (hacer), di (decir), ve (ir), sé (ser): 'Ven acá', 'Ten cuidado', 'Dame la mano' (da + me). NEGATIVE tú commands switch to the present subjunctive: no hables, no comas, no toques, no vayas (never «no habla»). Pronouns follow a strict geography: they ATTACH to the end of an affirmative command (dámelo, siéntate, lávate las manos, often adding an accent to keep the stress) but go BEFORE a negative one (no me lo des, no te levantes). Usted commands use the subjunctive in both directions: hable / no hable, pase / no pase: the polite register for the doctor's office or a stranger. Around the house with a toddler this is bread and butter: ven, dame, mira, ten cuidado, no toques, siéntate.",
+      "summary": "Affirmative tú commands look like the él/ella present: habla, come, abre: 'Habla más despacio', 'Abre la boquita'. Eight verbs go rogue and are worth knowing cold: pon (poner), ten (tener), ven (venir), sal (salir), haz (hacer), di (decir), ve (ir), sé (ser): 'Ven acá', 'Ten cuidado', 'Dame la mano' (da + me). NEGATIVE tú commands switch to the present subjunctive: no hables, no comas, no toques, no vayas (never “no habla”). Pronouns follow a strict geography: they ATTACH to the end of an affirmative command (dámelo, siéntate, lávate las manos, often adding an accent to keep the stress) but go BEFORE a negative one (no me lo des, no te levantes). Usted commands use the subjunctive in both directions: hable / no hable, pase / no pase: the polite register for the doctor's office or a stranger. Around the house with a toddler this is bread and butter: ven, dame, mira, ten cuidado, no toques, siéntate.",
       "examples": [
         { "spanish": "Ven acá, mi amor.", "english": "Come here, my love.", "note": "irregular tú command: venir → ven" },
         { "spanish": "Dame la manita.", "english": "Give me your little hand.", "note": "da + me attached" },
@@ -47,7 +47,7 @@
       "promptEnglish": "Don't touch that, it's hot.",
       "options": ["toca", "toques", "tocas"],
       "answers": ["toques"],
-      "explanation": "Negative tú commands use the subjunctive: no toques. «No toca» is the classic slip.",
+      "explanation": "Negative tú commands use the subjunctive: no toques. “No toca” is the classic slip.",
       "difficulty": 1
     },
     {
@@ -128,7 +128,7 @@
       "id": "cm-ch-usted",
       "topicId": "commands",
       "type": "choice",
-      "prompt": "En la sala de espera: «___ por aquí, señora.»",
+      "prompt": "En la sala de espera: “___ por aquí, señora.”",
       "promptEnglish": "In the waiting room: \"Come through this way, madam.\"",
       "options": ["Pasa", "Pase", "Pasás"],
       "answers": ["Pase"],
@@ -153,7 +153,7 @@
       "prompt": "___ las manos antes de comer. (lavarse, mandato tú)",
       "promptEnglish": "Wash your hands before eating.",
       "answers": ["lávate", "lavate"],
-      "explanation": "Reflexive attaches to the affirmative command: lava + te → lávate. Note it's las manos, not «tus manos».",
+      "explanation": "Reflexive attaches to the affirmative command: lava + te → lávate. Note it's las manos, not “tus manos”.",
       "difficulty": 2
     },
     {

@@ -39,12 +39,12 @@ export function CorrectionCards({ corrections }: { corrections: VoiceObservation
                 className="clay-card w-full rounded-[18px] px-4 py-3.5 text-left"
               >
                 <p className="font-serif text-[17px] leading-[1.4] text-ink">
-                  «{c.detail.original}»
+                  “{c.detail.original}”
                 </p>
                 {open ? (
                   <div className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5">
                     <p className="text-sm font-semibold text-terracotta-ink">
-                      Mejor: «{c.detail.corrected?.trim().replace(/\.$/, "")}».
+                      Mejor: “{c.detail.corrected?.trim().replace(/\.$/, "")}”.
                     </p>
                     {c.detail.note && (
                       <p className="mt-1 text-xs leading-relaxed text-ink-muted text-pretty">

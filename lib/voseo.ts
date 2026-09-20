@@ -29,7 +29,7 @@ const VOSEO_FORMS = [
 ]
 
 const normalize = (s: string) =>
-  s.toLowerCase().replace(/[¡!¿?.,;:'"«»()]/g, " ").replace(/\s+/g, " ").trim()
+  s.toLowerCase().replace(/[¡!¿?.,;:'"«»“”‘’()]/g, " ").replace(/\s+/g, " ").trim()
 
 /** Whole-word match, so "vos" doesn't fire on "vosotros" or "nosotros". */
 export function containsVoseo(text: string | undefined | null): boolean {

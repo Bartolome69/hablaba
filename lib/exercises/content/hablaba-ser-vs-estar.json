@@ -90,7 +90,7 @@
       "promptEnglish": "I'm really tired today. It was a long night.",
       "options": ["soy", "estoy"],
       "answers": ["estoy"],
-      "explanation": "Tiredness is a state, so estar. «Soy cansada» would claim it as a permanent trait.",
+      "explanation": "Tiredness is a state, so estar. “Soy cansada” would claim it as a permanent trait.",
       "difficulty": 1
     },
     {

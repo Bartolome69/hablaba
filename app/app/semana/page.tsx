@@ -173,7 +173,7 @@ export default function WeeklyReportPage() {
                   <li key={i} className="flex items-start gap-2.5 rounded-[16px] bg-sunken px-3.5 py-2.5">
                     <DuoIcon name="repasar" size={14} className="mt-0.5 flex-shrink-0 text-ink-soft" detail="#8A9188" />
                     <p className="text-sm leading-relaxed text-ink">
-                      <span className="font-serif text-[16px]">«{r.word}»</span>
+                      <span className="font-serif text-[16px]">“{r.word}”</span>
                       {r.alternatives && (
                         <span className="text-ink-muted">: probá {r.alternatives}</span>
                       )}

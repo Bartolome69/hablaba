@@ -121,7 +121,7 @@ Key characteristics:
 - **One terracotta accent per screen.** Terracotta is a spot colour for the
   state that matters (a correction, a new phrase, the streak, the active
   moment chip) — never decoration. Never red, never an error icon; a wrong
-  answer gets `terracotta-tint` and a "Mejor: «…»" recast.
+  answer gets `terracotta-tint` and a "Mejor: “…”" recast.
 - **Serif carries the Spanish.** Newsreader for screen titles, section heads,
   phrases and every conversational sentence. Outfit for UI: row titles,
   metadata, chips, nav labels, small-caps labels.
