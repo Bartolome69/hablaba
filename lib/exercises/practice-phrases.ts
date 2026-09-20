@@ -15,6 +15,32 @@ export interface PracticePhrase {
 }
 
 export const PRACTICE_PHRASES: Record<string, PracticePhrase[]> = {
+  "hace-time-expressions": [
+    {
+      text: "Hace dos años que vivimos aquí.",
+      translation: "We've lived here for two years.",
+    },
+    {
+      text: "Se despertó hace una hora.",
+      translation: "He woke up an hour ago.",
+    },
+    {
+      text: "Hacía mucho que no salíamos los dos.",
+      translation: "We hadn't been out together in ages.",
+    },
+    {
+      text: "Hace tres días que no duerme bien.",
+      translation: "He hasn't slept well for three days.",
+    },
+    {
+      text: "¿Hace mucho que esperas?",
+      translation: "Have you been waiting long?",
+    },
+    {
+      text: "Estudio español desde hace un año.",
+      translation: "I've been learning Spanish for a year.",
+    },
+  ],
   "key-verbs": [
     {
       text: "Quiero aprovechar la siesta para descansar un rato.",

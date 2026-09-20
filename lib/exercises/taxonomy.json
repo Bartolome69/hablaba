@@ -216,6 +216,15 @@
     "blurb": "The -ra forms from the ellos preterite (quisiera, fuera, tuviera) for the past, politeness and hypotheticals."
   },
   {
+    "id": "hace-time-expressions",
+    "title": "Hace + Time",
+    "spanish": "Hace y hacía con tiempo",
+    "emoji": "⏳",
+    "cefr": "B1",
+    "area": "tenses",
+    "blurb": "The hacer time formulas: hace dos años que vivo aquí (for), llegamos hace una hora (ago), hacía meses que no salíamos (had been), desde hace."
+  },
+  {
     "id": "key-verbs",
     "title": "Key Verbs, Many Uses",
     "spanish": "Verbos clave",

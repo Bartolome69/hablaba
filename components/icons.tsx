@@ -824,6 +824,7 @@ const GRAMMAR_ICONS: Record<string, IconName> = {
   "si-clauses": "intercambio",
   "imperfect-subjunctive": "luna",
   "key-verbs": "llave",
+  "hace-time-expressions": "tiempo",
 }
 
 export function grammarIcon(id: string): IconName {

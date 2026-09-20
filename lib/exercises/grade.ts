@@ -30,6 +30,10 @@ export function acceptedAnswers(item: ExerciseItem): string[] {
 export function gradeAnswer(item: ExerciseItem, given: string): boolean {
   const answers = acceptedAnswers(item)
   if (answers.length === 0) return false
+  // A choice tap selects an exact displayed option, so accents count — it's
+  // the one surface that can test hacia vs hacía. Accent-stripping below is
+  // for TYPED answers, where the phone keyboard has no accent layout.
+  if (item.type === "choice") return answers.includes(given)
   const g = normalizeAnswer(given)
   return answers.some((a) => normalizeAnswer(a) === g)
 }
