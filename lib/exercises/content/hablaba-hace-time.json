@@ -1,0 +1,183 @@
+{
+  "id": "hablaba-hace-time",
+  "title": "Hace y Hacía con Tiempo: Practice",
+  "description": "Authored B1 practice set for the hacer time formulas: hace + time + que + present (how long something has been true), hace + time as \"ago\", hacía + time + que + imperfect (had been), desde vs desde hace, the ¿cuánto hace que...? question, and the hacia/hacía accent trap.",
+  "topicIds": ["hace-time-expressions"],
+  "ingestedAt": "2026-09-20",
+  "lessons": [
+    {
+      "topicId": "hace-time-expressions",
+      "summary": "Spanish measures time with hacer, and the formula changes meaning with the tense around it. HACE + time + QUE + PRESENT = how long something has been true and still is: 'Hace dos años que vivimos aquí' (we have lived here for two years). English says \"have lived\"; Spanish uses the simple present, never the perfect. Flip the order with desde hace: 'Vivimos aquí desde hace dos años.' Watch the desde split: DESDE takes a point in time ('desde enero', 'desde 2024'), DESDE HACE takes a duration ('desde hace dos años'). HACE + time WITHOUT que, next to a completed action, means \"ago\": 'Llegamos hace una hora.' Move the whole thing to the past and hace becomes HACÍA + time + QUE + IMPERFECT = had been: 'Hacía meses que no salíamos' (we hadn't been out in months). The question form is '¿Cuánto (tiempo) hace que...?': '¿Hace mucho que esperas?'. One spelling trap: hacía (accent) is the verb; hacia (no accent) is the preposition \"towards\", a different word said with different stress.",
+      "examples": [
+        { "spanish": "Hace dos años que vivimos en este barrio.", "english": "We've lived in this neighbourhood for two years.", "note": "hace + time + que + PRESENT" },
+        { "spanish": "Se despertó hace una hora.", "english": "He woke up an hour ago.", "note": "hace + time = ago, no que" },
+        { "spanish": "Hacía meses que no salíamos de noche.", "english": "We hadn't been out at night in months.", "note": "hacía + time + que + IMPERFECT" },
+        { "spanish": "Estudio español desde hace un año.", "english": "I've been learning Spanish for a year.", "note": "desde hace + duration" },
+        { "spanish": "¿Hace mucho que esperas?", "english": "Have you been waiting long?", "note": "the how-long question" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "ht-ch-vivimos-formula",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "___ dos años que vivimos en este barrio.",
+      "promptEnglish": "We've lived in this neighbourhood for two years.",
+      "options": ["Hace", "Hacía", "Desde"],
+      "answers": ["Hace"],
+      "explanation": "Still true now, so hace + time + que + present: hace dos años que vivimos.",
+      "difficulty": 1
+    },
+    {
+      "id": "ht-ch-present-not-perfect",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Hace dos años que ___ aquí.",
+      "promptEnglish": "We have lived here for two years.",
+      "options": ["vivimos", "hemos vivido", "vivíamos"],
+      "answers": ["vivimos"],
+      "explanation": "English says \"have lived\", but after hace...que Spanish uses the simple present: vivimos.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-cl-ago",
+      "topicId": "hace-time-expressions",
+      "type": "cloze",
+      "prompt": "Llegamos al parque ___ una hora. (hace / hacía / desde)",
+      "promptEnglish": "We got to the park an hour ago.",
+      "answers": ["hace"],
+      "explanation": "Next to a completed action and with no que, hace + time means \"ago\": llegamos hace una hora.",
+      "difficulty": 1
+    },
+    {
+      "id": "ht-cl-hacia-meses",
+      "topicId": "hace-time-expressions",
+      "type": "cloze",
+      "prompt": "___ meses que no salíamos de noche. (hace / hacía)",
+      "promptEnglish": "We hadn't been out at night in months.",
+      "answers": ["hacía"],
+      "explanation": "The whole sentence sits in the past (no salíamos), so the formula moves to the imperfect too: hacía + time + que.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-ch-hacia-imperfect",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Hacía semanas que no ___ tan bien.",
+      "promptEnglish": "He hadn't slept this well in weeks.",
+      "options": ["dormía", "durmió", "duerme"],
+      "answers": ["dormía"],
+      "explanation": "Hacía...que pairs with the imperfect: hacía semanas que no dormía.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-ch-desde-hace",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Vivimos aquí ___ dos años.",
+      "promptEnglish": "We've lived here for two years.",
+      "options": ["desde hace", "desde", "hace que"],
+      "answers": ["desde hace"],
+      "explanation": "Dos años is a duration, and durations take desde hace. Same meaning as hace dos años que vivimos, flipped order.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-ch-desde-point",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Estamos en esta casa ___ enero.",
+      "promptEnglish": "We've been in this house since January.",
+      "options": ["desde", "desde hace", "hace"],
+      "answers": ["desde"],
+      "explanation": "Enero is a point in time, not a duration, so plain desde. Desde enero, but desde hace seis meses.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-cl-cuanto-hace",
+      "topicId": "hace-time-expressions",
+      "type": "cloze",
+      "prompt": "¿Cuánto tiempo ___ que esperas? (hacer, presente)",
+      "promptEnglish": "How long have you been waiting?",
+      "answers": ["hace"],
+      "explanation": "The how-long question is ¿Cuánto (tiempo) hace que...? with the present after que.",
+      "difficulty": 1
+    },
+    {
+      "id": "ht-ch-llegue-hace",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "—¿Hace mucho que esperas? —No, llegué ___ cinco minutos.",
+      "promptEnglish": "—Have you been waiting long? —No, I arrived five minutes ago.",
+      "options": ["hace", "hacía", "desde"],
+      "answers": ["hace"],
+      "explanation": "Llegué is a completed action, so hace cinco minutos = five minutes ago.",
+      "difficulty": 1
+    },
+    {
+      "id": "ht-cl-mecia",
+      "topicId": "hace-time-expressions",
+      "type": "cloze",
+      "prompt": "Cuando por fin se durmió, ___ tres horas que lo mecía. (hacer, imperfecto)",
+      "promptEnglish": "When he finally fell asleep, I had been rocking him for three hours.",
+      "answers": ["hacía"],
+      "explanation": "\"Had been rocking\" is the past version of the formula: hacía tres horas que lo mecía.",
+      "difficulty": 3
+    },
+    {
+      "id": "ht-ch-no-duerme",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Hace tres días que no ___ la siesta.",
+      "promptEnglish": "He hasn't napped for three days.",
+      "options": ["duerme", "durmió", "ha dormido"],
+      "answers": ["duerme"],
+      "explanation": "Still true today, so present after hace...que, even in the negative: hace tres días que no duerme.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-ch-hacia-towards",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Caminamos ___ el parque cuando empezó a llover.",
+      "promptEnglish": "We were walking towards the park when it started to rain.",
+      "options": ["hacia", "hacía"],
+      "answers": ["hacia"],
+      "explanation": "No accent: hacia is the preposition \"towards\". With the accent, hacía is the verb (ha-CÍ-a vs HA-cia out loud).",
+      "difficulty": 3
+    },
+    {
+      "id": "ht-ch-hacia-frio",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "___ mucho frío cuando salimos esta mañana.",
+      "promptEnglish": "It was very cold when we went out this morning.",
+      "options": ["Hacía", "Hace", "Hacia"],
+      "answers": ["Hacía"],
+      "explanation": "Past weather as background takes the imperfect of hacer: hacía frío. (Hacia without the accent is \"towards\".)",
+      "difficulty": 1
+    },
+    {
+      "id": "ht-ch-mudamos",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Nos mudamos ___ seis meses.",
+      "promptEnglish": "We moved six months ago.",
+      "options": ["hace", "desde", "desde hace"],
+      "answers": ["hace"],
+      "explanation": "Nos mudamos is a one-off completed event, so hace seis meses = six months ago. Desde hace would need an ongoing verb.",
+      "difficulty": 2
+    },
+    {
+      "id": "ht-ch-hablaba",
+      "topicId": "hace-time-expressions",
+      "type": "choice",
+      "prompt": "Hacía mucho que no ___ con mi mamá tan tranquilo.",
+      "promptEnglish": "I hadn't talked with my mum so calmly in a long time.",
+      "options": ["hablaba", "hablé", "hablo"],
+      "answers": ["hablaba"],
+      "explanation": "After hacía...que the verb stays in the imperfect: hacía mucho que no hablaba.",
+      "difficulty": 2
+    }
+  ]
+}
