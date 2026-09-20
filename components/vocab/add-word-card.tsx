@@ -28,7 +28,7 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
         toast.success(withArticle(outcome.word), { description: outcome.word.english })
         onAdded?.()
       } else {
-        toast.info(`Ya tenías «${outcome.spanish}»`)
+        toast.info(`Ya tenías “${outcome.spanish}”`)
       }
     } catch {
       toast.error("No se pudo traducir la palabra", {

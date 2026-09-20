@@ -114,7 +114,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                 </svg>
                 <div className="flex min-w-0 flex-col gap-0.5">
                   <p className="text-[13px] font-semibold text-terracotta-ink">
-                    {hasImprovement ? "Mejor" : "Así se dice"}: «{stripFullStop(correction.corrected)}».
+                    {hasImprovement ? "Mejor" : "Así se dice"}: “{stripFullStop(correction.corrected)}”.
                   </p>
                   {correction.explanation && (
                     <p className="text-xs leading-[1.4] text-[#96604A]">{correction.explanation}</p>

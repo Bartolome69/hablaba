@@ -146,7 +146,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
       {checked && (
         <div className={`anim-settle mt-4 rounded-[18px] p-4 ${wasCorrect ? "bg-green-tint" : "bg-terracotta-tint"}`}>
           <p className={`text-sm font-semibold ${wasCorrect ? "text-ink" : "text-terracotta-ink"}`}>
-            {wasCorrect ? "¡Eso es!" : `Mejor: «${acceptedAnswers(item)[0]}».`}
+            {wasCorrect ? "¡Eso es!" : `Mejor: “${acceptedAnswers(item)[0]}”.`}
           </p>
           <p className={`mt-1 text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-[#96604A]"}`}>
             {item.explanation}

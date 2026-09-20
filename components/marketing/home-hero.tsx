@@ -118,7 +118,7 @@ function AppPeek() {
             </div>
             <div>
               <p className="font-serif text-[14.5px] leading-snug text-terracotta-ink">
-                Mejor: «el bebé <span className="font-medium">se despertó</span> tres veces»
+                Mejor: “el bebé <span className="font-medium">se despertó</span> tres veces”
               </p>
               <p className="mt-1 text-[12px] leading-relaxed text-terracotta-ink/80">
                 Despertarse is reflexive when someone wakes up.

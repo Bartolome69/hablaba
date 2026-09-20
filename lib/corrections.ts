@@ -15,7 +15,7 @@ function bareWords(text: string): string {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "") // combining accents
-    .replace(/[¡!¿?.,;:'"«»()\-–—]/g, " ")
+    .replace(/[¡!¿?.,;:'"«»“”‘’()\-–—]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
 }

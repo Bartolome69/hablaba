@@ -37,7 +37,7 @@
       "promptEnglish": "If I had more time, I'd study Spanish every day.",
       "options": ["tendría", "tuviera", "tengo"],
       "answers": ["tuviera"],
-      "explanation": "Hypothetical: si + imperfecto de subjuntivo (tuviera) → condicional. «Si tendría» is the famous error.",
+      "explanation": "Hypothetical: si + imperfecto de subjuntivo (tuviera) → condicional. “Si tendría” is the famous error.",
       "difficulty": 2
     },
     {

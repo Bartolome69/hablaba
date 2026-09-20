@@ -470,7 +470,7 @@ function Quiz({
                   )}
                   <div className="flex flex-col gap-1">
                     <p className={`text-sm font-semibold ${wasCorrect ? "text-ink" : "text-terracotta-ink"}`}>
-                      {wasCorrect ? "¡Eso es!" : <>Mejor: «{acceptedAnswers(item)[0]}».</>}
+                      {wasCorrect ? "¡Eso es!" : <>Mejor: “{acceptedAnswers(item)[0]}”.</>}
                     </p>
                     <p className={`text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-[#96604A]"}`}>
                       {item.explanation}
