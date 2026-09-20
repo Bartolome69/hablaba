@@ -74,7 +74,11 @@ Grammar is tú, always — never voseo, never vosotros. ${DIALECT_BLOCK[dialect]
 Phrases must be short enough to say naturally while holding a baby, warm, and varied in structure. Each needs a natural English gloss. Respond with a JSON object: {"phrases": [{"text": "...", "translation": "..."}]}`
 
     const user = isCapture
-      ? `The parent hit a real-life gap — they wanted to say: "${body.capture!.trim().slice(0, 300)}". Give the ONE most natural way to say it (as they would to their baby or about their baby). "translation" = a natural English gloss of your Spanish. Also add "moment": which daily moment the phrase belongs to, chosen from ${Object.entries(
+      ? `The parent hit a real-life gap — they wanted to say: "${body.capture!.trim().slice(0, 300)}". Give the ONE most natural way to say it (as they would to their baby or about their baby). "translation" = a natural English gloss of your Spanish.
+
+If their input is already Spanish (fully or partly), it is a CONSTRUCTION they are trying to learn, not a meaning to paraphrase: keep their verb and construction, correct it minimally if needed, and complete it into one short natural sentence from daily life with a little one. Never swap in a synonymous but different construction (input "Me hace falta" → something like "Me hace falta dormir un poco más", NEVER "Te extraño").
+
+Also add "moment": which daily moment the phrase belongs to, chosen from ${Object.entries(
           MOMENT_DESCRIPTIONS,
         )
           .map(([id, desc]) => `"${id}" (${desc})`)
