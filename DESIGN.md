@@ -172,8 +172,12 @@ generic icon library or reintroduce emoji on app surfaces.
 block means the screen is overcommitted — demote one to a `surface` card.
 
 **The spot-terracotta rule.** Terracotta marks at most one state per screen.
-Progress uses green and cream only (three-segment bars, `#E0D8C9` empty) — no
-amber, no red, anywhere.
+Progress uses green and cream (three-segment bars, `#E0D8C9` empty) — no
+amber, no red, anywhere. One sanctioned exception (Bart, Sep 2026): the
+Práctica mastery bars are colour-graded within the palette — Repasalo
+segments in terracotta (it IS the state that matters), Ahí va in green/55,
+Confiado in full green — so several terracotta bars may appear in the topic
+list at once.
 
 **Everything labelled.** No icon-only mystery buttons in the voice console:
 every control ≥ 56px with a text label under it.
