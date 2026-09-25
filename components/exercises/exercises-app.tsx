@@ -44,6 +44,46 @@ const BAND_SEGMENTS: Record<MasteryBand, number> = {
   confident: 3,
 }
 
+// Colour grading for the mastery bar, inside the palette: Repasalo is the
+// state that matters (terracotta), Ahí va is green still warming up,
+// Confiado is the full green. (Bart asked for the grading, Sep 2026 —
+// mastery bars are the sanctioned exception to one-terracotta-per-screen.)
+const BAND_FILL: Record<MasteryBand, string> = {
+  untested: "",
+  mislearned: "bg-terracotta",
+  learning: "bg-green/55",
+  confident: "bg-green",
+}
+
+type TopicSort = "area" | "flojos" | "olvidados"
+
+const SORT_LABELS: Record<TopicSort, string> = {
+  area: "Por área",
+  flojos: "Más flojos",
+  olvidados: "Sin practicar",
+}
+
+// Weakest first: proven-wrong beats never-tested beats still-learning.
+const BAND_RANK: Record<MasteryBand, number> = {
+  mislearned: 0,
+  untested: 1,
+  learning: 2,
+  confident: 3,
+}
+
+/** "¿Hace cuánto practiqué esto?" — coarse on purpose; days are enough. */
+function timeSince(iso: string | null | undefined): string {
+  if (!iso) return "Nunca"
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+  if (days <= 0) return "Hoy"
+  if (days === 1) return "Ayer"
+  if (days < 7) return `Hace ${days} días`
+  const weeks = Math.floor(days / 7)
+  if (weeks < 5) return weeks === 1 ? "Hace 1 semana" : `Hace ${weeks} semanas`
+  const months = Math.floor(days / 30)
+  return months <= 1 ? "Hace 1 mes" : `Hace ${months} meses`
+}
+
 // Topics group by their taxonomy grammar area — learner-facing Spanish names,
 // ordered from "the verbs themselves" outward.
 const AREA_ORDER: GrammarArea[] = [
@@ -72,6 +112,14 @@ export function ExercisesApp() {
   const covered = useMemo(() => coveredTopics(), [])
   const [view, setView] = useState<View>({ name: "home" })
   const [mastery, setMastery] = useState<Record<string, TopicMastery>>({})
+  const [sort, setSort] = useState<TopicSort>("area")
+
+  const changeSort = (s: TopicSort) => {
+    setSort(s)
+    try {
+      localStorage.setItem("practica_sort", s)
+    } catch {}
+  }
 
   const refreshMastery = () => {
     const m: Record<string, TopicMastery> = {}
@@ -84,6 +132,10 @@ export function ExercisesApp() {
   // localStorage is client-only — read after mount to avoid hydration mismatch
   useEffect(() => {
     refreshMastery()
+    try {
+      const saved = localStorage.getItem("practica_sort") as TopicSort | null
+      if (saved && saved in SORT_LABELS) setSort(saved)
+    } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -151,25 +203,74 @@ export function ExercisesApp() {
         <span className="text-[12.5px] text-ink-soft">{totalQuestions} preguntas</span>
       </div>
 
-      {AREA_ORDER.map((area) => {
-        const group = covered.filter((c) => c.topic.area === area)
-        if (group.length === 0) return null
-        return (
-          <section key={area} className="mt-5">
-            <h3 className="smallcaps px-1 pb-2.5 text-ink-faint">{AREA_NAMES[area]}</h3>
-            <div className="stagger-children space-y-2">
-              {group.map((c) => (
-                <TopicCard
-                  key={c.topic.id}
-                  covered={c}
-                  mastery={mastery[c.topic.id]}
-                  onClick={() => startTopic(c.topic.id, c.topic.title)}
-                />
-              ))}
-            </div>
-          </section>
-        )
-      })}
+      {/* Sort: grouped by area, weakest first, or longest un-practised first. */}
+      <div className="mt-3 flex gap-2">
+        {(Object.keys(SORT_LABELS) as TopicSort[]).map((s) => {
+          const active = s === sort
+          return (
+            <button
+              key={s}
+              onClick={() => changeSort(s)}
+              aria-pressed={active}
+              className={`h-[34px] flex-none rounded-full px-3.5 text-[13px] font-medium transition-transform duration-[120ms] active:translate-y-[2px] ${
+                active ? "bg-green text-cream" : "bg-sunken-2 text-ink"
+              }`}
+              style={{
+                boxShadow: active ? "0 3px 0 var(--hb-green-press)" : "0 2px 0 var(--hb-lip-sunken)",
+              }}
+            >
+              {SORT_LABELS[s]}
+            </button>
+          )
+        })}
+      </div>
+
+      {sort === "area" ? (
+        AREA_ORDER.map((area) => {
+          const group = covered.filter((c) => c.topic.area === area)
+          if (group.length === 0) return null
+          return (
+            <section key={area} className="mt-5">
+              <h3 className="smallcaps px-1 pb-2.5 text-ink-faint">{AREA_NAMES[area]}</h3>
+              <div className="stagger-children space-y-2">
+                {group.map((c) => (
+                  <TopicCard
+                    key={c.topic.id}
+                    covered={c}
+                    mastery={mastery[c.topic.id]}
+                    onClick={() => startTopic(c.topic.id, c.topic.title)}
+                  />
+                ))}
+              </div>
+            </section>
+          )
+        })
+      ) : (
+        <div className="stagger-children mt-4 space-y-2">
+          {[...covered]
+            .sort((a, b) => {
+              const ma = mastery[a.topic.id]
+              const mb = mastery[b.topic.id]
+              if (sort === "flojos") {
+                const byRank =
+                  BAND_RANK[ma?.band ?? "untested"] - BAND_RANK[mb?.band ?? "untested"]
+                if (byRank !== 0) return byRank
+                return (ma?.score ?? 0) - (mb?.score ?? 0)
+              }
+              // olvidados: never-practised first, then oldest attempt first.
+              return (ma?.lastPracticedAt ?? "").localeCompare(mb?.lastPracticedAt ?? "")
+            })
+            .map((c) => (
+              <TopicCard
+                key={c.topic.id}
+                covered={c}
+                mastery={mastery[c.topic.id]}
+                staleness={sort === "olvidados" ? timeSince(mastery[c.topic.id]?.lastPracticedAt) : undefined}
+                onClick={() => startTopic(c.topic.id, c.topic.title)}
+              />
+            ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -177,10 +278,13 @@ export function ExercisesApp() {
 function TopicCard({
   covered,
   mastery,
+  staleness,
   onClick,
 }: {
   covered: CoveredTopic
   mastery?: TopicMastery
+  /** In the Sin practicar sort: "Hace 12 días" / "Nunca" replaces the CEFR line. */
+  staleness?: string
   onClick: () => void
 }) {
   const band: MasteryBand = mastery?.band ?? "untested"
@@ -197,19 +301,25 @@ function TopicCard({
         </p>
       </div>
       <div className="flex flex-none flex-col items-end gap-1.5">
-        <span className="text-[12.5px] text-ink-soft">
-          <span className="font-medium text-ink-faint">{covered.topic.cefr}</span> · {covered.quizCount} P
-        </span>
+        {staleness ? (
+          <span className="text-[12.5px] font-medium text-ink-soft">{staleness}</span>
+        ) : (
+          <span className="text-[12.5px] text-ink-soft">
+            <span className="font-medium text-ink-faint">{covered.topic.cefr}</span> · {covered.quizCount} P
+          </span>
+        )}
         <span className="flex items-center gap-1.5">
           <span className="flex items-center gap-[3px]" aria-hidden>
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
-                className={`h-[5px] w-[9px] rounded-full ${i < filled ? "bg-green" : "bg-segment-empty"}`}
+                className={`h-[5px] w-[9px] rounded-full ${i < filled ? BAND_FILL[band] : "bg-segment-empty"}`}
               />
             ))}
           </span>
-          <span className="text-[11.5px] text-ink-soft">{BAND_LABEL[band]}</span>
+          <span className={`text-[11.5px] ${band === "mislearned" ? "font-medium text-terracotta-ink" : "text-ink-soft"}`}>
+            {BAND_LABEL[band]}
+          </span>
         </span>
       </div>
     </button>
