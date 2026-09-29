@@ -49,7 +49,7 @@ nav is **Today / Charlar / Phrases / Palabras / Exercises**:
 - `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
 - `/app/charla/historial` — Every conversation
 - `/app/speak` — Phrases: capture, the moment pack (a live query over the library), routine browsing with audio
-- `/app/palabras` — Palabras: the vocabulary surface. A tappable body diagram, authored sets (el cuerpo / los animales / la comida), your own words (type English, get the Spanish), and a spaced-repetition review. A deck holds only what's DUE (Leitner ladder, `lib/vocab/schedule.ts`); when nothing is due the screen says "Estás al día" rather than nagging. See `lib/vocab/README.md`
+- `/app/palabras` — Palabras: the vocabulary surface. A tappable body diagram, authored sets (el cuerpo / los animales / la comida), your own words (type English or Spanish; Spanish is kept as-is and glossed), and the Tarjetas flashcard deck: a spaced-repetition review with a real card flip. A deck holds only what's DUE (Leitner ladder, `lib/vocab/schedule.ts`); when nothing is due the screen says "Estás al día" rather than nagging. See `lib/vocab/README.md`
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
 - `/app/practice` and `/app/chat` are **retired** — 301'd to `/app/today` and `/app/charla`. Practice split into Today (the dashboard half) and Charlar (the conversations half); text chat became a conversation thread.
@@ -70,7 +70,7 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/analyze` — Conversation transcript in, tagged observations out (imports the exercises taxonomy for tag validation)
 - `POST /api/analyze/weekly` — Weekly-report narrative + taxonomy tag labels
 - `POST /api/translate` — One turn of Spanish → English (tap-to-translate)
-- `POST /api/vocab/translate` — One English word → the Spanish, with **article and gender as fields** (the part a B1 learner gets wrong), plus an example sentence. The en→es counterpart to the above
+- `POST /api/vocab/translate` — One English word → the Spanish (or a Spanish word, kept as typed and glossed, never swapped for a synonym), with **article and gender as fields** (the part a B1 learner gets wrong), plus an example sentence. The en→es counterpart to the above
 - `POST /api/tts` — Text-to-speech (optional `register=rioplatense`)
 - `POST /api/transcribe` — Speech-to-text (optional `language=auto`)
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.

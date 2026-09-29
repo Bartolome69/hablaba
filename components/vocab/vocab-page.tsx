@@ -12,6 +12,7 @@
 // there's anything to study; the word of the day before that.
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { toast } from "sonner"
 import { AppHeader } from "@/components/home/app-header"
 import { ChipRow } from "@/components/chip-row"
 import { DuoIcon, vocabSetIcon } from "@/components/icons"
@@ -78,6 +79,17 @@ export function VocabPage() {
     ? SETS.cuerpo.words.find((w) => w.id === selectedRegion)
     : undefined
 
+  /** The whole authored set into the deck — each word still climbs the ladder alone. */
+  const addWholeSet = (inSet: Exclude<VocabSetId, "propias">) => {
+    const added = SETS[inSet].words.filter((w) => !saved.has(w.id) && addCatalogWord(w, inSet)).length
+    reload()
+    if (added > 0) {
+      toast.success(`${added} ${added === 1 ? "tarjeta nueva" : "tarjetas nuevas"}`, {
+        description: `${SET_LABELS[inSet]}, lista para repasar.`,
+      })
+    }
+  }
+
   const toggleCatalog = (word: CatalogWord, inSet: VocabSetId) => {
     if (saved.has(word.id)) removeCatalogWord(word.id)
     else addCatalogWord(word, inSet)
@@ -93,7 +105,7 @@ export function VocabPage() {
   if (studying) {
     return (
       <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
-        <AppHeader title="Repaso" />
+        <AppHeader title="Tarjetas" />
         <VocabDeck
           words={studying}
           onExit={() => {
@@ -124,10 +136,10 @@ export function VocabPage() {
         >
           <div className="flex items-center gap-[9px]">
             <DuoIcon name="repasar" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
-            <span className="smallcaps-lg text-green-on-dark">Tu lista</span>
+            <span className="smallcaps-lg text-green-on-dark">Tus tarjetas</span>
           </div>
           <p className="mt-3.5 font-serif text-[26px] leading-tight tracking-[-0.015em] text-cream">
-            Repasá tus palabras
+            Repasá tus tarjetas
           </p>
           <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
             {dueCount} {dueCount === 1 ? "lista para hoy" : "listas para hoy"}
@@ -142,13 +154,13 @@ export function VocabPage() {
         <div className="clay-green-hero rounded-[26px] p-[22px]">
           <div className="flex items-center gap-[9px]">
             <DuoIcon name="logrado" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
-            <span className="smallcaps-lg text-green-on-dark">Tu lista</span>
+            <span className="smallcaps-lg text-green-on-dark">Tus tarjetas</span>
           </div>
           <p className="mt-3.5 font-serif text-[26px] leading-tight tracking-[-0.015em] text-cream">
             Estás al día
           </p>
           <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
-            Tus {mine.length} palabras están descansando. Te las voy trayendo de a poco.
+            Tus {mine.length} tarjetas están descansando. Te las voy trayendo de a poco.
           </span>
           <button
             onClick={() => startStudy(true)}
@@ -262,6 +274,25 @@ export function VocabPage() {
           )}
 
           <p className="mb-3 px-1 text-[13px] text-ink-soft">{SETS[set].blurb}</p>
+          {(() => {
+            const unsaved = SETS[set].words.filter((w) => !saved.has(w.id)).length
+            return unsaved > 0 ? (
+              <button
+                onClick={() => addWholeSet(set)}
+                className="press-chip mb-6 flex w-full items-center justify-center gap-2 rounded-[18px] bg-sunken py-3 text-sm font-medium text-ink"
+              >
+                <DuoIcon name="repasar" size={15} />
+                {unsaved === SETS[set].words.length
+                  ? `Agregar las ${unsaved} a tus tarjetas`
+                  : `Agregar las ${unsaved} que faltan a tus tarjetas`}
+              </button>
+            ) : (
+              <p className="mb-6 flex items-center gap-1.5 px-1 text-[13px] text-ink-soft">
+                <DuoIcon name="logrado" size={14} className="text-green" />
+                Todo el set está en tus tarjetas.
+              </p>
+            )
+          })()}
           {wordsByGroup(SETS[set]).map((group) => (
             <section key={group.id} className="mb-6">
               <h2 className="mb-2.5 px-1 font-serif text-[19px] text-ink">{group.label}</h2>

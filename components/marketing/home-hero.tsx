@@ -94,7 +94,7 @@ function AppPeek() {
       <div className="max-h-[300px] overflow-hidden [mask-image:linear-gradient(180deg,#000_72%,transparent_100%)] sm:max-h-none sm:overflow-visible sm:[mask-image:none]">
         <div
           className="rounded-[30px] bg-surface p-5 sm:p-6"
-          style={{ boxShadow: "inset 0 0 0 1px rgba(30,61,44,.08), 0 3px 0 var(--hb-card-lip)" }}
+          style={{ boxShadow: "inset 0 0 0 1px rgba(30,61,44,.08), 0 3px 0 var(--hb-lip)" }}
         >
           <div className="flex items-center justify-between">
             <p className="smallcaps text-ink-faint">Charla · esta tarde</p>
@@ -129,7 +129,7 @@ function AppPeek() {
           <div className="mt-2.5 flex justify-start">
             <div
               className="max-w-[85%] rounded-[18px] rounded-bl-[6px] bg-background px-4 py-3"
-              style={{ boxShadow: "inset 0 0 0 1px rgba(30,61,44,.07), 0 2px 0 var(--hb-card-lip)" }}
+              style={{ boxShadow: "inset 0 0 0 1px rgba(30,61,44,.07), 0 2px 0 var(--hb-lip)" }}
             >
               <p className="font-serif text-[15.5px] leading-snug text-ink">
                 ¡Qué noche! ¿Y pudiste dormir la siesta con él?

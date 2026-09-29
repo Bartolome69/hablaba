@@ -85,6 +85,13 @@ export function removePhrase(id: string) {
   writeAll(readAll().filter((p) => p.id !== id))
 }
 
+/** Put a removed row back exactly as it was — the "Deshacer" half of removal. */
+export function restorePhrase(phrase: Phrase) {
+  const rows = readAll()
+  if (rows.some((p) => p.id === phrase.id)) return
+  writeAll([phrase, ...rows])
+}
+
 // --- state transitions (the progress model) ---
 
 /** Seeded into a conversation: nueva → practicando. Already-further states stay. */

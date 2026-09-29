@@ -91,28 +91,44 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         />
       </div>
 
+      {/* A real flip: two faces back to back, rotated on Y. Keyed per card so
+          the next one mounts face-up; animating it back would flash its answer.
+          Faces use clay-static, not clay-card: the card's :active press sets
+          transform and would undo the back face's rotation mid-tap. Reduced
+          motion collapses the transition to an instant swap (globals.css). */}
       <button
+        key={index}
         onClick={() => setRevealed((r) => !r)}
-        className="clay-card flex min-h-[240px] w-full flex-col items-center justify-center gap-3 rounded-[26px] px-6 py-8 text-center"
+        aria-label={revealed ? `${back}. ${front}` : `${front}. Tocá para dar vuelta`}
+        className="block w-full [perspective:1200px]"
       >
-        <span className="smallcaps text-ink-faint">
-          {revealed ? "" : direction === "en-es" ? "En español…" : "In English…"}
-        </span>
-        <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink">
-          {revealed ? back : front}
-        </span>
-        {revealed ? (
-          <>
+        <div
+          className={`relative h-[280px] w-full transition-transform duration-[480ms] [transform-style:preserve-3d] ${
+            revealed ? "[transform:rotateY(180deg)]" : ""
+          }`}
+          style={{ transitionTimingFunction: "cubic-bezier(.22,1,.36,1)" }}
+        >
+          <div className="clay-static absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[26px] px-6 py-8 text-center [backface-visibility:hidden]">
+            <span className="smallcaps text-ink-faint">
+              {direction === "en-es" ? "En español…" : "In English…"}
+            </span>
+            <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
+              {front}
+            </span>
+            <span className="text-[12.5px] text-ink-faint">Tocá para dar vuelta</span>
+          </div>
+          <div className="clay-static absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-hidden rounded-[26px] px-6 py-8 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
+              {back}
+            </span>
             <span className="text-[13.5px] text-ink-soft">{front}</span>
             {current.example && (
-              <span className="anim-settle mt-3 max-w-[280px] border-t border-rule pt-3 font-serif text-[15px] leading-[1.4] text-ink-muted">
+              <span className="mt-2 max-w-[280px] border-t border-rule pt-3 font-serif text-[15px] leading-[1.4] text-ink-muted">
                 {current.example}
               </span>
             )}
-          </>
-        ) : (
-          <span className="text-[12.5px] text-ink-faint">Tocá para ver</span>
-        )}
+          </div>
+        </div>
       </button>
 
       {revealed ? (

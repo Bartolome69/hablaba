@@ -82,3 +82,64 @@ export function practicePhrasesForTopics(topicIds: string[]): PracticePhrase[] {
   }
   return out
 }
+
+// The same bridge for WORDS: a topic can also name the vocabulary it drills,
+// so the results screen can put those words straight into the Palabras deck.
+// Examples are fresh sentences, not the quiz's, so a card isn't answered by
+// memory of a question. Grammar is tú, like everything taught.
+
+export interface PracticeWord {
+  spanish: string
+  english: string
+  example: string
+  exampleTranslation: string
+}
+
+export const PRACTICE_WORDS: Record<string, PracticeWord[]> = {
+  "key-verbs": [
+    {
+      spanish: "enfrentar",
+      english: "to face, to deal with",
+      example: "Hoy enfrentamos el primer día de guardería.",
+      exampleTranslation: "Today we faced the first day of nursery.",
+    },
+    {
+      spanish: "averiguar",
+      english: "to find out",
+      example: "¿Averiguaste si hay lugar en la guardería?",
+      exampleTranslation: "Did you find out if there's a spot at the nursery?",
+    },
+    {
+      spanish: "aprovechar",
+      english: "to make the most of",
+      example: "Aprovecha que duerme y descansa un rato.",
+      exampleTranslation: "Make the most of him sleeping and rest a bit.",
+    },
+    {
+      spanish: "superar",
+      english: "to overcome, to get over",
+      example: "Superó el miedo al agua en una semana.",
+      exampleTranslation: "He got over his fear of the water in a week.",
+    },
+    {
+      spanish: "alcanzar",
+      english: "to reach; to be enough",
+      example: "Ya alcanza la mesa con las manos.",
+      exampleTranslation: "He can already reach the table with his hands.",
+    },
+  ],
+}
+
+/** The card-able words for a quiz spanning these topics (deduped, in order). */
+export function practiceWordsForTopics(topicIds: string[]): PracticeWord[] {
+  const seen = new Set<string>()
+  const out: PracticeWord[] = []
+  for (const id of topicIds) {
+    for (const w of PRACTICE_WORDS[id] ?? []) {
+      if (seen.has(w.spanish)) continue
+      seen.add(w.spanish)
+      out.push(w)
+    }
+  }
+  return out
+}

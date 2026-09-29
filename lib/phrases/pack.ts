@@ -12,7 +12,7 @@
 
 import { assembleFocusAreas } from "@/lib/conversations/focus"
 import { getProfile } from "@/lib/profile/store"
-import { getStarterPhrases } from "./starter"
+import { getStarterPhrases, hiddenStarterIds } from "./starter"
 import { addPhrase, listPhrases, normalizePhraseText, updatePhrase } from "./store"
 import { PHRASE_MOMENTS, type Phrase, type PhraseMoment } from "./types"
 
@@ -66,8 +66,9 @@ export function queryPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Phra
       .map((p) => normalizePhraseText(p.text))
       .filter(Boolean),
   )
+  const hidden = hiddenStarterIds()
   const starters = getStarterPhrases(moment).filter(
-    (s) => !taken.has(normalizePhraseText(s.text)),
+    (s) => !hidden.has(s.id) && !taken.has(normalizePhraseText(s.text)),
   )
   return [...library, ...starters.slice(0, size - library.length)]
 }
