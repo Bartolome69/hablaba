@@ -19,6 +19,37 @@ export function isStarterPhrase(p: Pick<Phrase, "id">): boolean {
   return p.id.startsWith(STARTER_ID_PREFIX)
 }
 
+// Starters aren't library rows, so "quitar" on one can't delete it: it hides
+// it instead, per device. Key `hidden_starters`, a plain id list.
+const HIDDEN_KEY = "hidden_starters"
+
+export function hiddenStarterIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(HIDDEN_KEY)
+    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
+  } catch {
+    return new Set()
+  }
+}
+
+function writeHidden(ids: Set<string>) {
+  try {
+    localStorage.setItem(HIDDEN_KEY, JSON.stringify([...ids]))
+  } catch {}
+}
+
+export function hideStarter(id: string) {
+  const ids = hiddenStarterIds()
+  ids.add(id)
+  writeHidden(ids)
+}
+
+export function unhideStarter(id: string) {
+  const ids = hiddenStarterIds()
+  ids.delete(id)
+  writeHidden(ids)
+}
+
 interface StarterEntry {
   text: string
   translation: string

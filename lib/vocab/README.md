@@ -75,7 +75,7 @@ it at runtime.
 | `body-map.ts` | Geometry for the tappable diagram — data, not JSX |
 | `schedule.ts` | The Leitner ladder: intervals, `nextSchedule()`, `isDue()`, the band labels. Pure — no storage, no React |
 | `store.ts` | The `vocab_words` table, `listDueWords()`, `countDue()`, `buildDeck()` |
-| `add.ts` | English in → Spanish out → onto the list (the mirror of `capturePhrase`) |
+| `add.ts` | English (or Spanish) in → Spanish out → onto the list (the mirror of `capturePhrase`). Spanish input is the word the learner wants, so it's kept and glossed, never swapped for a synonym |
 | `app/api/vocab/translate/` | The en→es route. Returns article and gender as **fields**, not prose |
 
 ## The diagram

@@ -3,7 +3,8 @@ import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
 
 // "I want to learn the word for pushchair" → la sillita de paseo (f), with a
-// sentence a parent would actually say. Stateless, like every route here: the
+// sentence a parent would actually say. Spanish input ("enfrentar") is kept
+// as-is and glossed instead, so the learner can card the words they're after. Stateless, like every route here: the
 // client owns the word list and decides what to keep.
 //
 // Distinct from /api/translate, which goes the other way (a whole Spanish turn
@@ -54,6 +55,7 @@ Rules:
 - "article" is the definite article that agrees with it: el, la, los or las. Nouns like "agua" that are feminine but take "el" in the singular get article "el" and gender "f".
 - "gender" is "m", "f", or "invariable" for words that don't inflect (adjectives, verbs, adverbs).
 - If the input is not a noun (a verb, an adjective), still translate it: give the infinitive or the masculine singular, article "", gender "invariable".
+- The input may already be SPANISH (a word, a verb, or a fixed expression like "hacer falta"). Then it is the exact thing the learner wants to learn: keep it as typed, fixing only spelling and missing accents (they type on a phone with no accent keys, so infer "averigue" → "averigüé"), and gloss it in "english". NEVER swap it for a synonym ("enfrentar" stays "enfrentar", not "afrontar"). Nouns still get their article.
 - "english" is a clean gloss of YOUR Spanish — it may differ from the input if the input was vague or misspelled.
 - "example" is one short sentence a parent would really say to or about their baby, using the word. Grammar is tú, always — never voseo (vos/tenés/querés), never vosotros.
 - "exampleTranslation" is a natural English gloss of that sentence.

@@ -13,10 +13,11 @@ import { DuoIcon, grammarIcon } from "@/components/icons"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
-import { practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
+import { practicePhrasesForTopics, practiceWordsForTopics } from "@/lib/exercises/practice-phrases"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
 import { getTopic } from "@/lib/exercises/taxonomy"
 import { addPhrase } from "@/lib/phrases/store"
+import { addWord } from "@/lib/vocab/store"
 import type { ExerciseItem, GrammarArea, MasteryBand, TopicMastery } from "@/lib/exercises/types"
 
 const SESSION_SIZE = 10
@@ -619,47 +620,94 @@ function Quiz({
   )
 }
 
-// The results-screen bridge into the speaking loop: topics with a practice
-// set let the learner save conversation-ready phrases straight into the
-// library. The seeded charla does the prompting from there (see
-// lib/exercises/practice-phrases.ts).
+// The results-screen bridge out of the quiz: topics with a practice set let
+// the learner save conversation-ready phrases into the library (the seeded
+// charla does the prompting from there, see lib/exercises/practice-phrases.ts)
+// and, where the topic names its words, put those words into the Palabras
+// flashcard deck.
 function PracticeBridge({ topicIds }: { topicIds: string[] }) {
-  const [savedCount, setSavedCount] = useState<number | null>(null)
+  const [phrasesAdded, setPhrasesAdded] = useState<number | null>(null)
+  const [wordsAdded, setWordsAdded] = useState<number | null>(null)
   const phrases = useMemo(() => practicePhrasesForTopics(topicIds), [topicIds])
-  if (phrases.length === 0) return null
+  const words = useMemo(() => practiceWordsForTopics(topicIds), [topicIds])
+  if (phrases.length === 0 && words.length === 0) return null
 
-  const save = () => {
-    // addPhrase dedupes by normalized text, so re-saving after a repeat quiz
-    // only adds what the library doesn't already hold.
-    const added = phrases.filter(
-      (p) => addPhrase({ text: p.text, translation: p.translation, source: "generated" }) !== null,
-    ).length
-    setSavedCount(added)
-  }
+  // Both stores dedupe by normalized text, so repeating a quiz only adds
+  // what isn't already there.
+  const savePhrases = () =>
+    setPhrasesAdded(
+      phrases.filter(
+        (p) => addPhrase({ text: p.text, translation: p.translation, source: "generated" }) !== null,
+      ).length,
+    )
+  const saveWords = () =>
+    setWordsAdded(
+      words.filter(
+        (w) =>
+          addWord({
+            spanish: w.spanish,
+            article: "",
+            gender: "invariable",
+            english: w.english,
+            example: w.example,
+            exampleTranslation: w.exampleTranslation,
+            set: "propias",
+            source: "catalogo",
+          }) !== null,
+      ).length,
+    )
 
   return (
     <div className="clay-static mt-3 w-full rounded-[22px] p-5 text-left">
-      <p className="smallcaps text-ink-faint">Llevalo a la conversación</p>
-      {savedCount === null ? (
-        <>
+      <p className="smallcaps text-ink-faint">Llevalo a tu día</p>
+
+      {phrases.length > 0 &&
+        (phrasesAdded === null ? (
+          <>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+              Guardá {phrases.length} frases en tu biblioteca. Tu partner las va a ir metiendo en
+              las próximas charlas hasta que salgan solas.
+            </p>
+            <button
+              onClick={savePhrases}
+              className="press-chip mt-3 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
+            >
+              <DuoIcon name="frases" size={15} />
+              Guardar las frases
+            </button>
+          </>
+        ) : (
           <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-            Guardá {phrases.length} frases con estos verbos en tu biblioteca. Tu partner las va
-            a ir metiendo en las próximas charlas hasta que salgan solas.
+            {phrasesAdded > 0
+              ? `${phrasesAdded === 1 ? "1 frase nueva" : `${phrasesAdded} frases nuevas`} en tu biblioteca. Aparecen en Frases y en tu próxima charla.`
+              : "Ya tenías todas las frases. Aparecen en tu próxima charla."}
           </p>
-          <button
-            onClick={save}
-            className="press-chip mt-3.5 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
-          >
-            <DuoIcon name="frases" size={15} />
-            Guardar las frases
-          </button>
-        </>
-      ) : (
-        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-          {savedCount > 0
-            ? `${savedCount === 1 ? "1 frase nueva" : `${savedCount} frases nuevas`} en tu biblioteca. Aparecen en Frases y en tu próxima charla.`
-            : "Ya las tenías todas en tu biblioteca. Aparecen en tu próxima charla."}
-        </p>
+        ))}
+
+      {words.length > 0 && (
+        <div className={phrases.length > 0 ? "mt-4 border-t border-rule pt-4" : ""}>
+          {wordsAdded === null ? (
+            <>
+              <p className="text-sm leading-relaxed text-ink-muted">
+                Y las palabras: {words.map((w) => w.spanish).join(", ")}, en tus tarjetas de
+                Palabras.
+              </p>
+              <button
+                onClick={saveWords}
+                className="press-chip mt-3 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
+              >
+                <DuoIcon name="repasar" size={15} />
+                Agregar a mis tarjetas
+              </button>
+            </>
+          ) : (
+            <p className="text-sm leading-relaxed text-ink-muted">
+              {wordsAdded > 0
+                ? `${wordsAdded === 1 ? "1 tarjeta nueva" : `${wordsAdded} tarjetas nuevas`} en Palabras, listas para repasar.`
+                : "Ya las tenías todas en tus tarjetas."}
+            </p>
+          )}
+        </div>
       )}
     </div>
   )

@@ -51,9 +51,9 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder="En inglés: pushchair, spoon…"
+          placeholder="En español o inglés: aprovechar, spoon…"
           disabled={busy}
-          aria-label="Palabra en inglés"
+          aria-label="Palabra en español o en inglés"
           className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40 disabled:opacity-60"
         />
         <button
@@ -72,7 +72,7 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
         </button>
       </div>
       <p className="mt-2.5 px-1 text-[12px] leading-snug text-ink-soft">
-        Te doy la palabra con su artículo y una frase para usarla. Va directo a tu lista.
+        Escribila como te salga. Te doy la palabra con su artículo y una frase para usarla, y va directo a tus tarjetas.
       </p>
     </div>
   )
