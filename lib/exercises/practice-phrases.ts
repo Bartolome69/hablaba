@@ -17,6 +17,14 @@ export interface PracticePhrase {
 }
 
 export const PRACTICE_PHRASES: Record<string, PracticePhrase[]> = {
+  demonstratives: [
+    { text: "¿Qué es esto?", translation: "What's this?" },
+    { text: "Eso no se toca.", translation: "Don't touch that." },
+    { text: "¿Me pasas ese vaso?", translation: "Can you pass me that glass?" },
+    { text: "Esta mañana fuimos a la plaza.", translation: "This morning we went to the playground." },
+    { text: "Quiero uno como este.", translation: "I want one like this one." },
+    { text: "Estas medias no son tuyas.", translation: "These socks aren't yours." },
+  ],
   "hace-time-expressions": [
     {
       text: "Hace dos años que vivimos aquí.",
