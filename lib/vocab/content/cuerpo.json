@@ -11,6 +11,8 @@
     "example": "Te limpio la nariz un segundo.", "exampleTranslation": "Let me wipe your nose a second." },
   { "id": "cuerpo-boca", "spanish": "boca", "article": "la", "gender": "f", "english": "mouth", "group": "cabeza",
     "example": "Abre la boca, que viene el avioncito.", "exampleTranslation": "Open your mouth, here comes the aeroplane." },
+  { "id": "cuerpo-menton", "spanish": "mentón", "article": "el", "gender": "m", "english": "chin", "group": "cabeza",
+    "example": "Tienes yogur en el mentón.", "exampleTranslation": "You've got yogurt on your chin." },
   { "id": "cuerpo-orejas", "spanish": "orejas", "article": "las", "gender": "f", "english": "ears", "group": "cabeza",
     "example": "Te lavo las orejas con cuidado.", "exampleTranslation": "I'll wash your ears gently." },
   { "id": "cuerpo-dientes", "spanish": "dientes", "article": "los", "gender": "m", "english": "teeth", "group": "cabeza",
