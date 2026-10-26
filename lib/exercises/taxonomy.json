@@ -162,6 +162,15 @@
     "blurb": "Using both pronouns together: se lo, te la, and their order."
   },
   {
+    "id": "demonstratives",
+    "title": "Demonstratives",
+    "spanish": "Este, ese y aquel",
+    "emoji": "👉",
+    "cefr": "A2",
+    "area": "pronouns",
+    "blurb": "This, that and those: este/ese/aquel agree with the noun, esto/eso point at things without a name, and estas is not estás."
+  },
+  {
     "id": "comparatives",
     "title": "Comparatives",
     "spanish": "Comparativos",

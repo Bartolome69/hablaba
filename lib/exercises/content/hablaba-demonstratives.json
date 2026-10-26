@@ -1,0 +1,219 @@
+{
+  "id": "hablaba-demonstratives",
+  "title": "Este, Ese y Aquel: Practice",
+  "description": "Authored A2/B1 practice set for demonstratives: este/esta/estos/estas agreeing with the noun, este vs ese vs aquel by distance, the neuter esto/eso for things without a name, este/esta with time words, como este, and the estas/estás trap.",
+  "topicIds": ["demonstratives"],
+  "ingestedAt": "2026-10-26",
+  "lessons": [
+    {
+      "topicId": "demonstratives",
+      "summary": "Demonstratives point, and Spanish points at three distances. ESTE is near me (this), ESE is near you or a little way off (that), AQUEL is far from both of us (that over there). Each one agrees with its noun: este cuento, esta canción, estos zapatos, estas medias; ese vaso, esa manzana, esos autos, esas llaves. The same words work alone when the noun is obvious: 'No quiero ese, quiero el otro' (the toy car), 'Quiero uno como este' (one like this one). They no longer need an accent as pronouns. Then there are the neuter forms ESTO, ESO and AQUELLO, which never go with a noun. Use them for a thing you haven't named yet or can't name ('¿Qué es esto?', 'Eso no se toca') and for ideas or situations ('Eso es lo que te dije'). So 'ese' points at a known masculine thing and 'eso' at something unnamed. With time words, este/esta means the current one: esta mañana, este fin de semana. Last, the spelling trap: ESTAS (these, feminine) has no accent, and ESTÁS (you are) does. '¿Cómo estás?' but 'estas medias'.",
+      "examples": [
+        { "spanish": "Este cuento es mi favorito.", "english": "This story is my favourite.", "note": "este: near me, masculine" },
+        { "spanish": "¿Me pasas esa taza?", "english": "Can you pass me that mug?", "note": "esa: near you, feminine" },
+        { "spanish": "¿Ves aquel avión allá arriba?", "english": "Can you see that plane up there?", "note": "aquel: far from both of us" },
+        { "spanish": "¿Qué es esto?", "english": "What's this?", "note": "esto: a thing without a name yet" },
+        { "spanish": "Quiero uno como este.", "english": "I want one like this one.", "note": "este alone, the noun is obvious" },
+        { "spanish": "¿Te gustan estas medias?", "english": "Do you like these socks?", "note": "estas (these) is not estás (you are)" }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "dem-ch-este-cuento",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "___ cuento es mi favorito.",
+      "promptEnglish": "This story is my favourite.",
+      "options": ["Este", "Esta", "Esto"],
+      "answers": ["Este"],
+      "explanation": "Cuento is masculine and the noun is right there, so este. Esto never goes with a noun.",
+      "difficulty": 1
+    },
+    {
+      "id": "dem-ch-esta-cancion",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "Me encanta ___ canción.",
+      "promptEnglish": "I love this song.",
+      "options": ["esta", "este", "estas"],
+      "answers": ["esta"],
+      "explanation": "Canción is feminine singular, so esta.",
+      "difficulty": 1
+    },
+    {
+      "id": "dem-ch-estos-zapatos",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿De quién son ___ zapatos?",
+      "promptEnglish": "Whose shoes are these?",
+      "options": ["estos", "estas", "este"],
+      "answers": ["estos"],
+      "explanation": "Zapatos is masculine plural, so estos.",
+      "difficulty": 1
+    },
+    {
+      "id": "dem-ch-estas-medias",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Te gustan ___ medias?",
+      "promptEnglish": "Do you like these socks?",
+      "options": ["estas", "estás"],
+      "answers": ["estas"],
+      "explanation": "Estas without an accent is \"these\" (feminine plural). Estás with an accent is \"you are\".",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-estas-verb",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Cómo ___ hoy, mi amor?",
+      "promptEnglish": "How are you today, my love?",
+      "options": ["estás", "estas"],
+      "answers": ["estás"],
+      "explanation": "Here it's the verb estar, \"you are\", and it carries the accent: estás. Estas without the accent means \"these\".",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-ese-vaso",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Me pasas ___ vaso que está cerca de ti?",
+      "promptEnglish": "Can you pass me that glass near you?",
+      "options": ["ese", "este", "aquel"],
+      "answers": ["ese"],
+      "explanation": "Near the person you're talking to is ese. Este would be near you, aquel far from both of you.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-aquel-pajaro",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Ves ___ pájaro allá arriba, en el árbol?",
+      "promptEnglish": "Can you see that bird up there, in the tree?",
+      "options": ["aquel", "este", "ese"],
+      "answers": ["aquel"],
+      "explanation": "Allá arriba is far from both of you, so aquel.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-que-es-esto",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Qué es ___? Nunca vi algo así.",
+      "promptEnglish": "What's this? I've never seen anything like it.",
+      "options": ["esto", "este", "esta"],
+      "answers": ["esto"],
+      "explanation": "You don't know what it is yet, so there's no noun to agree with: the neuter esto.",
+      "difficulty": 1
+    },
+    {
+      "id": "dem-ch-eso-no-se-toca",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¡___ no se toca, está caliente!",
+      "promptEnglish": "Don't touch that, it's hot!",
+      "options": ["Eso", "Ese", "Esa"],
+      "answers": ["Eso"],
+      "explanation": "Pointing at something without naming it takes the neuter eso.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-eso-idea",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "Ya sé, ___ es lo que te dije ayer.",
+      "promptEnglish": "I know, that's what I told you yesterday.",
+      "options": ["eso", "ese", "esa"],
+      "answers": ["eso"],
+      "explanation": "Eso can point at an idea or something someone said, not just at an object. Ideas take the neuter.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-esa-manzana",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Quieres ___ manzana o la otra?",
+      "promptEnglish": "Do you want that apple or the other one?",
+      "options": ["esa", "eso", "ese"],
+      "answers": ["esa"],
+      "explanation": "Manzana is named and feminine, so esa. Eso is only for things without a noun.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-esta-manana",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "___ mañana fuimos a la plaza.",
+      "promptEnglish": "This morning we went to the playground.",
+      "options": ["Esta", "Este", "Esa"],
+      "answers": ["Esta"],
+      "explanation": "With time words este/esta means the current one: esta mañana, esta semana.",
+      "difficulty": 1
+    },
+    {
+      "id": "dem-cl-fin-de-semana",
+      "topicId": "demonstratives",
+      "type": "cloze",
+      "prompt": "___ fin de semana vamos a lo de la abuela. (this)",
+      "promptEnglish": "This weekend we're going to grandma's.",
+      "answers": ["este"],
+      "explanation": "Fin de semana is masculine (el fin de semana), so este.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-como-este",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "Quiero un autito como ___.",
+      "promptEnglish": "I want a toy car like this one.",
+      "options": ["este", "esto", "esta"],
+      "answers": ["este"],
+      "explanation": "You mean this autito, so it agrees with the masculine noun even though the noun isn't repeated: como este.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-no-quiero-ese",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "No quiero ___ libro, quiero el otro.",
+      "promptEnglish": "I don't want that book, I want the other one.",
+      "options": ["ese", "eso", "esa"],
+      "answers": ["ese"],
+      "explanation": "Libro is masculine and named, so ese. Eso would only work with no noun at all.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-cl-esas-llaves",
+      "topicId": "demonstratives",
+      "type": "cloze",
+      "prompt": "¿___ son mis llaves, las que tienes en la mano? (those, near you)",
+      "promptEnglish": "Are those my keys, the ones in your hand?",
+      "answers": ["esas"],
+      "explanation": "Near the person you're talking to, feminine plural: esas.",
+      "difficulty": 2
+    },
+    {
+      "id": "dem-ch-mira-esto",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¡Mira ___! Es un caracol.",
+      "promptEnglish": "Look at this! It's a snail.",
+      "options": ["esto", "este", "esta"],
+      "answers": ["esto"],
+      "explanation": "At the moment you point, the thing has no name yet, so the neuter esto. Once named, it's este caracol.",
+      "difficulty": 3
+    },
+    {
+      "id": "dem-ch-aquellos-dias",
+      "topicId": "demonstratives",
+      "type": "choice",
+      "prompt": "¿Te acuerdas de ___ días en la playa, antes del bebé?",
+      "promptEnglish": "Do you remember those days at the beach, before the baby?",
+      "options": ["aquellos", "estos", "esos"],
+      "answers": ["aquellos"],
+      "explanation": "Aquel also points far back in time: aquellos días, aquella época.",
+      "difficulty": 3
+    }
+  ]
+}

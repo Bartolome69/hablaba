@@ -35,6 +35,7 @@ import haberUses from "./content/hablaba-haber-uses.json"
 import objectPronouns from "./content/hablaba-object-pronouns.json"
 import keyVerbs from "./content/hablaba-key-verbs.json"
 import haceTime from "./content/hablaba-hace-time.json"
+import demonstratives from "./content/hablaba-demonstratives.json"
 
 // The example pack (por-vs-para-example.json) is intentionally excluded — it's a
 // schema reference, not real teacher content.
@@ -65,6 +66,7 @@ export const sources = [
   objectPronouns,
   keyVerbs,
   haceTime,
+  demonstratives,
 ] as unknown as ExerciseSource[]
 
 export const allItems: ExerciseItem[] = sources.flatMap((s) => s.items)
