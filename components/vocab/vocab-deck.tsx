@@ -117,27 +117,31 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         className="block w-full [perspective:1200px]"
       >
         <div
-          className={`relative h-[280px] w-full transition-transform duration-[480ms] [transform-style:preserve-3d] ${
+          className={`relative h-[300px] w-full transition-transform duration-[480ms] [transform-style:preserve-3d] ${
             revealed ? "[transform:rotateY(180deg)]" : ""
           }`}
           style={{ transitionTimingFunction: "cubic-bezier(.22,1,.36,1)" }}
         >
-          <div className="clay-static absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[26px] px-6 py-8 text-center [backface-visibility:hidden]">
-            <span className="smallcaps text-ink-faint">
+          {/* Both faces share one layout: a fixed label slot, then the big word
+              at the same height, then whatever else grows DOWN from it. So the
+              word never jumps on a flip or from card to card. */}
+          <div className="clay-static absolute inset-0 flex flex-col items-center rounded-[26px] px-6 pt-[64px] text-center [backface-visibility:hidden]">
+            <span className="smallcaps flex h-5 items-center text-ink-faint">
               {isRetry ? "Otra vez" : direction === "en-es" ? "En español…" : "¿Qué significa?"}
             </span>
-            <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
+            <span className="mt-3 font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {front}
             </span>
-            <span className="text-[12.5px] text-ink-faint">Tocá para dar vuelta</span>
+            <span className="mt-3 text-[12.5px] text-ink-faint">Tocá para dar vuelta</span>
           </div>
-          <div className="clay-static absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-hidden rounded-[26px] px-6 py-8 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
+          <div className="clay-static absolute inset-0 flex flex-col items-center overflow-hidden rounded-[26px] px-6 pt-[64px] text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <span className="h-5" aria-hidden />
+            <span className="mt-3 font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {back}
             </span>
-            <span className="text-[13.5px] text-ink-soft">{front}</span>
+            <span className="mt-3 text-[13.5px] text-ink-soft">{front}</span>
             {current.example && (
-              <span className="mt-2 max-w-[280px] border-t border-rule pt-3 font-serif text-[15px] leading-[1.4] text-ink-muted">
+              <span className="mt-4 max-w-[280px] border-t border-rule pt-3 font-serif text-[15px] leading-[1.4] text-ink-muted">
                 {current.example}
               </span>
             )}
