@@ -6,6 +6,7 @@
 // the prompt at the top and pins Comprobar above the keyboard, so there's
 // never a button floating in an empty half-screen.
 
+import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { AppHeader } from "@/components/home/app-header"
@@ -13,11 +14,11 @@ import { DuoIcon, grammarIcon } from "@/components/icons"
 import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
-import { practicePhrasesForTopics, practiceWordsForTopics } from "@/lib/exercises/practice-phrases"
+import { practicePackForTopics, practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
 import { getTopic } from "@/lib/exercises/taxonomy"
 import { addPhrase } from "@/lib/phrases/store"
-import { addWord } from "@/lib/vocab/store"
+import { packLabel } from "@/lib/vocab/catalog"
 import type { ExerciseItem, GrammarArea, MasteryBand, TopicMastery } from "@/lib/exercises/types"
 
 const SESSION_SIZE = 10
@@ -623,37 +624,19 @@ function Quiz({
 // The results-screen bridge out of the quiz: topics with a practice set let
 // the learner save conversation-ready phrases into the library (the seeded
 // charla does the prompting from there, see lib/exercises/practice-phrases.ts)
-// and, where the topic names its words, put those words into the Palabras
-// flashcard deck.
+// and, where the topic has a Palabras pack, send them to its flashcards.
 function PracticeBridge({ topicIds }: { topicIds: string[] }) {
   const [phrasesAdded, setPhrasesAdded] = useState<number | null>(null)
-  const [wordsAdded, setWordsAdded] = useState<number | null>(null)
   const phrases = useMemo(() => practicePhrasesForTopics(topicIds), [topicIds])
-  const words = useMemo(() => practiceWordsForTopics(topicIds), [topicIds])
-  if (phrases.length === 0 && words.length === 0) return null
+  const pack = useMemo(() => practicePackForTopics(topicIds), [topicIds])
+  if (phrases.length === 0 && !pack) return null
 
-  // Both stores dedupe by normalized text, so repeating a quiz only adds
-  // what isn't already there.
+  // addPhrase dedupes by normalized text, so repeating a quiz only adds what
+  // isn't already there.
   const savePhrases = () =>
     setPhrasesAdded(
       phrases.filter(
         (p) => addPhrase({ text: p.text, translation: p.translation, source: "generated" }) !== null,
-      ).length,
-    )
-  const saveWords = () =>
-    setWordsAdded(
-      words.filter(
-        (w) =>
-          addWord({
-            spanish: w.spanish,
-            article: "",
-            gender: "invariable",
-            english: w.english,
-            example: w.example,
-            exampleTranslation: w.exampleTranslation,
-            set: "propias",
-            source: "catalogo",
-          }) !== null,
       ).length,
     )
 
@@ -684,29 +667,18 @@ function PracticeBridge({ topicIds }: { topicIds: string[] }) {
           </p>
         ))}
 
-      {words.length > 0 && (
+      {pack && (
         <div className={phrases.length > 0 ? "mt-4 border-t border-rule pt-4" : ""}>
-          {wordsAdded === null ? (
-            <>
-              <p className="text-sm leading-relaxed text-ink-muted">
-                Y las palabras: {words.map((w) => w.spanish).join(", ")}, en tus tarjetas de
-                Palabras.
-              </p>
-              <button
-                onClick={saveWords}
-                className="press-chip mt-3 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
-              >
-                <DuoIcon name="repasar" size={15} />
-                Agregar a mis tarjetas
-              </button>
-            </>
-          ) : (
-            <p className="text-sm leading-relaxed text-ink-muted">
-              {wordsAdded > 0
-                ? `${wordsAdded === 1 ? "1 tarjeta nueva" : `${wordsAdded} tarjetas nuevas`} en Palabras, listas para repasar.`
-                : "Ya las tenías todas en tus tarjetas."}
-            </p>
-          )}
+          <p className="text-sm leading-relaxed text-ink-muted">
+            Las palabras están en el pack {packLabel(pack)}, listas para repasar con tarjetas.
+          </p>
+          <Link
+            href={`/app/palabras/${pack}`}
+            className="press-chip mt-3 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
+          >
+            <DuoIcon name="repasar" size={15} />
+            Ver las tarjetas
+          </Link>
         </div>
       )}
     </div>

@@ -1,35 +1,48 @@
 "use client"
 
-// "The word I want is ___". English in, Spanish out, onto the list — the same
-// move as CaptureCard on Frases, and deliberately the same shape so the two
-// read as one habit: whatever you couldn't say, type it, keep it.
+// "The word I want is ___", inside a pack. Spanish or English in, the Spanish
+// word out, straight into the pack being viewed. The same move as CaptureCard
+// on Frases, and deliberately the same shape so the two read as one habit:
+// whatever you couldn't say, type it, keep it.
 
 import { useState } from "react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { DuoIcon } from "@/components/icons"
 import { addOwnWord } from "@/lib/vocab/add"
-import { withArticle } from "@/lib/vocab/types"
+import { withArticle, type VocabSetId } from "@/lib/vocab/types"
 
-export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
+interface AddWordCardProps {
+  set: VocabSetId
+  /** The pack's display name, for the copy: "Va directo a La ropa". */
+  label: string
+  onAdded?: () => void
+}
+
+export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
   const [value, setValue] = useState("")
   const [busy, setBusy] = useState(false)
   const posthog = usePostHog()
+  const own = set === "propias"
 
   const submit = async () => {
     const term = value.trim()
     if (!term || busy) return
     setBusy(true)
     try {
-      const outcome = await addOwnWord(term)
-      posthog.capture("vocab_word_added", { status: outcome.status })
+      const outcome = await addOwnWord(term, set)
+      posthog.capture("vocab_word_added", { status: outcome.status, pack: set })
       setValue("")
       if (outcome.status === "added") {
         toast.success(withArticle(outcome.word), { description: outcome.word.english })
-        onAdded?.()
+      } else if (outcome.restored) {
+        toast.success(`Volvió “${outcome.spanish}”`, { description: `Está de nuevo en ${outcome.packLabel}.` })
       } else {
-        toast.info(`Ya tenías “${outcome.spanish}”`)
+        toast.info(`Ya tenías “${outcome.spanish}”`, {
+          description: outcome.packLabel ? `Está en ${outcome.packLabel}.` : undefined,
+        })
       }
+      onAdded?.()
     } catch {
       toast.error("No se pudo traducir la palabra", {
         description: "Probá de nuevo en un momento.",
@@ -43,7 +56,9 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
     <div className="clay-static mt-3.5 rounded-[22px] p-4">
       <div className="flex items-center gap-2">
         <DuoIcon name="brote" size={17} />
-        <p className="text-[14.5px] font-semibold text-ink">¿Qué palabra querés aprender?</p>
+        <p className="text-[14.5px] font-semibold text-ink">
+          {own ? "¿Qué palabra querés aprender?" : "¿Falta alguna?"}
+        </p>
       </div>
       <div className="mt-3 flex gap-[9px]">
         <input
@@ -51,9 +66,9 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder="En español o inglés: aprovechar, spoon…"
+          placeholder="En español o inglés…"
           disabled={busy}
-          aria-label="Palabra en español o en inglés"
+          aria-label={`Agregar una palabra a ${label}`}
           className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40 disabled:opacity-60"
         />
         <button
@@ -72,7 +87,8 @@ export function AddWordCard({ onAdded }: { onAdded?: () => void }) {
         </button>
       </div>
       <p className="mt-2.5 px-1 text-[12px] leading-snug text-ink-soft">
-        Escribila como te salga. Te doy la palabra con su artículo y una frase para usarla, y va directo a tus tarjetas.
+        Escribila como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
+        {own ? "tus palabras" : label}.
       </p>
     </div>
   )

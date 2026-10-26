@@ -1,17 +1,18 @@
 "use client"
 
-// Adding a word of your own: English in, Spanish (with its article and gender)
-// out, straight into the list. The mirror of `capturePhrase` in
-// lib/phrases/pack.ts — same shape, same contract, same reason: what the
-// learner asked for should be usable NOW, not queued for tomorrow.
+// Adding a word of your own: English or Spanish in, the Spanish word (with its
+// article and gender) out, straight into the pack the learner is looking at.
+// The mirror of `capturePhrase` in lib/phrases/pack.ts: what the learner asked
+// for should be usable NOW, not queued for tomorrow.
 
 import { getProfile } from "@/lib/profile/store"
-import { addWord, hasWord } from "./store"
+import { addWord, findWord, unhideBySpanish } from "./store"
 import type { Gender, VocabSetId, VocabWord } from "./types"
 
 export type AddWordOutcome =
   | { status: "added"; word: VocabWord }
-  | { status: "duplicate"; spanish: string }
+  /** Already in a pack. `restored` when it had been removed and is now back. */
+  | { status: "duplicate"; spanish: string; packLabel: string; restored: boolean }
 
 interface TranslatedWord {
   spanish: string
@@ -20,16 +21,14 @@ interface TranslatedWord {
   english: string
   example?: string
   exampleTranslation?: string
-  set: VocabSetId
 }
 
 /**
- * Translate an English term and store it. Throws on network failure so the
- * caller can offer a retry; returns `duplicate` (rather than throwing) when
- * the translation turns out to be a word already on the list, so the UI can
- * say "you've got that one" instead of silently doing nothing.
+ * Translate a term and store it in `set`. Throws on network failure so the
+ * caller can offer a retry; returns `duplicate` (rather than throwing) when the
+ * word is already somewhere, so the UI can say where.
  */
-export async function addOwnWord(term: string): Promise<AddWordOutcome> {
+export async function addOwnWord(term: string, set: VocabSetId): Promise<AddWordOutcome> {
   const profile = getProfile()
   const res = await fetch("/api/vocab/translate", {
     method: "POST",
@@ -45,7 +44,11 @@ export async function addOwnWord(term: string): Promise<AddWordOutcome> {
   const word = data.word
   if (!word?.spanish) throw new Error("Vocab translate returned no word")
 
-  if (hasWord(word.spanish)) return { status: "duplicate", spanish: word.spanish }
+  const existing = findWord(word.spanish)
+  if (existing) {
+    if (existing.hidden) unhideBySpanish(word.spanish)
+    return { status: "duplicate", spanish: word.spanish, packLabel: existing.label, restored: existing.hidden }
+  }
 
   const stored = addWord({
     spanish: word.spanish,
@@ -54,11 +57,10 @@ export async function addOwnWord(term: string): Promise<AddWordOutcome> {
     english: word.english,
     example: word.example,
     exampleTranslation: word.exampleTranslation,
-    // The model classifies into a set, so a body part typed by hand lands
-    // under El cuerpo rather than in an undifferentiated "mine" pile.
-    set: word.set,
+    // The pack the learner added it from wins over the model's own guess.
+    set,
     source: "propia",
   })
-  if (!stored) return { status: "duplicate", spanish: word.spanish }
+  if (!stored) return { status: "duplicate", spanish: word.spanish, packLabel: "", restored: false }
   return { status: "added", word: stored }
 }
