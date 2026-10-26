@@ -725,6 +725,26 @@ const draw: Record<string, Drawer> = {
       <path d="M12.3 5.4c1-1.6 2.6-2.1 4-1.9.2 1.6-.8 3-2.4 3.4" fill={d} />
     </>
   ),
+  remera: (d) => (
+    <>
+      <path
+        d="M8.6 4.2 4 6.6l1.8 4 2.2-.9V19a1.2 1.2 0 0 0 1.2 1.2h5.6A1.2 1.2 0 0 0 16 19V9.7l2.2.9 1.8-4-4.6-2.4c-.6 1.3-1.9 2.1-3.4 2.1S9.2 5.5 8.6 4.2Z"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="13.2" r="1.9" fill={d} />
+    </>
+  ),
+  paleta: (d) => (
+    <>
+      <path
+        d="M12 3.6c-4.9 0-8.6 3.4-8.6 7.8 0 4.1 3.3 7.6 7.4 7.6 1.4 0 2-.7 2-1.6 0-.9-.7-1.3-.7-2.2 0-1 .8-1.6 1.9-1.6h1.9c2.6 0 4.7-1.8 4.7-4.6 0-3.1-3.8-5.4-8.6-5.4Z"
+        fill="currentColor"
+      />
+      <circle cx="8" cy="10.4" r="1.4" fill={CREAM} />
+      <circle cx="11.6" cy="7.6" r="1.4" fill={d} />
+      <circle cx="15.6" cy="9" r="1.4" fill={CREAM} />
+    </>
+  ),
 
 }
 
@@ -836,6 +856,14 @@ const VOCAB_SET_ICONS: Record<string, IconName> = {
   cuerpo: "cuerpo",
   animales: "animal",
   comida: "manzana",
+  bebe: "peque",
+  ropa: "remera",
+  casa: "casa",
+  juguetes: "pelota",
+  calle: "paseo",
+  colores: "paleta",
+  emociones: "corazon",
+  verbos: "rayo",
   propias: "brote",
 }
 

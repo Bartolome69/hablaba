@@ -17,14 +17,30 @@
 export type Gender = "m" | "f" | "invariable"
 
 /**
- * Which authored set a word came from. Custom words the learner added
- * themselves are `propias` — their own list, always present, never shipped.
+ * The packs. Every authored pack is preloaded: its words are studyable from the
+ * first visit, no saving step. The learner can add words to any pack, and
+ * `propias` ("Tus palabras") is the pack for anything that fits nowhere else.
  */
-export type VocabSetId = "cuerpo" | "animales" | "comida" | "propias"
+export type VocabSetId =
+  | "bebe"
+  | "comida"
+  | "cuerpo"
+  | "ropa"
+  | "casa"
+  | "juguetes"
+  | "animales"
+  | "calle"
+  | "colores"
+  | "emociones"
+  | "verbos"
+  | "propias"
+
+/** An authored pack, i.e. every set but the learner's own. */
+export type PackId = Exclude<VocabSetId, "propias">
 
 /** A word as authored in `content/*.json`. Read-only; never written to. */
 export interface CatalogWord {
-  /** Stable id, unique across all sets — also the body-map hotspot key. */
+  /** Stable id, unique across all packs: "<pack>-<slug>". */
   id: string
   /** The bare noun, no article: "rodilla". */
   spanish: string
@@ -40,9 +56,9 @@ export interface CatalogWord {
   group?: string
 }
 
-/** An authored set: the catalog file plus its display metadata. */
+/** An authored pack: the catalog file plus its display metadata. */
 export interface VocabSet {
-  id: VocabSetId
+  id: PackId
   /** Spanish display name, as it appears on the chip: "El cuerpo". */
   label: string
   /** English one-liner under the section head. */
@@ -60,13 +76,14 @@ export interface VocabSet {
 export type VocabSource = "catalogo" | "propia"
 
 /**
- * A word in the learner's own list — the `vocab_words` table.
+ * A row in the `vocab_words` table: either the review progress of a catalog
+ * word (written the first time it's reviewed, see lib/vocab/store.ts) or a
+ * word the learner added to a pack themselves.
  *
  * Deliberately denormalised: the Spanish, article and gender are COPIED from
- * the catalog rather than referenced by id. A saved word must keep working if
- * the catalog entry is later reworded or dropped, and a `propia` word has no
- * catalog row to point at. `catalogId` survives only so the body map can show
- * which parts you've already saved.
+ * the catalog rather than referenced by id. Progress must keep working if the
+ * catalog entry is later reworded or dropped, and a learner's own word has no
+ * catalog row to point at. `catalogId` links a progress row to its pack word.
  */
 export interface VocabWord {
   id: string

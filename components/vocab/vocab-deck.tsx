@@ -1,23 +1,30 @@
 "use client"
 
-// A study session over the learner's own word list.
+// A flashcard session over a deck of words (a pack, or Repaso de hoy).
 //
-// The prompt is ENGLISH and the answer is Spanish, on purpose: recognising
-// "la rodilla" proves much less than producing it, and producing it forces the
-// article, which is the part that's actually hard. Recognition is available as
-// the other direction for a gentler pass.
+// Direction follows the word, not a toggle: a new or shaky card shows the
+// Spanish first (recognise it), and once it's been known twice it flips to
+// English first (produce it, which forces the article, the part that's
+// actually hard). Cards get harder as the learner does, with nothing to set.
 //
-// "Lo sabía / Otra vez" is the learner's own call, not a grade — nothing here
-// marks them wrong. Missed words simply come back sooner, because the deck is
-// ordered by least-practised (see buildDeck in lib/vocab/store.ts).
+// "Lo sabía / Otra vez" is the learner's own call, not a grade. Only a card's
+// FIRST answer in a session moves it on the ladder; a missed card goes back to
+// the end of the deck (up to twice) so the session ends on getting it.
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { useTTS } from "@/hooks/use-tts"
-import { recordReview } from "@/lib/vocab/store"
+import { isVirtual, recordRelearned, recordReview } from "@/lib/vocab/store"
 import { withArticle, type VocabWord } from "@/lib/vocab/types"
 
-type Direction = "en-es" | "es-en"
+/** How many times a missed card comes back within one session. */
+const MAX_REQUEUES = 2
+
+type Direction = "es-en" | "en-es"
+
+function directionFor(word: VocabWord): Direction {
+  return !isVirtual(word) && word.box >= 2 ? "en-es" : "es-en"
+}
 
 interface VocabDeckProps {
   words: VocabWord[]
@@ -26,22 +33,29 @@ interface VocabDeckProps {
 }
 
 export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
-  // Frozen for the session so cards don't reshuffle as the counts change
-  // underneath — same reason the phrase deck freezes its order.
-  const deck = useMemo(() => words, [])
   const { play, playingId } = useTTS("speak")
-  const [direction, setDirection] = useState<Direction>("en-es")
+  // Frozen at the start so cards don't reshuffle as counts change underneath;
+  // it only grows, when a missed card is sent to the back.
+  const [queue, setQueue] = useState(words)
   const [index, setIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
-  const [knownCount, setKnownCount] = useState(0)
+  const [firstTryKnown, setFirstTryKnown] = useState(0)
+  const [attempts, setAttempts] = useState<Record<string, number>>({})
 
-  const current = deck[index]
-  const done = index >= deck.length
+  const current = queue[index]
+  const done = index >= queue.length
 
   const answer = (known: boolean) => {
     if (!current) return
-    recordReview(current.id, known)
-    if (known) setKnownCount((c) => c + 1)
+    const tries = attempts[current.id] ?? 0
+    if (tries === 0) {
+      recordReview(current.id, known)
+      if (known) setFirstTryKnown((c) => c + 1)
+    } else if (known) {
+      recordRelearned(current.id)
+    }
+    setAttempts((a) => ({ ...a, [current.id]: tries + 1 }))
+    if (!known && tries < MAX_REQUEUES) setQueue((q) => [...q, current])
     setRevealed(false)
     setIndex((i) => i + 1)
   }
@@ -52,12 +66,10 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         <div className="clay-green-disc mb-5 flex h-16 w-16 items-center justify-center rounded-full">
           <DuoIcon name="logrado" size={28} className="text-cream" detail="#8FBE9C" />
         </div>
-        <h2 className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-ink">
-          ¡Listo!
-        </h2>
+        <h2 className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-ink">¡Listo!</h2>
         <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-ink-soft">
-          {deck.length} {deck.length === 1 ? "palabra" : "palabras"} · sabías {knownCount}. Las que
-          sabés vuelven más adelante; las que no, enseguida.
+          {words.length} {words.length === 1 ? "tarjeta" : "tarjetas"} · {firstTryKnown} a la primera.
+          Las que sabés vuelven más adelante; las otras, pronto.
         </p>
         <button
           onClick={onFinished}
@@ -69,14 +81,16 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
     )
   }
 
+  const direction = directionFor(current)
   const front = direction === "en-es" ? current.english : withArticle(current)
   const back = direction === "en-es" ? withArticle(current) : current.english
+  const isRetry = (attempts[current.id] ?? 0) > 0
 
   return (
     <div className="flex flex-col">
       <div className="mb-3 flex items-center justify-between">
         <span className="smallcaps text-ink-soft">
-          {index + 1} / {deck.length}
+          {index + 1} / {queue.length}
         </span>
         <button onClick={onExit} className="text-[13px] font-medium text-ink-muted">
           Salir
@@ -87,7 +101,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
       <div className="mb-5 h-[5px] w-full overflow-hidden rounded-full bg-segment-empty">
         <div
           className="h-full rounded-full bg-green transition-[width] duration-300"
-          style={{ width: `${(index / deck.length) * 100}%` }}
+          style={{ width: `${(index / queue.length) * 100}%` }}
         />
       </div>
 
@@ -110,7 +124,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         >
           <div className="clay-static absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[26px] px-6 py-8 text-center [backface-visibility:hidden]">
             <span className="smallcaps text-ink-faint">
-              {direction === "en-es" ? "En español…" : "In English…"}
+              {isRetry ? "Otra vez" : direction === "en-es" ? "En español…" : "¿Qué significa?"}
             </span>
             <span className="font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {front}
@@ -131,7 +145,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         </div>
       </button>
 
-      {revealed ? (
+      {revealed && (
         <div className="mt-4 flex flex-col gap-2.5">
           <div className="flex items-center justify-center gap-2">
             <button
@@ -168,29 +182,6 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
             >
               Lo sabía
             </button>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-4 flex justify-center">
-          <div className="clay-well flex items-center gap-1 rounded-full bg-sunken-2 p-1">
-            {(
-              [
-                ["en-es", "Inglés → Español"],
-                ["es-en", "Español → Inglés"],
-              ] as [Direction, string][]
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                onClick={() => setDirection(id)}
-                aria-pressed={direction === id}
-                className={`press-chip h-9 rounded-full px-3.5 text-[12.5px] font-medium ${
-                  direction === id ? "bg-green text-cream" : "text-ink-muted"
-                }`}
-                style={direction === id ? { boxShadow: "0 2px 0 var(--hb-green-press)" } : undefined}
-              >
-                {label}
-              </button>
-            ))}
           </div>
         </div>
       )}
