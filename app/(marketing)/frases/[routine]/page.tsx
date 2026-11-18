@@ -50,7 +50,7 @@ export default async function PhrasePage({ params }: PageProps) {
 
   return (
     <article className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:pt-14">
-      <nav className="flex items-center gap-1.5 text-[13px] text-ink-soft" aria-label="Breadcrumb">
+      <nav className="flex items-center gap-1.5 text-[13px] text-ink-muted" aria-label="Breadcrumb">
         <Link href="/frases" className="hover:text-ink">Spanish phrases</Link>
         <DuoIcon name="chevron" size={12} />
         <span className="text-ink-muted">{routine.name}</span>
@@ -65,19 +65,19 @@ export default async function PhrasePage({ params }: PageProps) {
             <h1 className="font-serif text-[34px] leading-[1.08] tracking-[-0.025em] text-ink sm:text-5xl">
               {copy.title}
             </h1>
-            <p className="mt-2 text-[14.5px] text-ink-soft">{routine.context}</p>
+            <p className="mt-2 text-[14.5px] text-ink-muted">{routine.context}</p>
           </div>
         </div>
         <p className="mt-6 max-w-2xl text-[15.5px] leading-[1.7] text-ink text-pretty">{copy.intro}</p>
       </header>
 
       <section className="mt-8">
-        <h2 className="smallcaps text-ink-faint">The phrases</h2>
+        <h2 className="smallcaps text-ink-muted">The phrases</h2>
         <ul className="mt-3 space-y-2.5">
           {routine.phrases.map((p) => (
             <li key={p.spanish} className="clay-static rounded-[18px] px-5 py-4">
               <p className="font-serif text-[21px] leading-snug text-ink">{p.spanish}</p>
-              <p className="mt-1 text-[13.5px] text-ink-soft">{p.english}</p>
+              <p className="mt-1 text-[13.5px] text-ink-muted">{p.english}</p>
             </li>
           ))}
         </ul>
@@ -115,7 +115,7 @@ export default async function PhrasePage({ params }: PageProps) {
 
       {related.length > 0 && (
         <section className="mt-12">
-          <h2 className="smallcaps text-ink-faint">More {category?.label.toLowerCase() ?? ""} phrases</h2>
+          <h2 className="smallcaps text-ink-muted">More {category?.label.toLowerCase() ?? ""} phrases</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {related.map((r) => (
               <Link

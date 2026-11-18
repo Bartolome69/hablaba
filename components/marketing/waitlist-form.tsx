@@ -59,7 +59,7 @@ export function WaitlistForm({ audience, placement = "hero", className }: Waitli
         placeholder="you@example.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="clay-recessed h-12 min-w-0 flex-1 rounded-full px-5 text-[15px] text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40"
+        className="clay-recessed h-12 min-h-12 w-full min-w-0 flex-none rounded-full px-5 text-[15px] sm:w-auto sm:flex-1 text-ink outline-none placeholder:text-ink-muted focus:ring-1 focus:ring-green/40"
       />
       <button
         type="submit"

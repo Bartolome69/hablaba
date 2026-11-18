@@ -166,6 +166,12 @@ export function packLabel(id: VocabSetId): string {
   return id === "propias" ? PROPIAS_LABEL : SETS[id].label
 }
 
+/** The label mid-sentence: "Empezar con la ropa", not "con La ropa". */
+export function packLabelInline(id: VocabSetId): string {
+  const label = packLabel(id)
+  return label.charAt(0).toLowerCase() + label.slice(1)
+}
+
 export function isPackId(id: string): id is PackId {
   return id in SETS
 }

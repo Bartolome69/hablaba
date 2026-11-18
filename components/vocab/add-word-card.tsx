@@ -10,18 +10,25 @@ import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { DuoIcon } from "@/components/icons"
 import { addOwnWord } from "@/lib/vocab/add"
+import { packLabelInline } from "@/lib/vocab/catalog"
 import { withArticle, type VocabSetId } from "@/lib/vocab/types"
 
 interface AddWordCardProps {
-  set: VocabSetId
+  /** Target pack. Without a pack context, words go to Tus palabras. */
+  set?: VocabSetId
   /** The pack's display name, for the copy: "Va directo a La ropa". */
-  label: string
+  label?: string
   onAdded?: () => void
 }
 
-export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
+// What happens next, true to the Leitner ladder (lib/vocab/schedule.ts): a
+// new word starts in box 0, due now; "lo sabía" moves it to box 1, one day.
+const NEXT_REVIEW = "Te la pregunto hoy y, si la sabés, otra vez mañana."
+
+export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }: AddWordCardProps) {
   const [value, setValue] = useState("")
   const [busy, setBusy] = useState(false)
+  const [added, setAdded] = useState<string | null>(null)
   const posthog = usePostHog()
   const own = set === "propias"
 
@@ -33,6 +40,7 @@ export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
       const outcome = await addOwnWord(term, set)
       posthog.capture("vocab_word_added", { status: outcome.status, pack: set })
       setValue("")
+      setAdded(outcome.status === "added" ? withArticle(outcome.word) : null)
       if (outcome.status === "added") {
         toast.success(withArticle(outcome.word), { description: outcome.word.english })
       } else if (outcome.restored) {
@@ -53,7 +61,7 @@ export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
   }
 
   return (
-    <div className="clay-static mt-3.5 rounded-[22px] p-4">
+    <div className="clay-static rounded-[22px] p-4">
       <div className="flex items-center gap-2">
         <DuoIcon name="brote" size={17} />
         <p className="text-[14.5px] font-semibold text-ink">
@@ -69,12 +77,14 @@ export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
           placeholder="En español o inglés…"
           disabled={busy}
           aria-label={`Agregar una palabra a ${label}`}
-          className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:ring-1 focus:ring-green/40 disabled:opacity-60"
+          className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-muted focus:ring-1 focus:ring-green/40 disabled:opacity-60"
         />
         <button
           onClick={submit}
           disabled={busy || !value.trim()}
-          className="clay-green flex h-11 flex-none items-center justify-center rounded-full px-5 text-[14.5px] font-semibold text-cream disabled:opacity-50"
+          className={`flex h-11 flex-none items-center justify-center rounded-full px-5 text-[14.5px] font-semibold ${
+            busy || value.trim() ? "clay-green text-cream" : "bg-sunken-2 text-ink-muted"
+          }`}
         >
           {busy ? (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-spin" aria-hidden>
@@ -86,10 +96,17 @@ export function AddWordCard({ set, label, onAdded }: AddWordCardProps) {
           )}
         </button>
       </div>
-      <p className="mt-2.5 px-1 text-[12px] leading-snug text-ink-soft">
-        Escribila como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
-        {own ? "tus palabras" : label}.
-      </p>
+      {added ? (
+        <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted" role="status">
+          <span className="font-serif text-[14px] text-ink">{added}</span> está en {packLabelInline(set)}.{" "}
+          {NEXT_REVIEW}
+        </p>
+      ) : (
+        <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted">
+          Escribila como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
+          {packLabelInline(set)}.
+        </p>
+      )}
     </div>
   )
 }

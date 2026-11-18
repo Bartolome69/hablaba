@@ -70,45 +70,56 @@ export default function CharlaHubPage() {
         <section className="mb-[26px]">
           <h2 className="px-1 font-serif text-[19px] text-ink">Seguir donde quedaste</h2>
           <div className="stagger-children mt-2.5 space-y-2">
-            {resumable.map((c) => (
-              <Link
-                key={c.id}
-                href={`/app/charla/${c.id}`}
-                className="press-chip flex items-center gap-3 rounded-[18px] bg-sunken px-3.5 py-[13px]"
-              >
-                <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-green-tint text-ink">
-                  <DuoIcon name={topicIcon(c.starterId ?? undefined)} size={19} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-semibold text-ink">{c.title}</p>
-                  <p className="text-[12.5px] text-ink-soft">
-                    {counts[c.id] ?? 0} turnos · {relativeDay(c.lastTurnAt)}
-                    {c.voiceSeconds > 0 && " · con voz"}
-                  </p>
-                </div>
-                <DuoIcon name="chevron" size={15} className="flex-none text-ink-soft" />
-              </Link>
-            ))}
+            {/* The most recent thread is the screen's one green block: the
+                thing to do now is pick up where you left off. */}
+            {resumable.map((c, i) => {
+              const lead = i === 0
+              return (
+                <Link
+                  key={c.id}
+                  href={`/app/charla/${c.id}`}
+                  className={`flex items-center gap-3 rounded-[18px] px-3.5 py-[13px] ${
+                    lead ? "clay-green" : "press-chip bg-sunken"
+                  }`}
+                >
+                  <div
+                    className={`flex h-9 w-9 flex-none items-center justify-center rounded-xl ${
+                      lead ? "bg-green-well text-[#EAF3EB]" : "bg-green-tint text-ink"
+                    }`}
+                  >
+                    <DuoIcon name={topicIcon(c.starterId ?? undefined)} size={19} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className={`truncate text-[15px] font-semibold ${lead ? "text-cream" : "text-ink"}`}>{c.title}</p>
+                    <p className={`text-[12.5px] ${lead ? "text-green-on-dark" : "text-ink-muted"}`}>
+                      {counts[c.id] ?? 0} turnos · {relativeDay(c.lastTurnAt)}
+                      {c.voiceSeconds > 0 && " · con voz"}
+                    </p>
+                  </div>
+                  <DuoIcon name="chevron" size={15} className={`flex-none ${lead ? "text-cream" : "text-ink-muted"}`} />
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}
 
       <section>
         <h2 className="px-1 font-serif text-[19px] text-ink">Empezar una charla</h2>
-        <p className="mt-1.5 px-1 text-[13px] leading-normal text-ink-soft">
+        <p className="mt-1.5 px-1 text-[13px] leading-normal text-ink-muted">
           Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras.
         </p>
 
         <button
           onClick={() => startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")}
-          className="clay-green mt-3.5 flex w-full items-center gap-[13px] rounded-[22px] p-4 text-left"
+          className="clay-card mt-3.5 flex w-full items-center gap-[13px] rounded-[22px] p-4 text-left"
         >
-          <div className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[14px] bg-green-well">
-            <DuoIcon name="familia" size={24} className="text-[#EAF3EB]" />
+          <div className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[14px] bg-green-tint text-ink">
+            <DuoIcon name="familia" size={24} />
           </div>
           <div className="flex flex-col gap-0.5">
-            <p className="text-[15.5px] font-semibold text-cream">Con tu peque</p>
-            <p className="text-[12.5px] leading-snug text-green-on-dark">
+            <p className="text-[15.5px] font-semibold text-ink">Con tu peque</p>
+            <p className="text-[12.5px] leading-snug text-ink-muted">
               {PARTNER_NAME} hace de tu hijo, para ensayar el día
             </p>
           </div>
@@ -124,7 +135,7 @@ export default function CharlaHubPage() {
               <DuoIcon name={topicIcon(topic.id)} size={26} className="text-ink" />
               <div className="flex flex-col gap-0.5">
                 <p className="text-[14.5px] font-semibold text-ink">{topic.label}</p>
-                <p className="text-xs leading-[1.35] text-ink-soft">{topic.blurb}</p>
+                <p className="text-xs leading-[1.35] text-ink-muted">{topic.blurb}</p>
               </div>
             </button>
           ))}
@@ -143,7 +154,7 @@ export default function CharlaHubPage() {
                   <DuoIcon name={topicIcon(topic.id)} size={26} className="text-ink" />
                   <div className="flex flex-col gap-0.5">
                     <p className="text-[14.5px] font-semibold text-ink">{topic.title}</p>
-                    <p className="font-serif text-[12.5px] italic leading-[1.35] text-ink-soft">
+                    <p className="font-serif text-[12.5px] italic leading-[1.35] text-ink-muted">
                       {topic.spanish}
                     </p>
                   </div>
@@ -160,11 +171,11 @@ export default function CharlaHubPage() {
       >
         <DuoIcon name="tiempo" size={18} />
         <span className="flex-1 text-sm font-medium">Todas tus charlas</span>
-        <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+        <DuoIcon name="chevron" size={14} className="text-ink-muted" />
       </Link>
 
-      <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-ink-soft">
-        <DuoIcon name="micro" size={13} className="text-ink-soft" detail="#8A9188" />
+      <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-ink-muted">
+        <DuoIcon name="micro" size={13} className="text-ink-muted" detail="#8A9188" />
         Las charlas habladas se revisan al terminar
       </p>
     </div>

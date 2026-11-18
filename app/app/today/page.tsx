@@ -57,7 +57,7 @@ export default function TodayPage() {
     <>
       <div className="flex items-center gap-[9px]">
         <DuoIcon name="micro" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
-        <span className="smallcaps-lg text-green-on-dark">Seguí tu charla</span>
+        <span className="smallcaps-lg text-green-on-dark">{resume ? "Seguí tu charla" : "Empezá una charla"}</span>
       </div>
       <div className="mt-3.5 flex items-center gap-3">
         <div className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-[13px] bg-green-well">
@@ -102,7 +102,7 @@ export default function TodayPage() {
         className="mt-3.5 flex items-center gap-1.5 px-1 text-[13.5px] font-medium text-ink-muted transition-colors hover:text-ink"
       >
         Elegir otro tema
-        <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+        <DuoIcon name="chevron" size={14} className="text-ink-muted" />
       </Link>
 
       {/* Phrases due today — straight from the unified library. */}
@@ -113,7 +113,7 @@ export default function TodayPage() {
               <DuoIcon name="brote" size={18} className="text-green" />
               Frases para usar hoy
             </h2>
-            <Link href="/app/speak" className="text-[12.5px] font-medium text-terracotta">
+            <Link href="/app/speak" className="text-[12.5px] font-medium text-terracotta-ink">
               Ver todas
             </Link>
           </div>
@@ -122,7 +122,7 @@ export default function TodayPage() {
               <li key={phrase.id} className="clay-static flex items-start gap-3 rounded-[20px] px-4 py-[15px]">
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{phrase.text}</p>
-                  <p className="text-[12.5px] leading-snug text-ink-soft">{phrase.translation}</p>
+                  <p className="text-[12.5px] leading-snug text-ink-muted">{phrase.translation}</p>
                 </div>
                 <button
                   onClick={() => play(phrase.id, phrase.text)}
@@ -149,12 +149,12 @@ export default function TodayPage() {
           <DuoIcon name="palabras" size={18} />
           <span className="flex-1 text-sm font-medium">
             Repasá tus palabras
-            <span className="text-ink-soft">
+            <span className="text-ink-muted">
               {" "}
               · {wordsDue} {wordsDue === 1 ? "lista" : "listas"}
             </span>
           </span>
-          <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+          <DuoIcon name="chevron" size={14} className="text-ink-muted" />
         </Link>
       )}
 
@@ -166,7 +166,7 @@ export default function TodayPage() {
       >
         <DuoIcon name="calendario" size={18} />
         <span className="flex-1 text-sm font-medium">Tu semana: patrones y logros</span>
-        <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+        <DuoIcon name="chevron" size={14} className="text-ink-muted" />
       </Link>
     </div>
   )

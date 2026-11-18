@@ -7,7 +7,7 @@ import { WaitlistForm } from "@/components/marketing/waitlist-form"
 import { FeatureGrid } from "@/components/marketing/feature-grid"
 import { Faq } from "@/components/marketing/faq"
 import { audiences } from "@/lib/marketing/audiences"
-import { coveredTopics } from "@/lib/exercises/content"
+import { coveredTopics, totalQuestionCount } from "@/lib/exercises/content"
 import { phrasePages } from "@/lib/marketing/phrase-pages"
 import { routines } from "@/lib/routines"
 
@@ -31,7 +31,7 @@ const TEASER_ROUTINES = ["bath", "bedtime", "feeding", "diaper", "wakeup", "outs
 
 export default function HomePage() {
   const covered = coveredTopics()
-  const totalQuestions = covered.reduce((n, c) => n + c.totalCount, 0)
+  const totalQuestions = totalQuestionCount(covered)
   const teaserTopics = TEASER_TOPICS.map((id) => covered.find((c) => c.topic.id === id)).filter(
     (c): c is NonNullable<typeof c> => !!c,
   )
@@ -98,7 +98,7 @@ export default function HomePage() {
                     <DuoIcon name="peque" size={18} />
                   </div>
                   <span className="flex-1 text-[15px] font-semibold text-ink">{phrasePages[r.id].title}</span>
-                  <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+                  <DuoIcon name="chevron" size={14} className="text-ink-muted" />
                 </Link>
               ))}
             </div>
@@ -117,7 +117,7 @@ export default function HomePage() {
               {totalQuestions} free questions you can try right on the page.
             </p>
             <div className="mt-5 space-y-2">
-              {teaserTopics.map(({ topic, totalCount }) => (
+              {teaserTopics.map(({ topic, quizCount }) => (
                 <Link
                   key={topic.id}
                   href={`/gramatica/${topic.id}`}
@@ -127,7 +127,7 @@ export default function HomePage() {
                     <DuoIcon name={grammarIcon(topic.id)} size={18} />
                   </div>
                   <span className="flex-1 text-[15px] font-semibold text-ink">{topic.title}</span>
-                  <span className="text-[12.5px] text-ink-soft">{topic.cefr} · {totalCount} Q</span>
+                  <span className="text-[12.5px] text-ink-muted">{topic.cefr} · {quizCount} Q</span>
                 </Link>
               ))}
             </div>

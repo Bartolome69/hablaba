@@ -25,7 +25,7 @@ export function CorrectionCards({ corrections }: { corrections: VoiceObservation
   return (
     <section className="mb-6">
       <h2 className="px-1 font-serif text-[19px] text-ink">Repasá tus correcciones</h2>
-      <p className="mt-1 px-1 text-[12.5px] text-ink-soft">
+      <p className="mt-1 px-1 text-[12.5px] text-ink-muted">
         Lo que dijiste esta semana. Tocá para ver la forma natural.
       </p>
       <ul className="mt-3 space-y-2">
@@ -53,7 +53,7 @@ export function CorrectionCards({ corrections }: { corrections: VoiceObservation
                     )}
                   </div>
                 ) : (
-                  <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-ink-soft">
+                  <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-ink-muted">
                     <DuoIcon name="pista" size={14} />
                     ¿Cómo lo dirías mejor?
                   </p>

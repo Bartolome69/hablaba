@@ -32,6 +32,14 @@ interface SettingsSheetProps {
   onOpenChange: (open: boolean) => void
 }
 
+/** "2025-02-14" in the device's locale: 14/02/2025 on en-GB, 2/14/2025 on en-US. */
+function formatBirthdate(iso?: string): string | null {
+  if (!iso) return null
+  const [y, m, d] = iso.split("-").map(Number)
+  if (!y || !m || !d) return null
+  return new Intl.DateTimeFormat(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(y, m - 1, d))
+}
+
 export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
   const { readAloud, setReadAloud } = useReadAloud()
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -62,7 +70,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
         {profile && (
           <>
-            <h3 className="smallcaps mb-3 text-ink-faint">Spanish</h3>
+            <h3 className="smallcaps mb-3 text-ink-muted">Español</h3>
             <div className="mb-4 grid grid-cols-2 gap-2">
               {DIALECT_OPTIONS.map((d) => {
                 const selected = profile.dialect === d.id
@@ -79,7 +87,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                     <p className={`text-sm font-semibold ${selected ? "text-green" : "text-ink"}`}>
                       {d.label}
                     </p>
-                    <p className="mt-0.5 text-xs text-ink-soft">{d.blurb}</p>
+                    <p className="mt-0.5 text-xs text-ink-muted">{d.blurb}</p>
                   </button>
                 )
               })}
@@ -105,14 +113,14 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
             </div>
 
-            <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Your little one</h3>
-            <p className="mb-3 text-xs text-ink-soft">
-              Optional — with a child set, {PARTNER_NAME} can talk about your day with them by name.
+            <h3 className="smallcaps mb-3 mt-7 text-ink-muted">Tu peque</h3>
+            <p className="mb-3 text-xs text-ink-muted">
+              Opcional. Si lo cargás, {PARTNER_NAME} puede hablar de tu día con su nombre.
             </p>
             <div className="space-y-3">
               <div>
                 <label htmlFor="profile-child-name" className="mb-1.5 block text-xs text-ink-muted">
-                  Name
+                  Nombre
                 </label>
                 <input
                   id="profile-child-name"
@@ -131,20 +139,30 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
               <div>
                 <label htmlFor="profile-child-birthdate" className="mb-1.5 block text-xs text-ink-muted">
-                  Birthdate
+                  Nacimiento
                 </label>
-                <input
-                  id="profile-child-birthdate"
-                  type="date"
-                  defaultValue={profile.child?.birthdate ?? ""}
-                  onBlur={(e) => {
-                    const birthdate = e.target.value
-                    if (profile.child?.name && birthdate !== profile.child.birthdate) {
-                      patchProfile({ child: { name: profile.child.name, birthdate } })
-                    }
-                  }}
-                  className="clay-recessed w-full rounded-[14px] px-3.5 py-2.5 text-sm text-ink outline-none focus:ring-1 focus:ring-green/40"
-                />
+                {/* The date shows in the device's own format (14/02/2025 on an
+                    en-GB phone). A native date input renders in the browser's
+                    UI language instead, so it sits transparent on top, only
+                    to open the system picker. */}
+                <div className="clay-recessed relative flex h-11 w-full items-center rounded-[14px] px-3.5 text-sm text-ink focus-within:ring-1 focus-within:ring-green/40">
+                  <span className={profile.child?.birthdate ? "text-ink" : "text-ink-muted"}>
+                    {formatBirthdate(profile.child?.birthdate) ?? "Elegí la fecha"}
+                  </span>
+                  <DuoIcon name="calendario" size={16} className="ml-auto text-ink-muted" />
+                  <input
+                    id="profile-child-birthdate"
+                    type="date"
+                    value={profile.child?.birthdate ?? ""}
+                    onChange={(e) => {
+                      const birthdate = e.target.value
+                      if (profile.child?.name && birthdate !== profile.child.birthdate) {
+                        patchProfile({ child: { name: profile.child.name, birthdate } })
+                      }
+                    }}
+                    className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  />
+                </div>
               </div>
             </div>
           </>
@@ -154,7 +172,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
             only thing left here is whether she reads to you — and the sheet's
             three headings now read as the three things the app is about:
             Spanish, your little one, and her. */}
-        <h3 className="smallcaps mb-3 mt-7 text-ink-faint">{PARTNER_NAME}</h3>
+        <h3 className="smallcaps mb-3 mt-7 text-ink-muted">{PARTNER_NAME}</h3>
 
         {/* Off by default, and the copy says what it does rather than naming a
             feature — the parent needs to know whether the phone is about to
@@ -162,7 +180,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
         <div className="clay-card mt-3 flex items-center gap-3 rounded-[18px] p-3">
           <div className="flex-1">
             <p className="text-sm font-semibold text-ink">Leer las respuestas</p>
-            <p className="text-xs leading-snug text-ink-soft">
+            <p className="text-xs leading-snug text-ink-muted">
               En el chat escrito, {PARTNER_NAME} lee sus mensajes sola.
             </p>
           </div>

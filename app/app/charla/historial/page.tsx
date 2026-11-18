@@ -16,12 +16,11 @@ interface Row {
   voiceTurns: number
 }
 
+// "miércoles 18 de noviembre": Spanish dates, lower case, no comma.
 function formatDay(iso: string): string {
-  return new Date(iso).toLocaleDateString("es-AR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  })
+  return new Date(iso)
+    .toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })
+    .replace(",", "")
 }
 
 export default function ConversationHistoryPage() {
@@ -59,7 +58,7 @@ export default function ConversationHistoryPage() {
         </Link>
         <div>
           <h1 className="font-serif text-[22px] leading-tight tracking-[-0.015em] text-ink">Tus charlas</h1>
-          <p className="text-xs text-ink-soft">Todo lo que hablaste y escribiste</p>
+          <p className="text-xs text-ink-muted">Todo lo que hablaste y escribiste</p>
         </div>
       </div>
 
@@ -91,19 +90,19 @@ export default function ConversationHistoryPage() {
                   <p className="truncate text-[15px] font-semibold text-ink">
                     {conversation.title}
                   </p>
-                  <p className="flex items-center gap-1 text-[12.5px] text-ink-soft">
-                    <span className="capitalize">{formatDay(conversation.lastTurnAt)}</span>
+                  <p className="flex items-center gap-1 text-[12.5px] text-ink-muted">
+                    <span>{formatDay(conversation.lastTurnAt)}</span>
                     <span>· {turns} turnos</span>
                     {voiceTurns > 0 && (
                       <>
-                        <DuoIcon name="micro" size={12} className="text-ink-soft" detail="#8A9188" />
+                        <DuoIcon name="micro" size={12} className="text-ink-muted" detail="#8A9188" />
                         {conversation.voiceSeconds > 0 &&
                           `${Math.max(1, Math.round(conversation.voiceSeconds / 60))}′`}
                       </>
                     )}
                   </p>
                 </div>
-                <DuoIcon name="chevron" size={15} className="flex-none text-ink-soft" />
+                <DuoIcon name="chevron" size={15} className="flex-none text-ink-muted" />
               </Link>
               <button
                 onClick={() => {
@@ -111,7 +110,7 @@ export default function ConversationHistoryPage() {
                   load()
                 }}
                 aria-label={`Borrar la charla ${conversation.title}`}
-                className="press-disc flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-ink-soft transition-colors hover:text-terracotta-ink"
+                className="press-disc flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:text-terracotta-ink"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
                   <path

@@ -169,7 +169,7 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
           spellCheck
           // 24px keeps a perfect pill at one line and stays softly rounded
           // as the box grows, so there's no radius pop mid-transition.
-          className={`clay-recessed min-w-0 flex-1 resize-none overflow-hidden rounded-[24px] px-[18px] py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-faint transition-[height,box-shadow] duration-150 ease-out ${
+          className={`clay-recessed min-w-0 flex-1 resize-none overflow-hidden rounded-[24px] px-[18px] py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink-muted transition-[height,box-shadow] duration-150 ease-out ${
             languageError ? "ring-2 ring-terracotta/50" : "focus:ring-1 focus:ring-green/40"
           }`}
           style={{ height: MIN_INPUT_HEIGHT }}

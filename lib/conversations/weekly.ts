@@ -18,7 +18,7 @@ export interface WeeklyPattern {
 }
 
 export interface WeeklyData {
-  stats: { sessions: number; minutes: number; userTurns: number; streakDays: number }
+  stats: { sessions: number; minutes: number; userTurns: number; activeDays: number }
   patterns: WeeklyPattern[]
   celebrations: string[]
   repetitions: { word: string; alternatives?: string }[]
@@ -30,23 +30,18 @@ function dayKey(iso: string): string {
   return iso.slice(0, 10)
 }
 
-/** Consecutive days with conversation activity, counting back from today or yesterday. */
-export function speakingStreakDays(conversations: Conversation[], now: Date = new Date()): number {
+/**
+ * Days this week with at least one conversation, in any order. Deliberately
+ * NOT consecutive: there is no streak anywhere in the app (QW6), so a missed
+ * day never resets anything.
+ */
+export function activeDays(conversations: Conversation[]): number {
   const days = new Set<string>()
   for (const c of conversations) {
     days.add(dayKey(c.startedAt))
     days.add(dayKey(c.lastTurnAt))
   }
-  const cursor = new Date(now)
-  const localKey = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  if (!days.has(localKey(cursor))) cursor.setDate(cursor.getDate() - 1)
-  let streak = 0
-  while (days.has(localKey(cursor))) {
-    streak++
-    cursor.setDate(cursor.getDate() - 1)
-  }
-  return streak
+  return days.size
 }
 
 export function computeWeeklyData(now: Date = new Date()): WeeklyData {
@@ -104,7 +99,7 @@ export function computeWeeklyData(now: Date = new Date()): WeeklyData {
       sessions: inWindow.length,
       minutes,
       userTurns,
-      streakDays: speakingStreakDays(all, now),
+      activeDays: activeDays(inWindow),
     },
     patterns,
     celebrations,

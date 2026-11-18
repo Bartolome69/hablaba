@@ -9,13 +9,13 @@ colors:
   rule: "#E8E1D3"
   card-lip: "#EDE5D6"
   ink: "#1E3D2C"
-  ink-muted: "#6E7A6F"
-  ink-soft: "#8A9188"
-  ink-faint: "#9AA097"
+  ink-muted: "#5F6B61"   # all secondary text: 5.05:1 on bg, 4.66 on sunken
+  ink-soft: "#5F6B61"    # merged into ink-muted (kept as an alias)
+  ink-faint: "#9AA097"   # decoration and disabled states only, never readable text
   green: "#1B5A2E"
   green-press: "#123C1F"
   green-tint: "#E4EDE5"
-  green-on-dark: "#9FC7AB"
+  green-on-dark: "#A8D0B4"   # 4.84:1 on green
   cream-on-dark: "#F7F3EC"
   terracotta: "#C4633E"
   terracotta-tint: "#F4DFCC"
@@ -49,7 +49,7 @@ typography:
     lineHeight: 1.4
   smallcaps:
     fontFamily: "Outfit, system-ui, sans-serif"
-    fontSize: "10.5px"
+    fontSize: "12px"
     fontWeight: 500
     letterSpacing: "0.16em"
     textTransform: uppercase
@@ -126,6 +126,26 @@ Key characteristics:
   phrases and every conversational sentence. Outfit for UI: row titles,
   metadata, chips, nav labels, small-caps labels.
 - Hairline `rule` dividers, 22px gutters, screens end above the 86px nav.
+
+### Contrast (QW5, Nov 2026)
+
+Every readable text/background pair is at least 4.5:1 (WCAG 2.1 AA), and no
+readable text is smaller than 12px.
+
+| Text | On | Ratio |
+| --- | --- | --- |
+| ink #1E3D2C | bg / surface / sunken | 10.81 / 11.54 / 9.97 |
+| ink-muted #5F6B61 | bg / surface / sunken / sunken-2 / green-tint | 5.05 / 5.40 / 4.66 / 4.55 / 4.66 |
+| green #1B5A2E | bg / surface / sunken | 7.46 / 7.97 / 6.88 |
+| terracotta-ink #8A4527 | bg / terracotta-tint | 6.42 / 5.50 |
+| cream-on-dark #F7F3EC | green / green-well | 7.45 / 5.82 |
+| green-on-dark #A8D0B4 | green | 4.84 |
+
+- **terracotta #C4633E is not a text colour** for small text (3.65:1). Small
+  terracotta labels use terracotta-ink; terracotta itself stays for dots,
+  bars, icons and the large serif blank in quiz prompts (large text, 3:1).
+- **ink-muted on terracotta-tint is 4.33:1**: use terracotta-ink or ink there.
+- **green-on-dark only on green**, not on green-well (3.78:1).
 
 ## 2. Press physics (the "clay" part)
 

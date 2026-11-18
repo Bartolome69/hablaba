@@ -14,6 +14,11 @@
 import { DuoIcon } from "@/components/icons"
 import type { VoiceConnectionState } from "@/lib/voice/types"
 
+// The volume button cycles her output gain 1× → 2× → 3× (lib/voice/config.ts);
+// the label names the level it's at, not a multiplier.
+const GAIN_LABELS: Record<number, string> = { 1: "Normal", 2: "Fuerte", 3: "Muy fuerte" }
+const gainLabel = (gain: number) => GAIN_LABELS[gain] ?? "Normal"
+
 const PRIMARY_LABELS: Record<VoiceConnectionState, string> = {
   idle: "Empezar",
   "requesting-mic": "Permitiendo…",
@@ -107,8 +112,8 @@ export function VoiceOrb({
         </span>
         {inConversation && (
           <span
-            className={`flex-none text-[11px] font-medium tabular-nums ${
-              nearLimit ? "text-terracotta-ink" : "text-ink-soft"
+            className={`flex-none text-[12px] font-medium tabular-nums ${
+              nearLimit ? "text-terracotta-ink" : "text-ink-muted"
             }`}
           >
             {formatElapsed(elapsed)}
@@ -122,12 +127,12 @@ export function VoiceOrb({
         <div className="flex w-[62px] flex-col items-center gap-1.5">
           <button
             onClick={onCycleGain}
-            aria-label={`Volumen ${outputGain}×, tocá para cambiar`}
+            aria-label={`Volumen: ${gainLabel(outputGain).toLowerCase()}. Tocá para cambiar`}
             className="clay-card flex h-14 w-14 items-center justify-center rounded-full text-ink"
           >
             <DuoIcon name="escuchar" size={24} />
           </button>
-          <span className="text-[11px] text-ink-soft">Volumen {outputGain}×</span>
+          <span className="text-[12px] text-ink-muted">{gainLabel(outputGain)}</span>
         </div>
 
         <div className="flex flex-col items-center gap-2">
@@ -179,7 +184,7 @@ export function VoiceOrb({
           >
             <DuoIcon name="parar" size={22} />
           </button>
-          <span className="text-[11px] text-ink-soft">Terminar</span>
+          <span className="text-[12px] text-ink-muted">Terminar</span>
         </div>
       </div>
     </div>

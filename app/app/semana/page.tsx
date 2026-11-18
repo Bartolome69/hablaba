@@ -9,6 +9,7 @@ import Link from "next/link"
 import { CorrectionCards } from "@/components/voice/correction-cards"
 import { DuoIcon } from "@/components/icons"
 import { runMigrations } from "@/lib/migrations"
+import { sentenceCase } from "@/lib/utils"
 import {
   computeWeeklyData,
   fetchWeeklyNarrative,
@@ -20,7 +21,7 @@ function StatTile({ value, label }: { value: string; label: string }) {
   return (
     <div className="clay-static flex-1 rounded-[18px] px-3 py-3.5 text-center">
       <p className="font-serif text-[22px] leading-tight text-ink">{value}</p>
-      <p className="mt-0.5 text-[11px] text-ink-soft">{label}</p>
+      <p className="mt-0.5 text-[12px] text-ink-muted">{label}</p>
     </div>
   )
 }
@@ -48,7 +49,9 @@ export default function WeeklyReportPage() {
 
   if (!data) return <div className="min-h-dvh bg-background" />
 
-  const labelFor = (tag: string) => tagLabels[tag] ?? tag.replace(/-/g, " ")
+  // Sentence case, never title case: "Pretérito o imperfecto", not
+  // "Pretérito O Imperfecto". Only the first letter is touched.
+  const labelFor = (tag: string) => sentenceCase(tagLabels[tag] ?? tag.replace(/-/g, " "))
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
@@ -62,7 +65,7 @@ export default function WeeklyReportPage() {
         </Link>
         <div>
           <h1 className="font-serif text-[22px] leading-tight tracking-[-0.015em] text-ink">Tu semana</h1>
-          <p className="text-xs text-ink-soft">Los últimos 7 días de conversación</p>
+          <p className="text-xs text-ink-muted">Los últimos 7 días de conversación</p>
         </div>
       </div>
 
@@ -87,14 +90,11 @@ export default function WeeklyReportPage() {
             <StatTile value={String(data.stats.userTurns)} label="veces que hablaste" />
           </div>
 
-          {/* The streak is the screen's one terracotta moment. */}
-          {data.stats.streakDays > 1 && (
-            <div className="mb-4 flex items-center gap-2.5 rounded-[18px] bg-terracotta-tint px-4 py-3">
-              <DuoIcon name="racha" size={17} className="flex-shrink-0 text-ink" />
-              <p className="text-sm font-semibold text-terracotta-ink">
-                {data.stats.streakDays} días seguidos con español
-              </p>
-            </div>
+          {/* Days with Spanish, not a streak: any order, nothing resets (QW6). */}
+          {data.stats.activeDays > 1 && (
+            <p className="mb-4 px-1 text-sm font-medium text-ink-muted">
+              {data.stats.activeDays} días con español esta semana
+            </p>
           )}
 
           {narrative ? (
@@ -133,12 +133,12 @@ export default function WeeklyReportPage() {
                 {data.patterns.map((p) => (
                   <li key={p.tag} className="clay-static rounded-[18px] px-4 py-3.5">
                     <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                      <p className="text-[15px] font-semibold capitalize text-ink">{labelFor(p.tag)}</p>
-                      <p className="text-xs tabular-nums text-ink-soft">×{p.count}</p>
+                      <p className="text-[15px] font-semibold text-ink">{labelFor(p.tag)}</p>
+                      <p className="text-xs tabular-nums text-ink-muted">×{p.count}</p>
                     </div>
                     {p.examples[0]?.original && p.examples[0]?.corrected && (
                       <p className="font-serif text-[17px] leading-[1.4] text-ink">
-                        <span className="text-ink-soft underline decoration-terracotta decoration-2 underline-offset-[3px]">
+                        <span className="text-ink-muted underline decoration-terracotta decoration-2 underline-offset-[3px]">
                           {p.examples[0].original}
                         </span>{" "}
                         <DuoIcon name="flecha" size={13} className="inline" />{" "}
@@ -171,7 +171,7 @@ export default function WeeklyReportPage() {
               <ul className="mt-2.5 space-y-1.5">
                 {data.repetitions.map((r, i) => (
                   <li key={i} className="flex items-start gap-2.5 rounded-[16px] bg-sunken px-3.5 py-2.5">
-                    <DuoIcon name="repasar" size={14} className="mt-0.5 flex-shrink-0 text-ink-soft" detail="#8A9188" />
+                    <DuoIcon name="repasar" size={14} className="mt-0.5 flex-shrink-0 text-ink-muted" detail="#8A9188" />
                     <p className="text-sm leading-relaxed text-ink">
                       <span className="font-serif text-[16px]">“{r.word}”</span>
                       {r.alternatives && (

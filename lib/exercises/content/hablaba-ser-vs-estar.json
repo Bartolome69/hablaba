@@ -13,7 +13,7 @@
         { "spanish": "El cochecito está en el pasillo.", "english": "The pram is in the hallway.", "note": "location of a thing → estar" },
         { "spanish": "La fiesta es en casa de los abuelos.", "english": "The party is at the grandparents' house.", "note": "events → ser" },
         { "spanish": "Está durmiendo, no hagas ruido.", "english": "He's sleeping, don't make noise.", "note": "progressive → estar" },
-        { "spanish": "¿Ya estás listo? — Sí, vamos.", "english": "Are you ready? — Yes, let's go.", "note": "estar listo = ready; ser listo = clever" }
+        { "spanish": "¿Ya estás listo? Sí, vamos.", "english": "Are you ready? Yes, let's go.", "note": "estar listo = ready; ser listo = clever" }
       ]
     }
   ],
@@ -172,8 +172,8 @@
       "id": "se-ch-como-es",
       "topicId": "ser-vs-estar",
       "type": "choice",
-      "prompt": "—¿Cómo ___ tu hijo? —Alegre y muy curioso.",
-      "promptEnglish": "—What's your son like? —Cheerful and very curious.",
+      "prompt": "¿Cómo ___ tu hijo? Alegre y muy curioso.",
+      "promptEnglish": "What's your son like? Cheerful and very curious.",
       "options": ["es", "está"],
       "answers": ["es"],
       "explanation": "¿Cómo es? asks about character (ser); ¿cómo está? asks how he's doing today.",

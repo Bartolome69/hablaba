@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { AppHeader } from "@/components/home/app-header"
 import { DuoIcon, grammarIcon } from "@/components/icons"
-import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
+import { coveredTopics, itemsForTopic, totalQuestionCount, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import { practicePackForTopics, practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
@@ -59,9 +59,10 @@ const BAND_FILL: Record<MasteryBand, string> = {
 
 type TopicSort = "area" | "flojos" | "olvidados"
 
+// Weakest first is the default (QW8): it answers "what should I work on?".
 const SORT_LABELS: Record<TopicSort, string> = {
-  area: "Por área",
   flojos: "Más flojos",
+  area: "Por área",
   olvidados: "Sin practicar",
 }
 
@@ -114,7 +115,7 @@ export function ExercisesApp() {
   const covered = useMemo(() => coveredTopics(), [])
   const [view, setView] = useState<View>({ name: "home" })
   const [mastery, setMastery] = useState<Record<string, TopicMastery>>({})
-  const [sort, setSort] = useState<TopicSort>("area")
+  const [sort, setSort] = useState<TopicSort>("flojos")
 
   const changeSort = (s: TopicSort) => {
     setSort(s)
@@ -183,7 +184,7 @@ export function ExercisesApp() {
     )
   }
 
-  const totalQuestions = covered.reduce((n, c) => n + c.quizCount, 0)
+  const totalQuestions = totalQuestionCount(covered)
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
@@ -202,7 +203,7 @@ export function ExercisesApp() {
 
       <div className="mt-[26px] flex items-baseline justify-between px-1">
         <h2 className="font-serif text-[19px] text-ink">Temas</h2>
-        <span className="text-[12.5px] text-ink-soft">{totalQuestions} preguntas</span>
+        <span className="text-[12.5px] text-ink-muted">{totalQuestions} preguntas</span>
       </div>
 
       {/* Sort: grouped by area, weakest first, or longest un-practised first. */}
@@ -233,7 +234,7 @@ export function ExercisesApp() {
           if (group.length === 0) return null
           return (
             <section key={area} className="mt-5">
-              <h3 className="smallcaps px-1 pb-2.5 text-ink-faint">{AREA_NAMES[area]}</h3>
+              <h3 className="smallcaps px-1 pb-2.5 text-ink-muted">{AREA_NAMES[area]}</h3>
               <div className="stagger-children space-y-2">
                 {group.map((c) => (
                   <TopicCard
@@ -298,16 +299,16 @@ function TopicCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-semibold text-ink">{covered.topic.title}</p>
-        <p className="truncate font-serif text-[13.5px] italic text-ink-soft">
+        <p className="truncate font-serif text-[13.5px] italic text-ink-muted">
           {covered.topic.spanish}
         </p>
       </div>
       <div className="flex flex-none flex-col items-end gap-1.5">
         {staleness ? (
-          <span className="text-[12.5px] font-medium text-ink-soft">{staleness}</span>
+          <span className="text-[12.5px] font-medium text-ink-muted">{staleness}</span>
         ) : (
-          <span className="text-[12.5px] text-ink-soft">
-            <span className="font-medium text-ink-faint">{covered.topic.cefr}</span> · {covered.quizCount} P
+          <span className="text-[12.5px] text-ink-muted">
+            <span className="font-medium text-ink-muted">{covered.topic.cefr}</span> · {covered.quizCount} P
           </span>
         )}
         <span className="flex items-center gap-1.5">
@@ -319,7 +320,7 @@ function TopicCard({
               />
             ))}
           </span>
-          <span className={`text-[11.5px] ${band === "mislearned" ? "font-medium text-terracotta-ink" : "text-ink-soft"}`}>
+          <span className={`text-[12px] ${band === "mislearned" ? "font-medium text-terracotta-ink" : "text-ink-muted"}`}>
             {BAND_LABEL[band]}
           </span>
         </span>
@@ -358,6 +359,7 @@ function Quiz({
   const [checked, setChecked] = useState(false)
   const [wasCorrect, setWasCorrect] = useState(false)
   const [correctCount, setCorrectCount] = useState(0)
+  const [missed, setMissed] = useState<ExerciseItem[]>([])
   const [done, setDone] = useState(false)
   const [hintOpen, setHintOpen] = useState(false)
 
@@ -374,6 +376,8 @@ function Quiz({
     if (correct) {
       setCorrectCount((c) => c + 1)
       playCorrect()
+    } else {
+      setMissed((m) => [...m, item])
     }
     recordAttempt({
       itemId: item.id,
@@ -419,7 +423,10 @@ function Quiz({
   }, [])
 
   const atLast = idx + 1 >= items.length
-  const pct = items.length ? Math.round((correctCount / items.length) * 100) : 0
+  const topicIds = useMemo(() => [...new Set(items.map((i) => i.topicId))], [items])
+  // The bridge's save action is the screen's one green block when it exists;
+  // otherwise "Volver a los temas" keeps the green.
+  const hasBridgePhrases = useMemo(() => practicePhrasesForTopics(topicIds).length > 0, [topicIds])
 
   // Full-screen focused view (covers the bottom nav, like the chat screen). The
   // action button lives in a flex-shrink-0 footer so it stays pinned above the
@@ -450,7 +457,7 @@ function Quiz({
                 style={{ width: `${Math.max(4, (idx / items.length) * 100)}%` }}
               />
             </div>
-            <p className="smallcaps mt-2.5 text-[12px] tracking-[.14em] text-ink-faint">
+            <p className="smallcaps mt-2.5 text-[12px] tracking-[.14em] text-ink-muted">
               Pregunta {idx + 1} de {items.length}
             </p>
           </div>
@@ -459,20 +466,24 @@ function Quiz({
 
       {done ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-[22px] py-6 text-center">
-          <DuoIcon name="logrado" size={44} className="text-green" />
-          <p className="font-serif text-5xl text-ink">
-            {correctCount}/{items.length}
-          </p>
-          <p className="text-sm text-ink-muted">
-            {pct}% correctas{pct === 100 ? ". ¡Perfecto!" : ""}
-          </p>
-          <PracticeBridge topicIds={[...new Set(items.map((i) => i.topicId))]} />
-          <button
-            onClick={onExit}
-            className="clay-green mt-2 h-14 rounded-full px-8 text-base font-semibold text-cream"
-          >
-            Volver a los temas
-          </button>
+          <DuoIcon name="logrado" size={40} className="text-green" />
+          <ResultsSummary items={items} missed={missed} correctCount={correctCount} />
+          <PracticeBridge topicIds={topicIds} />
+          {hasBridgePhrases ? (
+            <button
+              onClick={onExit}
+              className="flex h-11 items-center px-4 text-[14.5px] font-medium text-ink-muted underline underline-offset-4"
+            >
+              Volver a los temas
+            </button>
+          ) : (
+            <button
+              onClick={onExit}
+              className="clay-green mt-2 h-14 rounded-full px-8 text-base font-semibold text-cream"
+            >
+              Volver a los temas
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -481,7 +492,7 @@ function Quiz({
             <div className="mb-7 mt-4">
               <PromptWithBlank prompt={item.prompt} />
               {item.promptEnglish && (
-                <p className="mt-2.5 font-serif text-[13.5px] italic text-ink-soft">{item.promptEnglish}</p>
+                <p className="mt-2.5 font-serif text-[13.5px] italic text-ink-muted">{item.promptEnglish}</p>
               )}
             </div>
 
@@ -534,7 +545,7 @@ function Quiz({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="Escribí tu respuesta…"
-                className="clay-recessed h-14 w-full rounded-[18px] px-5 font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-[15px] placeholder:text-ink-faint focus:ring-1 focus:ring-green disabled:opacity-100"
+                className="clay-recessed h-14 w-full rounded-[18px] px-5 font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-[15px] placeholder:text-ink-muted focus:ring-1 focus:ring-green disabled:opacity-100"
               />
             )}
 
@@ -584,7 +595,7 @@ function Quiz({
                     <p className={`text-sm font-semibold ${wasCorrect ? "text-ink" : "text-terracotta-ink"}`}>
                       {wasCorrect ? "¡Eso es!" : <>Mejor: “{acceptedAnswers(item)[0]}”.</>}
                     </p>
-                    <p className={`text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-[#96604A]"}`}>
+                    <p className={`text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-terracotta-ink"}`}>
                       {item.explanation}
                     </p>
                   </div>
@@ -621,6 +632,61 @@ function Quiz({
   )
 }
 
+// A calm results summary: what went well first, then what to try next. The
+// raw count stays, small and secondary. No big score numeral.
+function ResultsSummary({
+  items,
+  missed,
+  correctCount,
+}: {
+  items: ExerciseItem[]
+  missed: ExerciseItem[]
+  correctCount: number
+}) {
+  const total = items.length
+  const ratio = total ? correctCount / total : 0
+  const heading = missed.length === 0 ? "Te salió todo" : ratio >= 0.7 ? "Vas muy bien" : ratio >= 0.4 ? "Vas bien" : "Buen comienzo"
+
+  const topicName = (id: string) => getTopic(id)?.spanish ?? getTopic(id)?.title ?? id
+  const topicIds = [...new Set(items.map((i) => i.topicId))]
+  const missedTopics = [...new Set(missed.map((i) => i.topicId))]
+  const solidTopics = topicIds.filter((id) => !missedTopics.includes(id))
+
+  let well: string
+  let next: string
+  if (topicIds.length > 1) {
+    well = solidTopics.length
+      ? `Lo más firme: ${solidTopics.slice(0, 2).map(topicName).join(" y ")}.`
+      : `${correctCount === 1 ? "Una te salió" : `${correctCount} te salieron`} a la primera.`
+    // The topic with the most misses is the one to come back to.
+    const counts = missedTopics.map((id) => [id, missed.filter((m) => m.topicId === id).length] as const)
+    const weakest = counts.sort((a, b) => b[1] - a[1])[0]?.[0]
+    next = weakest ? `Para la próxima: ${topicName(weakest)}.` : "Volvé en unos días para que se asiente."
+  } else {
+    well =
+      missed.length === 0
+        ? "Todas a la primera."
+        : correctCount > 0
+          ? `${correctCount === 1 ? "Una te salió" : `${correctCount} te salieron`} a la primera.`
+          : "Ya viste cómo funciona; la segunda vuelta es más fácil."
+    next =
+      missed.length === 0
+        ? "Volvé en unos días para que se asiente."
+        : `Para la próxima: mirá la pista antes de ${missed.length === 1 ? "la que se te escapó" : `las ${missed.length} que se te escaparon`}.`
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <p className="font-serif text-[28px] tracking-[-0.015em] text-ink">{heading}</p>
+      <p className="max-w-[300px] text-[14.5px] leading-relaxed text-ink">{well}</p>
+      <p className="max-w-[300px] text-[14.5px] leading-relaxed text-ink-muted">{next}</p>
+      <p className="mt-1 text-[12.5px] text-ink-muted">
+        {correctCount} de {total} a la primera
+      </p>
+    </div>
+  )
+}
+
 // The results-screen bridge out of the quiz: topics with a practice set let
 // the learner save conversation-ready phrases into the library (the seeded
 // charla does the prompting from there, see lib/exercises/practice-phrases.ts)
@@ -642,18 +708,18 @@ function PracticeBridge({ topicIds }: { topicIds: string[] }) {
 
   return (
     <div className="clay-static mt-3 w-full rounded-[22px] p-5 text-left">
-      <p className="smallcaps text-ink-faint">Llevalo a tu día</p>
+      <p className="smallcaps text-ink-muted">Llevalo a tu día</p>
 
       {phrases.length > 0 &&
         (phrasesAdded === null ? (
           <>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-              Guardá {phrases.length} frases en tu biblioteca. Tu partner las va a ir metiendo en
-              las próximas charlas hasta que salgan solas.
+              Guardá {phrases.length} frases en tu biblioteca. Elena las va a ir usando en tus
+              próximas charlas hasta que te salgan solas.
             </p>
             <button
               onClick={savePhrases}
-              className="press-chip mt-3 flex w-full items-center justify-center gap-2 rounded-[16px] bg-sunken py-3 text-sm font-medium text-ink"
+              className="clay-green mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full text-[15px] font-semibold text-cream"
             >
               <DuoIcon name="frases" size={15} />
               Guardar las frases

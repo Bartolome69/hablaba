@@ -24,11 +24,11 @@ interface TranslatedWord {
 }
 
 /**
- * Translate a term and store it in `set`. Throws on network failure so the
+ * Translate a term and store it in `set` (Tus palabras when there's no pack context). Throws on network failure so the
  * caller can offer a retry; returns `duplicate` (rather than throwing) when the
  * word is already somewhere, so the UI can say where.
  */
-export async function addOwnWord(term: string, set: VocabSetId): Promise<AddWordOutcome> {
+export async function addOwnWord(term: string, set: VocabSetId = "propias"): Promise<AddWordOutcome> {
   const profile = getProfile()
   const res = await fetch("/api/vocab/translate", {
     method: "POST",

@@ -3,7 +3,6 @@ import type { Message, SavedPhrase, DailyPrompt, Session, UserProfile, Conversat
 export const mockUser: UserProfile = {
   id: "1",
   name: "You",
-  streak: 7,
   savedPhraseCount: 12,
 }
 
@@ -132,10 +131,10 @@ export const surpriseThemes = [
 export const PARENT_CHILD_TOPIC_ID = "parent-child"
 
 export const parentChildThemes = [
-  "asking for a favorite snack before dinner",
+  "asking for a favourite snack before dinner",
   "getting dressed in the morning",
   "not wanting to brush your teeth",
-  "playing with a favorite toy",
+  "playing with a favourite toy",
   "being scared of a loud noise",
   "wanting one more bedtime story",
   "sharing toys with a sibling or friend",

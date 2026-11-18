@@ -10,6 +10,7 @@
 import { useState } from "react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { DuoIcon } from "@/components/icons"
+import { PARTNER_NAME } from "@/lib/voices"
 import { useTurnTranslations } from "@/hooks/use-turn-translations"
 import type { ConversationTurn } from "@/lib/conversations/types"
 import type { Message } from "@/lib/types"
@@ -64,7 +65,7 @@ export function ConversationTranscript({
         if (isUser) {
           return (
             <div key={turn.id} className="flex flex-col items-end gap-[5px]">
-              <span className="smallcaps pr-1 text-terracotta">Tú · voz</span>
+              <span className="smallcaps pr-1 text-terracotta-ink">Tú · voz</span>
               <div
                 className="max-w-[84%] rounded-[20px] rounded-br-[7px] bg-green px-[15px] py-3.5"
                 style={{ boxShadow: "0 3px 0 var(--hb-green-press)" }}
@@ -77,7 +78,7 @@ export function ConversationTranscript({
 
         return (
           <div key={turn.id} className="flex flex-col items-start gap-[5px]">
-            <span className="smallcaps pl-1 text-ink-faint">Hablaba</span>
+            <span className="smallcaps pl-1 text-ink-muted">{PARTNER_NAME}</span>
             <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
               <p
                 onClick={translatable ? () => toggle(turn.id, turn.text) : undefined}
@@ -90,7 +91,7 @@ export function ConversationTranscript({
               </p>
 
               {open && (
-                <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-soft">
+                <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-muted">
                   {pendingId === turn.id && !translation ? (
                     <span className="inline-flex items-end gap-[3px]" aria-label="Traduciendo…">
                       <span className="anim-bar h-2.5 w-[3px] rounded-[2px] bg-green opacity-45" />
@@ -119,7 +120,7 @@ export function ConversationTranscript({
                         size={12}
                         className={`text-ink ${playingId === turn.id ? "animate-pulse" : ""}`}
                       />
-                      <span className="text-[11.5px] font-semibold text-ink">Repetir</span>
+                      <span className="text-[12px] font-semibold text-ink">Repetir</span>
                     </button>
                   )}
                 </div>
@@ -146,7 +147,7 @@ function SaveChip({ onSave }: { onSave: () => void }) {
       aria-label={saved ? "Guardada en Frases" : "Guardar en Frases"}
     >
       <DuoIcon name="guardada" size={12} className="text-terracotta" />
-      <span className="text-[11.5px] font-semibold text-ink">{saved ? "Guardada" : "Guardar"}</span>
+      <span className="text-[12px] font-semibold text-ink">{saved ? "Guardada" : "Guardar"}</span>
     </button>
   )
 }

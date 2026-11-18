@@ -79,7 +79,7 @@ export default async function GrammarTopicPage({ params }: PageProps) {
 
   return (
     <article className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:pt-14">
-      <nav className="flex items-center gap-1.5 text-[13px] text-ink-soft" aria-label="Breadcrumb">
+      <nav className="flex items-center gap-1.5 text-[13px] text-ink-muted" aria-label="Breadcrumb">
         <Link href="/gramatica" className="hover:text-ink">Spanish grammar</Link>
         <DuoIcon name="chevron" size={12} />
         <span className="text-ink-muted">{topic.title}</span>
@@ -94,11 +94,11 @@ export default async function GrammarTopicPage({ params }: PageProps) {
             <h1 className="font-serif text-[34px] leading-[1.05] tracking-[-0.025em] text-ink sm:text-5xl">
               {topic.title}
             </h1>
-            <p className="mt-1 font-serif text-lg italic text-ink-soft">{topic.spanish}</p>
+            <p className="mt-1 font-serif text-lg italic text-ink-muted">{topic.spanish}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-terracotta-tint px-3 py-1 text-[11px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
+          <span className="rounded-full bg-terracotta-tint px-3 py-1 text-[12px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
             {topic.cefr}
           </span>
           <span className="rounded-full bg-sunken px-3 py-1 text-[12.5px] text-ink-muted">
@@ -123,9 +123,9 @@ export default async function GrammarTopicPage({ params }: PageProps) {
           {examples.map((e) => (
             <li key={e.spanish} className="clay-static rounded-[18px] px-5 py-4">
               <p className="font-serif text-[19px] leading-snug text-ink">{e.spanish}</p>
-              <p className="mt-1 text-[13.5px] text-ink-soft">
+              <p className="mt-1 text-[13.5px] text-ink-muted">
                 {e.english}
-                {e.note && <span className="text-ink-faint"> ({e.note})</span>}
+                {e.note && <span className="text-ink-muted"> ({e.note})</span>}
               </p>
             </li>
           ))}
@@ -163,7 +163,7 @@ export default async function GrammarTopicPage({ params }: PageProps) {
 
       {related.length > 0 && (
         <section className="mt-12">
-          <h2 className="smallcaps text-ink-faint">Keep going</h2>
+          <h2 className="smallcaps text-ink-muted">Keep going</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {related.map((t) => (
               <Link

@@ -56,7 +56,7 @@
       "id": "rf-llamas",
       "topicId": "reflexive-verbs",
       "type": "cloze",
-      "prompt": "¿Cómo te ___? — Me llamo Ana. (llamarse, tú)",
+      "prompt": "¿Cómo te ___? Me llamo Ana. (llamarse, tú)",
       "promptEnglish": "What are you called? I'm called Ana.",
       "answers": ["llamas"],
       "explanation": "llamarse, tú form: te llamas.",

@@ -11,7 +11,7 @@
       "summary": "The present perfect (pretérito perfecto) is a compound tense, two words: the present tense of haber + the past participle. Use it for the recent past and for past events that still matter now ('¿Has comido?' / '¿Has estado en España?'). Haber here is an auxiliary meaning 'to have'; it is never used like tener: you can't say 'yo he un libro' (that's 'tengo un libro'). Forms of haber: he, has, ha, hemos, habéis, han. Regular participles: -ar → -ado, -er/-ir → -ido.",
       "examples": [
         { "spanish": "He vivido acá por muchos años.", "english": "I have lived here for many years." },
-        { "spanish": "¿Has comido? — Sí, he comido.", "english": "Have you eaten? Yes, I have." },
+        { "spanish": "¿Has comido? Sí, he comido.", "english": "Have you eaten? Yes, I have." },
         { "spanish": "Ella ha escrito la carta.", "english": "She has written the letter.", "note": "escrito is an irregular participle" },
         { "spanish": "No hemos hecho nada.", "english": "We haven't done anything.", "note": "hecho is an irregular participle" },
         { "spanish": "¿Has visto a Tom hoy?", "english": "Have you seen Tom today?", "note": "perfect (relevance now) vs preterite '¿Viste a Tom?'" }

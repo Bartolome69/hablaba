@@ -177,7 +177,7 @@ Things to *name*, studied as flashcards.
 ### Práctica (Grammar)
 Short, targeted quizzes.
 
-- **27 topics, 496 questions,** grouped by area (verbs, tenses, subjunctive and
+- **27 topics, about 480 questions,** grouped by area (verbs, tenses, subjunctive and
   commands, prepositions, pronouns, comparisons, commonly confused words). They run
   from ser vs estar and por vs para to si-clauses, the imperfect subjunctive, the
   *hace/hacía* time expressions, demonstratives and a set of five workhorse verbs

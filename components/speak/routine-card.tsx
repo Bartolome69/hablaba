@@ -31,13 +31,13 @@ export function RoutineCard({ routine, icon, playingId, onPlay }: RoutineCardPro
           <DuoIcon name={icon} size={19} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold text-ink">{routine.name}</p>
-          <p className="text-[12.5px] text-ink-soft">{routine.context}</p>
+          <p className="text-[15px] font-semibold text-ink">{routine.title}</p>
+          <p className="text-[12.5px] text-ink-muted">{routine.context}</p>
         </div>
         <DuoIcon
           name="chevron"
           size={15}
-          className={`flex-none text-ink-soft transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+          className={`flex-none text-ink-muted transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
         />
       </button>
 
@@ -50,7 +50,7 @@ export function RoutineCard({ routine, icon, playingId, onPlay }: RoutineCardPro
               <div key={id} className="flex items-center gap-3 px-4 py-3">
                 <div className="min-w-0 flex-1">
                   <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{phrase.spanish}</p>
-                  <p className="mt-0.5 text-[12.5px] text-ink-soft">{phrase.english}</p>
+                  <p className="mt-0.5 text-[12.5px] text-ink-muted">{phrase.english}</p>
                 </div>
                 <button
                   onClick={() => onPlay(id, phrase.spanish)}

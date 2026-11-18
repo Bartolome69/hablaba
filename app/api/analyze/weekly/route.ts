@@ -22,7 +22,7 @@ interface WeeklyPattern {
 }
 
 interface WeeklyRequest {
-  stats: { sessions: number; minutes: number; userTurns: number; streakDays: number }
+  stats: { sessions: number; minutes: number; userTurns: number; activeDays: number }
   patterns: WeeklyPattern[] // grammar/avoidance grouped by tag, descending count
   celebrations: string[] // target phrases actually used
   repetitions: { word: string; alternatives?: string }[]
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       sessions: Number(body.stats?.sessions) || 0,
       minutes: Number(body.stats?.minutes) || 0,
       userTurns: Number(body.stats?.userTurns) || 0,
-      streakDays: Number(body.stats?.streakDays) || 0,
+      activeDays: Number(body.stats?.activeDays) || 0,
     }
     if (stats.sessions <= 0) {
       return NextResponse.json({ error: "Nothing to summarize" }, { status: 400 })
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     }
 
     const facts = [
-      `Sessions this week: ${stats.sessions}, total ${stats.minutes} minutes, the learner spoke ${stats.userTurns} times. Current daily streak: ${stats.streakDays} day(s).`,
+      `Sessions this week: ${stats.sessions}, total ${stats.minutes} minutes, the learner spoke ${stats.userTurns} times. Days with Spanish this week: ${stats.activeDays}. Never mention streaks or consecutive days.`,
       celebrations.length
         ? `Target phrases they successfully used in real conversation: ${celebrations.map((c) => `"${c}"`).join(", ")}.`
         : "",
