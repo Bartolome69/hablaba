@@ -17,7 +17,9 @@
 const VOSEO_FORMS = [
   // present indicative
   "sos", "tenés", "podés", "querés", "sabés", "hacés", "ponés", "venís",
-  "decís", "vivís", "salís", "comés", "bebés", "leés", "creés", "debés",
+  // Not bebés: in this app it means babies far more often than the vos form
+  // of beber, and listing it blocked every correction about babies.
+  "decís", "vivís", "salís", "comés", "leés", "creés", "debés",
   "animás", "llegás", "hablás", "pensás", "contás", "tomás", "dejás",
   "mirás", "estás vos", "sentís", "preferís", "elegís", "seguís",
   // imperatives

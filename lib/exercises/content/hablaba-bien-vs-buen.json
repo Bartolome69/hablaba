@@ -97,7 +97,7 @@
       "id": "bb-cl-sopa",
       "topicId": "bien-vs-buen",
       "type": "cloze",
-      "prompt": "¡Probá la sopa! Está muy ___. (rica de sabor)",
+      "prompt": "¡Prueba la sopa! Está muy ___. (rica de sabor)",
       "promptEnglish": "Try the soup! It tastes really good.",
       "answers": ["buena", "rica"],
       "explanation": "With food, estar bueno/buena = it tastes good right now. Agrees with la sopa → buena.",
