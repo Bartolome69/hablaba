@@ -71,7 +71,7 @@ export interface VocabSet {
 /**
  * How a word got into the learner's list:
  * - catalogo — tapped/saved from one of the authored sets
- * - propia   — typed in English and translated by /api/vocab/translate
+ * - propia   — added by the learner via "¿Cómo se dice?" (/api/ask)
  */
 export type VocabSource = "catalogo" | "propia"
 
