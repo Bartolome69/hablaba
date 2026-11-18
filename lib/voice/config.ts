@@ -71,9 +71,3 @@ export function isCorrectionLevel(value: unknown): value is CorrectionLevel {
   return typeof value === "string" && (CORRECTION_LEVELS as string[]).includes(value)
 }
 
-/**
- * Whether to hold the screen on during a conversation. Platform-dependent
- * default (see `defaultKeepScreenAwake`), overridable by the parent and
- * remembered.
- */
-export const KEEP_AWAKE_KEY = "criar_voice_keep_awake"
