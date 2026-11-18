@@ -261,6 +261,14 @@ const draw: Record<string, Drawer> = {
       <circle cx="18" cy="17.4" r="2.2" fill={d} />
     </>
   ),
+  // "⋯": the visible way into a row's press-and-hold actions.
+  mas: () => (
+    <>
+      <circle cx="5.5" cy="12" r="1.9" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.9" fill="currentColor" />
+      <circle cx="18.5" cy="12" r="1.9" fill="currentColor" />
+    </>
+  ),
   lento: () => (
     <path
       d="M4.6 6.4h14.8M4.6 12h14.8M4.6 17.6h9.4"

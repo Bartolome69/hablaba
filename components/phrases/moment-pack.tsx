@@ -234,6 +234,15 @@ function PhraseRow({
         >
           <DuoIcon name="escuchar" size={17} className={playing ? "animate-pulse" : undefined} />
         </button>
+        <button
+          onClick={open ? onClose : onOpen}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-label={open ? "Cerrar opciones" : "Más opciones"}
+          aria-expanded={open}
+          className="-my-1 -mr-3 flex h-11 w-11 flex-none items-center justify-center rounded-full text-ink-muted"
+        >
+          <DuoIcon name="mas" size={18} />
+        </button>
       </div>
 
       {open && (
