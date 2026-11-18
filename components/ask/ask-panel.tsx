@@ -43,6 +43,8 @@ export interface AskPanelProps {
   initialQuery?: string
   /** The sentence a word was met in (Phase 4: looking up a word from chat). */
   context?: string
+  /** Ask for a single word even outside a pack (a word picked out of a chat bubble). */
+  wantWord?: boolean
   autoFocus?: boolean
   onSaved?: (kind: "word" | "phrase") => void
   onClose?: () => void
@@ -57,6 +59,7 @@ export function AskPanel({
   placeholder = "En inglés o en español…",
   initialQuery,
   context,
+  wantWord,
   autoFocus,
   onSaved,
   onClose,
@@ -72,7 +75,7 @@ export function AskPanel({
   const { play, playingId } = useTTS("speak")
   const inputRef = useRef<HTMLInputElement>(null)
   const wordSet: VocabSetId = target?.set ?? "propias"
-  const surface = variant === "sheet" ? "sheet" : target ? "pack" : "frases"
+  const surface = context ? "chat" : variant === "sheet" ? "sheet" : target ? "pack" : "frases"
 
   const ask = useCallback(
     async (query: string) => {
@@ -80,7 +83,7 @@ export function AskPanel({
       if (!text || busy) return
       setBusy(true)
       try {
-        const result = await askLookup(text, { want: target ? "word" : "auto", context })
+        const result = await askLookup(text, { want: target || wantWord ? "word" : "auto", context })
         posthog.capture("ask_answered", { kind: result.kind, surface })
         const saved = alreadySaved(result)
         setAnswer(result)
@@ -94,7 +97,7 @@ export function AskPanel({
         setBusy(false)
       }
     },
-    [busy, target, context, posthog, surface],
+    [busy, target, wantWord, context, posthog, surface],
   )
 
   // Opened with a word already in hand (from a chat bubble): ask straight away.
