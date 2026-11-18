@@ -11,7 +11,7 @@
 // with personalised phrases on request.
 
 import { assembleFocusAreas } from "@/lib/conversations/focus"
-import { getProfile } from "@/lib/profile/store"
+import { childMonths, getProfile } from "@/lib/profile/store"
 import { getStarterPhrases, hiddenStarterIds } from "./starter"
 import { addPhrase, listPhrases, normalizePhraseText, updatePhrase } from "./store"
 import { PHRASE_MOMENTS, type Phrase, type PhraseMoment } from "./types"
@@ -67,7 +67,8 @@ export function queryPackForMoment(moment: PhraseMoment, size = PACK_SIZE): Phra
       .filter(Boolean),
   )
   const hidden = hiddenStarterIds()
-  const starters = getStarterPhrases(moment).filter(
+  // Age-aware: built-ins that don't suit the child are left out (Phase 5).
+  const starters = getStarterPhrases(moment, childMonths()).filter(
     (s) => !hidden.has(s.id) && !taken.has(normalizePhraseText(s.text)),
   )
   return [...library, ...starters.slice(0, size - library.length)]
@@ -99,6 +100,7 @@ export async function fillPackForMoment(moment: PhraseMoment, size = PACK_SIZE):
       focusAreas: assembleFocusAreas(),
       dialect: profile.dialect,
       childName: profile.child?.name,
+      ageMonths: childMonths() ?? undefined,
     }),
   })
   if (!res.ok) throw new Error(`Phrase generation error: ${res.status}`)

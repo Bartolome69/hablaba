@@ -30,6 +30,11 @@ export interface VoiceTopic {
   /** Only offered where a child is in context (i.e. inside Grow). */
   requiresChild?: boolean
   /**
+   * Age gate in months (refresh Phase 5): hidden until the child is this old,
+   * when a birthdate is set. Gate, don't delete: no birthdate, no gate.
+   */
+  minMonths?: number
+  /**
    * Roleplay only: replaces the partner's DEFAULT PERSONA with a character
    * for the scene. Everything else (register, corrections-by-recast, short
    * turns, patience with half-built sentences) stays in force. Chips for
@@ -134,6 +139,7 @@ export const voiceTopics: VoiceTopic[] = [
   },
   {
     id: "rol-jardin",
+    minMonths: 18,
     label: "Rol: el jardín",
     emoji: "🎭",
     blurb: "Hablas con la seño en la puerta",
@@ -156,6 +162,7 @@ export const voiceTopics: VoiceTopic[] = [
   },
   {
     id: "rol-plaza",
+    minMonths: 12,
     label: "Rol: la plaza",
     emoji: "🎭",
     blurb: "Charla con otra mamá o papá",

@@ -120,7 +120,7 @@
       "type": "cloze",
       "prompt": "___ qué te duele. (decir + me, mandato tú)",
       "promptEnglish": "Tell me what hurts.",
-      "answers": ["dime", "decime"],
+      "answers": ["dime"],
       "explanation": "Decir → di, plus the attached pronoun: dime.",
       "difficulty": 2
     },

@@ -5,6 +5,7 @@
 // collapsed; stage stays DERIVED from the birthdate rather than stored.
 
 import type { CorrectionLevel } from "@/lib/voice/config"
+import { monthsOld } from "./age"
 
 export type { CorrectionLevel }
 
@@ -80,4 +81,9 @@ export function describeAge(birthdate: string, now: Date = new Date()): string {
 function monthsBetween(from: Date, to: Date): number {
   const months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth())
   return Math.max(0, to.getDate() < from.getDate() ? months - 1 : months)
+}
+
+/** The child's age in months from Ajustes, or null when no birthdate is set. */
+export function childMonths(): number | null {
+  return monthsOld(getProfile().child?.birthdate)
 }

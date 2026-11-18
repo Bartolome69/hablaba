@@ -9,6 +9,7 @@
 
 /** Daily-routine moments a phrase belongs to. */
 export type PhraseMoment =
+  | "cambiar"
   | "baño"
   | "comida"
   | "dormir"
@@ -19,6 +20,7 @@ export type PhraseMoment =
 
 export const PHRASE_MOMENTS: PhraseMoment[] = [
   "despertar",
+  "cambiar",
   "comida",
   "juego",
   "paseo",

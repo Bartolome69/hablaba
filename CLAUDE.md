@@ -58,7 +58,7 @@ nav is **Today / Charlar / Phrases / Palabras / Exercises**:
   - **Every thread is seeded**, typed or spoken (`lib/conversations/seed.ts`): the working set of phrases plus the words reviewed in the last week (`getConversationSeedWords`). `/api/chat` and `/api/voice/session` both weave them in; the seed is stored on the conversation so the analysis knows what to look for
   - **Typed threads are analysed too**: leaving the thread or backgrounding the app runs `ensureConversationAnalysis` when there are typed turns the review hasn't seen (a new typed turn clears `analyzedAt`). A seeded phrase used naturally shows as a quiet note under that turn, never while voice is live, and in Tu semana under "Te salieron solas"
 - `/app/charla/historial` — Every conversation
-- `/app/speak` — Phrases: capture, the moment pack (a live query over the library), routine browsing with audio
+- `/app/speak` — Frases: the ask box, the phrase of the day, then **one set of moments** (refresh Phase 5): Recientes plus despertar, cambiar (Pañal), comida, juego, paseo, baño, calmar, dormir. Each moment is the learner's own phrases first, then the built-ins: `lib/phrases/content/moments.json` plus the matching baby routine from `lib/routines.ts` (merged in `lib/phrases/starter.ts`), so bath appears once. The adult situations (small talk, cafés, getting around) sit below in **"Para ti"**. `/frases/*` SEO pages still read `lib/routines.ts` and keep their URLs
 - `/app/palabras` — Palabras: a shelf of word packs studied as flashcards. One green "Repaso de hoy" block (what's DUE across every pack, Leitner ladder in `lib/vocab/schedule.ts`; "Estás al día" when nothing is, never a nag), then "Tus palabras" and fourteen preloaded packs as tiles in three sections (`SHELF_SECTIONS` in `lib/vocab/catalog.ts`: Del bebé / Casa y calle / Para describir), so every library is one tap from the tab. Bebidas and Muebles used to be groups inside La comida and La casa; Adjetivos comunes is new. `/app/palabras/[pack]` lists a pack's words, studies them (a real card flip; due words first, then up to 8 new), and takes your own additions (English or Spanish in; Spanish kept as typed). Press and hold a word for "Ya la sé" / "Quitar". No chips, no body diagram. See `lib/vocab/README.md`
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
@@ -85,6 +85,25 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/transcribe` — Speech-to-text (optional `language=auto`)
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.
 - `POST /api/feedback` — Stub, returns 501 (not implemented)
+
+## Age-aware content (refresh Phase 5)
+
+The child's age is **derived** from the birthdate in Ajustes, never stored
+(`lib/profile/age.ts`: `monthsOld`, `ageBand`, `fitsAge`, `ageGuidance`;
+`childMonths()` in `lib/profile/store.ts`). Content can carry
+`minMonths`/`maxMonths`: moment phrases, routine phrases, voice topics
+(`rol-jardin` 18, `rol-plaza` 12) and "Con tu peque" (18, in the Charlar hub).
+**Gate, don't delete:** with no birthdate nothing is gated, which is exactly the
+old behaviour. With one, lines that don't fit are hidden and lines written for
+that age lead. Elena gets one age line in every prompt (`/api/chat` material
+block, voice persona, `/api/phrases/generate` moment mode), so a 6-month-old's
+parent hears about naps and weaning, not the playground. Entries with
+`"draft": true` (moments.json, bebe.json) are awaiting Bart's review.
+
+`npm run validate:content` covers grammar packs, the vocabulary packs (shape,
+no duplicate ids or spellings), the moments (shape, no duplicates with the
+routines) and **the tú rule** across all taught Spanish, using `lib/voseo.ts`'s
+own blocklist.
 
 ## Conversations (main app)
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
 import { PARENT_CHILD_TOPIC_ID } from "@/lib/data"
+import { ageGuidance } from "@/lib/profile/age"
 
 // Known structured topic IDs — anything else is treated as a freeform surprise theme
 const conversationTopicIds = new Set([
@@ -134,7 +135,10 @@ Do not include any text outside the JSON object.`
  * already does, so typed conversations practise them too. Capped and sanitised;
  * an empty seed adds nothing.
  */
-function materialBlock(body: { seedPhrases?: unknown; seedWords?: unknown }, isParentChild: boolean): string {
+function materialBlock(
+  body: { seedPhrases?: unknown; seedWords?: unknown; childName?: unknown; ageMonths?: unknown },
+  isParentChild: boolean,
+): string {
   const phrases = (Array.isArray(body.seedPhrases) ? body.seedPhrases : [])
     .filter((p): p is string => typeof p === "string" && !!p.trim())
     .slice(0, 8)
@@ -144,6 +148,12 @@ function materialBlock(body: { seedPhrases?: unknown; seedWords?: unknown }, isP
     .slice(0, 6)
     .map((w) => `${w.spanish.slice(0, 60)}${typeof w.english === "string" ? ` (${w.english.slice(0, 60)})` : ""}`)
   const lines: string[] = []
+  // The child's age (Phase 5): so the day she asks about is the one the parent
+  // is living. Not in "Con tu peque", where she IS the child.
+  if (!isParentChild && typeof body.ageMonths === "number") {
+    const name = typeof body.childName === "string" && body.childName.trim() ? body.childName.trim().slice(0, 40) : "The child"
+    lines.push(`THE CHILD: ${name}. ${ageGuidance(Math.max(0, Math.round(body.ageMonths)))}`)
+  }
   if (phrases.length && !isParentChild) {
     lines.push(
       `THIS WEEK'S MATERIAL: phrases the parent is learning. Use them yourself where they fit naturally, so they hear them in a real reply, and leave natural openings for them to say them. Don't quiz them or point it out:\n${phrases.map((p) => `- ${p}`).join("\n")}`,

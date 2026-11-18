@@ -21,7 +21,8 @@ const MODEL = "gpt-4o"
 const MAX_CHARS = 300
 
 const MOMENTS: Record<string, string> = {
-  baño: "bath time / nappy changes",
+  cambiar: "nappy changes and getting dressed",
+  baño: "bath time",
   comida: "feeding and meals",
   dormir: "bedtime and naps",
   juego: "play time on the floor",

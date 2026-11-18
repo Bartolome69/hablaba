@@ -26,6 +26,7 @@ import { PHRASE_MOMENTS, type Phrase, type PhraseMoment } from "@/lib/phrases/ty
 
 const MOMENT_LABELS: Record<PhraseMoment, string> = {
   despertar: "Despertar",
+  cambiar: "Pañal",
   comida: "Comida",
   juego: "Juego",
   paseo: "Paseo",
@@ -41,6 +42,9 @@ export function MomentPack() {
   const [pack, setPack] = useState<Phrase[]>([])
   const [filling, setFilling] = useState(false)
   const [openId, setOpenId] = useState<string | null>(null)
+  // A moment now holds its routine too (Phase 5), so it can run past 12:
+  // the first 12 show, the rest behind "Ver todas".
+  const [expanded, setExpanded] = useState(false)
   const { play, playingId } = useTTS("speak")
   const posthog = usePostHog()
   // The undo toast can outlive a tab switch; it refreshes whatever is showing then.
@@ -48,11 +52,12 @@ export function MomentPack() {
   tabRef.current = tab
 
   const refresh = useCallback((t: PackTab) => {
-    setPack(t === "recientes" ? queryRecentPhrases() : queryPackForMoment(t))
+    setPack(t === "recientes" ? queryRecentPhrases() : queryPackForMoment(t, 60))
   }, [])
 
   useEffect(() => {
     setOpenId(null)
+    setExpanded(false)
     refresh(tab)
   }, [tab, refresh])
 
@@ -144,7 +149,7 @@ export function MomentPack() {
         </p>
       ) : (
         <ul className="stagger-children mt-4 space-y-[9px]">
-          {pack.map((phrase) => (
+          {(expanded ? pack : pack.slice(0, 12)).map((phrase) => (
             <PhraseRow
               key={phrase.id}
               phrase={phrase}
@@ -160,6 +165,14 @@ export function MomentPack() {
         </ul>
       )}
 
+      {!expanded && pack.length > 12 && (
+        <button
+          onClick={() => setExpanded(true)}
+          className="mt-3 flex h-11 w-full items-center justify-center text-[13.5px] font-medium text-ink-muted underline underline-offset-4"
+        >
+          Ver todas ({pack.length})
+        </button>
+      )}
       {tab !== "recientes" && (
         <button
           onClick={fill}

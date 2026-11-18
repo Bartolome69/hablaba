@@ -13,7 +13,8 @@ import { AppHeader } from "@/components/home/app-header"
 import { DuoIcon, topicIcon } from "@/components/icons"
 import { createConversation, countTurns, listResumable } from "@/lib/conversations/store"
 import { runMigrations } from "@/lib/migrations"
-import { getProfile } from "@/lib/profile/store"
+import { fitsAge } from "@/lib/profile/age"
+import { childMonths, getProfile } from "@/lib/profile/store"
 import type { Conversation } from "@/lib/conversations/types"
 import { voiceTopics } from "@/lib/voice-topics"
 import { conversationTopics, dailyTopics, PARENT_CHILD_TOPIC_ID } from "@/lib/data"
@@ -44,6 +45,9 @@ export default function CharlaHubPage() {
   const [resumable, setResumable] = useState<Conversation[]>([])
   const [counts, setCounts] = useState<Record<string, number>>({})
   const [starters, setStarters] = useState(baseStarters)
+  // "Con tu peque" has Elena play the child, so it waits for a talking toddler
+  // (about 18 months) when a birthdate is set. No birthdate: always offered.
+  const [showParentChild, setShowParentChild] = useState(true)
 
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
@@ -51,7 +55,12 @@ export default function CharlaHubPage() {
     const rows = listResumable()
     setResumable(rows.slice(0, 3))
     setCounts(Object.fromEntries(rows.map((c) => [c.id, countTurns(c.id)])))
-    if (getProfile().child) setStarters(voiceTopics)
+    // Age-aware (Phase 5): toddler-only scenes wait until the child is old
+    // enough; with no birthdate nothing is gated.
+    const months = childMonths()
+    const pool = getProfile().child ? voiceTopics : baseStarters
+    setStarters(pool.filter((t) => fitsAge({ minMonths: t.minMonths }, months)))
+    setShowParentChild(fitsAge({ minMonths: 18 }, months))
   }, [])
 
   const startConversation = useCallback(
@@ -110,20 +119,22 @@ export default function CharlaHubPage() {
           Elige un tema. Puedes escribir, o tocar el micrófono cuando quieras.
         </p>
 
-        <button
-          onClick={() => startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")}
-          className="clay-card mt-3.5 flex w-full items-center gap-[13px] rounded-[22px] p-4 text-left"
-        >
-          <div className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[14px] bg-green-tint text-ink">
-            <DuoIcon name="familia" size={24} />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[15.5px] font-semibold text-ink">Con tu peque</p>
-            <p className="text-[12.5px] leading-snug text-ink-muted">
-              {PARTNER_NAME} hace de tu hijo, para ensayar el día
-            </p>
-          </div>
-        </button>
+        {showParentChild && (
+          <button
+            onClick={() => startConversation(PARENT_CHILD_TOPIC_ID, "Con tu peque", "🧸")}
+            className="clay-card mt-3.5 flex w-full items-center gap-[13px] rounded-[22px] p-4 text-left"
+          >
+            <div className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[14px] bg-green-tint text-ink">
+              <DuoIcon name="familia" size={24} />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <p className="text-[15.5px] font-semibold text-ink">Con tu peque</p>
+              <p className="text-[12.5px] leading-snug text-ink-muted">
+                {PARTNER_NAME} hace de tu hijo, para ensayar el día
+              </p>
+            </div>
+          </button>
+        )}
 
         <div className="mt-3 grid grid-cols-2 gap-2.5">
           {starters.map((topic) => (

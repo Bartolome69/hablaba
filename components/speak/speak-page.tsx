@@ -1,9 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { usePostHog } from "posthog-js/react"
 import { AppHeader } from "@/components/home/app-header"
-import { ChipRow } from "@/components/chip-row"
 import { DuoIcon, type IconName } from "@/components/icons"
 import { CaptureCard } from "@/components/phrases/capture-card"
 import { MomentPack } from "@/components/phrases/moment-pack"
@@ -37,8 +35,6 @@ function dayOfYear(now: Date): number {
 
 export function SpeakPage() {
   const { play, playingId } = useTTS("speak")
-  const posthog = usePostHog()
-  const [selected, setSelected] = useState<string>(categories[0].id)
   const [packKey, setPackKey] = useState(0)
 
   // Complete any captures migrated in without their Spanish yet.
@@ -49,8 +45,6 @@ export function SpeakPage() {
     })
   }, [])
 
-  const visible = routines.filter((r) => r.category === selected)
-  const activeCategory = categories.find((c) => c.id === selected) ?? categories[0]
 
   // Rotates once a day, same for the whole day.
   const phraseOfDay = useMemo(() => allPhrases[dayOfYear(new Date()) % allPhrases.length], [])
@@ -90,46 +84,36 @@ export function SpeakPage() {
 
       <MomentPack key={packKey} />
 
-      {/* Routine browsing, by situation. */}
-      <div className="mt-8">
-        <h2 className="px-1 font-serif text-[19px] text-ink">Frases por situación</h2>
-        <ChipRow className="mt-3">
-          {categories.map((category) => {
-              const isActive = category.id === selected
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => {
-                    setSelected(category.id)
-                    posthog.capture("category_selected", { category: category.id })
-                  }}
-                  aria-pressed={isActive}
-                  className={`flex h-[38px] flex-none items-center gap-[7px] rounded-full px-3.5 transition-transform duration-[120ms] active:translate-y-[2px] ${
-                    isActive ? "bg-green text-cream" : "bg-sunken-2 text-ink"
-                  }`}
-                  style={{
-                    boxShadow: isActive ? "0 3px 0 var(--hb-green-press)" : "0 2px 0 var(--hb-lip-sunken)",
-                  }}
-                >
-                  <DuoIcon name={CATEGORY_ICONS[category.id] ?? "brote"} size={15} />
-                  <span className="text-[13px] font-medium">{category.title}</span>
-                </button>
-              )
-            })}
-        </ChipRow>
-      </div>
-
-      <div className="mt-4 space-y-2.5">
-        {visible.map((routine) => (
-          <RoutineCard
-            key={routine.id}
-            routine={routine}
-            icon={CATEGORY_ICONS[activeCategory.id] ?? "brote"}
-            playingId={playingId}
-            onPlay={play}
-          />
-        ))}
-      </div>
+      {/* Para ti: the parent's own situations (refresh Phase 5). The baby
+          routines live inside the moments above now, so bath appears once;
+          what's left here is the adult Spanish: small talk, cafés, getting
+          around. Short headed groups, no chips. */}
+      <section className="mt-9">
+        <h2 className="px-1 font-serif text-[19px] text-ink">Para ti</h2>
+        <p className="mt-1 px-1 text-[12.5px] text-ink-muted">
+          Tu propio español: la charla con otros padres, el café, moverte por la ciudad.
+        </p>
+        {categories
+          .filter((c) => c.id !== "baby")
+          .map((category) => (
+            <div key={category.id} className="mt-5">
+              <h3 className="smallcaps px-1 text-ink-muted">{category.title}</h3>
+              <div className="mt-2.5 space-y-2.5">
+                {routines
+                  .filter((r) => r.category === category.id)
+                  .map((routine) => (
+                    <RoutineCard
+                      key={routine.id}
+                      routine={routine}
+                      icon={CATEGORY_ICONS[category.id] ?? "brote"}
+                      playingId={playingId}
+                      onPlay={play}
+                    />
+                  ))}
+              </div>
+            </div>
+          ))}
+      </section>
     </div>
   )
 }
