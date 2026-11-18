@@ -40,9 +40,9 @@ export function HomeHero({ stats }: { stats: HomeHeroStats }) {
           </h1>
 
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:mt-5 sm:text-[17px]">
-            Hablaba is a free web app for the parent, not the child: real conversations with a
-            warm Spanish partner by text or voice, phrases for bath time and bedtime, and
-            grammar practice built from what you actually say.
+            Hablaba is a web app for the parent, not the child, and it&apos;s free during early
+            access: real conversations with Elena by text or voice, phrases for bath time and
+            bedtime, and grammar practice built from what you actually say.
           </p>
 
           <div id="waitlist" className="mt-6 scroll-mt-24 sm:mt-7">
