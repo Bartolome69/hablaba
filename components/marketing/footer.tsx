@@ -9,8 +9,8 @@ export function Footer() {
           <div>
             <p className="font-serif text-[26px] tracking-[-0.02em] text-green">Hablaba</p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-muted">
-              Spanish for daily life, for parents raising bilingual kids and learners getting
-              past B1.
+              Spanish for parents raising bilingual kids: the phrases for your day together,
+              and your own Spanish growing alongside.
             </p>
             <div className="mt-5">
               <WaitlistForm placement="footer" />
@@ -30,8 +30,8 @@ export function Footer() {
               <p className="smallcaps text-ink-faint">For</p>
               <Link href="/for/parents" className="text-ink-muted hover:text-ink">Parents</Link>
               <Link href="/for/toddlers" className="text-ink-muted hover:text-ink">Toddlers</Link>
-              <Link href="/for/b1-learners" className="text-ink-muted hover:text-ink">B1 learners</Link>
-              <Link href="/for/travelers" className="text-ink-muted hover:text-ink">Travelers</Link>
+              <Link href="/for/beginners-with-kids" className="text-ink-muted hover:text-ink">New parents</Link>
+              <Link href="/for/b1-learners" className="text-ink-muted hover:text-ink">Parents at B1</Link>
               <p className="smallcaps mt-3 text-ink-faint">Product</p>
               <Link href="/#waitlist" className="text-ink-muted hover:text-ink">Join the waitlist</Link>
             </div>

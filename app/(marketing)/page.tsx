@@ -22,9 +22,7 @@ const useCases = [
   { slug: "parents", label: "Parents", body: "Speak Spanish with your kid, even if you're still learning." },
   { slug: "toddlers", label: "Toddlers", body: "Real phrases for bath, snack, bedtime." },
   { slug: "beginners-with-kids", label: "New parents", body: "Catch up to your bilingual partner." },
-  { slug: "b1-learners", label: "B1 learners", body: "Past Duolingo? Have real conversations." },
-  { slug: "travelers", label: "Travelers", body: "Trip-ready Spanish in two weeks." },
-  { slug: "expats", label: "Expats", body: "Settle into life in Spanish." },
+  { slug: "b1-learners", label: "Parents at B1", body: "Grow your own Spanish past the nursery phrases." },
 ]
 
 // The landing page's free-content teasers — the SEO families, surfaced.
@@ -150,7 +148,7 @@ export default function HomePage() {
         <h2 className="mb-10 text-center font-serif text-[32px] tracking-[-0.02em] text-ink sm:text-[40px]">
           Hablaba is for…
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {useCases.map((u) => (
             <Link key={u.slug} href={`/for/${u.slug}`} className="clay-card rounded-[22px] p-6">
               <p className="font-serif text-[20px] tracking-[-0.01em] text-ink">{u.label}</p>
@@ -167,7 +165,7 @@ export default function HomePage() {
       <Faq
         items={[
           { q: "What level is Hablaba for?", a: "We're built for B1-ish learners: you can read a menu and survive a chat, but you freeze in real conversation. We also support beginners with a bilingual partner." },
-          { q: "Does my child need to use it?", a: "No. Hablaba is for the parent: you practise the Spanish, then bring it into bath time, bedtime and the walk to nursery yourself. There's even a mode where your partner plays your little one so you can rehearse the day." },
+          { q: "Does my child need to use it?", a: "No. Hablaba is for the parent: you practise the Spanish, then bring it into bath time, bedtime and the walk to nursery yourself." },
           { q: "How long per session?", a: "Five minutes is the sweet spot. Short, daily sessions beat long, occasional ones, and voice conversations work hands-free while you push the pram." },
           { q: "Do I need to install anything?", a: "No. Hablaba runs in your browser, and you can add it to your home screen as an app in one tap." },
           { q: "How much does it cost?", a: "Hablaba is free during the early access period, and the grammar and phrase libraries on this site are free forever. Join the waitlist to be the first in." },

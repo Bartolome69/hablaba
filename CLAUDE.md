@@ -4,7 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-Hablaba is a Spanish language learning app for B1-level learners — built around
+Hablaba is a Spanish app for parents raising bilingual kids, most of them B1
+learners themselves. **Positioning (Nov 2026):** the marketing site speaks to
+bilingual parents only; the app keeps every general-learning feature (open
+conversation, adult routines, all grammar) as the parent's own practice. Don't
+add non-parent audience pages, and don't cut app features for not being about
+the baby. It's built around
 one loop: **conversations produce observations and phrase usage → observations
 and phrases seed the next conversation.** Every surface is a slice of that loop.
 
@@ -40,7 +45,7 @@ No test framework is configured.
 
 Marketing (route group `app/(marketing)/`, full-width):
 - `/` — Landing page (hero, how it works, features, audience teasers, FAQ)
-- `/for/[slug]` — Programmatic audience pages, content from `lib/marketing/audiences.ts`. Slugs in `audienceSlugs`.
+- `/for/[slug]` — Programmatic audience pages, content from `lib/marketing/audiences.ts`. Slugs in `audienceSlugs`: parents, toddlers, beginners-with-kids, b1-learners ("parents at B1"). `/for/travelers` and `/for/expats` 301 to `/for/parents`.
 
 App (under `app/app/`, constrained to `max-w-lg` via its own layout). Bottom
 nav is **Today / Charlar / Phrases / Palabras / Exercises**:

@@ -37,6 +37,24 @@ The first real user is the founder: a dad raising a son, Teo, in an Argentine
 family. Much of the product has been shaped by him using it daily and saying what
 felt wrong.
 
+### Positioning (decided November 2026)
+
+Hablaba is **marketed only to bilingual parents**, and the app keeps every general
+learning feature as **the parent's own practice**. The parent is a Spanish learner in
+their own right: they want the nursery phrases *and* the Spanish to talk with the
+abuela, the pediatrician and the other parents at the park. So:
+
+- **The website** speaks to parents only. The audience pages are parents, toddlers,
+  new parents and parents at B1. The travel and expat pages were removed and
+  redirect to `/for/parents`.
+- **The app** keeps everything: open conversation topics (work, films, travel), the
+  adult routines (café, taxi, directions), all grammar topics and every word pack.
+  Nothing is cut for being "not about the baby"; it's framed as growing your own
+  Spanish alongside your kid.
+- **Why:** general Spanish apps are a crowded market with big budgets. "What do I
+  say to my kid at bath time, right now" is a problem nobody else solves, and it
+  makes the copy specific.
+
 ---
 
 ## The idea underneath it
