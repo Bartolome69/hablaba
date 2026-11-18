@@ -32,6 +32,14 @@ interface SettingsSheetProps {
   onOpenChange: (open: boolean) => void
 }
 
+/** "2025-02-14" in the device's locale: 14/02/2025 on en-GB, 2/14/2025 on en-US. */
+function formatBirthdate(iso?: string): string | null {
+  if (!iso) return null
+  const [y, m, d] = iso.split("-").map(Number)
+  if (!y || !m || !d) return null
+  return new Intl.DateTimeFormat(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(y, m - 1, d))
+}
+
 export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
   const { readAloud, setReadAloud } = useReadAloud()
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -133,18 +141,28 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                 <label htmlFor="profile-child-birthdate" className="mb-1.5 block text-xs text-ink-muted">
                   Nacimiento
                 </label>
-                <input
-                  id="profile-child-birthdate"
-                  type="date"
-                  defaultValue={profile.child?.birthdate ?? ""}
-                  onBlur={(e) => {
-                    const birthdate = e.target.value
-                    if (profile.child?.name && birthdate !== profile.child.birthdate) {
-                      patchProfile({ child: { name: profile.child.name, birthdate } })
-                    }
-                  }}
-                  className="clay-recessed w-full rounded-[14px] px-3.5 py-2.5 text-sm text-ink outline-none focus:ring-1 focus:ring-green/40"
-                />
+                {/* The date shows in the device's own format (14/02/2025 on an
+                    en-GB phone). A native date input renders in the browser's
+                    UI language instead, so it sits transparent on top, only
+                    to open the system picker. */}
+                <div className="clay-recessed relative flex h-11 w-full items-center rounded-[14px] px-3.5 text-sm text-ink focus-within:ring-1 focus-within:ring-green/40">
+                  <span className={profile.child?.birthdate ? "text-ink" : "text-ink-muted"}>
+                    {formatBirthdate(profile.child?.birthdate) ?? "Elegí la fecha"}
+                  </span>
+                  <DuoIcon name="calendario" size={16} className="ml-auto text-ink-muted" />
+                  <input
+                    id="profile-child-birthdate"
+                    type="date"
+                    value={profile.child?.birthdate ?? ""}
+                    onChange={(e) => {
+                      const birthdate = e.target.value
+                      if (profile.child?.name && birthdate !== profile.child.birthdate) {
+                        patchProfile({ child: { name: profile.child.name, birthdate } })
+                      }
+                    }}
+                    className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  />
+                </div>
               </div>
             </div>
           </>
