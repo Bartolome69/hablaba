@@ -9,7 +9,7 @@
 
 import { getConversationSeedPhrases } from "@/lib/phrases/pack"
 import { markSeeded } from "@/lib/phrases/store"
-import { describeAge, getProfile } from "@/lib/profile/store"
+import { childMonths, describeAge, getProfile } from "@/lib/profile/store"
 import { getConversationSeedWords } from "@/lib/vocab/store"
 import type { VoiceSeedContext } from "@/lib/voice/types"
 import { getConversation, saveSeedContext } from "./store"
@@ -28,6 +28,7 @@ export function buildSeed(topicId?: string): VoiceSeedContext {
     dialect: profile.dialect,
     topicId,
     seedWords: getConversationSeedWords(),
+    ageMonths: childMonths() ?? undefined,
   }
 }
 
@@ -43,5 +44,14 @@ export function ensureThreadSeed(conversationId: string): VoiceSeedContext | nul
 
 /** The slice of a seed that /api/chat takes. */
 export function chatSeedBody(seed: VoiceSeedContext | null) {
-  return seed ? { seedPhrases: seed.packPhrases.slice(0, 8), seedWords: (seed.seedWords ?? []).slice(0, 6) } : {}
+  // Age is read fresh, not from the stored seed: a thread can outlive a birthday.
+  const months = childMonths()
+  return seed
+    ? {
+        seedPhrases: seed.packPhrases.slice(0, 8),
+        seedWords: (seed.seedWords ?? []).slice(0, 6),
+        childName: seed.childName || undefined,
+        ageMonths: months ?? undefined,
+      }
+    : {}
 }

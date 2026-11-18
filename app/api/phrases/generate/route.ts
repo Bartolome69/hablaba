@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getOpenAI } from "@/lib/openai"
 import { posthog } from "@/lib/posthog-server"
+import { ageGuidance } from "@/lib/profile/age"
 
 // Phrase generation for the unified library. Stateless — the client owns the
 // library and decides what to keep. Two jobs, one route:
@@ -18,7 +19,8 @@ export const maxDuration = 30
 const MODEL = "gpt-4o"
 
 const MOMENT_DESCRIPTIONS: Record<string, string> = {
-  baño: "bath time / nappy changes",
+  cambiar: "nappy changes and getting dressed",
+  baño: "bath time",
   comida: "feeding and meals",
   dormir: "bedtime and naps",
   juego: "play time on the floor",
@@ -39,6 +41,8 @@ interface GenerateRequest {
   focusAreas?: string[]
   dialect?: "rioplatense" | "neutral"
   childName?: string
+  /** The child's age (refresh Phase 5), so phrases fit a baby or a toddler. */
+  ageMonths?: number
 }
 
 const DIALECT_BLOCK: Record<string, string> = {
@@ -69,7 +73,9 @@ export async function POST(req: Request) {
 
     const system = `You write short, natural, CORRECT Spanish phrases for a B1-level parent to say out loud during daily life with their baby${body.childName ? ` (${body.childName})` : ""}.
 
-Grammar is tú, always — never voseo, never vosotros. ${DIALECT_BLOCK[dialect]}
+Grammar is tú, always — never voseo, never vosotros. ${DIALECT_BLOCK[dialect]}${
+      typeof body.ageMonths === "number" ? `\n${ageGuidance(Math.max(0, Math.round(body.ageMonths)))} Phrases must suit a child of this age.` : ""
+    }
 
 Phrases must be short enough to say naturally while holding a baby, warm, and varied in structure. Each needs a natural English gloss. Respond with a JSON object: {"phrases": [{"text": "...", "translation": "..."}]}`
 

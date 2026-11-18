@@ -106,6 +106,8 @@ export interface VoiceSeedContext {
   priorTurns?: { speaker: "user" | "assistant"; text: string }[]
   /** Words the learner has been reviewing (refresh Phase 4), woven into her speech. */
   seedWords?: { spanish: string; english: string }[]
+  /** The child's age in months (Phase 5): what she talks about follows it. */
+  ageMonths?: number
 }
 
 // --- persisted records (localStorage today, SQL later) ---

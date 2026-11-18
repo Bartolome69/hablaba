@@ -5,6 +5,7 @@
 // Grammar is tú everywhere in Hablaba (settled; there is no register switch).
 // Dialect is the separate flavour axis, from the profile.
 
+import { ageGuidance } from "@/lib/profile/age"
 import { getVoiceTopic } from "@/lib/voice-topics"
 
 /**
@@ -49,6 +50,8 @@ export interface VoiceInstructionInput {
     captureLessons: { request: string; spanish: string }[]
     /** Words they've been reviewing (Phase 4), woven in like the phrases. */
     seedWords?: { spanish: string; english: string }[]
+    /** The child's age in months (Phase 5). */
+    ageMonths?: number
   }
   correctionLevel: VoiceCorrectionLevel
   /** What the conversation is about — see lib/voice-topics.ts. */
@@ -114,7 +117,9 @@ export function buildVoiceInstructions({
   const persona = topic.personaPrompt
     ? `${topic.personaPrompt} The learner is a B1 Spanish learner (often hands-free, out walking — spoken conversation). If they get genuinely lost, step briefly out of character with one short hint in Spanish, then return to the scene.`
     : context.childName
-      ? `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner.`
+      ? `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a parent who is raising their baby ${context.childName} (${context.ageDescription} old) bilingually, often while out walking with the pram. The parent is a B1 learner.${
+          context.ageMonths !== undefined ? ` ${ageGuidance(context.ageMonths)}` : ""
+        }`
       : // Child-free surfaces (Speak's voice mode) get the same partner, no baby premise.
         `You are a warm, patient Argentine conversation partner having a SPOKEN, hands-free conversation with a B1 Spanish learner going about their day.`
 
