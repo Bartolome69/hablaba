@@ -21,9 +21,9 @@ import { runMigrations } from "@/lib/migrations"
 import { queryPackForMoment } from "@/lib/phrases/pack"
 import type { Phrase, PhraseMoment } from "@/lib/phrases/types"
 import { getProfile } from "@/lib/profile/store"
-import { weakestTopic, weeklyPattern, type FocusTopic } from "@/lib/review/focus"
+import { weeklyPattern, type FocusTopic } from "@/lib/review/focus"
+import { buildRepasarPlan, isEmptyPlan } from "@/lib/review/session"
 import { DEFAULT_VOICE_TOPIC_ID, getVoiceTopic } from "@/lib/voice-topics"
-import { countDue } from "@/lib/vocab/store"
 
 /** The daily moment this hour belongs to: what "para hoy" means right now. */
 function momentForHour(now: Date): PhraseMoment {
@@ -38,9 +38,9 @@ function momentForHour(now: Date): PhraseMoment {
 interface TodayState {
   resume: Conversation | null
   resumeTurns: number
-  wordsDue: number
+  /** Repasar, summarised: card count and the grammar topic (null when nothing is waiting). */
+  repasar: { cards: number; topic: string | null; phrase: boolean } | null
   pattern: (FocusTopic & { count: number }) | null
-  weakest: FocusTopic | null
   phrases: Phrase[]
   childName: string | null
 }
@@ -57,9 +57,13 @@ export default function TodayPage() {
     setS({
       resume: latest ?? null,
       resumeTurns: latest ? countTurns(latest.id) : 0,
-      wordsDue: countDue(),
+      repasar: (() => {
+        const plan = buildRepasarPlan()
+        return isEmptyPlan(plan)
+          ? null
+          : { cards: plan.cards.length, topic: plan.grammar?.topic.label ?? null, phrase: !!plan.phrase }
+      })(),
       pattern: weeklyPattern(),
-      weakest: weakestTopic(),
       phrases: queryPackForMoment(momentForHour(new Date())).slice(0, 2),
       childName: getProfile().child?.name ?? null,
     })
@@ -96,25 +100,24 @@ export default function TodayPage() {
     </>
   )
 
-  // Job 5: words due first (the review that won't wait), else the grammar to
-  // work on, else a calm "al día" that still leads into Práctica.
+  // Job 5: one session (Repasar) mixing due cards, this week's grammar and a
+  // saved phrase. Nothing waiting: a calm "al día" that still leads to Práctica.
   const repasar: { href: string; title: string; detail: string; icon: IconName } | null = !s
     ? null
-    : s.wordsDue > 0
+    : s.repasar
       ? {
-          href: "/app/palabras",
+          href: "/app/repasar",
           title: "Repasar",
-          detail: `${s.wordsDue} ${s.wordsDue === 1 ? "tarjeta" : "tarjetas"}${s.pattern ? ` · ${s.pattern.label.toLowerCase()}` : ""}`,
+          detail: [
+            s.repasar.cards ? `${s.repasar.cards} ${s.repasar.cards === 1 ? "tarjeta" : "tarjetas"}` : "",
+            s.repasar.topic ? s.repasar.topic.toLowerCase() : "",
+            s.repasar.phrase ? "1 frase" : "",
+          ]
+            .filter(Boolean)
+            .join(" · "),
           icon: "repasar",
         }
-      : s.pattern || s.weakest
-        ? {
-            href: `/app/exercises?topic=${(s.pattern ?? s.weakest)!.id}`,
-            title: "Practicar",
-            detail: (s.pattern ?? s.weakest)!.label,
-            icon: "practica",
-          }
-        : { href: "/app/exercises", title: "Estás al día", detail: "Elige un tema de gramática cuando quieras", icon: "practica" }
+      : { href: "/app/exercises", title: "Estás al día", detail: "Elige un tema de gramática cuando quieras", icon: "practica" }
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">

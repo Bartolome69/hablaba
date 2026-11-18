@@ -258,6 +258,30 @@ export function buildPackDeck(pack: VocabSetId, size = SESSION_SIZE, at = new Da
 }
 
 /**
+ * Repasar's cards (refresh Phase 3): what's due across every pack, topped up
+ * with new words when fewer than `size` are due (decision 2). New words come
+ * from the pack the learner touched most recently, so a session continues
+ * what they were already learning, then from the shelf in order.
+ */
+export function buildRepasarDeck(size = 8, at = new Date()): VocabWord[] {
+  const due = buildReviewDeck(size, at)
+  if (due.length >= size) return due
+  const ix = buildIndex()
+  const recent = [...ix.byCatalog.values()].sort((a, b) => b.lastTouchedAt.localeCompare(a.lastTouchedAt))[0]
+  const firstPack = recent ? packOfCatalogWord(recent.catalogId ?? "") : undefined
+  const order = firstPack ? [firstPack, ...PACK_ORDER.filter((p) => p !== firstPack)] : PACK_ORDER
+  const fresh: VocabWord[] = []
+  for (const pack of order) {
+    for (const w of packContents(pack).catalog) {
+      if (fresh.length >= size - due.length) break
+      if (isVirtual(w) || w.timesPracticed === 0) fresh.push(w)
+    }
+    if (fresh.length >= size - due.length) break
+  }
+  return [...due, ...fresh]
+}
+
+/**
  * The way out of "Estás al día": seen words that aren't due yet, soonest
  * first. An early review still moves a word up or down the ladder.
  */

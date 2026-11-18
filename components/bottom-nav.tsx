@@ -18,7 +18,7 @@ import { useIsImmersive } from "@/lib/ui/immersive"
 
 // Full-screen conversation views keep their own chrome. The Charlar HUB keeps
 // the bar (it's a top-level destination); only a conversation itself hides it.
-const HIDE_ON = ["/app/chat", "/app/charla/"]
+const HIDE_ON = ["/app/chat", "/app/charla/", "/app/repasar"]
 
 export function BottomNav() {
   const pathname = usePathname()
