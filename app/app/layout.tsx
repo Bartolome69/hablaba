@@ -1,3 +1,4 @@
+import { AskSheet } from "@/components/ask/ask-sheet"
 import { BottomNav } from "@/components/bottom-nav"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -5,6 +6,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="mx-auto w-full max-w-lg">
       {children}
       <BottomNav />
+      <AskSheet />
     </div>
   )
 }
