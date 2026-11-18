@@ -32,7 +32,7 @@ All commands run from `/Users/bart/hablaba/`:
 ```bash
 npm run dev      # Start dev server at localhost:3000
 npm run build    # Production build
-npm run lint     # Run ESLint
+npm run lint     # ESLint (flat config in eslint.config.mjs; 0 errors expected)
 ```
 
 No test framework is configured.

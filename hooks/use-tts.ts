@@ -39,6 +39,9 @@ export function useTTS(context: TTSContext = "chat") {
     }
   }, [])
 
+  // The retry toast calls the latest play, not the closure it was created in.
+  const playRef = useRef<(id: string, text: string) => void>(() => {})
+
   const play = useCallback(async (id: string, text: string) => {
     const wasPlaying = playingId === id
     stop()
@@ -72,12 +75,15 @@ export function useTTS(context: TTSContext = "chat") {
       setPlayingId(null)
       toast.error("No se pudo reproducir el audio", {
         action: {
-          label: "Retry",
-          onClick: () => play(id, text),
+          label: "Reintentar",
+          onClick: () => playRef.current(id, text),
         },
       })
     }
   }, [playingId, context, posthog, stop])
+  useEffect(() => {
+    playRef.current = play
+  }, [play])
 
   // Kill audio if the component using this hook unmounts mid-playback.
   useEffect(() => stop, [stop])
