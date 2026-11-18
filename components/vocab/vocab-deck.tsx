@@ -11,7 +11,7 @@
 // FIRST answer in a session moves it on the ladder; a missed card goes back to
 // the end of the deck (up to twice) so the session ends on getting it.
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { useTTS } from "@/hooks/use-tts"
 import { isVirtual, recordRelearned, recordReview } from "@/lib/vocab/store"
@@ -31,9 +31,11 @@ interface VocabDeckProps {
   words: VocabWord[]
   onExit: () => void
   onFinished: () => void
+  /** Embedded use (Repasar): hand the result back instead of showing the end screen. */
+  onComplete?: (result: { cards: number; firstTry: number }) => void
 }
 
-export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
+export function VocabDeck({ words, onExit, onFinished, onComplete }: VocabDeckProps) {
   useImmersive()
   const { play, playingId } = useTTS("speak")
   // Frozen at the start so cards don't reshuffle as counts change underneath;
@@ -61,6 +63,8 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
     setRevealed(false)
     setIndex((i) => i + 1)
   }
+
+  if (done && onComplete) return <DeckHandoff onDone={() => onComplete({ cards: words.length, firstTry: firstTryKnown })} />
 
   if (done) {
     return (
@@ -94,9 +98,12 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         <span className="smallcaps text-ink-muted">
           {index + 1} / {queue.length}
         </span>
-        <button onClick={onExit} className="text-[13px] font-medium text-ink-muted">
-          Salir
-        </button>
+        {/* Embedded in Repasar, the session's own back button is the exit. */}
+        {!onComplete && (
+          <button onClick={onExit} className="flex min-h-11 items-center text-[13px] font-medium text-ink-muted">
+            Salir
+          </button>
+        )}
       </div>
 
       {/* Green and cream only — no amber, no red, nothing that reads as a score. */}
@@ -193,4 +200,15 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
       )}
     </div>
   )
+}
+
+/** Calls back once, after render: the deck's end, handed to the session around it. */
+function DeckHandoff({ onDone }: { onDone: () => void }) {
+  const called = useRef(false)
+  useEffect(() => {
+    if (called.current) return
+    called.current = true
+    onDone()
+  }, [onDone])
+  return null
 }

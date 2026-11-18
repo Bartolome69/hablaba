@@ -32,14 +32,23 @@ function PromptWithBlank({ prompt }: { prompt: string }) {
   )
 }
 
+export interface QuizResult {
+  correct: number
+  total: number
+  missed: ExerciseItem[]
+}
+
 export function Quiz({
   title,
   items,
   onExit,
+  onComplete,
 }: {
   title: string
   items: ExerciseItem[]
   onExit: () => void
+  /** Embedded use (Repasar): hand the result back instead of showing the results screen. */
+  onComplete?: (result: QuizResult) => void
 }) {
   useImmersive()
   const [idx, setIdx] = useState(0)
@@ -79,6 +88,10 @@ export function Quiz({
 
   const next = () => {
     if (idx + 1 >= items.length) {
+      if (onComplete) {
+        onComplete({ correct: correctCount, total: items.length, missed })
+        return
+      }
       setDone(true)
       playFinish()
       return
