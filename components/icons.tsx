@@ -779,6 +779,10 @@ const TOPIC_ICONS: Record<string, IconName> = {
   sorpresa: "dado",
   "rol-cafe": "taza",
   "rol-verduleria": "carrito",
+  "rol-pediatra": "corazon",
+  "rol-jardin": "brote",
+  "rol-abuela": "familia",
+  "rol-plaza": "paseo",
   "parent-child": "familia",
   // interests
   restaurant: "mesa",

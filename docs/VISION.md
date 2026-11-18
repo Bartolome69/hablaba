@@ -123,8 +123,9 @@ Conversations with Elena, the one persona across the whole app: a warm Argentine
 partner with one voice.
 
 - **The hub** shows resume cards for recent threads (they expire after 14 days, so
-  old half-finished chats don't pile up), 22 conversation starters (your day, errands,
-  memories, opinions, roleplays like ordering at a café or a greengrocer), and the
+  old half-finished chats don't pile up), 26 conversation starters (your day, errands,
+  memories, opinions, roleplays: the café and the greengrocer, plus parent-life scenes at the
+  pediatrician, the jardín, a video call with the abuela and the plaza), and the
   full history.
 - **A conversation** is one thread with two ways in. Typing gets an inline
   correction: the mis-said part is underlined in terracotta, and tapping "Ver la
@@ -255,8 +256,9 @@ app itself isn't linked from the site.
   page that ends in email capture. Every phrase routine has one too (`/frases/...`).
   Both are generated from the app's own content, so they grow as the app does and
   give the site something real to rank for in search.
-- **Audience pages** (`/for/parents`, `/for/toddlers` and others) speak to specific
-  starting points.
+- **Audience pages** speak to four kinds of parent: parents, parents of toddlers,
+  new parents starting from zero, and parents at B1. There are no pages for other
+  audiences (see Positioning above).
 
 ---
 
