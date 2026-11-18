@@ -3,7 +3,6 @@ export type PracticeMode = "solo" | "together"
 export interface UserProfile {
   id: string
   name: string
-  streak: number
   savedPhraseCount: number
 }
 

@@ -90,14 +90,11 @@ export default function WeeklyReportPage() {
             <StatTile value={String(data.stats.userTurns)} label="veces que hablaste" />
           </div>
 
-          {/* The streak is the screen's one terracotta moment. */}
-          {data.stats.streakDays > 1 && (
-            <div className="mb-4 flex items-center gap-2.5 rounded-[18px] bg-terracotta-tint px-4 py-3">
-              <DuoIcon name="racha" size={17} className="flex-shrink-0 text-ink" />
-              <p className="text-sm font-semibold text-terracotta-ink">
-                {data.stats.streakDays} días seguidos con español
-              </p>
-            </div>
+          {/* Days with Spanish, not a streak: any order, nothing resets (QW6). */}
+          {data.stats.activeDays > 1 && (
+            <p className="mb-4 px-1 text-sm font-medium text-ink-muted">
+              {data.stats.activeDays} días con español esta semana
+            </p>
           )}
 
           {narrative ? (

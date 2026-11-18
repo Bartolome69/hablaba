@@ -3,7 +3,6 @@ import type { Message, SavedPhrase, DailyPrompt, Session, UserProfile, Conversat
 export const mockUser: UserProfile = {
   id: "1",
   name: "You",
-  streak: 7,
   savedPhraseCount: 12,
 }
 

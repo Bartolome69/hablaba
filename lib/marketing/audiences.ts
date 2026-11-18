@@ -53,7 +53,7 @@ export const audiences: Record<string, Audience> = {
     features: [
       { emoji: "🛁", title: "Real toddler routines", body: "Phrases mapped to bath, meals, getting dressed and the park, built around your day." },
       { emoji: "🗣️", title: "Practice out loud", body: "Speak the phrase before you live it, so it actually comes out when you need it." },
-      { emoji: "📈", title: "Build a streak", body: "Five minutes a day adds up. Hablaba tracks your streak so the habit sticks." },
+      { emoji: "📈", title: "Five minutes adds up", body: "Short sessions, whenever you get them. No streaks, no guilt about missed days." },
     ],
     steps: [
       { title: "Choose a routine", body: "Bath time tonight? Pick it." },
