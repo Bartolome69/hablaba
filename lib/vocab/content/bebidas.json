@@ -5,8 +5,6 @@
     "example": "La leche está tibia, como te gusta.", "exampleTranslation": "The milk is warm, just how you like it." },
   { "id": "comida-jugo", "spanish": "jugo", "article": "el", "gender": "m", "english": "juice", "group": "todos",
     "example": "El jugo de naranja recién exprimido.", "exampleTranslation": "Freshly squeezed orange juice." },
-  { "id": "comida-yogur", "spanish": "yogur", "article": "el", "gender": "m", "english": "yoghurt", "group": "todos",
-    "example": "Un yogur de postre.", "exampleTranslation": "A yoghurt for pudding." },
   { "id": "bebidas-taza", "spanish": "taza", "article": "la", "gender": "f", "english": "cup, mug", "group": "todos",
     "example": "Cuidado, la taza de mamá quema.", "exampleTranslation": "Careful, Mum's mug is hot." },
   { "id": "bebidas-botella", "spanish": "botella", "article": "la", "gender": "f", "english": "bottle", "group": "todos",

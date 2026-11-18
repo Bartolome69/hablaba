@@ -249,7 +249,7 @@ export function AskPanel({
                   >
                     {lowerFirst(savedWord.label)} →
                   </Link>
-                  {justAddedWord ? `. ${NEXT_REVIEW}` : "."}
+                  {justAddedWord ? ` ${NEXT_REVIEW}` : ""}
                 </SavedLine>
               ) : (
                 <button onClick={saveWord} className={`flex h-12 items-center justify-center gap-2 rounded-full text-[15px] font-semibold ${primary}`}>

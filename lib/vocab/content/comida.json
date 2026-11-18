@@ -72,5 +72,7 @@
   { "id": "comida-torta", "spanish": "torta", "article": "la", "gender": "f", "english": "cake", "group": "dulces",
     "example": "Soplamos las velitas y comemos torta.", "exampleTranslation": "We blow out the candles and have some cake." },
   { "id": "comida-flan", "spanish": "flan", "article": "el", "gender": "m", "english": "crème caramel", "group": "dulces",
-    "example": "¡Mira cómo tiembla el flan!", "exampleTranslation": "Look how the crème caramel wobbles!" }
+    "example": "¡Mira cómo tiembla el flan!", "exampleTranslation": "Look how the crème caramel wobbles!" },
+  { "id": "comida-yogur", "spanish": "yogur", "article": "el", "gender": "m", "english": "yoghurt", "group": "basicos",
+    "example": "Un yogur de postre.", "exampleTranslation": "A yoghurt for pudding." }
 ]
