@@ -225,8 +225,15 @@ export function packStats(pack: VocabSetId, at = new Date()): PackStats {
 const lowestBoxFirst = (a: VocabWord, b: VocabWord) => a.box - b.box || a.dueAt.localeCompare(b.dueAt)
 
 /** Seen words that are due now, across every pack. Words never reviewed aren't "due" — they're new. */
+/**
+ * Due now: seen words whose time has come, AND words the learner added
+ * themselves that haven't been reviewed yet (box 0, due on arrival). Without
+ * the second half a word saved from "¿Cómo se dice?" or a chat bubble sat
+ * unseen until its pack was opened, which made "te la pregunto hoy" untrue.
+ * Untouched catalog words stay out: they arrive as "new", a handful at a time.
+ */
 function dueRows(ix: Index, at: Date): VocabWord[] {
-  return liveRows(ix).filter((w) => w.timesPracticed > 0 && isDue(w, at))
+  return liveRows(ix).filter((w) => isDue(w, at) && (w.timesPracticed > 0 || (w.source === "propia" && !isVirtual(w))))
 }
 
 /** "Repaso de hoy": what's due across all packs, shakiest first. */
@@ -279,6 +286,21 @@ export function buildRepasarDeck(size = 8, at = new Date()): VocabWord[] {
     if (fresh.length >= size - due.length) break
   }
   return [...due, ...fresh]
+}
+
+/**
+ * Words to weave into the next conversation (refresh Phase 4): ones the
+ * learner has been reviewing lately and doesn't own yet (boxes 1 to 3,
+ * touched in the last 7 days), most recent first. Seeded the way phrases are,
+ * so Elena uses them and the learner hears them in a real sentence.
+ */
+export function getConversationSeedWords(cap = 6, at = new Date()): { spanish: string; english: string }[] {
+  const weekAgo = new Date(at.getTime() - 7 * 86_400_000).toISOString()
+  return liveRows(buildIndex())
+    .filter((w) => w.timesPracticed > 0 && w.box >= 1 && w.box <= 3 && w.lastTouchedAt >= weekAgo)
+    .sort((a, b) => b.lastTouchedAt.localeCompare(a.lastTouchedAt))
+    .slice(0, cap)
+    .map((w) => ({ spanish: w.article ? `${w.article} ${w.spanish}` : w.spanish, english: w.english }))
 }
 
 /**
