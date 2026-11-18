@@ -171,8 +171,6 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
         </div>
       ) : null}
 
-      <AddWordCard set={packId} label={label} onAdded={reload} />
-
       {contents && contents.catalog.length + contents.own.length === 0 && (
         <p className="mt-6 px-1 text-center text-[13px] leading-relaxed text-ink-soft">
           {pack ? "Quitaste todas las palabras de este pack." : "Acá van las palabras que no entran en ningún pack."}
@@ -199,6 +197,11 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
           </ul>
         </section>
       ))}
+
+      {/* Below the list: in a long pack the words come first. */}
+      <div className="mt-7">
+        <AddWordCard set={packId} label={label} onAdded={reload} />
+      </div>
 
       {pack && contents && contents.hiddenCount > 0 && (
         <button
