@@ -97,7 +97,7 @@ export default async function PhrasePage({ params }: PageProps) {
         </h2>
         <p className="mt-2 text-[14.5px] leading-relaxed text-green-on-dark">
           In Hablaba every one of these phrases has audio, lives in your own library, and comes
-          back at the right moment. There's also a warm Spanish-speaking partner to practise
+          back at the right moment. There’s also a warm Spanish-speaking partner to practise
           them on, by text or out loud. Early access invites go out by email.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-4">

@@ -82,7 +82,7 @@ export default function PhrasesIndexPage() {
           Take the phrases into a real conversation
         </h2>
         <p className="mt-2 max-w-xl text-[14.5px] leading-relaxed text-green-on-dark">
-          Hablaba puts every pack in your pocket with audio, tracks which phrases you've
+          Hablaba puts every pack in your pocket with audio, tracks which phrases you’ve
           actually used, and gives you a warm Argentine partner to try them on, typed at the
           kitchen table or hands-free on a walk with the pram.
         </p>

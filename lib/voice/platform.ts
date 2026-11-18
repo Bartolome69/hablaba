@@ -47,10 +47,10 @@ export function defaultKeepScreenAwake(): boolean {
 /** Where the parent actually has to go to undo a denied mic permission. */
 export function micPermissionHelp(): string {
   if (isAndroid()) {
-    return "En Android: mantené apretado el ícono de Hablaba → Información de la app → Permisos → Micrófono."
+    return "En Android: mantén pulsado el ícono de Hablaba → Información de la app → Permisos → Micrófono."
   }
   if (isIOS()) {
-    return "En iPhone: Ajustes → Safari → Micrófono, y permitilo para este sitio."
+    return "En iPhone: Ajustes → Safari → Micrófono, y permítelo para este sitio."
   }
-  return "Buscá el ícono de candado en la barra de direcciones y permití el micrófono."
+  return "Busca el ícono de candado en la barra de direcciones y permite el micrófono."
 }

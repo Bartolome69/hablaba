@@ -34,7 +34,7 @@ const CAPTION_FALLBACK: Record<VoiceConnectionState, string> = {
   idle: "Listo cuando quieras",
   "requesting-mic": "Esperando el micrófono…",
   connecting: "Conectando…",
-  live: "Te escucho, hablá cuando quieras",
+  live: "Te escucho, habla cuando quieras",
   paused: "En pausa · nadie te escucha",
   interrupted: "Se pausó al salir de la pantalla",
   ended: "Charla guardada",
@@ -127,7 +127,7 @@ export function VoiceOrb({
         <div className="flex w-[62px] flex-col items-center gap-1.5">
           <button
             onClick={onCycleGain}
-            aria-label={`Volumen: ${gainLabel(outputGain).toLowerCase()}. Tocá para cambiar`}
+            aria-label={`Volumen: ${gainLabel(outputGain).toLowerCase()}. Toca para cambiar`}
             className="clay-card flex h-14 w-14 items-center justify-center rounded-full text-ink"
           >
             <DuoIcon name="escuchar" size={24} />

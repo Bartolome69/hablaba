@@ -1,6 +1,6 @@
 "use client"
 
-// "Repasá tus correcciones": the week's grammar corrections as tap-to-reveal
+// "Repasa tus correcciones": the week's grammar corrections as tap-to-reveal
 // cards — your own sentence shown first, the natural version revealed on tap.
 // Active recall over your OWN errors, which is the material no generic
 // exercise pack can offer.
@@ -24,9 +24,9 @@ export function CorrectionCards({ corrections }: { corrections: VoiceObservation
 
   return (
     <section className="mb-6">
-      <h2 className="px-1 font-serif text-[19px] text-ink">Repasá tus correcciones</h2>
+      <h2 className="px-1 font-serif text-[19px] text-ink">Repasa tus correcciones</h2>
       <p className="mt-1 px-1 text-[12.5px] text-ink-muted">
-        Lo que dijiste esta semana. Tocá para ver la forma natural.
+        Lo que dijiste esta semana. Toca para ver la forma natural.
       </p>
       <ul className="mt-3 space-y-2">
         {corrections.map((c) => {

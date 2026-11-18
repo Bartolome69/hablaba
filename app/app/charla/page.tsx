@@ -64,7 +64,7 @@ export default function CharlaHubPage() {
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
-      <AppHeader title="Charlar" subtitle="Conversá en español, escribiendo o en voz alta" />
+      <AppHeader title="Charlar" subtitle="Conversa en español, escribiendo o en voz alta" />
 
       {resumable.length > 0 && (
         <section className="mb-[26px]">
@@ -107,7 +107,7 @@ export default function CharlaHubPage() {
       <section>
         <h2 className="px-1 font-serif text-[19px] text-ink">Empezar una charla</h2>
         <p className="mt-1.5 px-1 text-[13px] leading-normal text-ink-muted">
-          Elegí un tema. Podés escribir, o tocar el micrófono cuando quieras.
+          Elige un tema. Puedes escribir, o tocar el micrófono cuando quieras.
         </p>
 
         <button

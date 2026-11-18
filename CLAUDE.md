@@ -32,7 +32,7 @@ All commands run from `/Users/bart/hablaba/`:
 ```bash
 npm run dev      # Start dev server at localhost:3000
 npm run build    # Production build
-npm run lint     # Run ESLint
+npm run lint     # ESLint (flat config in eslint.config.mjs; 0 errors expected)
 ```
 
 No test framework is configured.
@@ -157,11 +157,10 @@ inside conversations (`/app/charla/[id]`). The short version:
   writing. Grammar is tú on all of them regardless — dialect is vocabulary
   flavour, never a grammar switch.
 - **App-authored Spanish that becomes the LEARNER'S message follows the tú
-  rule**, not the app's porteño chrome. The quick-ask chips in
+  rule** (and since Nov 2026 so does the chrome). The quick-ask chips in
   `components/chat/chat-input.tsx` were voseo ("¿Lo podés repetir?",
   "Ayudame"), so the chat model correctly flagged them as errors — the app put
-  voseo in the parent's mouth and then corrected them for it. Chrome voice
-  stops at the send button.
+  voseo in the parent's mouth and then corrected them for it.
 - **TTS delivery has two axes** (`/api/tts`): `dialect` is her accent and
   follows the profile; `manner` is what the line is for. `conversational`
   (Repetir, read-aloud) echoes the VOICE block in `lib/voice/prompts.ts` so a
@@ -182,9 +181,11 @@ inside conversations (`/app/charla/[id]`). The short version:
   selectable in the profile. `SpanishDialect` lives in `lib/profile/store.ts`,
   the dialect flavour blocks in `lib/voice/prompts.ts`; never reintroduce a
   grammar flag. The rule governs the Spanish being **taught** — content packs,
-  vocabulary sets, chat and voice. The app's own UI chrome ("Tocá", "Probá de
-  nuevo", "Repasá tus palabras") is porteño and does use voseo; that split is
-  deliberate, so don't "fix" either side into the other.
+  vocabulary sets, chat and voice, **and the UI chrome too** ("Toca", "Prueba de
+  nuevo", "Repasa tus palabras"). Until Nov 2026 the chrome was voseo on
+  purpose; Bart reversed that so learners aren't reading vos forms all day.
+  Rioplatense *vocabulary* can stay in chrome ("Dale", "mozo") because that's
+  dialect, not grammar. Don't reintroduce vos forms in UI strings.
 - Post-session analysis (`/api/analyze`) tags observations with
   **exercises-taxonomy topic ids** — the closed vocabulary that makes session
   reviews and the weekly report link into `/app/exercises?topic=…`. Keep tags

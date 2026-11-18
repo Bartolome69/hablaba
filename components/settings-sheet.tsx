@@ -115,7 +115,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
             <h3 className="smallcaps mb-3 mt-7 text-ink-muted">Tu peque</h3>
             <p className="mb-3 text-xs text-ink-muted">
-              Opcional. Si lo cargás, {PARTNER_NAME} puede hablar de tu día con su nombre.
+              Opcional. Si lo agregas, {PARTNER_NAME} puede hablar de tu día con su nombre.
             </p>
             <div className="space-y-3">
               <div>
@@ -147,7 +147,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                     to open the system picker. */}
                 <div className="clay-recessed relative flex h-11 w-full items-center rounded-[14px] px-3.5 text-sm text-ink focus-within:ring-1 focus-within:ring-green/40">
                   <span className={profile.child?.birthdate ? "text-ink" : "text-ink-muted"}>
-                    {formatBirthdate(profile.child?.birthdate) ?? "Elegí la fecha"}
+                    {formatBirthdate(profile.child?.birthdate) ?? "Elige la fecha"}
                   </span>
                   <DuoIcon name="calendario" size={16} className="ml-auto text-ink-muted" />
                   <input
