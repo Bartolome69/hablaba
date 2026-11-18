@@ -817,8 +817,9 @@ export function topicIcon(id: string | undefined): IconName {
 /** Phrase moments (the Frases filter chips). */
 const MOMENT_ICONS: Record<string, IconName> = {
   despertar: "despertar",
+  cambiar: "peque",
   comida: "comida",
-  juego: "peque",
+  juego: "pelota",
   paseo: "paseo",
   baño: "bano",
   calmar: "calmar",
