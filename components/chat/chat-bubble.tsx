@@ -80,7 +80,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
   if (isUser) {
     return (
       <div className="flex flex-col items-end gap-[5px]">
-        <span className="smallcaps pr-1 text-terracotta">Tú</span>
+        <span className="smallcaps pr-1 text-terracotta-ink">Tú</span>
         <div
           className="max-w-[84%] rounded-[20px] rounded-br-[7px] bg-green px-[15px] py-3.5"
           style={{ boxShadow: "0 3px 0 var(--hb-green-press)" }}
@@ -118,14 +118,14 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                     {hasImprovement ? "Mejor" : "Así se dice"}: “{stripFullStop(correction.corrected)}”.
                   </p>
                   {correction.explanation && (
-                    <p className="text-xs leading-[1.4] text-[#96604A]">{correction.explanation}</p>
+                    <p className="text-xs leading-[1.4] text-terracotta-ink">{correction.explanation}</p>
                   )}
                   <div className="mt-1 flex items-center gap-3">
                     {onSavePhrase && (
                       <button
                         onClick={handleSaveCorrection}
                         disabled={saved}
-                        className="press-chip text-[11.5px] font-semibold text-terracotta-ink underline-offset-2 hover:underline disabled:no-underline disabled:opacity-70"
+                        className="press-chip text-[12px] font-semibold text-terracotta-ink underline-offset-2 hover:underline disabled:no-underline disabled:opacity-70"
                       >
                         {saved ? "Guardada en Frases" : "Guardar en Frases"}
                       </button>
@@ -133,7 +133,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                     <button
                       onClick={() => setShowCorrection(false)}
                       aria-expanded
-                      className="press-chip text-[11.5px] font-medium text-[#96604A]"
+                      className="press-chip text-[12px] font-medium text-terracotta-ink"
                     >
                       Cerrar
                     </button>
@@ -157,7 +157,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="text-[11.5px] font-semibold text-terracotta-ink">
+              <span className="text-[12px] font-semibold text-terracotta-ink">
                 {hasImprovement ? "Ver la mejora" : "Ya estaba bien"}
               </span>
             </button>
@@ -169,7 +169,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
 
   return (
     <div className="flex flex-col items-start gap-[5px]">
-      <span className="smallcaps pl-1 text-ink-faint">{PARTNER_NAME}</span>
+      <span className="smallcaps pl-1 text-ink-muted">{PARTNER_NAME}</span>
       <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
         <p
           onClick={message.translation ? () => setShowTranslation((s) => !s) : undefined}
@@ -187,7 +187,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
         </p>
 
         {showTranslation && message.translation && (
-          <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-soft">
+          <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-muted">
             {message.translation}
           </p>
         )}
@@ -201,7 +201,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                 aria-label="Escuchar este mensaje"
               >
                 <DuoIcon name="escuchar" size={12} className={`text-ink ${isPlaying ? "animate-pulse" : ""}`} />
-                <span className="text-[11.5px] font-semibold text-ink">Escuchar</span>
+                <span className="text-[12px] font-semibold text-ink">Escuchar</span>
               </button>
             )}
             {onSavePhrase && (
@@ -212,7 +212,7 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
                 aria-label={botSaved ? "Guardada en Frases" : "Guardar en Frases"}
               >
                 <DuoIcon name="guardada" size={12} className="text-terracotta" />
-                <span className="text-[11.5px] font-semibold text-ink">{botSaved ? "Guardada" : "Guardar"}</span>
+                <span className="text-[12px] font-semibold text-ink">{botSaved ? "Guardada" : "Guardar"}</span>
               </button>
             )}
           </div>

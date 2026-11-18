@@ -108,7 +108,7 @@ export function MomentPack() {
   return (
     <section className="mt-8">
       <h2 className="px-1 font-serif text-[19px] text-ink">Tus frases</h2>
-      <p className="mt-1 px-1 text-[12.5px] text-ink-soft">
+      <p className="mt-1 px-1 text-[12.5px] text-ink-muted">
         Lo último que pediste, y un pack para cada momento del día.
       </p>
 
@@ -213,14 +213,14 @@ function PhraseRow({
         <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
           <p className="font-serif text-[17.5px] leading-[1.32] text-ink">{phrase.text}</p>
           <div className="flex flex-wrap items-center gap-[7px]">
-            <span className="text-[12.5px] text-ink-soft">{phrase.translation}</span>
+            <span className="text-[12.5px] text-ink-muted">{phrase.translation}</span>
             {/* Starter rows are the built-in floor, not learner activity — no state tag. */}
             {isStarterPhrase(phrase) ? null : phrase.state === "nueva" ? (
-              <span className="rounded-full bg-terracotta-tint px-[7px] py-[3px] text-[9.5px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
+              <span className="rounded-full bg-terracotta-tint px-[7px] py-[3px] text-[12px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
                 nueva
               </span>
             ) : (
-              <span className="text-[9.5px] font-medium uppercase tracking-[.14em] text-ink-faint">
+              <span className="text-[12px] font-medium uppercase tracking-[.14em] text-ink-muted">
                 {phrase.state}
               </span>
             )}

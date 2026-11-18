@@ -31,7 +31,7 @@ export default function OGImage() {
           <div
             style={{
               fontSize: 22,
-              color: "#8a9188",
+              color: "#5f6b61",
               letterSpacing: 4,
               textTransform: "uppercase",
             }}
@@ -45,7 +45,7 @@ export default function OGImage() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{ width: 46, height: 6, background: "#c4633e", borderRadius: 3 }} />
-            <div style={{ fontSize: 32, color: "#6e7a6f" }}>Warm, calm, encouraging.</div>
+            <div style={{ fontSize: 32, color: "#5f6b61" }}>Warm, calm, encouraging.</div>
           </div>
         </div>
       </div>

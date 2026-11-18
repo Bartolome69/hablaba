@@ -67,7 +67,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
           <DuoIcon name="logrado" size={28} className="text-cream" detail="#8FBE9C" />
         </div>
         <h2 className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-ink">¡Listo!</h2>
-        <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-ink-soft">
+        <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-ink-muted">
           {words.length} {words.length === 1 ? "tarjeta" : "tarjetas"} · {firstTryKnown} a la primera.
           Las que sabés vuelven más adelante; las otras, pronto.
         </p>
@@ -89,7 +89,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
   return (
     <div className="flex flex-col">
       <div className="mb-3 flex items-center justify-between">
-        <span className="smallcaps text-ink-soft">
+        <span className="smallcaps text-ink-muted">
           {index + 1} / {queue.length}
         </span>
         <button onClick={onExit} className="text-[13px] font-medium text-ink-muted">
@@ -126,20 +126,20 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
               at the same height, then whatever else grows DOWN from it. So the
               word never jumps on a flip or from card to card. */}
           <div className="clay-static absolute inset-0 flex flex-col items-center rounded-[26px] px-6 pt-[64px] text-center [backface-visibility:hidden]">
-            <span className="smallcaps flex h-5 items-center text-ink-faint">
+            <span className="smallcaps flex h-5 items-center text-ink-muted">
               {isRetry ? "Otra vez" : direction === "en-es" ? "En español…" : "¿Qué significa?"}
             </span>
             <span className="mt-3 font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {front}
             </span>
-            <span className="mt-3 text-[12.5px] text-ink-faint">Tocá para dar vuelta</span>
+            <span className="mt-3 text-[12.5px] text-ink-muted">Tocá para dar vuelta</span>
           </div>
           <div className="clay-static absolute inset-0 flex flex-col items-center overflow-hidden rounded-[26px] px-6 pt-[64px] text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <span className="h-5" aria-hidden />
             <span className="mt-3 font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {back}
             </span>
-            <span className="mt-3 text-[13.5px] text-ink-soft">{front}</span>
+            <span className="mt-3 text-[13.5px] text-ink-muted">{front}</span>
             {current.example && (
               <span className="mt-4 max-w-[280px] border-t border-rule pt-3 font-serif text-[15px] leading-[1.4] text-ink-muted">
                 {current.example}

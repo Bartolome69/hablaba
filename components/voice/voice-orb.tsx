@@ -112,8 +112,8 @@ export function VoiceOrb({
         </span>
         {inConversation && (
           <span
-            className={`flex-none text-[11px] font-medium tabular-nums ${
-              nearLimit ? "text-terracotta-ink" : "text-ink-soft"
+            className={`flex-none text-[12px] font-medium tabular-nums ${
+              nearLimit ? "text-terracotta-ink" : "text-ink-muted"
             }`}
           >
             {formatElapsed(elapsed)}
@@ -184,7 +184,7 @@ export function VoiceOrb({
           >
             <DuoIcon name="parar" size={22} />
           </button>
-          <span className="text-[11px] text-ink-soft">Terminar</span>
+          <span className="text-[12px] text-ink-muted">Terminar</span>
         </div>
       </div>
     </div>

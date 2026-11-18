@@ -116,12 +116,12 @@ export function SessionReview({
       <ul className="stagger-children space-y-2">
         {shown.map((obs) => (
           <li key={obs.id} className="clay-static rounded-[18px] px-4 py-3.5">
-            <p className={`smallcaps mb-1.5 ${obs.type === "error_grammar" ? "text-terracotta" : "text-ink-faint"}`}>
+            <p className={`smallcaps mb-1.5 ${obs.type === "error_grammar" ? "text-terracotta-ink" : "text-ink-muted"}`}>
               {TYPE_LABELS[obs.type]}
             </p>
             {obs.detail.original && obs.detail.corrected && (
               <p className="mb-1 font-serif text-[17px] leading-[1.4] text-ink">
-                <span className="text-ink-soft underline decoration-terracotta decoration-2 underline-offset-[3px]">
+                <span className="text-ink-muted underline decoration-terracotta decoration-2 underline-offset-[3px]">
                   {obs.detail.original}
                 </span>{" "}
                 <DuoIcon name="flecha" size={13} className="inline" />{" "}

@@ -94,7 +94,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
   return (
     <div className="clay-static rounded-[26px] p-5 sm:p-8">
       <div className="flex items-center justify-between">
-        <span className="smallcaps text-ink-faint">Try it: question {idx + 1} of {items.length}</span>
+        <span className="smallcaps text-ink-muted">Try it: question {idx + 1} of {items.length}</span>
         <span className="flex items-center gap-[3px]" aria-hidden>
           {items.map((_, i) => (
             <span key={i} className={`h-[5px] w-[14px] rounded-full ${i < idx || (i === idx && checked) ? "bg-green" : "bg-segment-empty"}`} />
@@ -105,7 +105,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
       <div className="mt-4">
         <PromptWithBlank prompt={item.prompt} />
         {item.promptEnglish && (
-          <p className="mt-2 font-serif text-[13.5px] italic text-ink-soft">{item.promptEnglish}</p>
+          <p className="mt-2 font-serif text-[13.5px] italic text-ink-muted">{item.promptEnglish}</p>
         )}
       </div>
 
@@ -148,7 +148,7 @@ export function TryIt({ items, topicId, topicTitle }: { items: ExerciseItem[]; t
           <p className={`text-sm font-semibold ${wasCorrect ? "text-ink" : "text-terracotta-ink"}`}>
             {wasCorrect ? "¡Eso es!" : `Mejor: “${acceptedAnswers(item)[0]}”.`}
           </p>
-          <p className={`mt-1 text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-[#96604A]"}`}>
+          <p className={`mt-1 text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-terracotta-ink"}`}>
             {item.explanation}
           </p>
         </div>

@@ -18,7 +18,7 @@ export function Footer() {
           </div>
           <nav className="grid grid-cols-2 gap-6 text-sm sm:justify-self-end">
             <div className="flex flex-col gap-2.5">
-              <p className="smallcaps text-ink-faint">Free practice</p>
+              <p className="smallcaps text-ink-muted">Free practice</p>
               <Link href="/gramatica" className="text-ink-muted hover:text-ink">Spanish grammar</Link>
               <Link href="/frases" className="text-ink-muted hover:text-ink">Phrase packs</Link>
               <Link href="/frases/bath" className="text-ink-muted hover:text-ink">Bath-time Spanish</Link>
@@ -27,17 +27,17 @@ export function Footer() {
               <Link href="/gramatica/por-vs-para" className="text-ink-muted hover:text-ink">Por vs para</Link>
             </div>
             <div className="flex flex-col gap-2.5">
-              <p className="smallcaps text-ink-faint">For</p>
+              <p className="smallcaps text-ink-muted">For</p>
               <Link href="/for/parents" className="text-ink-muted hover:text-ink">Parents</Link>
               <Link href="/for/toddlers" className="text-ink-muted hover:text-ink">Toddlers</Link>
               <Link href="/for/beginners-with-kids" className="text-ink-muted hover:text-ink">New parents</Link>
               <Link href="/for/b1-learners" className="text-ink-muted hover:text-ink">Parents at B1</Link>
-              <p className="smallcaps mt-3 text-ink-faint">Product</p>
+              <p className="smallcaps mt-3 text-ink-muted">Product</p>
               <Link href="/#waitlist" className="text-ink-muted hover:text-ink">Join the waitlist</Link>
             </div>
           </nav>
         </div>
-        <p className="mt-12 text-xs text-ink-soft">© {new Date().getFullYear()} Hablaba</p>
+        <p className="mt-12 text-xs text-ink-muted">© {new Date().getFullYear()} Hablaba</p>
       </div>
     </footer>
   )

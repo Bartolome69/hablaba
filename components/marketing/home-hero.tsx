@@ -31,7 +31,7 @@ export function HomeHero({ stats }: { stats: HomeHeroStats }) {
     <section className="mx-auto max-w-6xl px-5 pb-12 pt-7 sm:pb-16 sm:pt-14">
       <div className="grid items-center gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
         <div>
-          <p className="inline-flex rounded-full bg-terracotta-tint px-4 py-1.5 text-[11px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
+          <p className="inline-flex rounded-full bg-terracotta-tint px-4 py-1.5 text-[12px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
             For parents raising bilingual kids
           </p>
 
@@ -66,7 +66,7 @@ export function HomeHero({ stats }: { stats: HomeHeroStats }) {
             </Link>
           </div>
 
-          <p className="mt-4 text-[13px] text-ink-soft sm:mt-5 sm:text-[13.5px]">
+          <p className="mt-4 text-[13px] text-ink-muted sm:mt-5 sm:text-[13.5px]">
             Free while in early access · Invites go out by email · Works on your phone
           </p>
 
@@ -97,7 +97,7 @@ function AppPeek() {
           style={{ boxShadow: "inset 0 0 0 1px rgba(30,61,44,.08), 0 3px 0 var(--hb-lip)" }}
         >
           <div className="flex items-center justify-between">
-            <p className="smallcaps text-ink-faint">Charla · esta tarde</p>
+            <p className="smallcaps text-ink-muted">Charla · esta tarde</p>
             <span className="flex h-2 w-2 rounded-full bg-green" />
           </div>
 
@@ -120,7 +120,7 @@ function AppPeek() {
               <p className="font-serif text-[14.5px] leading-snug text-terracotta-ink">
                 Mejor: “el bebé <span className="font-medium">se despertó</span> tres veces”
               </p>
-              <p className="mt-1 text-[12px] leading-relaxed text-terracotta-ink/80">
+              <p className="mt-1 text-[12px] leading-relaxed text-terracotta-ink">
                 Despertarse is reflexive when someone wakes up.
               </p>
             </div>
@@ -138,13 +138,13 @@ function AppPeek() {
           </div>
 
           <div className="mt-4 border-t border-rule pt-3.5">
-            <p className="smallcaps text-ink-faint">Guardada en tus frases</p>
+            <p className="smallcaps text-ink-muted">Guardada en tus frases</p>
             <div className="mt-2 flex items-center gap-3 rounded-[16px] bg-sunken px-4 py-3">
               <div className="min-w-0 flex-1">
                 <p className="font-serif text-[15.5px] leading-snug text-ink">Se despertó con hambre.</p>
-                <p className="mt-0.5 text-[12px] text-ink-soft">He woke up hungry.</p>
+                <p className="mt-0.5 text-[12px] text-ink-muted">He woke up hungry.</p>
               </div>
-              <span className="rounded-full bg-terracotta-tint px-2 py-1 text-[9px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
+              <span className="rounded-full bg-terracotta-tint px-2 py-1 text-[12px] font-medium uppercase tracking-[.14em] text-terracotta-ink">
                 nueva
               </span>
               <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sunken-2 text-ink">

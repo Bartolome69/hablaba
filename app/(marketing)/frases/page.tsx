@@ -35,7 +35,7 @@ export default function PhrasesIndexPage() {
   return (
     <div className="mx-auto max-w-4xl px-5 pb-20 pt-12 sm:pt-16">
       <header className="max-w-2xl">
-        <p className="mb-4 inline-flex rounded-full bg-terracotta-tint px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
+        <p className="mb-4 inline-flex rounded-full bg-terracotta-tint px-3.5 py-1.5 text-[12px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
           Free phrase packs
         </p>
         <h1 className="font-serif text-[40px] leading-[1.05] tracking-[-0.025em] text-ink sm:text-6xl">
@@ -54,7 +54,7 @@ export default function PhrasesIndexPage() {
         if (!category || group.length === 0) return null
         return (
           <section key={catId} className="mt-12">
-            <h2 className="smallcaps px-1 text-ink-faint">{CATEGORY_HEADINGS[catId]}</h2>
+            <h2 className="smallcaps px-1 text-ink-muted">{CATEGORY_HEADINGS[catId]}</h2>
             <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
               {group.map((routine) => (
                 <Link
@@ -67,9 +67,9 @@ export default function PhrasesIndexPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[15px] font-semibold text-ink">{routine.name}</p>
-                    <p className="truncate text-[13px] text-ink-soft">{routine.context}</p>
+                    <p className="truncate text-[13px] text-ink-muted">{routine.context}</p>
                   </div>
-                  <span className="flex-none text-[12.5px] text-ink-soft">{routine.phrases.length} frases</span>
+                  <span className="flex-none text-[12.5px] text-ink-muted">{routine.phrases.length} frases</span>
                 </Link>
               ))}
             </div>

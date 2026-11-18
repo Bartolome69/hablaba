@@ -202,7 +202,7 @@ export function ExercisesApp() {
 
       <div className="mt-[26px] flex items-baseline justify-between px-1">
         <h2 className="font-serif text-[19px] text-ink">Temas</h2>
-        <span className="text-[12.5px] text-ink-soft">{totalQuestions} preguntas</span>
+        <span className="text-[12.5px] text-ink-muted">{totalQuestions} preguntas</span>
       </div>
 
       {/* Sort: grouped by area, weakest first, or longest un-practised first. */}
@@ -233,7 +233,7 @@ export function ExercisesApp() {
           if (group.length === 0) return null
           return (
             <section key={area} className="mt-5">
-              <h3 className="smallcaps px-1 pb-2.5 text-ink-faint">{AREA_NAMES[area]}</h3>
+              <h3 className="smallcaps px-1 pb-2.5 text-ink-muted">{AREA_NAMES[area]}</h3>
               <div className="stagger-children space-y-2">
                 {group.map((c) => (
                   <TopicCard
@@ -298,16 +298,16 @@ function TopicCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-semibold text-ink">{covered.topic.title}</p>
-        <p className="truncate font-serif text-[13.5px] italic text-ink-soft">
+        <p className="truncate font-serif text-[13.5px] italic text-ink-muted">
           {covered.topic.spanish}
         </p>
       </div>
       <div className="flex flex-none flex-col items-end gap-1.5">
         {staleness ? (
-          <span className="text-[12.5px] font-medium text-ink-soft">{staleness}</span>
+          <span className="text-[12.5px] font-medium text-ink-muted">{staleness}</span>
         ) : (
-          <span className="text-[12.5px] text-ink-soft">
-            <span className="font-medium text-ink-faint">{covered.topic.cefr}</span> · {covered.quizCount} P
+          <span className="text-[12.5px] text-ink-muted">
+            <span className="font-medium text-ink-muted">{covered.topic.cefr}</span> · {covered.quizCount} P
           </span>
         )}
         <span className="flex items-center gap-1.5">
@@ -319,7 +319,7 @@ function TopicCard({
               />
             ))}
           </span>
-          <span className={`text-[11.5px] ${band === "mislearned" ? "font-medium text-terracotta-ink" : "text-ink-soft"}`}>
+          <span className={`text-[12px] ${band === "mislearned" ? "font-medium text-terracotta-ink" : "text-ink-muted"}`}>
             {BAND_LABEL[band]}
           </span>
         </span>
@@ -456,7 +456,7 @@ function Quiz({
                 style={{ width: `${Math.max(4, (idx / items.length) * 100)}%` }}
               />
             </div>
-            <p className="smallcaps mt-2.5 text-[12px] tracking-[.14em] text-ink-faint">
+            <p className="smallcaps mt-2.5 text-[12px] tracking-[.14em] text-ink-muted">
               Pregunta {idx + 1} de {items.length}
             </p>
           </div>
@@ -491,7 +491,7 @@ function Quiz({
             <div className="mb-7 mt-4">
               <PromptWithBlank prompt={item.prompt} />
               {item.promptEnglish && (
-                <p className="mt-2.5 font-serif text-[13.5px] italic text-ink-soft">{item.promptEnglish}</p>
+                <p className="mt-2.5 font-serif text-[13.5px] italic text-ink-muted">{item.promptEnglish}</p>
               )}
             </div>
 
@@ -544,7 +544,7 @@ function Quiz({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="Escribí tu respuesta…"
-                className="clay-recessed h-14 w-full rounded-[18px] px-5 font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-[15px] placeholder:text-ink-faint focus:ring-1 focus:ring-green disabled:opacity-100"
+                className="clay-recessed h-14 w-full rounded-[18px] px-5 font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-[15px] placeholder:text-ink-muted focus:ring-1 focus:ring-green disabled:opacity-100"
               />
             )}
 
@@ -594,7 +594,7 @@ function Quiz({
                     <p className={`text-sm font-semibold ${wasCorrect ? "text-ink" : "text-terracotta-ink"}`}>
                       {wasCorrect ? "¡Eso es!" : <>Mejor: “{acceptedAnswers(item)[0]}”.</>}
                     </p>
-                    <p className={`text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-[#96604A]"}`}>
+                    <p className={`text-[13px] leading-normal ${wasCorrect ? "text-ink-muted" : "text-terracotta-ink"}`}>
                       {item.explanation}
                     </p>
                   </div>
@@ -707,7 +707,7 @@ function PracticeBridge({ topicIds }: { topicIds: string[] }) {
 
   return (
     <div className="clay-static mt-3 w-full rounded-[22px] p-5 text-left">
-      <p className="smallcaps text-ink-faint">Llevalo a tu día</p>
+      <p className="smallcaps text-ink-muted">Llevalo a tu día</p>
 
       {phrases.length > 0 &&
         (phrasesAdded === null ? (

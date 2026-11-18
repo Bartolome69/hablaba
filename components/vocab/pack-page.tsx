@@ -118,16 +118,16 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
         >
           <DuoIcon name="volver" size={19} />
         </Link>
-        <span className="text-[13px] font-medium text-ink-soft">Palabras</span>
+        <span className="text-[13px] font-medium text-ink-muted">Palabras</span>
       </div>
 
       <h1 className="mt-5 font-serif text-[32px] leading-[1.05] tracking-[-0.025em] text-ink">{label}</h1>
-      {pack && <p className="mt-1.5 text-[13.5px] text-ink-soft">{pack.blurb}</p>}
+      {pack && <p className="mt-1.5 text-[13.5px] text-ink-muted">{pack.blurb}</p>}
 
       {stats && stats.total > 0 && (
         <div className="mt-4">
           <PackProgress stats={stats} />
-          <p className="mt-2 text-[12.5px] text-ink-soft">
+          <p className="mt-2 text-[12.5px] text-ink-muted">
             {stats.total} palabras · {stats.sabidas} sabidas · {stats.practicando} practicando ·{" "}
             {stats.unseen} nuevas
           </p>
@@ -172,7 +172,7 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
       ) : null}
 
       {contents && contents.catalog.length + contents.own.length === 0 && (
-        <p className="mt-6 px-1 text-center text-[13px] leading-relaxed text-ink-soft">
+        <p className="mt-6 px-1 text-center text-[13px] leading-relaxed text-ink-muted">
           {pack ? "Quitaste todas las palabras de este pack." : "Acá van las palabras que no entran en ningún pack."}
         </p>
       )}
@@ -257,9 +257,9 @@ function PackWordRow({
               <span className="h-[7px] w-[7px] flex-none rounded-full bg-terracotta" aria-label="Lista para repasar" />
             )}
           </p>
-          <p className="text-[12.5px] leading-snug text-ink-soft">
+          <p className="text-[12.5px] leading-snug text-ink-muted">
             {word.english}
-            {band && <span className="text-ink-faint"> · {BAND_LABELS[band]}</span>}
+            {band && <span className="text-ink-muted"> · {BAND_LABELS[band]}</span>}
           </p>
         </div>
         <button

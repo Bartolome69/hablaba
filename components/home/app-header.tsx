@@ -21,7 +21,7 @@ export function AppHeader({ title, subtitle, controls = false }: AppHeaderProps)
     <header className="mb-6 flex items-start justify-between">
       <div className="flex flex-col gap-1">
         <h1 className="font-serif text-[34px] leading-none tracking-[-0.025em] text-ink">{title}</h1>
-        {subtitle && <p className="text-[13.5px] text-ink-soft">{subtitle}</p>}
+        {subtitle && <p className="text-[13.5px] text-ink-muted">{subtitle}</p>}
       </div>
       {controls && (
         <div className="flex items-center gap-2 pt-0.5">

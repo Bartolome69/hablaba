@@ -41,7 +41,7 @@ export default function GrammarIndexPage() {
   return (
     <div className="mx-auto max-w-4xl px-5 pb-20 pt-12 sm:pt-16">
       <header className="max-w-2xl">
-        <p className="mb-4 inline-flex rounded-full bg-terracotta-tint px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
+        <p className="mb-4 inline-flex rounded-full bg-terracotta-tint px-3.5 py-1.5 text-[12px] font-medium uppercase tracking-[.16em] text-terracotta-ink">
           Free practice
         </p>
         <h1 className="font-serif text-[40px] leading-[1.05] tracking-[-0.025em] text-ink sm:text-6xl">
@@ -59,7 +59,7 @@ export default function GrammarIndexPage() {
         if (group.length === 0) return null
         return (
           <section key={area} className="mt-12">
-            <h2 className="smallcaps px-1 text-ink-faint">{AREA_HEADINGS[area]}</h2>
+            <h2 className="smallcaps px-1 text-ink-muted">{AREA_HEADINGS[area]}</h2>
             <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
               {group.map(({ topic, quizCount }) => (
                 <Link
@@ -72,11 +72,11 @@ export default function GrammarIndexPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[15px] font-semibold text-ink">{topic.title}</p>
-                    <p className="truncate font-serif text-[13.5px] italic text-ink-soft">{topic.spanish}</p>
+                    <p className="truncate font-serif text-[13.5px] italic text-ink-muted">{topic.spanish}</p>
                   </div>
                   <div className="flex flex-none flex-col items-end gap-0.5 text-right">
-                    <span className="text-[11px] font-medium uppercase tracking-[.14em] text-ink-faint">{topic.cefr}</span>
-                    <span className="text-[12.5px] text-ink-soft">{quizCount} Q</span>
+                    <span className="text-[12px] font-medium uppercase tracking-[.14em] text-ink-muted">{topic.cefr}</span>
+                    <span className="text-[12.5px] text-ink-muted">{quizCount} Q</span>
                   </div>
                 </Link>
               ))}

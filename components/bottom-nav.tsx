@@ -48,7 +48,7 @@ export function BottomNav() {
             }`}
           >
             <DuoIcon name={tab.icon} size={23} detail={tab.active ? undefined : "#1E3D2C"} />
-            <span className={`text-[10.5px] leading-none ${tab.active ? "font-semibold" : "font-medium"}`}>
+            <span className={`text-[12px] leading-none ${tab.active ? "font-semibold" : "font-medium"}`}>
               {tab.label}
             </span>
           </button>

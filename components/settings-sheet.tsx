@@ -62,7 +62,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
         {profile && (
           <>
-            <h3 className="smallcaps mb-3 text-ink-faint">Español</h3>
+            <h3 className="smallcaps mb-3 text-ink-muted">Español</h3>
             <div className="mb-4 grid grid-cols-2 gap-2">
               {DIALECT_OPTIONS.map((d) => {
                 const selected = profile.dialect === d.id
@@ -79,7 +79,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                     <p className={`text-sm font-semibold ${selected ? "text-green" : "text-ink"}`}>
                       {d.label}
                     </p>
-                    <p className="mt-0.5 text-xs text-ink-soft">{d.blurb}</p>
+                    <p className="mt-0.5 text-xs text-ink-muted">{d.blurb}</p>
                   </button>
                 )
               })}
@@ -105,8 +105,8 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
             </div>
 
-            <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Tu peque</h3>
-            <p className="mb-3 text-xs text-ink-soft">
+            <h3 className="smallcaps mb-3 mt-7 text-ink-muted">Tu peque</h3>
+            <p className="mb-3 text-xs text-ink-muted">
               Opcional. Si lo cargás, {PARTNER_NAME} puede hablar de tu día con su nombre.
             </p>
             <div className="space-y-3">
@@ -154,7 +154,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
             only thing left here is whether she reads to you — and the sheet's
             three headings now read as the three things the app is about:
             Spanish, your little one, and her. */}
-        <h3 className="smallcaps mb-3 mt-7 text-ink-faint">{PARTNER_NAME}</h3>
+        <h3 className="smallcaps mb-3 mt-7 text-ink-muted">{PARTNER_NAME}</h3>
 
         {/* Off by default, and the copy says what it does rather than naming a
             feature — the parent needs to know whether the phone is about to
@@ -162,7 +162,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
         <div className="clay-card mt-3 flex items-center gap-3 rounded-[18px] p-3">
           <div className="flex-1">
             <p className="text-sm font-semibold text-ink">Leer las respuestas</p>
-            <p className="text-xs leading-snug text-ink-soft">
+            <p className="text-xs leading-snug text-ink-muted">
               En el chat escrito, {PARTNER_NAME} lee sus mensajes sola.
             </p>
           </div>

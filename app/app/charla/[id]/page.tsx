@@ -226,7 +226,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-[15px] font-semibold text-ink">{conversation.title}</h1>
           {inVoice && (voice.state === "live" || voice.state === "paused") ? (
-            <p className="flex items-center gap-1.5 text-xs text-ink-soft">
+            <p className="flex items-center gap-1.5 text-xs text-ink-muted">
               <span
                 aria-hidden
                 className={`h-1.5 w-1.5 rounded-full ${voice.state === "live" ? "bg-green" : "bg-ink-faint"}`}
@@ -236,7 +236,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
               {Math.max(1, Math.ceil(voice.elapsed / 60))} min en voz alta
             </p>
           ) : (
-            <p className="truncate text-xs text-ink-soft">
+            <p className="truncate text-xs text-ink-muted">
               {conversation.voiceSeconds > 0
                 ? `${voiceMinutes} min en voz alta`
                 : topic?.blurb ?? "Escribí o hablá"}
@@ -267,7 +267,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
           <div className="text-sm leading-relaxed text-terracotta-ink text-pretty">
             <p>{voice.error.message}</p>
             {voice.error.kind === "mic-denied" && (
-              <p className="mt-1 text-[#96604A]">{micPermissionHelp()}</p>
+              <p className="mt-1 text-terracotta-ink">{micPermissionHelp()}</p>
             )}
           </div>
         </div>
@@ -312,7 +312,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
                   <span className="anim-bar h-3.5 w-[3px] rounded-[2px] bg-green opacity-70 [animation-delay:140ms]" />
                   <span className="anim-bar h-3.5 w-[3px] rounded-[2px] bg-terracotta [animation-delay:280ms]" />
                 </span>
-                <span className="text-[12.5px] text-ink-soft">Hablaba está pensando…</span>
+                <span className="text-[12.5px] text-ink-muted">Hablaba está pensando…</span>
               </div>
             </div>
           )}

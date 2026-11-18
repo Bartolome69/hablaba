@@ -98,7 +98,7 @@ export default function HomePage() {
                     <DuoIcon name="peque" size={18} />
                   </div>
                   <span className="flex-1 text-[15px] font-semibold text-ink">{phrasePages[r.id].title}</span>
-                  <DuoIcon name="chevron" size={14} className="text-ink-soft" />
+                  <DuoIcon name="chevron" size={14} className="text-ink-muted" />
                 </Link>
               ))}
             </div>
@@ -127,7 +127,7 @@ export default function HomePage() {
                     <DuoIcon name={grammarIcon(topic.id)} size={18} />
                   </div>
                   <span className="flex-1 text-[15px] font-semibold text-ink">{topic.title}</span>
-                  <span className="text-[12.5px] text-ink-soft">{topic.cefr} · {quizCount} Q</span>
+                  <span className="text-[12.5px] text-ink-muted">{topic.cefr} · {quizCount} Q</span>
                 </Link>
               ))}
             </div>

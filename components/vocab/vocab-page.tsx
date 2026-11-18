@@ -155,7 +155,7 @@ export function VocabPage() {
 
       <div className="mt-[26px] flex items-baseline justify-between px-1">
         <h2 className="font-serif text-[19px] text-ink">Tus packs</h2>
-        <span className="text-[12.5px] text-ink-soft">{SHELF.length} packs</span>
+        <span className="text-[12.5px] text-ink-muted">{SHELF.length} packs</span>
       </div>
 
       <ul className="stagger-children mt-3 space-y-2">
@@ -182,7 +182,7 @@ function PackRow({ id, stats }: { id: VocabSetId; stats?: PackStats }) {
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-semibold text-ink">{packLabel(id)}</p>
-        <p className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-ink-soft">
+        <p className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-ink-muted">
           {stats && stats.due > 0 && (
             <span className="h-[6px] w-[6px] flex-none rounded-full bg-terracotta" aria-hidden />
           )}
@@ -190,7 +190,7 @@ function PackRow({ id, stats }: { id: VocabSetId; stats?: PackStats }) {
         </p>
       </div>
       <div className="flex w-[64px] flex-none flex-col items-end gap-1.5">
-        <span className="text-[12.5px] text-ink-faint">{stats ? stats.total : ""}</span>
+        <span className="text-[12.5px] text-ink-muted">{stats ? stats.total : ""}</span>
         {stats && stats.total > 0 && <PackProgress stats={stats} className="w-full" />}
       </div>
     </Link>
