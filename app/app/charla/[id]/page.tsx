@@ -414,26 +414,14 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
             onPocket={() => setPocket(true)}
           />
         ) : (
-          <div
-            className="flex items-end gap-2.5 px-5 pt-3.5"
-            style={{ paddingBottom: "max(env(safe-area-inset-bottom), 1.5rem)" }}
-          >
-            <div className="min-w-0 flex-1">
-              <ChatInput
-                onSend={sendMessage}
-                onFocus={() => bottomRef.current?.scrollIntoView({ behavior: "smooth" })}
-              />
-            </div>
-            {/* The 56px mic disc with its slow breathing ring: "switch this
-                thread to a live spoken conversation". */}
-            <button
-              onClick={startVoice}
-              aria-label="Seguir en voz alta"
-              className="clay-green-disc relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full"
-            >
-              <span aria-hidden className="anim-breathe absolute -inset-[9px] -z-10 rounded-full bg-[#CFDECF]" />
-              <DuoIcon name="micro" size={26} className="text-cream" detail="#8FBE9C" />
-            </button>
+          <div className="px-5 pt-3.5" style={{ paddingBottom: "max(env(safe-area-inset-bottom), 1.5rem)" }}>
+            {/* One action slot: "Hablar" hands the thread to your voice; once
+                you type, it's the send arrow. */}
+            <ChatInput
+              onSend={sendMessage}
+              onVoice={startVoice}
+              onFocus={() => bottomRef.current?.scrollIntoView({ behavior: "smooth" })}
+            />
           </div>
         )}
       </div>

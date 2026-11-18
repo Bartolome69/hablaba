@@ -7,11 +7,17 @@
 // dictation (e.g. Wispr Flow) covers typing by voice better anyway.
 //
 // Clay + calm: a recessed input well (pressed into the clay, not floating on
-// it) under a row of quick-ask chips — Repetir / Ayudame / Más lento — that
-// send a ready-made Spanish request, so the ask itself never needs typing.
+// it) under a row of quick-ask chips that send a ready-made Spanish request,
+// so the ask itself never needs typing.
+//
+// ONE action slot beside the box (Nov 2026): empty, it's a labelled "Hablar"
+// pill that hands the thread to your voice; with text in the box, it becomes
+// the send arrow. It used to be a send arrow AND an unlabelled mic disc side
+// by side, two green circles meaning two different things, and the
+// placeholder's "o habla" read like the keyboard's own dictation mic.
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { DuoIcon, type IconName } from "@/components/icons"
+import { DuoIcon } from "@/components/icons"
 
 // Common English words that rarely appear in Spanish
 const ENGLISH_STOP_WORDS = new Set([
@@ -38,10 +44,14 @@ function looksLikeEnglish(text: string): boolean {
 // correctly applies the tú rule, so it flagged them as mistakes: the app put
 // voseo in the parent's mouth and then corrected them for it. Don't write these
 // in the chrome's voice.
-const QUICK_ASKS: { label: string; icon: IconName; text: string }[] = [
-  { label: "Repetir", icon: "escuchar", text: "¿Lo puedes repetir?" },
-  { label: "Ayúdame", icon: "rayo", text: "Ayúdame, ¿cómo lo digo mejor?" },
-  { label: "Más lento", icon: "lento", text: "Más despacio, por favor." },
+//
+// The chip shows (nearly) the message it sends, in Spanish, so it reads as "say this"
+// rather than as a control. ("Repetir" with a speaker icon looked like "play
+// that again".) They hide while you're typing your own message.
+const QUICK_ASKS: { label: string; text: string }[] = [
+  { label: "¿Me lo repites?", text: "¿Me lo repites?" },
+  { label: "¿Cómo lo digo?", text: "Ayúdame, ¿cómo lo digo mejor?" },
+  { label: "Más lento", text: "Más despacio, por favor." },
 ]
 
 // The composer is one `leading-6` line plus `py-3`, so a single line is 48px —
@@ -56,11 +66,13 @@ interface ChatInputProps {
   onSend: (message: string) => void
   onFocus?: () => void
   onHeightChange?: () => void
-  /** Show the Repetir / Ayudame / Más lento quick-ask chips. */
+  /** Show the quick-ask chips. */
   quickAsks?: boolean
+  /** Hand the thread to your voice: the "Hablar" pill when the box is empty. */
+  onVoice?: () => void
 }
 
-export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }: ChatInputProps) {
+export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true, onVoice }: ChatInputProps) {
   const [value, setValue] = useState("")
   const [languageError, setLanguageError] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -133,16 +145,16 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
 
   return (
     <div>
-      {quickAsks && (
-        <div className="flex flex-wrap gap-2 pb-3">
+      {quickAsks && !hasText && (
+        <div className="flex gap-2 overflow-x-auto pb-3 [scrollbar-width:none]">
           {QUICK_ASKS.map((ask) => (
             <button
               key={ask.label}
               onClick={() => onSend(ask.text)}
-              className="press-chip flex h-[34px] flex-none items-center gap-1.5 rounded-full bg-sunken px-[13px]"
+              aria-label={`Enviar: ${ask.text}`}
+              className="press-chip flex h-9 flex-none items-center rounded-full bg-sunken px-3"
             >
-              <DuoIcon name={ask.icon} size={13} className="text-ink" />
-              <span className="text-[12.5px] font-medium text-ink">{ask.label}</span>
+              <span className="font-serif text-[13.5px] text-ink">{ask.label}</span>
             </button>
           ))}
         </div>
@@ -162,7 +174,7 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onFocus={onFocus}
-          placeholder="Escribe, o habla…"
+          placeholder="Escribe en español…"
           lang="es"
           autoCorrect="on"
           autoCapitalize="sentences"
@@ -175,7 +187,7 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
           style={{ height: MIN_INPUT_HEIGHT }}
         />
 
-        {hasText && (
+        {hasText ? (
           <button
             onClick={handleSubmit}
             aria-label="Enviar"
@@ -183,6 +195,17 @@ export function ChatInput({ onSend, onFocus, onHeightChange, quickAsks = true }:
           >
             <DuoIcon name="flecha" size={20} detail="#F7F3EC" />
           </button>
+        ) : (
+          onVoice && (
+            <button
+              onClick={onVoice}
+              aria-label="Hablar con voz"
+              className="clay-green flex h-12 flex-none items-center gap-2 rounded-full pl-4 pr-5 text-[15px] font-semibold text-cream"
+            >
+              <DuoIcon name="micro" size={20} className="text-cream" detail="#8FBE9C" />
+              Hablar
+            </button>
+          )
         )}
       </div>
     </div>

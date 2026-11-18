@@ -110,6 +110,12 @@ export async function POST(req: Request) {
             // low ever feels sluggish after a clearly finished turn, the next
             // lever is prompt-side ("wait for me"), not a fixed delay.
             turn_detection: { type: "semantic_vad", eagerness: "low" },
+            // Filters the mic BEFORE it reaches turn detection, so a baby's
+            // squeal, a bang or a passing bus is less likely to count as the
+            // parent starting or finishing a turn (which made her cut in, or
+            // stop mid-sentence and answer the noise). far_field because the
+            // phone is in a hand, on a table or on the pram, not a headset.
+            noise_reduction: { type: "far_field" },
           },
           output: { voice: PARTNER_VOICE },
         },
