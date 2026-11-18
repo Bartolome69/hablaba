@@ -12,6 +12,8 @@ export interface AskSheetState {
   context?: string
   /** "word" when a single word was picked out of a sentence (a chat bubble). */
   want?: "auto" | "word"
+  /** Opened from the bar's mic: start listening straight away. */
+  listen?: boolean
   /** Bumps on every open so the panel remounts fresh. */
   key: number
 }
@@ -23,8 +25,10 @@ const set = (next: AskSheetState) => {
   listeners.forEach((l) => l())
 }
 
-export function openAskSheet(opts: { query?: string; context?: string; want?: "auto" | "word" } = {}) {
-  set({ open: true, query: opts.query, context: opts.context, want: opts.want, key: state.key + 1 })
+export function openAskSheet(
+  opts: { query?: string; context?: string; want?: "auto" | "word"; listen?: boolean } = {},
+) {
+  set({ open: true, query: opts.query, context: opts.context, want: opts.want, listen: opts.listen, key: state.key + 1 })
 }
 
 export function closeAskSheet() {

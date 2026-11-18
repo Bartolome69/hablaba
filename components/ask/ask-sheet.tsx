@@ -38,7 +38,8 @@ export function AskSheet() {
           initialQuery={sheet.query}
           context={sheet.context}
           wantWord={sheet.want === "word"}
-          autoFocus={!sheet.query}
+          autoFocus={!sheet.query && !sheet.listen}
+          startListening={sheet.listen}
           onClose={closeAskSheet}
         />
       </SheetContent>
