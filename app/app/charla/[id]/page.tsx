@@ -17,6 +17,7 @@ import { ConversationTranscript } from "@/components/conversations/conversation-
 import { DuoIcon } from "@/components/icons"
 import { SessionReview } from "@/components/voice/session-review"
 import { SettingsSheet } from "@/components/settings-sheet"
+import { PocketView } from "@/components/voice/pocket-view"
 import { VoiceOrb } from "@/components/voice/voice-orb"
 import { useTTS } from "@/hooks/use-tts"
 import { useReadAloud } from "@/hooks/use-read-aloud"
@@ -35,7 +36,7 @@ import {
   OUTPUT_GAIN_KEY,
   SESSION_WARNING_SECONDS,
 } from "@/lib/voice/config"
-import { micPermissionHelp } from "@/lib/voice/platform"
+import { isIOS, micPermissionHelp } from "@/lib/voice/platform"
 import { useMediaSession } from "@/lib/voice/use-media-session"
 import { useVoiceSession } from "@/lib/voice/use-voice-session"
 import { useWakeLock } from "@/lib/voice/use-wake-lock"
@@ -120,7 +121,38 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
       maybeAnalyze()
     }
   }, [id, loadNotes])
-  useWakeLock(voice.state === "live" || voice.state === "paused")
+  const talking = voice.state === "live" || voice.state === "paused"
+  const wakeLock = useWakeLock(talking)
+
+  // The pocket view (Phase 6). On iPhone it opens by itself the first time a
+  // session goes live with the screen held on: the screen has to stay on
+  // there, so it may as well be dark with two big controls. Elsewhere it's
+  // one tap away ("Modo bolsillo"). Closing it is respected until the next
+  // spoken stretch.
+  const [ios, setIos] = useState(false)
+  const [pocket, setPocket] = useState(false)
+  const autoPocketDone = useRef(false)
+  useEffect(() => {
+    if (!inVoice) {
+      setPocket(false)
+      autoPocketDone.current = false
+      return
+    }
+    if (ios && wakeLock === "held" && voice.state === "live" && !autoPocketDone.current) {
+      autoPocketDone.current = true
+      setPocket(true)
+    }
+  }, [inVoice, ios, wakeLock, voice.state])
+
+  // What to say about the screen. Only iPhone needs a note: there a locked
+  // screen pauses the conversation, so we promise only what's true.
+  const screenNote = !ios || !talking
+    ? undefined
+    : wakeLock === "held"
+      ? "En iPhone la pantalla tiene que quedar prendida. La dejamos prendida por ti."
+      : wakeLock === "off"
+        ? undefined
+        : "Este iPhone no nos deja mantener la pantalla prendida. Si se apaga, la charla se pausa: tócala de vez en cuando."
   useMediaSession({
     active: voice.state === "live" || voice.state === "paused",
     paused: voice.state === "paused",
@@ -132,6 +164,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
   // localStorage is client-only — load after mount to avoid hydration mismatch
   useEffect(() => {
     setConversation(getConversation(id))
+    setIos(isIOS())
     try {
       const gain = Number(localStorage.getItem(OUTPUT_GAIN_KEY))
       if (Number.isFinite(gain) && gain >= 1) setOutputGainPref(gain)
@@ -278,7 +311,8 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
         <div className="mx-5 mt-3 flex items-start gap-3 rounded-2xl bg-sunken px-4 py-3">
           <DuoIcon name="pausa" size={16} className="mt-0.5 flex-shrink-0 text-ink" />
           <p className="text-sm leading-relaxed text-ink text-pretty">
-            La conversación se pausó cuando saliste de la pantalla. Todo quedó guardado acá.
+            La conversación se pausó cuando saliste de la pantalla.
+            {ios && " En iPhone pasa si la pantalla se apaga o cambias de app."} Todo quedó guardado acá.
           </p>
         </div>
       )}
@@ -293,6 +327,16 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
             )}
           </div>
         </div>
+      )}
+
+      {screenNote && (
+        <p
+          className={`mx-5 mt-2 text-center text-xs leading-snug ${
+            wakeLock === "held" ? "text-ink-muted" : "font-medium text-terracotta-ink"
+          }`}
+        >
+          {screenNote}
+        </p>
       )}
 
       {nearLimit && (
@@ -367,6 +411,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
             onStop={voice.stop}
             outputGain={voice.outputGain}
             onCycleGain={cycleGain}
+            onPocket={() => setPocket(true)}
           />
         ) : (
           <div
@@ -394,6 +439,19 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
       </div>
 
       <SettingsSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+
+      {pocket && talking && (
+        <PocketView
+          state={voice.state}
+          elapsed={voice.elapsed}
+          userSpeaking={voice.userSpeaking}
+          screenNote={screenNote}
+          onPause={voice.pause}
+          onResume={voice.resume}
+          onStop={voice.stop}
+          onExit={() => setPocket(false)}
+        />
+      )}
     </div>
   )
 }

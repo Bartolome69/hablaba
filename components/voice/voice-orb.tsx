@@ -59,6 +59,7 @@ export function VoiceOrb({
   onStop,
   outputGain,
   onCycleGain,
+  onPocket,
 }: {
   state: VoiceConnectionState
   userSpeaking: boolean
@@ -72,6 +73,8 @@ export function VoiceOrb({
   onStop: () => void
   outputGain: number
   onCycleGain: () => void
+  /** Open the dark pocket view (refresh Phase 6). Shown while in conversation. */
+  onPocket?: () => void
 }) {
   const live = state === "live"
   const paused = state === "paused"
@@ -187,6 +190,18 @@ export function VoiceOrb({
           <span className="text-[12px] text-ink-muted">Terminar</span>
         </div>
       </div>
+
+      {/* The pocket view: a dark screen with two big controls, for a walk
+          with the phone in a pocket or on the pram. */}
+      {inConversation && onPocket && (
+        <button
+          onClick={onPocket}
+          className="flex h-11 items-center gap-2 rounded-full px-4 text-[13.5px] font-medium text-ink"
+        >
+          <DuoIcon name="luna" size={17} />
+          Modo bolsillo
+        </button>
+      )}
     </div>
   )
 }
