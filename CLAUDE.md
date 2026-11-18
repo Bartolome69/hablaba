@@ -217,6 +217,14 @@ inside conversations (`/app/charla/[id]`). The short version:
 - Primary platform is **Chrome on Android as an installed PWA** (screen-off
   sessions survive; iOS Safari pauses instead). Platform forks live in
   `lib/voice/platform.ts` — never make backgrounding behavior unconditional.
+- **The pocket view** (refresh Phase 6, `components/voice/pocket-view.tsx`): a
+  dark full-screen view with Pausa/Seguir (88px) and Terminar as a 1-second
+  press and HOLD, so a pocket can't end the conversation. It opens by itself on
+  iPhone when the screen wake lock is held (a locked iPhone screen pauses the
+  session), and is one tap away elsewhere ("Modo bolsillo"). `useWakeLock`
+  returns `held | unsupported | denied | off` and the iPhone copy follows it:
+  never promise the screen stays on unless the lock is actually held. The
+  real-device run is `docs/voice-device-checklist.md`.
 
 **SEO**: `app/sitemap.ts`, `app/robots.ts`, root `app/opengraph-image.tsx` and per-audience `app/(marketing)/for/[slug]/opengraph-image.tsx` generate dynamic OG images.
 
