@@ -109,7 +109,14 @@ export async function POST(req: Request) {
             // VAD scores "do they sound done", not just silence length. If
             // low ever feels sluggish after a clearly finished turn, the next
             // lever is prompt-side ("wait for me"), not a fixed delay.
-            turn_detection: { type: "semantic_vad", eagerness: "low" },
+            //
+            // `interrupt_response: false` (Bart, Nov 2026): she always finishes
+            // her sentence. With it on, a squeal from the baby counted as the
+            // parent starting to talk and cut her off mid-word. The cost is
+            // that the parent can't stop her by talking over her; Pausa
+            // still does. Anything said over her is answered once she's done
+            // (lib/voice/openai-realtime.ts, maybeAnswerWhatWasSaidOverHer).
+            turn_detection: { type: "semantic_vad", eagerness: "low", interrupt_response: false },
             // Filters the mic BEFORE it reaches turn detection, so a baby's
             // squeal, a bang or a passing bus is less likely to count as the
             // parent starting or finishing a turn (which made her cut in, or
