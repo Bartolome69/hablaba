@@ -2,8 +2,10 @@
 // the repo (see lib/vocab/README.md): static, offline, and in the bundle. The
 // packs never change at runtime; the learner's progress and own words do.
 
+import adjetivos from "./content/adjetivos.json"
 import animales from "./content/animales.json"
 import bebe from "./content/bebe.json"
+import bebidas from "./content/bebidas.json"
 import calle from "./content/calle.json"
 import casa from "./content/casa.json"
 import colores from "./content/colores.json"
@@ -11,28 +13,26 @@ import comida from "./content/comida.json"
 import cuerpo from "./content/cuerpo.json"
 import emociones from "./content/emociones.json"
 import juguetes from "./content/juguetes.json"
+import muebles from "./content/muebles.json"
 import ropa from "./content/ropa.json"
 import verbos from "./content/verbos.json"
 import type { CatalogWord, PackId, VocabSet, VocabSetId } from "./types"
 
 /**
- * Shelf order on the Palabras home: the baby's day first, then the world
- * around it, then the grammar-flavoured packs. `propias` sits above all of
- * these as "Tus palabras" and isn't listed here.
+ * The Palabras shelf, in three short sections so every library is one tap
+ * from the tab: the baby's world, the home and the street, and the words for
+ * describing anything. `propias` ("Tus palabras") sits above all of these.
+ * Drinks and furniture were groups inside La comida and La casa; they became
+ * their own packs (Nov 2026) with their catalog ids unchanged, so progress
+ * carried over (the catalog id, not the stored set, decides a word's pack).
  */
-export const PACK_ORDER: PackId[] = [
-  "bebe",
-  "comida",
-  "cuerpo",
-  "ropa",
-  "casa",
-  "juguetes",
-  "animales",
-  "calle",
-  "colores",
-  "emociones",
-  "verbos",
+export const SHELF_SECTIONS: { title: string; packs: PackId[] }[] = [
+  { title: "Del bebé", packs: ["bebe", "juguetes", "cuerpo", "emociones"] },
+  { title: "Casa y calle", packs: ["comida", "bebidas", "ropa", "casa", "muebles", "calle", "animales"] },
+  { title: "Para describir", packs: ["colores", "adjetivos", "verbos"] },
 ]
+
+export const PACK_ORDER: PackId[] = SHELF_SECTIONS.flatMap((s) => s.packs)
 
 export const SETS: Record<PackId, VocabSet> = {
   bebe: {
@@ -56,8 +56,18 @@ export const SETS: Record<PackId, VocabSet> = {
       { id: "frutas", label: "Frutas" },
       { id: "verduras", label: "Verduras" },
       { id: "basicos", label: "Básicos" },
-      { id: "bebidas", label: "Para tomar" },
       { id: "dulces", label: "Dulces" },
+    ],
+  },
+  bebidas: {
+    id: "bebidas",
+    label: "Las bebidas",
+    blurb: "From the morning milk to the café order",
+    words: bebidas as CatalogWord[],
+    groups: [
+      { id: "todos", label: "Todos los días" },
+      { id: "calientes", label: "Calientes" },
+      { id: "cafe", label: "En el café" },
     ],
   },
   cuerpo: {
@@ -90,8 +100,18 @@ export const SETS: Record<PackId, VocabSet> = {
     words: casa as CatalogWord[],
     groups: [
       { id: "lugares", label: "Los lugares" },
-      { id: "muebles", label: "Los muebles" },
       { id: "cosas", label: "Las cosas" },
+    ],
+  },
+  muebles: {
+    id: "muebles",
+    label: "Los muebles",
+    blurb: "What's in every room, the cot included",
+    words: muebles as CatalogWord[],
+    groups: [
+      { id: "living", label: "El living" },
+      { id: "dormitorio", label: "El dormitorio" },
+      { id: "cocina", label: "La cocina y el baño" },
     ],
   },
   juguetes: {
@@ -136,6 +156,17 @@ export const SETS: Record<PackId, VocabSet> = {
     groups: [
       { id: "colores", label: "Los colores" },
       { id: "formas", label: "Las formas" },
+    ],
+  },
+  adjetivos: {
+    id: "adjetivos",
+    label: "Adjetivos comunes",
+    blurb: "Big and small, full and empty: words in opposite pairs",
+    words: adjetivos as CatalogWord[],
+    groups: [
+      { id: "tamano", label: "Tamaño y forma" },
+      { id: "estado", label: "Cómo está" },
+      { id: "como-es", label: "Cómo es" },
     ],
   },
   emociones: {

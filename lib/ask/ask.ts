@@ -57,14 +57,14 @@ export function answerDisplay(answer: AskAnswer): string {
 export type SaveWordOutcome =
   | { status: "added"; word: VocabWord }
   /** Already somewhere. `restored` when it had been removed and is now back. */
-  | { status: "duplicate"; packLabel: string; restored: boolean }
+  | { status: "duplicate"; pack: VocabSetId; packLabel: string; restored: boolean }
 
 /** Keep a word answer: into `set` (Tus palabras by default), due now on the ladder. */
 export function saveAnswerAsWord(answer: AskAnswer, set: VocabSetId = "propias"): SaveWordOutcome {
   const existing = findWord(answer.spanish)
   if (existing) {
     if (existing.hidden) unhideBySpanish(answer.spanish)
-    return { status: "duplicate", packLabel: existing.label, restored: existing.hidden }
+    return { status: "duplicate", pack: existing.pack, packLabel: existing.label, restored: existing.hidden }
   }
   const stored = addWord({
     spanish: answer.spanish,
@@ -78,7 +78,7 @@ export function saveAnswerAsWord(answer: AskAnswer, set: VocabSetId = "propias")
   })
   return stored
     ? { status: "added", word: stored }
-    : { status: "duplicate", packLabel: packLabel(set), restored: false }
+    : { status: "duplicate", pack: set, packLabel: packLabel(set), restored: false }
 }
 
 /** Keep a phrase answer (or a word's example sentence): Frases, Recientes, seedable. */
@@ -91,8 +91,12 @@ export function saveAnswerAsPhrase(answer: AskAnswer): Phrase | null {
 }
 
 /** Is this answer already kept? Drives "Ya está en …" instead of a save button. */
-export function alreadySaved(answer: AskAnswer): { word: string | null; phrase: boolean } {
-  const word = answer.kind === "word" ? (findWord(answer.spanish)?.label ?? null) : null
+export function alreadySaved(answer: AskAnswer): {
+  word: { pack: VocabSetId; label: string } | null
+  phrase: boolean
+} {
+  const found = answer.kind === "word" ? findWord(answer.spanish) : null
+  const word = found ? { pack: found.pack, label: found.label } : null
   const text = answer.kind === "word" ? answer.example : answer.spanish
   const key = text ? normalizePhraseText(text) : ""
   return { word, phrase: !!key && listPhrases().some((p) => normalizePhraseText(p.text) === key) }

@@ -5,6 +5,7 @@
 // box at the top of Frases, and a pack's "¿Falta alguna?" box. A pack keeps
 // itself as the word target; everywhere else words go to Tus palabras.
 
+import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
@@ -63,7 +64,8 @@ export function AskPanel({
   const [value, setValue] = useState(initialQuery ?? "")
   const [busy, setBusy] = useState(false)
   const [answer, setAnswer] = useState<AskAnswer | null>(null)
-  const [savedWord, setSavedWord] = useState<string | null>(null)
+  /** Where the word lives once kept (or if it already was): links to that library. */
+  const [savedWord, setSavedWord] = useState<{ pack: VocabSetId; label: string } | null>(null)
   const [savedPhrase, setSavedPhrase] = useState(false)
   const [justAddedWord, setJustAddedWord] = useState(false)
   const posthog = usePostHog()
@@ -117,10 +119,10 @@ export function AskPanel({
     const outcome = saveAnswerAsWord(answer, wordSet)
     posthog.capture("ask_saved", { as: "word", status: outcome.status, surface })
     if (outcome.status === "added") {
-      setSavedWord(packLabelInline(wordSet))
+      setSavedWord({ pack: wordSet, label: packLabelInline(wordSet) })
       setJustAddedWord(true)
     } else {
-      setSavedWord(outcome.packLabel)
+      setSavedWord({ pack: outcome.pack, label: outcome.packLabel })
       if (outcome.restored) toast.success("Volvió a tus palabras", { description: `Está en ${outcome.packLabel}.` })
     }
     onSaved?.("word")
@@ -239,7 +241,15 @@ export function AskPanel({
             {answer.kind === "word" &&
               (savedWord ? (
                 <SavedLine>
-                  {justAddedWord ? `En ${savedWord}. ${NEXT_REVIEW}` : `Ya está en ${lowerFirst(savedWord)}.`}
+                  {justAddedWord ? "En " : "Ya está en "}
+                  <Link
+                    href={`/app/palabras/${savedWord.pack}`}
+                    onClick={onClose}
+                    className="underline decoration-green/40 underline-offset-[3px]"
+                  >
+                    {lowerFirst(savedWord.label)} →
+                  </Link>
+                  {justAddedWord ? `. ${NEXT_REVIEW}` : "."}
                 </SavedLine>
               ) : (
                 <button onClick={saveWord} className={`flex h-12 items-center justify-center gap-2 rounded-full text-[15px] font-semibold ${primary}`}>
