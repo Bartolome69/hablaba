@@ -210,6 +210,16 @@ inside conversations (`/app/charla/[id]`). The short version:
   purpose; Bart reversed that so learners aren't reading vos forms all day.
   Rioplatense *vocabulary* can stay in chrome ("Dale", "mozo") because that's
   dialect, not grammar. Don't reintroduce vos forms in UI strings.
+- **Turn-taking is patient on purpose** (`/api/voice/session`): semantic VAD
+  at `eagerness: "low"` (she waits when you sound unfinished), plus
+  `noise_reduction: far_field` so a baby's squeal or a bang is filtered before
+  turn detection, plus a SOUNDS AROUND THEM block in `lib/voice/prompts.ts`
+  (babble, cries and words to the child are not the parent's turn). Interrupting
+  her by voice is still on; if noise keeps cutting her off, the next lever is
+  `interrupt_response: false` (she finishes her sentence; Pausa still stops her).
+- **The thread composer has ONE action slot** (`components/chat/chat-input.tsx`):
+  "Hablar" (start voice) when the box is empty, the send arrow once you type.
+  The quick-ask chips show the Spanish they send and hide while you type.
 - Post-session analysis (`/api/analyze`) tags observations with
   **exercises-taxonomy topic ids** — the closed vocabulary that makes session
   reviews and the weekly report link into `/app/exercises?topic=…`. Keep tags
