@@ -165,7 +165,7 @@ export default function HomePage() {
       <Faq
         items={[
           { q: "What level is Hablaba for?", a: "We're built for B1-ish learners: you can read a menu and survive a chat, but you freeze in real conversation. We also support beginners with a bilingual partner." },
-          { q: "Does my child need to use it?", a: "No. Hablaba is for the parent: you practise the Spanish, then bring it into bath time, bedtime and the walk to nursery yourself." },
+          { q: "Does my child need to use it?", a: "No. Hablaba is for the parent: you practise the Spanish, then bring it into bath time, bedtime and the walk to nursery yourself. In “Con tu peque”, Elena plays your little one so you can rehearse the day." },
           { q: "How long per session?", a: "Five minutes is the sweet spot. Short, daily sessions beat long, occasional ones, and voice conversations work hands-free while you push the pram." },
           { q: "Do I need to install anything?", a: "No. Hablaba runs in your browser, and you can add it to your home screen as an app in one tap." },
           { q: "How much does it cost?", a: "Hablaba is free during the early access period, and the grammar and phrase libraries on this site are free forever. Join the waitlist to be the first in." },

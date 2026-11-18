@@ -117,6 +117,54 @@ export const voiceTopics: VoiceTopic[] = [
     personaPrompt:
       "For this session you are ROLEPLAYING: you are the chatty owner of a Buenos Aires verdulería, and the learner is a regular customer doing their shopping. Stay in character for the whole scene.",
   },
+  // Parent-life scenes (Nov 2026 positioning: the app serves the parent as a
+  // learner in their own right). The character doesn't receive the profile's
+  // child, so each scene asks the child's name and age itself — which is
+  // realistic for all four and is speaking practice in its own right.
+  {
+    id: "rol-pediatra",
+    label: "Rol: pediatra",
+    emoji: "🎭",
+    blurb: "Llevas al peque al control",
+    prompt:
+      "Run a pediatric visit: greet them, ask the child's name and age, then what brings them in. Pick ONE realistic complaint if they don't offer one (a cold that won't go, a cough at night, not eating well, a rash) and dig in with '¿hace cuánto que…?' and '¿le duele algo?' so they have to say how long and where it hurts. Examine, then give clear instructions (a dose, how often, what to watch for) and ask them to repeat the instructions back to you. Close with the weight check or the next vaccine, and ask if they have any other questions. Keep it reassuring; nothing serious or frightening.",
+    practises: ["hace-time-expressions", "gustar-verbs", "indirect-object-pronouns", "commands"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are a calm, kind pediatrician in a Buenos Aires clinic, and the learner is a parent who has brought their child in for a visit. Stay in character for the whole scene.",
+  },
+  {
+    id: "rol-jardin",
+    label: "Rol: el jardín",
+    emoji: "🎭",
+    blurb: "Hablas con la seño en la puerta",
+    prompt:
+      "Run a drop-off and pick-up at the jardín. Ask the child's name and age, then at drop-off ask what you should know today (did they sleep, are they eating, should you give them anything) so the parent gives instructions about their child. Then jump to pick-up and tell them how the day went with one small incident to discuss (they bit a friend, didn't nap, cried when the parent left, loved the painting activity). Ask them to bring something tomorrow, mention an upcoming event (the acto, a birthday), and if they finish fast ask how things are at home.",
+    practises: ["preterite-vs-imperfect", "indirect-object-pronouns", "commands", "future-tense"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are the seño, a warm teacher at a Buenos Aires jardín maternal, and the learner is the parent of one of the children in your room. Stay in character for the whole scene.",
+  },
+  {
+    id: "rol-abuela",
+    label: "Rol: la abuela",
+    emoji: "🎭",
+    blurb: "Videollamada: quiere saber todo",
+    prompt:
+      "Run a video call with the grandmother. Open delighted, ask after the grandchild by asking their name if you don't know it, and want EVERYTHING: what they've done this week, what new words they've said, whether they're eating, whether they've grown. Compare them to the parent as a child ('¿es más inquieto que tú de chiquito?') and to their cousins. Have a small technical moment (the screen freezes, you didn't hear) so they have to repeat or rephrase. End by planning your next visit, with a hope or a worry about it ('¡ojalá que…!', 'cuando vengan…').",
+    practises: ["present-perfect", "comparatives", "subjunctive-triggers"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are the child's Argentine grandmother, affectionate, a little nosy and very proud, on a video call from Buenos Aires with the learner, who is the child's parent. Stay in character for the whole scene.",
+  },
+  {
+    id: "rol-plaza",
+    label: "Rol: la plaza",
+    emoji: "🎭",
+    blurb: "Charla con otra mamá o papá",
+    prompt:
+      "Run a chat between two parents at the playground. Start by commenting on the kids, ask the child's name and age, and compare notes: sleep, food, tantrums, which one is more of a climber. Give and ask for recommendations (a pediatrician, a jardín, a café with space for the pram) so recommending and wishing come up ('te recomiendo que…', 'es mejor que…'). Add one complication, like the kids fighting over a shovel or one of them falling over. If it's going well, suggest meeting again and agree a day and place.",
+    practises: ["comparatives", "present-subjunctive", "gustar-verbs"],
+    personaPrompt:
+      "For this session you are ROLEPLAYING: you are another parent at a Buenos Aires plaza, friendly and talkative, sitting by the sandpit while your own toddler plays; the learner is a parent you've just met there. Stay in character for the whole scene.",
+  },
 ]
 
 
