@@ -37,7 +37,7 @@ export const audiences: Record<string, Audience> = {
     faq: [
       { q: "I only know a little Spanish. Is this for me?", a: "Yes. Hablaba is built for B1-ish learners: you can read a menu and survive a conversation, but you freeze with a toddler. We start where you are." },
       { q: "Does my child need to use it?", a: "No. Hablaba is for the parent. You learn the phrases, then bring them into your home naturally." },
-      { q: "What dialect of Spanish?", a: "Rioplatense by default — Argentine vocabulary and a porteño accent — or neutral Latin American if you prefer, switchable in settings. Grammar is tú either way, never vosotros." },
+      { q: "What dialect of Spanish?", a: "Rioplatense by default (Argentine vocabulary and a porteño accent) or neutral Latin American if you prefer, switchable in settings. Grammar is tú either way, never vosotros." },
     ],
   },
   toddlers: {
@@ -67,77 +67,28 @@ export const audiences: Record<string, Audience> = {
   },
   "b1-learners": {
     slug: "b1-learners",
-    eyebrow: "For B1 learners",
-    headline: "You're past Duolingo. You need real conversation.",
+    eyebrow: "For parents at B1",
+    headline: "Your Spanish got you to bedtime. Now take it further.",
     subhead:
-      "Hablaba is the conversation partner for learners stuck at B1. Talk about anything, get corrections in context, and finally feel confident in real Spanish.",
-    metaTitle: "B1 Spanish practice: real conversation with a tutor",
+      "You know the nursery phrases. Hablaba is where your own Spanish grows past them: real conversations about your day, gentle corrections, and grammar practice built from what you actually said, so you can talk with the abuela, the pediatrician and the other parents at the park.",
+    metaTitle: "B1 Spanish practice for parents raising bilingual kids",
     metaDescription:
-      "Stuck at B1? Hablaba is an AI Spanish tutor that holds real conversations, corrects your grammar in context, and explains why, so you finally break through.",
+      "Stuck at B1 while raising a bilingual child? Hablaba holds real conversations with you, corrects your grammar in context, and turns your mistakes into short practice.",
     keyword: "b1 spanish practice",
     features: [
-      { emoji: "💬", title: "Real conversation", body: "Talk about your week, your job, your weekend. The AI keeps up and pushes you." },
-      { emoji: "🩹", title: "Grammar in context", body: "Get corrections inline, with the why as well as the fix." },
-      { emoji: "🔁", title: "Spaced repetition", body: "Phrases you stumble on come back tomorrow, until they stop tripping you up." },
+      { emoji: "💬", title: "Real conversation", body: "Talk about your week, your work, your kid. Type at the table or go hands-free on the walk to nursery." },
+      { emoji: "🩹", title: "Grammar in context", body: "Corrections on what you actually said, with the why as well as the fix." },
+      { emoji: "🔁", title: "Practice the exact gap", body: "Every slip you make links to a short quiz on that one rule, and the rule comes back in your next conversation." },
     ],
     steps: [
-      { title: "Pick a topic", body: "Something you care about: your job, your hobby, last weekend." },
-      { title: "Just talk", body: "Type or speak. The AI responds in Spanish at your level." },
-      { title: "Review corrections", body: "After the chat, review what you got wrong and why." },
+      { title: "Talk about your day", body: "The nap that didn't happen, the dinner that did. She keeps up and asks more." },
+      { title: "Get your patterns back", body: "After the chat, see what you fumbled and what you nailed." },
+      { title: "Close the gap", body: "Practise the one rule that tripped you, then use it with your kid tonight." },
     ],
     faq: [
-      { q: "How is this different from ChatGPT?", a: "Hablaba is tuned for B1 specifically. Corrections are scoped to your level, and the tutor never overloads you with vocabulary you don't have yet." },
-      { q: "Can I speak, not just type?", a: "Yes, voice in and out, with native-quality speech." },
-    ],
-  },
-  travelers: {
-    slug: "travelers",
-    eyebrow: "For travelers",
-    headline: "Real Spanish for your trip, not phrasebook Spanish.",
-    subhead:
-      "Headed to Mexico, Spain or Argentina? Hablaba teaches you the phrases that actually come up (ordering, asking for directions, small talk with your host) and corrects you kindly along the way.",
-    metaTitle: "Spanish for travel: phrases you'll actually use",
-    metaDescription:
-      "Travel-ready Spanish for Mexico, Spain, Argentina and beyond. Hablaba teaches you the phrases that come up at the border, the bar and the taxi, with gentle corrections.",
-    keyword: "spanish for travel",
-    features: [
-      { emoji: "✈️", title: "Trip-shaped lessons", body: "Phrases mapped to airports, restaurants, taxis and hotels: the real flow of a trip." },
-      { emoji: "🌎", title: "Region-aware", body: "Choose Mexico, Spain or Latin America. We adjust slang and pronunciation." },
-      { emoji: "⏱️", title: "Five minutes a day", body: "Two weeks before your flight is enough to feel the difference." },
-    ],
-    steps: [
-      { title: "Pick your destination", body: "Mexico? Spain? Argentina? Each has its own phrases." },
-      { title: "Run the routines", body: "Order food, ask for the bill, find the bus, make a friend." },
-      { title: "Land prepared", body: "You'll surprise yourself in the first taxi." },
-    ],
-    faq: [
-      { q: "I leave in a week. Is it too late?", a: "No. Even a few sessions will help with the basics: ordering, directions, polite chat." },
-      { q: "Do you cover Spain and Latin America?", a: "Yes. Pick your region and we adjust accent and vocabulary." },
-    ],
-  },
-  expats: {
-    slug: "expats",
-    eyebrow: "For expats",
-    headline: "Move to a Spanish-speaking country with the language you actually need.",
-    subhead:
-      "Renting a flat, talking to the doctor, ordering groceries, making friends. Hablaba teaches you the real-life Spanish that gets you settled quickly.",
-    metaTitle: "Spanish for expats: settle into life in Spanish",
-    metaDescription:
-      "Moving to Spain, Mexico or Latin America? Hablaba teaches expats the practical Spanish for housing, healthcare, banking and friendships. Real life, real conversations.",
-    keyword: "spanish for expats",
-    features: [
-      { emoji: "🏠", title: "Practical scenarios", body: "Renting, banking, doctor visits, paperwork: the conversations you'll actually have." },
-      { emoji: "🤝", title: "Friendship Spanish", body: "Move past transactions. Practice small talk, jokes, plans." },
-      { emoji: "🇪🇸", title: "Pick your country", body: "Spain, Mexico, Argentina, Colombia. Each has its own version of right." },
-    ],
-    steps: [
-      { title: "Tell us where you live", body: "We tailor the Spanish to your country and city." },
-      { title: "Run the scenarios", body: "Practice the conversations coming up this week." },
-      { title: "Live in Spanish", body: "Replace the English fallback, one routine at a time." },
-    ],
-    faq: [
-      { q: "I'm already at intermediate. Will I be bored?", a: "No. Hablaba meets you where you are and pushes you. Most expats plateau at B1; we help break through." },
-      { q: "Can I practice for a specific situation?", a: "Yes. Tell the AI what's coming up (a doctor's visit, a viewing, a dinner) and run it as a scenario." },
+      { q: "Is this only for talking to my child?", a: "No. The phrases for bath time and bedtime are one part. The rest is your own Spanish: conversation, grammar and vocabulary, so you keep growing alongside your kid." },
+      { q: "How is this different from ChatGPT?", a: "Hablaba is tuned for B1. Corrections are scoped to your level, nothing gets flagged for a missing accent on a phone keyboard, and every mistake links to practice for that exact rule." },
+      { q: "Can I speak, not just type?", a: "Yes. Voice conversations run hands-free, and the review comes after so she never interrupts you mid-sentence." },
     ],
   },
   "beginners-with-kids": {
@@ -151,7 +102,7 @@ export const audiences: Record<string, Audience> = {
       "New parent learning Spanish from zero so you can join your bilingual family? Hablaba teaches you daily phrases kindly, slowly, and at the moments they come up.",
     keyword: "learn spanish as a parent",
     features: [
-      { emoji: "🌱", title: "Built for beginners", body: "We start at the start. No grammar drills, no shame, no flashcards." },
+      { emoji: "🌱", title: "Built for beginners", body: "We start at the start: short phrases you can use today, no shame, no homework." },
       { emoji: "👨‍👩‍👧", title: "Family-shaped", body: "Phrases your partner already says, so what your kid hears at home becomes what you say too." },
       { emoji: "🕯️", title: "Calm pacing", body: "Five minutes a day, ideally while the kid naps. Promise." },
     ],

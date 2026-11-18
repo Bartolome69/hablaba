@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Hablaba — Spanish for daily life",
+    name: "Hablaba: Spanish with your little one",
     short_name: "Hablaba",
     description:
-      "Practice conversational Spanish with an AI tutor. Warm, calm, encouraging — for parents and B1 learners.",
+      "Spanish for parents raising bilingual kids. Phrases for your day together, real conversation and grammar practice for you.",
     start_url: "/app/today",
     scope: "/",
     display: "standalone",

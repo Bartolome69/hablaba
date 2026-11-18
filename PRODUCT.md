@@ -6,7 +6,7 @@ product
 
 ## Users
 
-Parents raising bilingual (Spanish-speaking) babies. They are not language students in the traditional sense; they want to speak Spanish around the home naturally, without strict one-parent-one-language rules. They use the app in-the-moment during daily routines (feeding, bath time, play) and in short practice sessions when they have a few minutes. Most are B1-level Spanish speakers who need confidence and vocabulary, not grammar drills.
+Parents raising bilingual (Spanish-speaking) babies. They are not language students in the traditional sense; they want to speak Spanish around the home naturally, without strict one-parent-one-language rules. They use the app in-the-moment during daily routines (feeding, bath time, play) and in short practice sessions when they have a few minutes. Most are B1-level Spanish speakers who need confidence and vocabulary, not grammar drills. They are also learners in their own right: the app's open conversation, grammar practice and adult routines are the parent's own Spanish growing alongside their child's. Marketing speaks to parents only; the app serves the whole learner (see `docs/VISION.md`, Positioning).
 
 ## Product Purpose
 

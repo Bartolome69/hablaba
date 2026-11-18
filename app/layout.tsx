@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     default: 'Hablaba: speak Spanish with your little one',
     template: '%s · Hablaba',
   },
-  description: 'Hablaba helps parents raise bilingual kids and B1 learners practice real conversation. Warm, calm and encouraging Spanish for daily life.',
+  description: 'Hablaba helps parents raise bilingual kids: the Spanish for bath time and bedtime, plus real conversation and grammar practice so your own Spanish keeps growing.',
   applicationName: 'Hablaba',
-  keywords: ['spanish for parents', 'bilingual parenting', 'spanish practice', 'b1 spanish', 'spanish ai tutor', 'learn spanish'],
+  keywords: ['spanish for parents', 'bilingual parenting', 'raising bilingual kids', 'spanish for toddlers', 'b1 spanish practice', 'learn spanish as a parent'],
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Hablaba: speak Spanish with your little one',

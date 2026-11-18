@@ -30,6 +30,10 @@ const nextConfig = {
       { source: '/grow/:path*', destination: '/app/today', permanent: true },
       { source: '/criar', destination: '/app/today', permanent: true },
       { source: '/criar/:path*', destination: '/app/today', permanent: true },
+      // Positioning (Nov 2026): the site markets to bilingual parents only.
+      // The travel and expat audience pages went; their links land on parents.
+      { source: '/for/travelers', destination: '/for/parents', permanent: true },
+      { source: '/for/expats', destination: '/for/parents', permanent: true },
     ]
   },
 }
