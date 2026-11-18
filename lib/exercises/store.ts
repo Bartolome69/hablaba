@@ -1,5 +1,5 @@
 // Table-shaped localStorage store for Exercises progress (attempts) plus derived
-// mastery. Mirrors lib/criar/store.ts: the `exercises_attempts` key maps 1:1 to
+// mastery. Same shape as lib/phrases/store.ts: the `exercises_attempts` key maps 1:1 to
 // a future SQL table, so swapping this for Supabase is a drop-in. Client-only.
 
 import type { Attempt, AttemptFormat, MasteryBand, TopicMastery } from "./types"
