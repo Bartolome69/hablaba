@@ -59,9 +59,10 @@ const BAND_FILL: Record<MasteryBand, string> = {
 
 type TopicSort = "area" | "flojos" | "olvidados"
 
+// Weakest first is the default (QW8): it answers "what should I work on?".
 const SORT_LABELS: Record<TopicSort, string> = {
-  area: "Por área",
   flojos: "Más flojos",
+  area: "Por área",
   olvidados: "Sin practicar",
 }
 
@@ -114,7 +115,7 @@ export function ExercisesApp() {
   const covered = useMemo(() => coveredTopics(), [])
   const [view, setView] = useState<View>({ name: "home" })
   const [mastery, setMastery] = useState<Record<string, TopicMastery>>({})
-  const [sort, setSort] = useState<TopicSort>("area")
+  const [sort, setSort] = useState<TopicSort>("flojos")
 
   const changeSort = (s: TopicSort) => {
     setSort(s)
