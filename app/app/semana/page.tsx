@@ -9,6 +9,7 @@ import Link from "next/link"
 import { CorrectionCards } from "@/components/voice/correction-cards"
 import { DuoIcon } from "@/components/icons"
 import { runMigrations } from "@/lib/migrations"
+import { sentenceCase } from "@/lib/utils"
 import {
   computeWeeklyData,
   fetchWeeklyNarrative,
@@ -48,7 +49,9 @@ export default function WeeklyReportPage() {
 
   if (!data) return <div className="min-h-dvh bg-background" />
 
-  const labelFor = (tag: string) => tagLabels[tag] ?? tag.replace(/-/g, " ")
+  // Sentence case, never title case: "Pretérito o imperfecto", not
+  // "Pretérito O Imperfecto". Only the first letter is touched.
+  const labelFor = (tag: string) => sentenceCase(tagLabels[tag] ?? tag.replace(/-/g, " "))
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
@@ -133,7 +136,7 @@ export default function WeeklyReportPage() {
                 {data.patterns.map((p) => (
                   <li key={p.tag} className="clay-static rounded-[18px] px-4 py-3.5">
                     <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                      <p className="text-[15px] font-semibold capitalize text-ink">{labelFor(p.tag)}</p>
+                      <p className="text-[15px] font-semibold text-ink">{labelFor(p.tag)}</p>
                       <p className="text-xs tabular-nums text-ink-soft">×{p.count}</p>
                     </div>
                     {p.examples[0]?.original && p.examples[0]?.corrected && (

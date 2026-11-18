@@ -25,7 +25,7 @@ export const audiences: Record<string, Audience> = {
       "Hablaba helps parents raise bilingual kids. Practice the daily phrases that matter, from bath time to bedtime, with a tutor that corrects you kindly.",
     keyword: "spanish for parents",
     features: [
-      { emoji: "🍼", title: "Daily-life phrases", body: "Phrases for the moments that actually happen: diaper changes, dinner, the park, bedtime." },
+      { emoji: "🍼", title: "Daily-life phrases", body: "Phrases for the moments that actually happen: nappy changes, dinner, the park, bedtime." },
       { emoji: "🎧", title: "Listen and repeat", body: "Hear native pronunciation, repeat out loud, and build muscle memory in five minutes a day." },
       { emoji: "💛", title: "Gentle corrections", body: "We won't shame your grammar. Hablaba nudges you forward, like a patient friend." },
     ],

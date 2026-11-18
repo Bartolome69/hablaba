@@ -19,7 +19,7 @@ import { DuoIcon, vocabSetIcon } from "@/components/icons"
 import { PackProgress, packStatusLine } from "@/components/vocab/pack-progress"
 import { VocabDeck } from "@/components/vocab/vocab-deck"
 import { useTTS } from "@/hooks/use-tts"
-import { PACK_ORDER, packLabel, packOfCatalogWord, wordOfTheDay } from "@/lib/vocab/catalog"
+import { PACK_ORDER, packLabel, packLabelInline, packOfCatalogWord, wordOfTheDay } from "@/lib/vocab/catalog"
 import {
   buildPracticeAnywayDeck,
   buildReviewDeck,
@@ -146,7 +146,7 @@ export function VocabPage() {
               href={`/app/palabras/${potdPack}`}
               className="clay-cream mt-4 flex h-[46px] items-center justify-center gap-2 rounded-full"
             >
-              <span className="text-[15px] font-semibold text-green">Empezar con {packLabel(potdPack)}</span>
+              <span className="text-[15px] font-semibold text-green">Empezar con {packLabelInline(potdPack)}</span>
               <DuoIcon name="flecha" size={16} />
             </Link>
           )}

@@ -62,7 +62,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
 
         {profile && (
           <>
-            <h3 className="smallcaps mb-3 text-ink-faint">Spanish</h3>
+            <h3 className="smallcaps mb-3 text-ink-faint">Español</h3>
             <div className="mb-4 grid grid-cols-2 gap-2">
               {DIALECT_OPTIONS.map((d) => {
                 const selected = profile.dialect === d.id
@@ -105,14 +105,14 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
             </div>
 
-            <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Your little one</h3>
+            <h3 className="smallcaps mb-3 mt-7 text-ink-faint">Tu peque</h3>
             <p className="mb-3 text-xs text-ink-soft">
-              Optional — with a child set, {PARTNER_NAME} can talk about your day with them by name.
+              Opcional. Si lo cargás, {PARTNER_NAME} puede hablar de tu día con su nombre.
             </p>
             <div className="space-y-3">
               <div>
                 <label htmlFor="profile-child-name" className="mb-1.5 block text-xs text-ink-muted">
-                  Name
+                  Nombre
                 </label>
                 <input
                   id="profile-child-name"
@@ -131,7 +131,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
               </div>
               <div>
                 <label htmlFor="profile-child-birthdate" className="mb-1.5 block text-xs text-ink-muted">
-                  Birthdate
+                  Nacimiento
                 </label>
                 <input
                   id="profile-child-birthdate"

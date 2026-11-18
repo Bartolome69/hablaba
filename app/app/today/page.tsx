@@ -57,7 +57,7 @@ export default function TodayPage() {
     <>
       <div className="flex items-center gap-[9px]">
         <DuoIcon name="micro" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
-        <span className="smallcaps-lg text-green-on-dark">Seguí tu charla</span>
+        <span className="smallcaps-lg text-green-on-dark">{resume ? "Seguí tu charla" : "Empezá una charla"}</span>
       </div>
       <div className="mt-3.5 flex items-center gap-3">
         <div className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-[13px] bg-green-well">

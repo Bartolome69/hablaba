@@ -7,6 +7,9 @@ export interface Routine {
   id: string
   category: string
   emoji: string
+  /** Spanish title, shown in the app. */
+  title: string
+  /** English name, for the English marketing site (/frases). en-GB. */
   name: string
   context: string
   phrases: RoutinePhrase[]
@@ -14,15 +17,18 @@ export interface Routine {
 
 export interface Category {
   id: string
+  /** Spanish chip label, shown in the app. */
+  title: string
+  /** English label, for the English marketing site. */
   label: string
   emoji: string
 }
 
 export const categories: Category[] = [
-  { id: "baby", label: "With baby", emoji: "👶" },
-  { id: "smalltalk", label: "Small talk", emoji: "👋" },
-  { id: "cafe", label: "Café", emoji: "☕" },
-  { id: "travel", label: "Getting around", emoji: "🚆" },
+  { id: "baby", title: "Con el bebé", label: "With baby", emoji: "👶" },
+  { id: "smalltalk", title: "Charla", label: "Small talk", emoji: "👋" },
+  { id: "cafe", title: "Café", label: "Café", emoji: "☕" },
+  { id: "travel", title: "Para moverse", label: "Getting around", emoji: "🚆" },
 ]
 
 // Clear, neutral Latin American Spanish using tú — approachable for a B1 learner.
@@ -31,6 +37,7 @@ export const routines: Routine[] = [
     id: "greetings",
     category: "smalltalk",
     emoji: "👋",
+    title: "Saludos",
     name: "Greetings",
     context: "Meeting someone new at the park or a playdate",
     phrases: [
@@ -52,8 +59,9 @@ export const routines: Routine[] = [
     id: "cafe-ordering",
     category: "cafe",
     emoji: "☕",
+    title: "En el café",
     name: "At the café",
-    context: "Ordering coffee with baby in the stroller",
+    context: "Ordering coffee with baby in the pushchair",
     phrases: [
       { spanish: "¿Me traes la carta, por favor?", english: "Could you bring me the menu, please?" },
       { spanish: "Para mí, un café con leche.", english: "A café con leche for me." },
@@ -73,6 +81,7 @@ export const routines: Routine[] = [
     id: "travel-basics",
     category: "travel",
     emoji: "🚆",
+    title: "Moverse en familia",
     name: "Travel basics",
     context: "Getting around town with the family",
     phrases: [
@@ -86,7 +95,7 @@ export const routines: Routine[] = [
       { spanish: "¿Dónde me bajo para el museo?", english: "Where do I get off for the museum?" },
       { spanish: "¿Cada cuánto pasa el tren?", english: "How often does the train come?" },
       { spanish: "Perdón, ¿me dejas pasar?", english: "Excuse me, could you let me through?" },
-      { spanish: "¿Hay ascensor? Vengo con cochecito.", english: "Is there a lift? I've got a stroller." },
+      { spanish: "¿Hay ascensor? Vengo con cochecito.", english: "Is there a lift? I've got a pushchair." },
       { spanish: "Nos bajamos en la próxima.", english: "We get off at the next stop." },
     ],
   },
@@ -94,10 +103,11 @@ export const routines: Routine[] = [
     id: "diaper",
     category: "baby",
     emoji: "🧷",
-    name: "Diaper change",
-    context: "Use these while changing the diaper",
+    title: "Cambiar el pañal",
+    name: "Nappy change",
+    context: "Use these while changing the nappy",
     phrases: [
-      { spanish: "Vamos a cambiar el pañal.", english: "Let's change your diaper." },
+      { spanish: "Vamos a cambiar el pañal.", english: "Let's change your nappy." },
       { spanish: "Aquí vamos, ya casi.", english: "Here we go, almost done." },
       { spanish: "Levanta las piernas.", english: "Lift your legs." },
       { spanish: "¡Muy bien! Qué limpio estás.", english: "Well done! You're so clean." },
@@ -106,7 +116,7 @@ export const routines: Routine[] = [
       { spanish: "Acuéstate aquí, mi amor.", english: "Lie down here, my love." },
       { spanish: "Espera, no te muevas.", english: "Wait, don't wriggle." },
       { spanish: "¿Dónde están las toallitas?", english: "Where are the wipes?" },
-      { spanish: "Un pañal limpio y listo.", english: "A clean diaper and we're done." },
+      { spanish: "Un pañal limpio y listo.", english: "A clean nappy and we're done." },
       { spanish: "Ahora el botón y ya está.", english: "Now the snap and that's it." },
       { spanish: "Qué bien hueles ahora.", english: "You smell so nice now." },
     ],
@@ -115,6 +125,7 @@ export const routines: Routine[] = [
     id: "feeding",
     category: "baby",
     emoji: "🍼",
+    title: "Comida",
     name: "Feeding",
     context: "During bottle or mealtime",
     phrases: [
@@ -136,6 +147,7 @@ export const routines: Routine[] = [
     id: "bath",
     category: "baby",
     emoji: "🛁",
+    title: "Baño",
     name: "Bath time",
     context: "While giving your little one a bath",
     phrases: [
@@ -157,6 +169,7 @@ export const routines: Routine[] = [
     id: "bedtime",
     category: "baby",
     emoji: "🌙",
+    title: "A dormir",
     name: "Bedtime",
     context: "Winding down for the night",
     phrases: [
@@ -178,6 +191,7 @@ export const routines: Routine[] = [
     id: "wakeup",
     category: "baby",
     emoji: "☀️",
+    title: "Despertarse",
     name: "Waking up",
     context: "First thing in the morning",
     phrases: [
@@ -199,6 +213,7 @@ export const routines: Routine[] = [
     id: "outside",
     category: "baby",
     emoji: "🌿",
+    title: "Salir a pasear",
     name: "Going outside",
     context: "Heading out for a walk or to the park",
     phrases: [
@@ -209,7 +224,7 @@ export const routines: Routine[] = [
       { spanish: "¿Escuchas los pájaros?", english: "Do you hear the birds?" },
       { spanish: "Vamos a ponernos los zapatos.", english: "Let's put your shoes on." },
       { spanish: "¿Dónde está tu gorro?", english: "Where's your hat?" },
-      { spanish: "Al cochecito, vamos.", english: "Into the stroller, let's go." },
+      { spanish: "Al cochecito, vamos.", english: "Into the pushchair, let's go." },
       { spanish: "Mira, un perrito.", english: "Look, a little dog." },
       { spanish: "¿Ves ese árbol tan grande?", english: "Do you see that big tree?" },
       { spanish: "Di adiós con la manita.", english: "Wave bye-bye with your little hand." },
@@ -220,6 +235,7 @@ export const routines: Routine[] = [
     id: "playground",
     category: "smalltalk",
     emoji: "🛝",
+    title: "En la plaza",
     name: "At the playground",
     context: "Chatting with other parents while the kids play",
     phrases: [
@@ -241,6 +257,7 @@ export const routines: Routine[] = [
     id: "weather",
     category: "smalltalk",
     emoji: "🌤️",
+    title: "El tiempo y el día",
     name: "Weather & the day",
     context: "Easy small talk about the weather",
     phrases: [
@@ -262,6 +279,7 @@ export const routines: Routine[] = [
     id: "bakery",
     category: "cafe",
     emoji: "🥐",
+    title: "En la panadería",
     name: "At the bakery",
     context: "Grabbing something at the bakery",
     phrases: [
@@ -283,10 +301,11 @@ export const routines: Routine[] = [
     id: "cafe-baby",
     category: "cafe",
     emoji: "🍼",
+    title: "Café con el bebé",
     name: "Café with a baby",
-    context: "Sorting out space for the stroller",
+    context: "Sorting out space for the pushchair",
     phrases: [
-      { spanish: "¿Hay lugar para el cochecito?", english: "Is there room for the stroller?" },
+      { spanish: "¿Hay lugar para el cochecito?", english: "Is there room for the pushchair?" },
       { spanish: "¿Tienes sillita para bebé?", english: "Do you have a high chair?" },
       { spanish: "¿Me calientas esto, por favor?", english: "Could you warm this up, please?" },
       { spanish: "¿Dónde puedo cambiarlo?", english: "Where can I change him?" },
@@ -304,6 +323,7 @@ export const routines: Routine[] = [
     id: "taxi",
     category: "travel",
     emoji: "🚕",
+    title: "En el taxi",
     name: "Taxi & rideshare",
     context: "Getting a cab with the family",
     phrases: [
@@ -316,7 +336,7 @@ export const routines: Routine[] = [
       { spanish: "Vamos con un bebé. Despacio, por favor.", english: "We've got a baby with us. Slowly, please." },
       { spanish: "¿Cuánto tarda hasta el aeropuerto?", english: "How long does it take to the airport?" },
       { spanish: "Para aquí, por favor.", english: "Stop here, please." },
-      { spanish: "¿Me ayudas con el cochecito?", english: "Could you help me with the stroller?" },
+      { spanish: "¿Me ayudas con el cochecito?", english: "Could you help me with the pushchair?" },
       { spanish: "Quédate con el cambio.", english: "Keep the change." },
       { spanish: "¿Me das un recibo?", english: "Could I get a receipt?" },
     ],
@@ -325,6 +345,7 @@ export const routines: Routine[] = [
     id: "directions",
     category: "travel",
     emoji: "🗺️",
+    title: "Preguntar el camino",
     name: "Asking directions",
     context: "Finding your way around town",
     phrases: [
@@ -338,7 +359,7 @@ export const routines: Routine[] = [
       { spanish: "¿Sigo todo derecho?", english: "Do I keep going straight?" },
       { spanish: "¿Me lo muestras en el mapa?", english: "Could you show me on the map?" },
       { spanish: "¿Cuántas cuadras son?", english: "How many blocks is it?" },
-      { spanish: "¿Se puede pasar con cochecito?", english: "Can you get through with a stroller?" },
+      { spanish: "¿Se puede pasar con cochecito?", english: "Can you get through with a pushchair?" },
       { spanish: "Gracias, muy amable.", english: "Thanks, that's very kind." },
     ],
   },

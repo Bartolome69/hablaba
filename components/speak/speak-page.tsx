@@ -19,7 +19,7 @@ const allPhrases = routines.flatMap((r) =>
     id: `${r.id}-${i}`,
     spanish: p.spanish,
     english: p.english,
-    routineName: r.name,
+    routineName: r.title,
   })),
 )
 
@@ -112,7 +112,7 @@ export function SpeakPage() {
                   }}
                 >
                   <DuoIcon name={CATEGORY_ICONS[category.id] ?? "brote"} size={15} />
-                  <span className="text-[13px] font-medium">{category.label}</span>
+                  <span className="text-[13px] font-medium">{category.title}</span>
                 </button>
               )
             })}

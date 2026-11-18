@@ -10,6 +10,7 @@
 import { useState } from "react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
 import { DuoIcon } from "@/components/icons"
+import { PARTNER_NAME } from "@/lib/voices"
 import { useTurnTranslations } from "@/hooks/use-turn-translations"
 import type { ConversationTurn } from "@/lib/conversations/types"
 import type { Message } from "@/lib/types"
@@ -77,7 +78,7 @@ export function ConversationTranscript({
 
         return (
           <div key={turn.id} className="flex flex-col items-start gap-[5px]">
-            <span className="smallcaps pl-1 text-ink-faint">Hablaba</span>
+            <span className="smallcaps pl-1 text-ink-faint">{PARTNER_NAME}</span>
             <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
               <p
                 onClick={translatable ? () => toggle(turn.id, turn.text) : undefined}

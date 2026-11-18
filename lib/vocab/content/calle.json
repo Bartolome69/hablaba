@@ -1,7 +1,7 @@
 [
   { "id": "calle-plaza", "spanish": "plaza", "article": "la", "gender": "f", "english": "playground, square", "group": "lugares",
     "example": "¿Vamos a la plaza después de la siesta?", "exampleTranslation": "Shall we go to the playground after your nap?" },
-  { "id": "calle-vereda", "spanish": "vereda", "article": "la", "gender": "f", "english": "pavement, sidewalk", "group": "lugares",
+  { "id": "calle-vereda", "spanish": "vereda", "article": "la", "gender": "f", "english": "pavement", "group": "lugares",
     "example": "Camina por la vereda, de mi mano.", "exampleTranslation": "Walk on the pavement, holding my hand." },
   { "id": "calle-semaforo", "spanish": "semáforo", "article": "el", "gender": "m", "english": "traffic light", "group": "lugares",
     "example": "Esperamos que el semáforo se ponga verde.", "exampleTranslation": "We wait for the light to turn green." },

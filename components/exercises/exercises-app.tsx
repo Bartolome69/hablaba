@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { AppHeader } from "@/components/home/app-header"
 import { DuoIcon, grammarIcon } from "@/components/icons"
-import { coveredTopics, itemsForTopic, type CoveredTopic } from "@/lib/exercises/content"
+import { coveredTopics, itemsForTopic, totalQuestionCount, type CoveredTopic } from "@/lib/exercises/content"
 import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/grade"
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import { practicePackForTopics, practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
@@ -183,7 +183,7 @@ export function ExercisesApp() {
     )
   }
 
-  const totalQuestions = covered.reduce((n, c) => n + c.quizCount, 0)
+  const totalQuestions = totalQuestionCount(covered)
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">

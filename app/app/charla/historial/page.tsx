@@ -16,12 +16,11 @@ interface Row {
   voiceTurns: number
 }
 
+// "miércoles 18 de noviembre": Spanish dates, lower case, no comma.
 function formatDay(iso: string): string {
-  return new Date(iso).toLocaleDateString("es-AR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  })
+  return new Date(iso)
+    .toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })
+    .replace(",", "")
 }
 
 export default function ConversationHistoryPage() {
@@ -92,7 +91,7 @@ export default function ConversationHistoryPage() {
                     {conversation.title}
                   </p>
                   <p className="flex items-center gap-1 text-[12.5px] text-ink-soft">
-                    <span className="capitalize">{formatDay(conversation.lastTurnAt)}</span>
+                    <span>{formatDay(conversation.lastTurnAt)}</span>
                     <span>· {turns} turnos</span>
                     {voiceTurns > 0 && (
                       <>

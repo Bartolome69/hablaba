@@ -4,7 +4,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { DuoIcon, grammarIcon } from "@/components/icons"
-import { coveredTopics } from "@/lib/exercises/content"
+import { coveredTopics, totalQuestionCount } from "@/lib/exercises/content"
 import type { GrammarArea } from "@/lib/exercises/types"
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ const AREA_HEADINGS: Record<GrammarArea, string> = {
 
 export default function GrammarIndexPage() {
   const covered = coveredTopics()
-  const totalQuestions = covered.reduce((n, c) => n + c.totalCount, 0)
+  const totalQuestions = totalQuestionCount(covered)
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-20 pt-12 sm:pt-16">
@@ -61,7 +61,7 @@ export default function GrammarIndexPage() {
           <section key={area} className="mt-12">
             <h2 className="smallcaps px-1 text-ink-faint">{AREA_HEADINGS[area]}</h2>
             <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
-              {group.map(({ topic, totalCount }) => (
+              {group.map(({ topic, quizCount }) => (
                 <Link
                   key={topic.id}
                   href={`/gramatica/${topic.id}`}
@@ -76,7 +76,7 @@ export default function GrammarIndexPage() {
                   </div>
                   <div className="flex flex-none flex-col items-end gap-0.5 text-right">
                     <span className="text-[11px] font-medium uppercase tracking-[.14em] text-ink-faint">{topic.cefr}</span>
-                    <span className="text-[12.5px] text-ink-soft">{totalCount} Q</span>
+                    <span className="text-[12.5px] text-ink-soft">{quizCount} Q</span>
                   </div>
                 </Link>
               ))}

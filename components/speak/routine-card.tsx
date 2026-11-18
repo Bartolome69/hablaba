@@ -31,7 +31,7 @@ export function RoutineCard({ routine, icon, playingId, onPlay }: RoutineCardPro
           <DuoIcon name={icon} size={19} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold text-ink">{routine.name}</p>
+          <p className="text-[15px] font-semibold text-ink">{routine.title}</p>
           <p className="text-[12.5px] text-ink-soft">{routine.context}</p>
         </div>
         <DuoIcon

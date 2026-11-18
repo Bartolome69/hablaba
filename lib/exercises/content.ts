@@ -88,6 +88,14 @@ export interface CoveredTopic {
 }
 
 /** Taxonomy topics that actually have content, in taxonomy order. */
+/**
+ * The one question count, everywhere (app and site): questions the app can
+ * actually ask and grade. Items that aren't client-gradable don't count.
+ */
+export function totalQuestionCount(covered: CoveredTopic[] = coveredTopics()): number {
+  return covered.reduce((n, c) => n + c.quizCount, 0)
+}
+
 export function coveredTopics(): CoveredTopic[] {
   return taxonomyTopics
     .map((topic) => {

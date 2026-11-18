@@ -121,7 +121,7 @@ export function FlashcardDeck({ phrases, onRecord, onExit }: FlashcardDeckProps)
         <p className="text-lg font-medium text-foreground">{current.spanish}</p>
         {flipped ? (
           <p className="text-sm text-muted-foreground mt-4 pt-4 border-t border-border/50 w-full">
-            {current.english || "—"}
+            {current.english}
           </p>
         ) : (
           <p className="text-xs text-muted-foreground mt-4">Tap to reveal</p>

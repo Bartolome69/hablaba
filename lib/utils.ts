@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+/** Sentence case: first letter up, the rest exactly as given. Never title case. */
+export function sentenceCase(text: string): string {
+  return text ? text.charAt(0).toLocaleUpperCase('es') + text.slice(1) : text
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

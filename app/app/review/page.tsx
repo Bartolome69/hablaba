@@ -41,7 +41,7 @@ function SavedPhraseRow({ phrase, onRemove }: { phrase: SavedPhrase; onRemove: (
     <div className="bg-card border border-border rounded-lg p-3 flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="text-sm font-medium text-foreground">{phrase.spanish}</p>
-        <p className="text-xs text-muted-foreground">{phrase.english || "—"}</p>
+        <p className="text-xs text-muted-foreground">{phrase.english}</p>
       </div>
       <button
         onClick={() => setConfirmDelete(true)}
