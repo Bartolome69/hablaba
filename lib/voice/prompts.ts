@@ -47,6 +47,8 @@ export interface VoiceInstructionInput {
     ageDescription: string
     packPhrases: string[]
     captureLessons: { request: string; spanish: string }[]
+    /** Words they've been reviewing (Phase 4), woven in like the phrases. */
+    seedWords?: { spanish: string; english: string }[]
   }
   correctionLevel: VoiceCorrectionLevel
   /** What the conversation is about — see lib/voice-topics.ts. */
@@ -90,6 +92,13 @@ export function buildVoiceInstructions({
           .map((p) => `- ${p}`)
           .join("\n")}`
       : ""
+  const words =
+    context.seedWords && context.seedWords.length > 0
+      ? `\n\nWORDS THEY'VE BEEN REVIEWING: work one or two of these into your own speech when the conversation allows, naturally, never as a vocabulary lesson:\n${context.seedWords
+          .slice(0, 6)
+          .map((w) => `- ${w.spanish} (${w.english})`)
+          .join("\n")}`
+      : ""
 
   const lessons =
     context.captureLessons.length > 0
@@ -126,6 +135,6 @@ YOUR JOB IS TO ELICIT SPEECH, NOT TO TALK. This is a 5–15 minute conversation 
 
 ${CORRECTION_BLOCKS[correctionLevel]}
 
-CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${prior}${focus}${vocab}${lessons}`
+CODE-SWITCHING. If the parent drops an English word or phrase mid-sentence, supply the natural Rioplatense equivalent inside your reply and keep the conversation moving — never stop to make it a lesson. Example: "no quería ponerse el… onesie" → "¡ah, el enterito! ¿Y al final se lo pusiste?"${prior}${focus}${vocab}${words}${lessons}`
 }
 

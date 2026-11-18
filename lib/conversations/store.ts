@@ -117,6 +117,11 @@ export function clearAnalysis(id: string) {
   patchConversation(id, { analyzedAt: null })
 }
 
+/** Store what a thread was seeded with (typed threads get one too, Phase 4). */
+export function saveSeedContext(id: string, seedContext: VoiceSeedContext) {
+  patchConversation(id, { seedContext })
+}
+
 export function markAnalyzed(id: string) {
   patchConversation(id, { analyzedAt: new Date().toISOString() })
 }
@@ -181,6 +186,9 @@ export function saveTurn(turn: ConversationTurn) {
   const rows = readTable<ConversationTurn>(KEYS.turns).filter((t) => t.id !== turn.id)
   writeTable(KEYS.turns, [...rows, turn])
   touchConversation(turn.conversationId)
+  // A new typed turn from the learner makes the review stale, as a new spoken
+  // stretch already does, so leaving the thread re-runs the analysis.
+  if (turn.speaker === "user" && turn.modality === "text") patchConversation(turn.conversationId, { analyzedAt: null })
 }
 
 export function countTurns(conversationId: string, modality?: TurnModality): number {
