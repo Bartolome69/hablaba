@@ -1,48 +1,58 @@
 # Hablaba
 
-Spanish practice for parents raising a bilingual baby. Built for someone with
+Spanish practice for parents raising a bilingual child. Built for someone with
 one hand on a pram: mobile-first, installable as a PWA, usable in five minutes
 or fifteen.
 
-Deployed on Vercel at [spanishroutine.com](https://spanishroutine.com).
+Deployed on Vercel. The canonical domain comes from `NEXT_PUBLIC_SITE_URL`
+(see `lib/site.ts`).
 
 ## What's in it
 
-| Surface | What it does |
+Five tabs, each a slice of one loop:
+
+| Tab | What it does |
 | --- | --- |
-| **Phrases** (`/app/speak`) | Ready-to-say phrases grouped by daily routine, with audio |
-| **Practice** (`/app/practice`, `/app/chat`) | Text conversation with an AI tutor that corrects as you go |
-| **Charlar** (`/app/charla`) | Hands-free *spoken* conversation, screen-off — transcribed, reviewed afterwards |
-| **Palabras** (`/app/palabras`) | Vocabulary: a tappable body diagram, sets for animals and food, your own words translated on the spot, and a spaced-repetition review that rests a word once you know it and brings it back weeks later |
-| **Exercises** (`/app/exercises`) | Grammar quizzes generated from teacher handouts |
-| **Grow** (`/grow`) | Bounded bilingual-parenting module: daily Rioplatense phrase packs, gap capture, sparring, journal, voice |
+| **Hoy** (`/app/today`) | The daily slice: resume your last conversation, phrases to use today, flashcards waiting, a link to the weekly report. The only screen with the streak and settings |
+| **Charlar** (`/app/charla`) | Conversations with Elena, typed or hands-free spoken in the same thread. Typed turns get inline corrections; spoken turns are reviewed after the session. **Tu semana** (`/app/semana`) is the weekly report across all conversations |
+| **Frases** (`/app/speak`) | Things to say: phrase of the day, a capture box for what you couldn't say, your phrases by daily moment, and 15 routines of ready-to-say phrases with audio |
+| **Palabras** (`/app/palabras`) | Things to name: a shelf of 11 preloaded word packs (baby things, food, the body, clothes, the house and more) studied as spaced-repetition flashcards. Add your own words to any pack in English or Spanish |
+| **Práctica** (`/app/exercises`) | Grammar quizzes: 27 topics from authored and teacher-handout content packs, sortable by area, weakness or staleness. `?topic=<id>` deep-links into one |
 
 The loop that matters: **speak → get your patterns back → practise the exact
-gap → speak again.** A spoken session is analysed into tagged observations, a
-weekly report ("Tu semana") groups them into patterns, and each pattern links
-straight to the quiz for that rule.
+gap → speak again.** A conversation is analysed into observations tagged with
+grammar topics, Tu semana groups them into patterns, and each pattern links
+straight to the quiz for that rule. Finishing a quiz can seed phrases that use
+the rule into the next conversation.
+
+The marketing site (`app/(marketing)/`) collects email signups for early
+access and publishes the grammar topics (`/gramatica/...`) and phrase routines
+(`/frases/...`) as free, indexable pages.
+
+`/app/practice` and `/app/chat` are retired and redirect to `/app/today` and
+`/app/charla`. The old Grow module (`/grow`, `/criar`) was folded into the main
+tabs in August 2026 and redirects too.
 
 ## Running it
 
 ```bash
 npm install
-npm run dev      # localhost:3000
-npm run build    # production build
-npm run lint     # ESLint
-npx tsc --noEmit # typecheck (the build ignores TS errors — see below)
+npm run dev               # localhost:3000
+npm run build             # production build
+npm run lint              # ESLint
+npx tsc --noEmit          # typecheck (the build ignores TS errors, see below)
+npm run validate:content  # check the Exercises content packs against their schema
 ```
 
-There is no test framework. Verification is typecheck + build + manual testing
-on a phone.
-
-`npm run validate:content` checks the Exercises content packs against their
-schema.
+There is no test framework. Verification is typecheck, build, and testing on a
+phone.
 
 ### Environment
 
-Only `OPENAI_API_KEY` is required — every AI feature runs through it (chat,
-packs, TTS, transcription, the Realtime voice engine, and the transcript
-analysis). Everything else is optional; see `CLAUDE.md` for the full list.
+Only `OPENAI_API_KEY` is required. Every AI feature runs through it: chat,
+phrase and word generation, TTS, transcription, the Realtime voice engine and
+the transcript analysis. Everything else is optional; see `CLAUDE.md` for the
+full list.
 
 Voice mode additionally needs **Realtime API access** on the OpenAI account,
 which is gated separately from the chat models.
@@ -51,9 +61,9 @@ which is gated separately from the chat models.
 
 `getUserMedia` requires a secure origin, so voice mode does not work over plain
 `http://<lan-ip>:3000`. Either use an HTTPS tunnel to your dev server, or test
-against the deployed site. Primary target is **Chrome on Android installed as a
-PWA**, where a session survives the screen going off; iOS Safari suspends the
-mic instead and gets an explicit paused state.
+against the deployed site. The primary target is **Chrome on Android installed
+as a PWA**, where a session survives the screen going off; iOS Safari suspends
+the mic instead and shows an explicit paused state.
 
 ## Architecture notes
 
@@ -63,17 +73,20 @@ mic instead and gets an explicit paused state.
   client owns persistence.
 - **`next.config.mjs` sets `ignoreBuildErrors: true`** for TypeScript and
   ESLint, so the build passes with type errors. Run `npx tsc --noEmit`
-  yourself — expect two known pre-existing errors in `app/manifest.ts` (Next's
-  type is narrower than the web manifest spec allows for `purpose`).
-- **Grow is a deliberately bounded module** with rules about what may cross its
-  edge in either direction. Read `lib/criar/README.md` before importing across
-  it.
+  yourself; it should come back clean.
+- **One conversation entity, two modalities** (`lib/conversations/`):
+  `modality: text | voice` lives on each turn, so a thread can move between
+  typing and speaking with one history and one review.
 - **Vocabulary is a separate table from phrases** (`lib/vocab/`), because a word
   carries an article and a gender and a phrase doesn't. Read
   `lib/vocab/README.md` before merging the two.
 - The **voice engine** is shared (`lib/voice/`), and
   `lib/voice/openai-realtime.ts` is the only file that knows about WebRTC or
-  OpenAI event names — so the provider stays swappable.
+  OpenAI event names, so the provider stays swappable.
 
-`CLAUDE.md` is the working reference for anyone (human or agent) picking this
-up; `PRODUCT.md` and `DESIGN.md` carry the product and visual-design intent.
+## Docs
+
+- `CLAUDE.md`: the working reference for anyone (human or agent) picking this up.
+- `docs/VISION.md`: what the app is, who it's for, and where it's going.
+- `PRODUCT.md`: users, brand personality, design principles.
+- `DESIGN.md`: the visual system, Clay + calm.

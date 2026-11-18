@@ -4,7 +4,7 @@
 //   - CONTENT (topics + ingested source packs) — static, versioned JSON in the
 //     repo. Shapes live in schema.ts (zod) and taxonomy.json; re-exported here.
 //   - PROGRESS (attempts, derived mastery) — runtime state in localStorage.
-//     Table-shaped like lib/criar/store.ts so it can move to Supabase unchanged.
+//     Table-shaped like lib/phrases/store.ts so it can move to Supabase unchanged.
 
 import type { ExerciseType } from "./schema"
 

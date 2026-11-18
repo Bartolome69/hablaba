@@ -16,7 +16,7 @@ feature needs no database yet.
 | | What | Where | Why |
 | --- | --- | --- | --- |
 | **Content** | Topics + ingested source packs | Versioned JSON in the repo (`taxonomy.json`, `content/*.json`) | Expensive to produce, static once reviewed, must not be lost, ships to every device in the bundle |
-| **Progress** | Attempts + derived mastery | `localStorage` (`exercises_*`), table-shaped | Cheap, small, per-device, tolerable to lose; same upgrade path as `lib/criar/store.ts` |
+| **Progress** | Attempts + derived mastery | `localStorage` (`exercises_*`), table-shaped | Cheap, small, per-device, tolerable to lose; same upgrade path as the other stores (e.g. `lib/phrases/store.ts`) |
 
 Content is produced **at dev time**, not in the app: you drop a PDF in
 `content/sources/`, run the `/ingest-pdf` skill, and review the generated JSON
