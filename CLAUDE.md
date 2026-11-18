@@ -214,9 +214,11 @@ inside conversations (`/app/charla/[id]`). The short version:
   at `eagerness: "low"` (she waits when you sound unfinished), plus
   `noise_reduction: far_field` so a baby's squeal or a bang is filtered before
   turn detection, plus a SOUNDS AROUND THEM block in `lib/voice/prompts.ts`
-  (babble, cries and words to the child are not the parent's turn). Interrupting
-  her by voice is still on; if noise keeps cutting her off, the next lever is
-  `interrupt_response: false` (she finishes her sentence; Pausa still stops her).
+  (babble, cries and words to the child are not the parent's turn), plus
+  `interrupt_response: false` (Bart's call): she always finishes her sentence,
+  so a squeal can't cut her off; Pausa is how you stop her. The server can't
+  reply to words said over her, so `openai-realtime.ts` does once she's done
+  (`maybeAnswerWhatWasSaidOverHer`), and only when the transcript is real words.
 - **The thread composer has ONE action slot** (`components/chat/chat-input.tsx`):
   "Hablar" (start voice) when the box is empty, the send arrow once you type.
   The quick-ask chips show the Spanish they send and hide while you type.

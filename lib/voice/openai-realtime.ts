@@ -48,6 +48,14 @@ class OpenAIRealtimeEngine implements VoiceEngine {
   private paused = false
   /** True while she is actually generating a reply — `response.cancel` errors otherwise. */
   private responseActive = false
+  /**
+   * User items heard while she was mid-reply, keyed to their transcript once
+   * it lands. Turn detection runs with `interrupt_response: false` (she always
+   * finishes her sentence, so the baby can't cut her off), and then the server
+   * can't start a reply to anything said over her. We do, once she's done, but
+   * only for real words: a lone "ah" or an empty transcript was noise.
+   */
+  private heardWhileSpeaking = new Map<string, string | null>()
   /** She was cut off mid-sentence, so resume should re-deliver that whole turn. */
   private pausedMidResponse = false
   /** Kept so pause/resume can detach and reattach the mic without renegotiating. */
@@ -215,6 +223,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
         const id = event.item?.id
         const role = event.item?.role
         if (id && (role === "user" || role === "assistant")) this.touch(id, role)
+        if (id && role === "user" && this.responseActive) this.heardWhileSpeaking.set(id, null)
         break
       }
 
@@ -224,12 +233,20 @@ class OpenAIRealtimeEngine implements VoiceEngine {
 
       case "conversation.item.input_audio_transcription.completed":
         this.finalise(event.item_id, "user", event.transcript ?? "")
+        if (event.item_id && this.heardWhileSpeaking.has(event.item_id)) {
+          this.heardWhileSpeaking.set(event.item_id, event.transcript ?? "")
+          this.maybeAnswerWhatWasSaidOverHer()
+        }
         break
 
       case "conversation.item.input_audio_transcription.failed":
         // Audio was heard and answered, we just have no text for it. Drop the
         // placeholder rather than leaving an empty bubble on screen.
         this.discard(event.item_id)
+        if (event.item_id && this.heardWhileSpeaking.has(event.item_id)) {
+          this.heardWhileSpeaking.set(event.item_id, "")
+          this.maybeAnswerWhatWasSaidOverHer()
+        }
         break
 
       case "response.created":
@@ -238,6 +255,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
 
       case "response.done":
         this.responseActive = false
+        this.maybeAnswerWhatWasSaidOverHer()
         break
 
       case "response.output_audio_transcript.delta":
@@ -265,6 +283,21 @@ class OpenAIRealtimeEngine implements VoiceEngine {
         console.warn("[realtime] server error event:", event.error?.message)
         break
     }
+  }
+
+  /**
+   * She has finished, and something was said over her: answer it if it was
+   * words. Waits until every such item has its transcript, so a squeal isn't
+   * mistaken for a question just because its transcript hasn't landed yet.
+   */
+  private maybeAnswerWhatWasSaidOverHer() {
+    if (this.responseActive || this.paused || this.stopped || this.heardWhileSpeaking.size === 0) return
+    const transcripts = [...this.heardWhileSpeaking.values()]
+    if (transcripts.some((t) => t === null)) return
+    this.heardWhileSpeaking.clear()
+    const words = transcripts.join(" ").match(/\p{L}+/gu) ?? []
+    const isSpeech = words.length >= 2 || words.join("").length >= 6
+    if (isSpeech) this.send({ type: "response.create" })
   }
 
   private touch(id: string, speaker: VoiceSpeaker): VoiceTurn {
@@ -409,6 +442,8 @@ class OpenAIRealtimeEngine implements VoiceEngine {
   pause(): void {
     if (this.stopped || this.paused || !this.pc) return
     this.paused = true
+    // Pausing is a fresh start: don't answer things said before it.
+    this.heardWhileSpeaking.clear()
 
     // Cut her off if she's actually mid-reply. Cancelling when nothing is
     // generating makes the server emit an error event, so this is conditional.
