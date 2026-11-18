@@ -21,12 +21,12 @@ import { VoiceOrb } from "@/components/voice/voice-orb"
 import { useTTS } from "@/hooks/use-tts"
 import { useReadAloud } from "@/hooks/use-read-aloud"
 import { assembleFocusAreas } from "@/lib/conversations/focus"
-import { getConversationSeedPhrases } from "@/lib/phrases/pack"
-import { addPhrase, markSeeded } from "@/lib/phrases/store"
-import { describeAge, getProfile } from "@/lib/profile/store"
+import { addPhrase } from "@/lib/phrases/store"
 import { ensureConversationAnalysis } from "@/lib/conversations/analysis"
+import { buildSeed } from "@/lib/conversations/seed"
+import { PARTNER_NAME } from "@/lib/voices"
 import { conversationVoicePersistence } from "@/lib/conversations/persistence"
-import { getConversation, listTurns } from "@/lib/conversations/store"
+import { getConversation, listObservations, listTurns } from "@/lib/conversations/store"
 import type { Conversation, ConversationTurn } from "@/lib/conversations/types"
 import { useConversation } from "@/lib/conversations/use-conversation"
 import {
@@ -85,6 +85,41 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
 
   const inVoice = voice.state !== "idle" && voice.state !== "ended"
   inVoiceRef.current = inVoice
+
+  // Phase 4: turns where the analysis found a saved phrase used naturally,
+  // as turnId → what the parent said. Shown as a quiet note under the turn.
+  const [usedNotes, setUsedNotes] = useState<Record<string, string>>({})
+  const loadNotes = useCallback(() => {
+    const notes: Record<string, string> = {}
+    for (const o of listObservations(id)) {
+      if (o.type === "target_phrase_used" && o.turnId && o.detail.original) notes[o.turnId] = o.detail.original
+    }
+    setUsedNotes(notes)
+  }, [id])
+  useEffect(() => loadNotes(), [loadNotes])
+
+  // Typed threads get analysed too (Phase 4): when the parent leaves the
+  // thread or the app goes to the background, if there are typed turns the
+  // review hasn't seen. Never mid-voice; voice has its own end-of-session run.
+  useEffect(() => {
+    const maybeAnalyze = () => {
+      if (inVoiceRef.current) return
+      const c = getConversation(id)
+      if (!c || c.analyzedAt) return
+      if (!listTurns(id).some((t) => t.speaker === "user" && t.modality === "text")) return
+      void ensureConversationAnalysis(id).then(loadNotes).catch(() => {})
+    }
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") maybeAnalyze()
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+    window.addEventListener("pagehide", maybeAnalyze)
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility)
+      window.removeEventListener("pagehide", maybeAnalyze)
+      maybeAnalyze()
+    }
+  }, [id, loadNotes])
   useWakeLock(voice.state === "live" || voice.state === "paused")
   useMediaSession({
     active: voice.state === "live" || voice.state === "paused",
@@ -121,7 +156,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
     if (voice.state !== "ended" && voice.state !== "interrupted") return
     reload()
     setConversation(getConversation(id))
-    void ensureConversationAnalysis(id).catch(() => {})
+    void ensureConversationAnalysis(id).then(loadNotes).catch(() => {})
     posthog.capture("conversation_voice_ended", { duration_seconds: voice.elapsed })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voice.state, id])
@@ -135,28 +170,15 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
     const priorTurns = listTurns(id)
       .slice(-12)
       .map((t) => ({ speaker: t.speaker, text: t.text }))
-    const profile = getProfile()
-    // Seed the working set: she weaves these in, and seeding is the state
-    // transition nueva → practicando.
-    const seedPhrases = getConversationSeedPhrases()
-    markSeeded(seedPhrases.map((p) => p.id))
+    // Seed the working set (phrases, and the words they've been reviewing):
+    // she weaves these in, and seeding moves the phrases nueva → practicando.
+    const seed = buildSeed(conversation.starterId ?? undefined)
     posthog.capture("conversation_voice_started", {
       prior_turns: priorTurns.length,
-      seed_phrases: seedPhrases.length,
+      seed_phrases: seed.packPhrases.length,
+      seed_words: seed.seedWords?.length ?? 0,
     })
-    void voice.start({
-      childName: profile.child?.name ?? "",
-      ageDescription: profile.child?.birthdate ? describeAge(profile.child.birthdate) : "",
-      packPhrases: seedPhrases.map((p) => p.text),
-      captureLessons: seedPhrases
-        .filter((p) => p.source === "captured")
-        .map((p) => ({ request: p.translation, spanish: p.text })),
-      correctionLevel: profile.correctionLevel,
-      dialect: profile.dialect,
-      topicId: conversation.starterId ?? undefined,
-      focusAreas: assembleFocusAreas(),
-      priorTurns,
-    })
+    void voice.start({ ...seed, focusAreas: assembleFocusAreas(), priorTurns })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation, id])
 
@@ -295,6 +317,8 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
                loud, which is what hands-free is for; the text is on screen
                either way. The chip comes back the moment the session ends. */
             onPlayRequest={inVoice ? undefined : play}
+            /* The "phrase used" notes wait until the spoken stretch is over. */
+            usedNotes={inVoice ? undefined : usedNotes}
             onSavePhrase={(spanish, english) => {
               addPhrase({ text: spanish, translation: english, source: "saved" })
               toast.success("Guardada")
@@ -312,7 +336,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
                   <span className="anim-bar h-3.5 w-[3px] rounded-[2px] bg-green opacity-70 [animation-delay:140ms]" />
                   <span className="anim-bar h-3.5 w-[3px] rounded-[2px] bg-terracotta [animation-delay:280ms]" />
                 </span>
-                <span className="text-[12.5px] text-ink-muted">Hablaba está pensando…</span>
+                <span className="text-[12.5px] text-ink-muted">{PARTNER_NAME} está pensando…</span>
               </div>
             </div>
           )}

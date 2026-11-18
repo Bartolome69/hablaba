@@ -104,6 +104,8 @@ export interface VoiceSeedContext {
    * opening cold. Oldest first, already trimmed by the caller.
    */
   priorTurns?: { speaker: "user" | "assistant"; text: string }[]
+  /** Words the learner has been reviewing (refresh Phase 4), woven into her speech. */
+  seedWords?: { spanish: string; english: string }[]
 }
 
 // --- persisted records (localStorage today, SQL later) ---

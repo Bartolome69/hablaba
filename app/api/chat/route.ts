@@ -128,6 +128,35 @@ NEVER correct accents, punctuation or capitalisation. Not even when the accent w
 Emit the "reply" field first in the JSON object.
 Do not include any text outside the JSON object.`
 
+/**
+ * The thread's seed (refresh Phase 4): the learner's working phrases and the
+ * words they've been reviewing, woven into her replies the way voice mode
+ * already does, so typed conversations practise them too. Capped and sanitised;
+ * an empty seed adds nothing.
+ */
+function materialBlock(body: { seedPhrases?: unknown; seedWords?: unknown }, isParentChild: boolean): string {
+  const phrases = (Array.isArray(body.seedPhrases) ? body.seedPhrases : [])
+    .filter((p): p is string => typeof p === "string" && !!p.trim())
+    .slice(0, 8)
+    .map((p) => p.slice(0, 160))
+  const words = (Array.isArray(body.seedWords) ? body.seedWords : [])
+    .filter((w): w is { spanish: string; english?: string } => !!w && typeof (w as { spanish?: unknown }).spanish === "string")
+    .slice(0, 6)
+    .map((w) => `${w.spanish.slice(0, 60)}${typeof w.english === "string" ? ` (${w.english.slice(0, 60)})` : ""}`)
+  const lines: string[] = []
+  if (phrases.length && !isParentChild) {
+    lines.push(
+      `THIS WEEK'S MATERIAL: phrases the parent is learning. Use them yourself where they fit naturally, so they hear them in a real reply, and leave natural openings for them to say them. Don't quiz them or point it out:\n${phrases.map((p) => `- ${p}`).join("\n")}`,
+    )
+  }
+  if (words.length) {
+    lines.push(
+      `WORDS THEY'VE BEEN REVIEWING: work one or two of these into your replies when the conversation allows, naturally, never as a vocabulary lesson:\n${words.map((w) => `- ${w}`).join("\n")}`,
+    )
+  }
+  return lines.join("\n\n")
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -143,6 +172,8 @@ export async function POST(req: Request) {
     const isParentChild = topicId === PARENT_CHILD_TOPIC_ID
     const chatDialect = asDialect(dialect)
     const systemPrompt = isParentChild ? childPrompt(chatDialect) : partnerPrompt(chatDialect)
+    const material = materialBlock(body, isParentChild)
+    const materialMessages = material ? [{ role: "system" as const, content: material }] : []
 
     // Opener mode: bot asks the first question for a topic
     if (opener && topic) {
@@ -157,6 +188,7 @@ export async function POST(req: Request) {
         model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
+          ...materialMessages,
           { role: "user", content: openerInstruction },
         ],
         response_format: { type: "json_object" },
@@ -200,6 +232,7 @@ export async function POST(req: Request) {
       model: "gpt-4o",
       messages: [
         { role: "system", content: systemPrompt },
+        ...materialMessages,
         ...history,
         { role: "system", content: REGISTER_REMINDER },
         { role: "user", content: message },

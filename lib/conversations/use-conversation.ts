@@ -9,6 +9,7 @@
 // readable when you're looking at the screen and useless when the phone is in
 // a pocket, so voice turns defer everything to the post-session review.
 
+import { chatSeedBody, ensureThreadSeed } from "./seed"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import type { Correction } from "@/lib/types"
@@ -82,7 +83,15 @@ export function useConversation(
     fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ opener: true, topic: topicTitle, topicId, history: [], dialect: getProfile().dialect }),
+      body: JSON.stringify({
+        opener: true,
+        topic: topicTitle,
+        topicId,
+        history: [],
+        dialect: getProfile().dialect,
+        // Phase 4: the thread's saved phrases and review words, so she uses them in writing too.
+        ...chatSeedBody(ensureThreadSeed(conversationId)),
+      }),
     })
       .then((r) => {
         if (!r.ok) throw new Error(`Chat API error: ${r.status}`)
@@ -157,7 +166,15 @@ export function useConversation(
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history, dialect: getProfile().dialect }),
+          // topicId on every turn: without it "Con tu peque" dropped the child
+          // persona after the opener (the route keys the persona off it).
+          body: JSON.stringify({
+            message: text,
+            history,
+            topicId,
+            dialect: getProfile().dialect,
+            ...chatSeedBody(ensureThreadSeed(conversationId)),
+          }),
         })
         if (!res.ok || !res.body) throw new Error("Chat API error")
 
@@ -207,7 +224,7 @@ export function useConversation(
         setIsLoading(false)
       }
     },
-    [conversationId, buildHistory, persist],
+    [conversationId, topicId, buildHistory, persist],
   )
 
   return { turns, isLoading, sendMessage, reload }

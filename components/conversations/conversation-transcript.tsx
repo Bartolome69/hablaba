@@ -7,8 +7,9 @@
 // label — the label carries the modality, no divider needed — and no
 // correction UI, because voice defers all of that to the post-session review.
 
-import { useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { ChatBubble } from "@/components/chat/chat-bubble"
+import { LookupText, WORD_HINT_KEY } from "@/components/conversations/lookup-text"
 import { DuoIcon } from "@/components/icons"
 import { PARTNER_NAME } from "@/lib/voices"
 import { useTurnTranslations } from "@/hooks/use-turn-translations"
@@ -33,18 +34,58 @@ export function ConversationTranscript({
   playingId,
   onPlayRequest,
   onSavePhrase,
+  usedNotes,
 }: {
   turns: ConversationTurn[]
+  /**
+   * turnId → what the parent said, for turns where analysis found a saved
+   * phrase used naturally. The caller passes nothing while voice is live, so
+   * the note never interrupts a spoken session.
+   */
+  usedNotes?: Record<string, string>
   streamingTurnId?: string | null
   playingId?: string | null
   onPlayRequest?: (id: string, text: string) => void
   onSavePhrase?: (spanish: string, english: string, source: "correction" | "bot" | "user") => void
 }) {
   const { translations, openIds, pendingId, toggle } = useTurnTranslations()
+  // One quiet hint, under Elena's latest message, until the first word lookup.
+  const [hintUsed, setHintUsed] = useState(true)
+  useEffect(() => {
+    try {
+      setHintUsed(localStorage.getItem(WORD_HINT_KEY) === "1")
+    } catch {}
+    // The first lookup hides it straight away, not on the next visit.
+    const used = () => setHintUsed(true)
+    window.addEventListener(WORD_HINT_KEY, used)
+    return () => window.removeEventListener(WORD_HINT_KEY, used)
+  }, [])
+  const hintTurnId = hintUsed
+    ? null
+    : ([...turns].reverse().find((t) => t.speaker === "assistant" && t.id !== streamingTurnId)?.id ?? null)
 
   return (
     <div className="space-y-4">
-      {turns.map((turn) => {
+      {turns.map((turn) => (
+        <Fragment key={turn.id}>
+          {renderTurn(turn)}
+          {usedNotes?.[turn.id] && (
+            <p className="anim-settle mt-1.5 flex items-start justify-end gap-1.5 px-1 text-[12.5px] leading-snug text-green" role="status">
+              <DuoIcon name="check" size={13} className="mt-[2px] flex-none" />
+              <span>
+                Te salió natural una frase guardada: <span className="font-serif text-[14px]">“{usedNotes[turn.id]}”</span>
+              </span>
+            </p>
+          )}
+          {turn.id === hintTurnId && (
+            <p className="mt-1.5 px-1 text-[12.5px] text-ink-muted">Mantén pulsada una palabra para buscarla y guardarla.</p>
+          )}
+        </Fragment>
+      ))}
+    </div>
+  )
+
+  function renderTurn(turn: ConversationTurn) {
         if (turn.modality === "text") {
           return (
             <ChatBubble
@@ -80,15 +121,12 @@ export function ConversationTranscript({
           <div key={turn.id} className="flex flex-col items-start gap-[5px]">
             <span className="smallcaps pl-1 text-ink-muted">{PARTNER_NAME}</span>
             <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
-              <p
-                onClick={translatable ? () => toggle(turn.id, turn.text) : undefined}
-                role={translatable ? "button" : undefined}
-                aria-expanded={translatable ? open : undefined}
-                aria-label={translatable ? "Ver traducción" : undefined}
-                className="cursor-pointer select-none font-serif text-lg leading-[1.4] text-ink"
-              >
-                {turn.text}
-              </p>
+              {/* Tap translates; holding a word looks it up (Phase 4). */}
+              <LookupText
+                text={turn.text}
+                onTap={translatable ? () => toggle(turn.id, turn.text) : undefined}
+                className="cursor-pointer font-serif text-lg leading-[1.4] text-ink"
+              />
 
               {open && (
                 <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-muted">
@@ -128,9 +166,7 @@ export function ConversationTranscript({
             </div>
           </div>
         )
-      })}
-    </div>
-  )
+  }
 }
 
 function SaveChip({ onSave }: { onSave: () => void }) {

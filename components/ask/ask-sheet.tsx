@@ -37,6 +37,7 @@ export function AskSheet() {
           variant="sheet"
           initialQuery={sheet.query}
           context={sheet.context}
+          wantWord={sheet.want === "word"}
           autoFocus={!sheet.query}
           onClose={closeAskSheet}
         />

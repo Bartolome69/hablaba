@@ -1,6 +1,6 @@
 # App refresh: plan (Phase 0)
 
-*November 2026. Status: **approved, with the decisions below.** Phases 1 to 3 shipped (PRs #50, #51, and the Phase 3 PR); Phase 4 is next.*
+*November 2026. Status: **approved, with the decisions below.** Phases 1 to 4 shipped (PRs #50, #51, #52 and the Phase 4 PR); Phase 5 is next.*
 
 Built on the quick-wins batch, which has landed (PR #47, QW1 to QW8). This plan
 assumes what that batch shipped:

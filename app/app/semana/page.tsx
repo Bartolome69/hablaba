@@ -114,7 +114,10 @@ export default function WeeklyReportPage() {
 
           {data.celebrations.length > 0 && (
             <section className="mb-6">
-              <h2 className="px-1 font-serif text-[19px] text-ink">Frases tuyas que usaste en serio</h2>
+              <h2 className="px-1 font-serif text-[19px] text-ink">Te salieron solas</h2>
+              <p className="mt-1 px-1 text-[13px] text-ink-muted">
+                Frases guardadas que usaste en una charla, escribiendo o en voz alta.
+              </p>
               <ul className="mt-2.5 space-y-1.5">
                 {data.celebrations.map((phrase, i) => (
                   <li key={i} className="flex items-start gap-2.5 rounded-[16px] bg-green-tint px-3.5 py-2.5">

@@ -10,6 +10,7 @@
 import { useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { PARTNER_NAME } from "@/lib/voices"
+import { LookupText } from "@/components/conversations/lookup-text"
 import type { Message } from "@/lib/types"
 import { useStreamedText } from "@/hooks/use-streamed-text"
 
@@ -171,20 +172,24 @@ export function ChatBubble({ message, isPlaying = false, onPlayRequest, onSavePh
     <div className="flex flex-col items-start gap-[5px]">
       <span className="smallcaps pl-1 text-ink-muted">{PARTNER_NAME}</span>
       <div className="clay-static max-w-[88%] rounded-[20px] rounded-bl-[7px] px-[15px] py-3.5">
-        <p
-          onClick={message.translation ? () => setShowTranslation((s) => !s) : undefined}
-          role={message.translation ? "button" : undefined}
-          aria-expanded={message.translation ? showTranslation : undefined}
-          className={`font-serif text-lg leading-[1.4] text-ink ${message.translation ? "cursor-pointer select-none" : ""}`}
-        >
-          {streamedText}
-          {caret && (
-            <span
-              aria-hidden
-              className="ml-0.5 inline-block h-[0.95em] w-[2px] translate-y-[0.12em] rounded-[1px] bg-current animate-pulse"
-            />
-          )}
-        </p>
+        {message.streaming || caret ? (
+          <p className="font-serif text-lg leading-[1.4] text-ink">
+            {streamedText}
+            {caret && (
+              <span
+                aria-hidden
+                className="ml-0.5 inline-block h-[0.95em] w-[2px] translate-y-[0.12em] rounded-[1px] bg-current animate-pulse"
+              />
+            )}
+          </p>
+        ) : (
+          // Tap toggles the translation; holding a word looks it up (Phase 4).
+          <LookupText
+            text={message.text}
+            onTap={message.translation ? () => setShowTranslation((s) => !s) : undefined}
+            className={`font-serif text-lg leading-[1.4] text-ink ${message.translation ? "cursor-pointer" : ""}`}
+          />
+        )}
 
         {showTranslation && message.translation && (
           <p className="anim-settle mt-2.5 border-t border-rule-soft pt-2.5 text-[12.5px] leading-[1.45] text-ink-muted">

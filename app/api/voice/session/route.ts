@@ -58,6 +58,10 @@ export async function POST(req: Request) {
               !!l && typeof l.request === "string" && typeof l.spanish === "string",
           )
           .slice(0, 10),
+        seedWords: (Array.isArray(body.seedWords) ? body.seedWords : [])
+          .filter((w): w is { spanish: string; english: string } => !!w && typeof w.spanish === "string")
+          .map((w) => ({ spanish: w.spanish.slice(0, 60), english: typeof w.english === "string" ? w.english.slice(0, 60) : "" }))
+          .slice(0, 6),
       },
       correctionLevel,
       dialect: (body.dialect === "neutral" ? "neutral" : "rioplatense") as SpanishDialect,
