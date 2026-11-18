@@ -1,6 +1,13 @@
 export interface RoutinePhrase {
   spanish: string
   english: string
+  /**
+   * Age gate (refresh Phase 5), in months. Gate, don't delete: with no
+   * birthdate in the profile everything shows. Set only where a line assumes
+   * a child who walks, talks or plays with toys.
+   */
+  minMonths?: number
+  maxMonths?: number
 }
 
 export interface Routine {
@@ -137,10 +144,10 @@ export const routines: Routine[] = [
       { spanish: "Abre la boca, aquí viene el avión.", english: "Open your mouth, here comes the aeroplane." },
       { spanish: "Una cucharadita más.", english: "One more little spoonful." },
       { spanish: "¿Quieres más?", english: "Do you want more?" },
-      { spanish: "Mastica bien.", english: "Chew it well." },
+      { spanish: "Mastica bien.", english: "Chew it well.", minMonths: 12 },
       { spanish: "Se acabó, no hay más.", english: "All gone, there's no more." },
       { spanish: "Vamos a limpiar esa carita.", english: "Let's clean that little face." },
-      { spanish: "¡Todo el plato! Muy bien.", english: "The whole plate! Well done." },
+      { spanish: "¡Todo el plato! Muy bien.", english: "The whole plate! Well done.", minMonths: 12 },
     ],
   },
   {
@@ -222,12 +229,12 @@ export const routines: Routine[] = [
       { spanish: "Mira el cielo.", english: "Look at the sky." },
       { spanish: "Siente el sol.", english: "Feel the sun." },
       { spanish: "¿Escuchas los pájaros?", english: "Do you hear the birds?" },
-      { spanish: "Vamos a ponernos los zapatos.", english: "Let's put your shoes on." },
+      { spanish: "Vamos a ponernos los zapatos.", english: "Let's put your shoes on.", minMonths: 12 },
       { spanish: "¿Dónde está tu gorro?", english: "Where's your hat?" },
       { spanish: "Al cochecito, vamos.", english: "Into the pushchair, let's go." },
       { spanish: "Mira, un perrito.", english: "Look, a little dog." },
       { spanish: "¿Ves ese árbol tan grande?", english: "Do you see that big tree?" },
-      { spanish: "Di adiós con la manita.", english: "Wave bye-bye with your little hand." },
+      { spanish: "Di adiós con la manita.", english: "Wave bye-bye with your little hand.", minMonths: 12 },
       { spanish: "Ya volvemos a casa.", english: "We're heading home now." },
     ],
   },

@@ -38,5 +38,21 @@
   { "id": "bebe-portabebe", "spanish": "portabebé", "article": "el", "gender": "m", "english": "baby carrier", "group": "salir",
     "example": "Hoy te llevo en el portabebé.", "exampleTranslation": "Today I'll carry you in the baby carrier." },
   { "id": "bebe-protector-solar", "spanish": "protector solar", "article": "el", "gender": "m", "english": "sunscreen", "group": "salir",
-    "example": "Te pongo protector solar en la cara.", "exampleTranslation": "I'll put sunscreen on your face." }
+    "example": "Te pongo protector solar en la cara.", "exampleTranslation": "I'll put sunscreen on your face." },
+  { "id": "bebe-papilla", "spanish": "papilla", "article": "la", "gender": "f", "english": "baby purée", "group": "comer", "draft": true,
+    "example": "Hoy hay papilla de zapallo.", "exampleTranslation": "Today there's squash purée." },
+  { "id": "bebe-mordillo", "spanish": "mordillo", "article": "el", "gender": "m", "english": "teething ring", "group": "comer", "draft": true,
+    "example": "El mordillo está en la heladera.", "exampleTranslation": "The teething ring is in the fridge." },
+  { "id": "bebe-sacaleche", "spanish": "sacaleche", "article": "el", "gender": "m", "english": "breast pump", "group": "comer", "draft": true,
+    "example": "¿Dónde dejé el sacaleche?", "exampleTranslation": "Where did I leave the breast pump?" },
+  { "id": "bebe-saco-de-dormir", "spanish": "saco de dormir", "article": "el", "gender": "m", "english": "baby sleeping bag", "group": "dormir", "draft": true,
+    "example": "Hace frío, te pongo el saco de dormir.", "exampleTranslation": "It's cold, I'll put your sleeping bag on." },
+  { "id": "bebe-ruido-blanco", "spanish": "ruido blanco", "article": "el", "gender": "m", "english": "white noise", "group": "dormir", "draft": true,
+    "example": "Con el ruido blanco duermes mejor.", "exampleTranslation": "You sleep better with the white noise." },
+  { "id": "bebe-manta-de-actividades", "spanish": "manta de actividades", "article": "la", "gender": "f", "english": "play mat", "group": "dormir", "draft": true,
+    "example": "Te acuesto en la manta de actividades.", "exampleTranslation": "I'll lay you down on the play mat." },
+  { "id": "bebe-termometro", "spanish": "termómetro", "article": "el", "gender": "m", "english": "thermometer", "group": "cambiar", "draft": true,
+    "example": "Estás calentito, ¿dónde está el termómetro?", "exampleTranslation": "You feel warm, where's the thermometer?" },
+  { "id": "bebe-huevito", "spanish": "huevito", "article": "el", "gender": "m", "english": "infant car seat", "group": "salir", "draft": true,
+    "example": "Al huevito, que vamos en auto.", "exampleTranslation": "Into the car seat, we're going in the car." }
 ]
