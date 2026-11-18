@@ -16,6 +16,7 @@ import { DuoIcon } from "@/components/icons"
 import { useTTS } from "@/hooks/use-tts"
 import { isVirtual, recordRelearned, recordReview } from "@/lib/vocab/store"
 import { withArticle, type VocabWord } from "@/lib/vocab/types"
+import { useImmersive } from "@/lib/ui/immersive"
 
 /** How many times a missed card comes back within one session. */
 const MAX_REQUEUES = 2
@@ -33,6 +34,7 @@ interface VocabDeckProps {
 }
 
 export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
+  useImmersive()
   const { play, playingId } = useTTS("speak")
   // Frozen at the start so cards don't reshuffle as counts change underneath;
   // it only grows, when a missed card is sent to the back.

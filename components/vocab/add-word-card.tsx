@@ -1,112 +1,30 @@
 "use client"
 
-// "The word I want is ___", inside a pack. Spanish or English in, the Spanish
-// word out, straight into the pack being viewed. The same move as CaptureCard
-// on Frases, and deliberately the same shape so the two read as one habit:
-// whatever you couldn't say, type it, keep it.
+// "¿Falta alguna?" at the bottom of a pack: the "¿Cómo se dice…?" panel
+// (components/ask/ask-panel.tsx) with this pack as the word target. English or
+// Spanish in; Spanish is kept as typed.
 
-import { useState } from "react"
-import { toast } from "sonner"
-import { usePostHog } from "posthog-js/react"
-import { DuoIcon } from "@/components/icons"
-import { addOwnWord } from "@/lib/vocab/add"
+import { AskPanel } from "@/components/ask/ask-panel"
 import { packLabelInline } from "@/lib/vocab/catalog"
-import { withArticle, type VocabSetId } from "@/lib/vocab/types"
+import type { VocabSetId } from "@/lib/vocab/types"
 
 interface AddWordCardProps {
   /** Target pack. Without a pack context, words go to Tus palabras. */
   set?: VocabSetId
-  /** The pack's display name, for the copy: "Va directo a La ropa". */
-  label?: string
   onAdded?: () => void
 }
 
-// What happens next, true to the Leitner ladder (lib/vocab/schedule.ts): a
-// new word starts in box 0, due now; "lo sabía" moves it to box 1, one day.
-const NEXT_REVIEW = "Te la pregunto hoy y, si la sabes, otra vez mañana."
-
-export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }: AddWordCardProps) {
-  const [value, setValue] = useState("")
-  const [busy, setBusy] = useState(false)
-  const [added, setAdded] = useState<string | null>(null)
-  const posthog = usePostHog()
+export function AddWordCard({ set = "propias", onAdded }: AddWordCardProps) {
   const own = set === "propias"
-
-  const submit = async () => {
-    const term = value.trim()
-    if (!term || busy) return
-    setBusy(true)
-    try {
-      const outcome = await addOwnWord(term, set)
-      posthog.capture("vocab_word_added", { status: outcome.status, pack: set })
-      setValue("")
-      setAdded(outcome.status === "added" ? withArticle(outcome.word) : null)
-      if (outcome.status === "added") {
-        toast.success(withArticle(outcome.word), { description: outcome.word.english })
-      } else if (outcome.restored) {
-        toast.success(`Volvió “${outcome.spanish}”`, { description: `Está de nuevo en ${outcome.packLabel}.` })
-      } else {
-        toast.info(`Ya tenías “${outcome.spanish}”`, {
-          description: outcome.packLabel ? `Está en ${outcome.packLabel}.` : undefined,
-        })
-      }
-      onAdded?.()
-    } catch {
-      toast.error("No se pudo traducir la palabra", {
-        description: "Prueba de nuevo en un momento.",
-      })
-    } finally {
-      setBusy(false)
-    }
-  }
-
   return (
-    <div className="clay-static rounded-[22px] p-4">
-      <div className="flex items-center gap-2">
-        <DuoIcon name="brote" size={17} />
-        <p className="text-[14.5px] font-semibold text-ink">
-          {own ? "¿Qué palabra quieres aprender?" : "¿Falta alguna?"}
-        </p>
-      </div>
-      <div className="mt-3 flex gap-[9px]">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder="En español o inglés…"
-          disabled={busy}
-          aria-label={`Agregar una palabra a ${label}`}
-          className="clay-recessed h-11 min-w-0 flex-1 rounded-full px-4 text-sm text-ink outline-none placeholder:text-ink-muted focus:ring-1 focus:ring-green/40 disabled:opacity-60"
-        />
-        <button
-          onClick={submit}
-          disabled={busy || !value.trim()}
-          className={`flex h-11 flex-none items-center justify-center rounded-full px-5 text-[14.5px] font-semibold ${
-            busy || value.trim() ? "clay-green text-cream" : "bg-sunken-2 text-ink-muted"
-          }`}
-        >
-          {busy ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-spin" aria-hidden>
-              <circle cx="12" cy="12" r="9" stroke="#F7F3EC" strokeOpacity=".3" strokeWidth="2.6" />
-              <path d="M21 12a9 9 0 0 0-9-9" stroke="#F7F3EC" strokeWidth="2.6" strokeLinecap="round" />
-            </svg>
-          ) : (
-            "Dale"
-          )}
-        </button>
-      </div>
-      {added ? (
-        <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted" role="status">
-          <span className="font-serif text-[14px] text-ink">{added}</span> está en {packLabelInline(set)}.{" "}
-          {NEXT_REVIEW}
-        </p>
-      ) : (
-        <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted">
-          Escríbela como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
-          {packLabelInline(set)}.
-        </p>
-      )}
-    </div>
+    <AskPanel
+      variant="card"
+      title={own ? "¿Qué palabra quieres aprender?" : "¿Falta alguna?"}
+      icon="brote"
+      target={{ set }}
+      placeholder="En español o en inglés…"
+      helper={`Escríbela como te salga. Te doy la palabra con su artículo y una frase, y la guardas en ${packLabelInline(set)}.`}
+      onSaved={(kind) => kind === "word" && onAdded?.()}
+    />
   )
 }

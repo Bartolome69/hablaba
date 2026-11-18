@@ -114,37 +114,11 @@ function asMoment(value: unknown): PhraseMoment | undefined {
   return PHRASE_MOMENTS.includes(value as PhraseMoment) ? (value as PhraseMoment) : undefined
 }
 
-/** What a capture lookup returns before anything is stored. */
+/** An answer to keep as a phrase (from the ask panel, lib/ask/ask.ts). */
 export interface CaptureAnswer {
   text: string
   translation: string
   moment?: PhraseMoment
-}
-
-/**
- * "¿Cómo se dice…?": generate the natural Spanish for what the learner asked,
- * WITHOUT storing it. Spanish input is kept as the learner's own construction
- * (the route prompt handles that). The API also classifies the answer into a
- * daily moment, used if the learner chooses to save it.
- */
-export async function lookupCapture(captureText: string): Promise<CaptureAnswer | null> {
-  const profile = getProfile()
-  const res = await fetch("/api/phrases/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      capture: captureText,
-      dialect: profile.dialect,
-      childName: profile.child?.name,
-    }),
-  })
-  if (!res.ok) throw new Error(`Capture generation error: ${res.status}`)
-  const data = (await res.json()) as {
-    phrases: { text: string; translation: string; moment?: string }[]
-  }
-  const generated = data.phrases?.[0]
-  if (!generated) return null
-  return { text: generated.text, translation: generated.translation, moment: asMoment(generated.moment) }
 }
 
 /** Save a looked-up answer to the library: Recientes, and its moment's pack. */
@@ -155,18 +129,6 @@ export function saveCapture(answer: CaptureAnswer): Phrase | null {
     moment: answer.moment,
     source: "captured",
   })
-}
-
-/** True when the library already holds this Spanish (saving would no-op). */
-export function isInLibrary(text: string): boolean {
-  const key = normalizePhraseText(text)
-  return listPhrases().some((p) => normalizePhraseText(p.text) === key)
-}
-
-/** Look up and save in one step (the pre-QW1 behaviour). */
-export async function capturePhrase(captureText: string): Promise<Phrase | null> {
-  const answer = await lookupCapture(captureText)
-  return answer ? saveCapture(answer) : null
 }
 
 /**

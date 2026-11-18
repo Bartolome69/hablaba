@@ -25,8 +25,8 @@ before packs existed are matched back to their pack word by `catalogId`, or by
 spelling (preferring the row's own pack), so old progress carries over; that's
 how a verb added by the Exercises bridge ended up in Verbos with its history.
 
-The learner can **add words to any pack** (English or Spanish in, via
-`add.ts`); "Tus palabras" (`propias`) is the pack for anything that fits
+The learner can **add words to any pack** (English or Spanish in, via the
+"¿Cómo se dice?" panel, `lib/ask/ask.ts`); "Tus palabras" (`propias`) is the pack for anything that fits
 nowhere else. Press and hold a word for "Ya la sé" (straight to the top box)
 or "Quitar" (an authored word is hidden per device in `vocab_hidden`, with
 undo and a "Mostrarlas" footer; an added word is deleted).
@@ -107,8 +107,8 @@ it at runtime.
 | `catalog.ts` | Typed access, pack metadata and order, word of the day |
 | `schedule.ts` | The Leitner ladder: intervals, `nextSchedule()`, `isDue()`, the band labels. Pure — no storage, no React |
 | `store.ts` | The `vocab_words` table, virtual words, `packContents()`, `packStats()`, the deck builders, remove/hide |
-| `add.ts` | English (or Spanish) in → Spanish out → into the pack being viewed (the mirror of `capturePhrase`). Spanish input is the word the learner wants, so it's kept and glossed, never swapped for a synonym |
-| `app/api/vocab/translate/` | The en→es route. Returns article and gender as **fields**, not prose |
+| `lib/ask/ask.ts` | "¿Cómo se dice?": lookup via `POST /api/ask` and `saveAnswerAsWord()` (into a pack, Tus palabras by default). Spanish input is kept as typed and glossed, never swapped for a synonym |
+| `app/api/ask/` | Word or phrase. A word comes back with article and gender as **fields**, not prose |
 
 ## Adding a pack
 

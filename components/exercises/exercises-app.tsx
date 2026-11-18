@@ -16,6 +16,7 @@ import { gradeAnswer, isClientGradable, acceptedAnswers } from "@/lib/exercises/
 import { playCorrect, playFinish } from "@/lib/exercises/sound"
 import { practicePackForTopics, practicePhrasesForTopics } from "@/lib/exercises/practice-phrases"
 import { recordAttempt, topicMastery } from "@/lib/exercises/store"
+import { useImmersive } from "@/lib/ui/immersive"
 import { getTopic } from "@/lib/exercises/taxonomy"
 import { addPhrase } from "@/lib/phrases/store"
 import { packLabel } from "@/lib/vocab/catalog"
@@ -353,6 +354,7 @@ function Quiz({
   items: ExerciseItem[]
   onExit: () => void
 }) {
+  useImmersive()
   const [idx, setIdx] = useState(0)
   const [selected, setSelected] = useState("")
   const [typed, setTyped] = useState("")

@@ -49,6 +49,7 @@ Marketing (route group `app/(marketing)/`, full-width):
 
 App (under `app/app/`, constrained to `max-w-lg` via its own layout). Bottom
 nav is **Today / Charlar / Phrases / Palabras / Exercises**:
+- **"¿Cómo se dice?" bar** (refresh Phase 1): rides on top of the bottom nav on every tab (`components/ask/ask-bar.tsx`), opens one global sheet (`components/ask/ask-sheet.tsx`, state in `lib/ask/sheet.ts`). The same `AskPanel` is the box at the top of Frases and a pack's "¿Falta alguna?". Type or hold to speak (`hooks/use-recorder.ts` → `/api/transcribe`); keep the answer as a word (Tus palabras or the pack) or a phrase (Frases), or close. Hidden while a quiz, a flashcard deck or voice mode is up (`useImmersive`, `lib/ui/immersive.ts`)
 - `/app/today` — Today: big Charlar card (resumes the latest thread, or starts one), phrases due today, daily prompt, saved-phrase review
 - `/app/charla` — Conversations hub: resume cards (expire after 14 days), starters, history
 - `/app/charla/[id]` — **A conversation.** Type or talk; see Conversations below
@@ -75,7 +76,7 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/analyze` — Conversation transcript in, tagged observations out (imports the exercises taxonomy for tag validation)
 - `POST /api/analyze/weekly` — Weekly-report narrative + taxonomy tag labels
 - `POST /api/translate` — One turn of Spanish → English (tap-to-translate)
-- `POST /api/vocab/translate` — One English word → the Spanish (or a Spanish word, kept as typed and glossed, never swapped for a synonym), with **article and gender as fields** (the part a B1 learner gets wrong), plus an example sentence. The en→es counterpart to the above
+- `POST /api/ask` — "¿Cómo se dice?" (jobs 1 to 3): English or Spanish in, a WORD (bare Spanish + **article and gender as fields** + example) or a PHRASE (+ moment) out, en-GB gloss, and the other dialect's word where it differs. Spanish input is the learner's own construction: kept, never swapped for a synonym. Replaced `/api/vocab/translate` (retired) and the client side of capture mode
 - `POST /api/tts` — Text-to-speech (optional `register=rioplatense`)
 - `POST /api/transcribe` — Speech-to-text (optional `language=auto`)
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.

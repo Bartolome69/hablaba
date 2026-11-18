@@ -200,7 +200,7 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
 
       {/* Below the list: in a long pack the words come first. */}
       <div className="mt-7">
-        <AddWordCard set={packId} label={label} onAdded={reload} />
+        <AddWordCard set={packId} onAdded={reload} />
       </div>
 
       {pack && contents && contents.hiddenCount > 0 && (

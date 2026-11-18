@@ -3,12 +3,18 @@
 // App-level primary navigation: a persistent bottom tab bar. Hides on
 // full-screen conversation views, which keep their own focused chrome.
 //
-// Clay + calm: duotone icons over a 10.5px label; the active tab is the only
-// full-colour one (green label at 600), inactive tabs sit at .42 opacity.
+// Clay + calm: duotone icons over a 12px label; the active tab is the only
+// full-colour one (green label at 600), inactive tabs are ink-muted (AA; they
+// used to be ink at .42 opacity, about 2.5:1).
+//
+// The "¿Cómo se dice?" bar rides on top of the tabs (same fixed block, so it
+// always clears them), and hides while an immersive session is running.
 
 import { usePathname, useRouter } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
+import { AskBar } from "@/components/ask/ask-bar"
 import { DuoIcon, type IconName } from "@/components/icons"
+import { useIsImmersive } from "@/lib/ui/immersive"
 
 // Full-screen conversation views keep their own chrome. The Charlar HUB keeps
 // the bar (it's a top-level destination); only a conversation itself hides it.
@@ -16,6 +22,7 @@ const HIDE_ON = ["/app/chat", "/app/charla/"]
 
 export function BottomNav() {
   const pathname = usePathname()
+  const immersive = useIsImmersive()
   const router = useRouter()
   const posthog = usePostHog()
 
@@ -30,7 +37,11 @@ export function BottomNav() {
   ]
 
   return (
+    <>
+      {/* In-flow space for the ask bar, so it never covers a page's last row. */}
+      {!immersive && <div aria-hidden className="h-[60px]" />}
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-background">
+      {!immersive && <AskBar />}
       <div
         className="mx-auto flex max-w-lg items-start justify-around px-3 pt-3.5"
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 14px)" }}
@@ -44,10 +55,10 @@ export function BottomNav() {
             }}
             aria-current={tab.active ? "page" : undefined}
             className={`press-chip flex min-w-[52px] flex-col items-center gap-[5px] pb-1 ${
-              tab.active ? "text-green" : "text-ink opacity-[.42]"
+              tab.active ? "text-green" : "text-ink-muted"
             }`}
           >
-            <DuoIcon name={tab.icon} size={23} detail={tab.active ? undefined : "#1E3D2C"} />
+            <DuoIcon name={tab.icon} size={23} detail={tab.active ? undefined : "#5F6B61"} />
             <span className={`text-[12px] leading-none ${tab.active ? "font-semibold" : "font-medium"}`}>
               {tab.label}
             </span>
@@ -55,5 +66,6 @@ export function BottomNav() {
         ))}
       </div>
     </nav>
+    </>
   )
 }
