@@ -60,8 +60,11 @@ export function SpeakPage() {
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
       <AppHeader title="Frases" subtitle="Tocá cualquier frase para escucharla" />
 
+      {/* "¿Cómo se dice…?" leads: it's the job people open Frases for. */}
+      <CaptureCard onCaptured={() => setPackKey((k) => k + 1)} />
+
       {/* Phrase of the day — the screen's single green block. */}
-      <div className="clay-green-hero flex items-start gap-3.5 rounded-[26px] p-5">
+      <div className="clay-green-hero mt-3.5 flex items-start gap-3.5 rounded-[26px] p-5">
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="flex items-center gap-2">
             <DuoIcon name="nueva" size={15} />
@@ -84,8 +87,6 @@ export function SpeakPage() {
           />
         </button>
       </div>
-
-      <CaptureCard onCaptured={() => setPackKey((k) => k + 1)} />
 
       <MomentPack key={packKey} />
 

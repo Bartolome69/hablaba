@@ -114,12 +114,20 @@ function asMoment(value: unknown): PhraseMoment | undefined {
   return PHRASE_MOMENTS.includes(value as PhraseMoment) ? (value as PhraseMoment) : undefined
 }
 
+/** What a capture lookup returns before anything is stored. */
+export interface CaptureAnswer {
+  text: string
+  translation: string
+  moment?: PhraseMoment
+}
+
 /**
- * Capture a real-life gap: generate the Spanish immediately and store it.
- * The API also classifies the capture into a daily moment, so what the
- * learner asked for shows up under the matching pill, not just Recientes.
+ * "¿Cómo se dice…?": generate the natural Spanish for what the learner asked,
+ * WITHOUT storing it. Spanish input is kept as the learner's own construction
+ * (the route prompt handles that). The API also classifies the answer into a
+ * daily moment, used if the learner chooses to save it.
  */
-export async function capturePhrase(captureText: string): Promise<Phrase | null> {
+export async function lookupCapture(captureText: string): Promise<CaptureAnswer | null> {
   const profile = getProfile()
   const res = await fetch("/api/phrases/generate", {
     method: "POST",
@@ -136,12 +144,29 @@ export async function capturePhrase(captureText: string): Promise<Phrase | null>
   }
   const generated = data.phrases?.[0]
   if (!generated) return null
+  return { text: generated.text, translation: generated.translation, moment: asMoment(generated.moment) }
+}
+
+/** Save a looked-up answer to the library: Recientes, and its moment's pack. */
+export function saveCapture(answer: CaptureAnswer): Phrase | null {
   return addPhrase({
-    text: generated.text,
-    translation: generated.translation,
-    moment: asMoment(generated.moment),
+    text: answer.text,
+    translation: answer.translation,
+    moment: answer.moment,
     source: "captured",
   })
+}
+
+/** True when the library already holds this Spanish (saving would no-op). */
+export function isInLibrary(text: string): boolean {
+  const key = normalizePhraseText(text)
+  return listPhrases().some((p) => normalizePhraseText(p.text) === key)
+}
+
+/** Look up and save in one step (the pre-QW1 behaviour). */
+export async function capturePhrase(captureText: string): Promise<Phrase | null> {
+  const answer = await lookupCapture(captureText)
+  return answer ? saveCapture(answer) : null
 }
 
 /**
