@@ -13,10 +13,10 @@ Five tabs, each a slice of one loop:
 
 | Tab | What it does |
 | --- | --- |
-| **Hoy** (`/app/today`) | The daily slice: resume your last conversation, phrases to use today, flashcards waiting, a link to the weekly report. The only screen with the streak and settings |
+| **Hoy** (`/app/today`) | The five jobs in one screen: resume or start a conversation, Repasar (words due, else the grammar to work on), this week's pattern, and two phrases for this time of day. The "¿Cómo se dice?" bar sits above the tabs on every screen. The only screen with settings |
 | **Charlar** (`/app/charla`) | Conversations with Elena, typed or hands-free spoken in the same thread. Typed turns get inline corrections; spoken turns are reviewed after the session. **Tu semana** (`/app/semana`) is the weekly report across all conversations |
 | **Frases** (`/app/speak`) | Things to say: phrase of the day, a capture box for what you couldn't say, your phrases by daily moment, and 15 routines of ready-to-say phrases with audio |
-| **Palabras** (`/app/palabras`) | Things to name: a shelf of 11 preloaded word packs (baby things, food, the body, clothes, the house and more) studied as spaced-repetition flashcards. Add your own words to any pack in English or Spanish |
+| **Palabras** (`/app/palabras`) | Things to name: a shelf of 14 preloaded word packs in three sections (baby things, food, drinks, clothes, furniture, adjectives and more) studied as spaced-repetition flashcards. Add your own words to any pack in English or Spanish |
 | **Práctica** (`/app/exercises`) | Grammar quizzes: 27 topics from authored and teacher-handout content packs, sortable by area, weakness or staleness. `?topic=<id>` deep-links into one |
 
 The loop that matters: **speak → get your patterns back → practise the exact

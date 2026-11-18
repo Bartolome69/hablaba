@@ -161,9 +161,11 @@ Things to *name*, studied as flashcards.
 
 - **The shelf.** One green block, "Repaso de hoy", gathers the cards due today from
   every pack. When nothing is due it says "Estás al día" and leaves you alone.
-- **Eleven preloaded packs, 243 words:** Cosas del bebé, La comida, El cuerpo, La
-  ropa, La casa, Juguetes y juego, Los animales, En la calle, Colores y formas, Las
-  emociones, Verbos de todos los días. Plus **Tus palabras** for your own.
+- **Fourteen preloaded packs** in three short sections, every one a tap from the
+  tab. *Del bebé:* Cosas del bebé, Juguetes y juego, El cuerpo, Las emociones.
+  *Casa y calle:* La comida, Las bebidas, La ropa, La casa, Los muebles, En la calle,
+  Los animales. *Para describir:* Colores y formas, Adjetivos comunes, Verbos de
+  todos los días. Plus **Tus palabras** for your own.
 - **A pack** shows its words under plain headings, one "Estudiar este pack" button,
   and an add box. Type a word in English *or* Spanish and you get it back with its
   article and an example sentence, straight into that pack. Press and hold a word for

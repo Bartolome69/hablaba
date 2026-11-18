@@ -92,7 +92,7 @@ reason — it's why the feature needs no database.
 
 | | What | Where |
 | --- | --- | --- |
-| **Content** | The authored packs: eleven of them, from Cosas del bebé to Verbos | Versioned JSON in `content/*.json`, shipped in the bundle, works offline |
+| **Content** | The authored packs: fourteen of them, from Cosas del bebé to Adjetivos comunes, shelved in three sections (`SHELF_SECTIONS`) | Versioned JSON in `content/*.json`, shipped in the bundle, works offline |
 | **Progress** | Review history, the learner's own words, removed words | `localStorage` keys `vocab_words` (table-shaped) and `vocab_hidden` |
 
 Content is authored at dev time and reviewed in a git diff. Nothing writes to

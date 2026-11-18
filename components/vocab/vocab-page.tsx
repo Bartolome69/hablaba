@@ -19,7 +19,7 @@ import { DuoIcon, vocabSetIcon } from "@/components/icons"
 import { PackProgress, packStatusLine } from "@/components/vocab/pack-progress"
 import { VocabDeck } from "@/components/vocab/vocab-deck"
 import { useTTS } from "@/hooks/use-tts"
-import { PACK_ORDER, packLabel, packLabelInline, packOfCatalogWord, wordOfTheDay } from "@/lib/vocab/catalog"
+import { PACK_ORDER, SHELF_SECTIONS, packLabel, packLabelInline, packOfCatalogWord, wordOfTheDay } from "@/lib/vocab/catalog"
 import {
   buildPracticeAnywayDeck,
   buildReviewDeck,
@@ -153,19 +153,50 @@ export function VocabPage() {
         </div>
       )}
 
-      <div className="mt-[26px] flex items-baseline justify-between px-1">
-        <h2 className="font-serif text-[19px] text-ink">Tus packs</h2>
-        <span className="text-[12.5px] text-ink-muted">{SHELF.length} packs</span>
+      {/* Every library one tap from the tab: Tus palabras, then three short
+          sections of tiles. No filters, no second layer. */}
+      <div className="mt-[26px]">
+        <PackRow id="propias" stats={stats.propias} />
       </div>
 
-      <ul className="stagger-children mt-3 space-y-2">
-        {SHELF.map((id) => (
-          <li key={id}>
-            <PackRow id={id} stats={stats[id]} />
-          </li>
-        ))}
-      </ul>
+      {SHELF_SECTIONS.map((section) => (
+        <section key={section.title} className="mt-6">
+          <h2 className="px-1 font-serif text-[19px] text-ink">{section.title}</h2>
+          <ul className="stagger-children mt-2.5 grid grid-cols-2 gap-2.5">
+            {section.packs.map((id) => (
+              <li key={id}>
+                <PackTile id={id} stats={stats[id]} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
+  )
+}
+
+function PackTile({ id, stats }: { id: VocabSetId; stats?: PackStats }) {
+  return (
+    <Link
+      href={`/app/palabras/${id}`}
+      className="clay-card flex h-full min-h-[118px] flex-col gap-2 rounded-[18px] p-3.5 text-left"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex h-[36px] w-[36px] items-center justify-center rounded-xl bg-green-tint text-ink">
+          <DuoIcon name={vocabSetIcon(id)} size={19} />
+        </div>
+        {stats && stats.due > 0 && (
+          <span className="mt-1 h-[7px] w-[7px] rounded-full bg-terracotta" aria-label="Hay palabras para repasar" />
+        )}
+      </div>
+      <p className="text-[14.5px] font-semibold leading-snug text-ink">{packLabel(id)}</p>
+      <div className="mt-auto flex flex-col gap-1.5">
+        <p className="truncate text-[12.5px] text-ink-muted">
+          {stats ? `${stats.total} · ${packStatusLine(stats).toLowerCase()}` : ""}
+        </p>
+        {stats && stats.total > 0 && <PackProgress stats={stats} />}
+      </div>
+    </Link>
   )
 }
 
