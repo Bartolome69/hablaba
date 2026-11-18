@@ -1,6 +1,6 @@
 "use client"
 
-// The "¿Cómo se dice…?" panel: ask (type, or hold to speak), read the answer,
+// The "¿Cómo se dice…?" panel: ask (type, or tap or hold the mic), read the answer,
 // keep it or not. One component behind three places: the global sheet, the
 // box at the top of Frases, and a pack's "¿Falta alguna?" box. A pack keeps
 // itself as the word target; everywhere else words go to Tus palabras.
@@ -46,6 +46,8 @@ export interface AskPanelProps {
   /** Ask for a single word even outside a pack (a word picked out of a chat bubble). */
   wantWord?: boolean
   autoFocus?: boolean
+  /** Open the mic on mount, hands-free (the bar's mic button). */
+  startListening?: boolean
   onSaved?: (kind: "word" | "phrase") => void
   onClose?: () => void
 }
@@ -61,6 +63,7 @@ export function AskPanel({
   context,
   wantWord,
   autoFocus,
+  startListening,
   onSaved,
   onClose,
 }: AskPanelProps) {
@@ -117,6 +120,16 @@ export function AskPanel({
     }, []),
   )
 
+  // Opened from the bar's mic: listen hands-free straight away (a press with
+  // no hold latches, so the next tap on the mic sends).
+  const listenedOnOpen = useRef(false)
+  useEffect(() => {
+    if (!startListening || !recorder.supported || listenedOnOpen.current) return
+    listenedOnOpen.current = true
+    void recorder.press()
+    recorder.release()
+  }, [startListening, recorder])
+
   const saveWord = () => {
     if (!answer) return
     const outcome = saveAnswerAsWord(answer, wordSet)
@@ -145,7 +158,7 @@ export function AskPanel({
   }
 
   const ready = !busy && !!value.trim()
-  const recording = recorder.state === "recording"
+  const recording = recorder.state === "recording" || recorder.state === "opening"
   const hearing = recorder.state === "transcribing"
   // In the sheet, the save is the one green block; inline, the page already has one.
   const primary =
@@ -162,7 +175,15 @@ export function AskPanel({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && ask(value)}
-          placeholder={recording ? "Te escucho…" : hearing ? "Escuchando…" : placeholder}
+          placeholder={
+            recorder.state === "opening"
+              ? "Abriendo el micro…"
+              : recording
+                ? "Te escucho…"
+                : hearing
+                  ? "Escuchando…"
+                  : placeholder
+          }
           aria-label={title}
           disabled={busy || recording || hearing}
           autoFocus={autoFocus}
@@ -172,23 +193,41 @@ export function AskPanel({
         {recorder.supported && !value.trim() && !busy ? (
           <button
             type="button"
+            // Tap to start and tap again to send, or hold and release: see
+            // hooks/use-recorder.ts. touch-none stops the scrolling sheet from
+            // claiming a slightly drifting thumb and cancelling the hold.
             onPointerDown={(e) => {
               e.preventDefault()
               // Keep the hold even if the thumb drifts off the button.
               try {
                 e.currentTarget.setPointerCapture(e.pointerId)
               } catch {}
-              void recorder.start()
+              void recorder.press()
             }}
-            onPointerUp={recorder.stop}
-            onPointerCancel={recorder.stop}
+            onPointerUp={recorder.release}
+            onPointerCancel={recorder.release}
             onContextMenu={(e) => e.preventDefault()}
-            aria-label="Mantén pulsado para hablar"
-            className={`flex h-11 w-11 flex-none select-none items-center justify-center rounded-full [-webkit-touch-callout:none] ${
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
+                e.preventDefault()
+                void recorder.press()
+              }
+            }}
+            onKeyUp={(e) => (e.key === "Enter" || e.key === " ") && recorder.release()}
+            disabled={hearing}
+            aria-label={recorder.latched ? "Terminar y buscar" : "Hablar: toca, o mantén pulsado"}
+            aria-pressed={recording}
+            className={`flex h-11 w-11 flex-none touch-none select-none items-center justify-center rounded-full [-webkit-touch-callout:none] ${
               recording ? "bg-green text-cream" : "clay-card text-ink"
             }`}
           >
-            {hearing ? <Spinner light={false} /> : <DuoIcon name="micro" size={19} />}
+            {hearing ? (
+              <Spinner light={false} />
+            ) : recorder.latched ? (
+              <DuoIcon name="parar" size={17} detail="#F7F3EC" />
+            ) : (
+              <DuoIcon name="micro" size={19} />
+            )}
           </button>
         ) : (
           <button
@@ -207,7 +246,11 @@ export function AskPanel({
       {!answer && helper && <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted">{helper}</p>}
       {!answer && recording && (
         <p className="mt-2.5 px-1 text-[12.5px] text-ink-muted" role="status">
-          Suelta para buscar.
+          {recorder.state === "opening"
+            ? "Abriendo el micro…"
+            : recorder.latched
+              ? "Toca el cuadrado cuando termines."
+              : "Suelta para buscar."}
         </p>
       )}
 
