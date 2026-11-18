@@ -1,6 +1,6 @@
 # App refresh: plan (Phase 0)
 
-*November 2026. Status: **proposed, awaiting approval.** No code in this phase.*
+*November 2026. Status: **approved, with the decisions below.** Phase 1 is next.*
 
 Built on the quick-wins batch, which has landed (PR #47, QW1 to QW8). This plan
 assumes what that batch shipped:
@@ -280,7 +280,23 @@ For a phrase result, the green action is "Guardar como frase" and there's no wor
 
 ---
 
-## 4. Open questions for you
+## 4. Decisions (answered November 2026)
+
+| # | Question | Decision |
+| --- | --- | --- |
+| 1 | Chrome register | **Tú.** The UI chrome moves from vos to tú, done as its own change before Phase 1. CLAUDE.md and DESIGN.md are updated to match. |
+| 2 | Repasar length | **Top up with new words** when fewer than 8 cards are due, up to 8 cards, then 3 grammar questions and 1 phrase. |
+| 3 | 0–12 month content | **No native-speaker review.** All five areas are drafted and flagged for Bart's review. |
+| 4 | Onboarding level question | **No.** Onboarding is child, then dialect. |
+| 5 | Word lookup in chat | **Long-press a word.** Tap stays translate. |
+| 6 | Ask bar on Hoy | **One global bar** above the nav on every tab, Hoy included; no second copy. |
+| 7 | Phrase taxonomy | **Merge** into one set of moments, plus a "Para ti" section for adult situations. `/frases/*` URLs stay. |
+| 8 | `review_sessions` table | **Skip for now.** |
+| 9 | Lint | **Add the ESLint config** as a small separate commit. |
+
+The original questions are kept below for context.
+
+## 4a. Open questions as asked
 
 1. **Chrome register: vos to tú?** The review recommends moving the UI chrome to tú so learners aren't reading vos all day. Size: a grep for the common vos forms ("Tocá", "Probá", "Escribí", "Elegí", "Guardá", "Repasá", "Contame", "podés", "sabés", "Vos elegís"…) finds about 35 strings in 13 files; with forms the grep misses, expect 40 to 60 strings across about 15 files. It's mechanical but needs a full read-through, because some strings sit on the line between chrome and taught Spanish (Elena's topic blurbs such as "Contame algo que pasó" and "Vos elegís el tema"). About two hours plus review. CLAUDE.md and DESIGN.md currently document the split as deliberate, so this reverses a recorded decision.
 2. **Repasar mix and length.** I propose up to 8 due cards, 3 grammar questions and 1 phrase recall, about 5 minutes. Should new words top it up when fewer than 8 are due, or should it stay "due only" so it ends fast?
