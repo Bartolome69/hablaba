@@ -1,6 +1,6 @@
 # App refresh: plan (Phase 0)
 
-*November 2026. Status: **approved, with the decisions below.** Phases 1 to 5 shipped (PRs #50 to #53 and the Phase 5 PR); Phase 6 (voice on iOS) is next.*
+*November 2026. Status: **approved, with the decisions below.** Phases 1 to 6 shipped (PRs #50 to #54 and the Phase 6 PR); Phase 6 still needs the real-device run in `docs/voice-device-checklist.md`. Phase 7 (onboarding) is next.*
 
 Built on the quick-wins batch, which has landed (PR #47, QW1 to QW8). This plan
 assumes what that batch shipped:
@@ -191,11 +191,18 @@ There's also a "Bebé" word pack addition (babero, sonajero, mordillo, cuna de v
 
 The wake lock already exists, so this phase is smaller than briefed.
 
+**As shipped.**
+- `useWakeLock` now returns what's actually true: `held`, `unsupported`, `denied` or `off`. Copy is chosen from that, so the app never promises a screen it can't keep on.
+- The pocket view has Pausa/Seguir (88px) and **Terminar as a 1-second press and hold** (64px). A pocket or a toddler can't end the conversation by accident, and a quick tap does nothing. "Salir del bolsillo" is 44px.
+- It opens by itself on iPhone the first time a session goes live with the lock held. Everywhere else it's behind "Modo bolsillo" under the voice console. Closing it is respected until the next spoken stretch.
+- The lock is still held on every platform during live and paused voice, as before. The unused `defaultKeepScreenAwake` and its dead `criar_voice_keep_awake` key are gone.
+- Copy is tú, not the vos written below: "En iPhone la pantalla tiene que quedar prendida. La dejamos prendida por ti."
+
 **Pocket view.** A new `components/voice/pocket-view.tsx`: a dark full-screen view while voice is live. It has large **Pausa** and **Terminar** (≥56px, labelled) and a caption line. It's entered automatically when the wake lock is held on iOS, and by a "Bolsillo" button elsewhere.
 
 **iOS messaging**
 - `platform.ts` gains `wakeLockSupported()`.
-- On iOS with support, the thread says plainly: "En iPhone la pantalla tiene que quedar prendida. La dejamos prendida por vos."
+- On iOS with support, the thread says plainly: "En iPhone la pantalla tiene que quedar prendida. La dejamos prendida por ti."
 - Without support (iOS < 16.4), the honest fallback: the session pauses when the screen locks, as it does today.
 
 **Corrections.** Still held back during voice. With "Corrígeme: mucho", the prompt's `mucho` block already recasts inside her reply, so nothing new is needed beyond confirming it.

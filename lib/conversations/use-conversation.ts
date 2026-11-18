@@ -112,7 +112,7 @@ export function useConversation(
         onAssistantTurnRef.current?.(turn)
       })
       .catch(() => {
-        toast.error("No se pudo empezar", { description: "Check your connection and try again." })
+        toast.error("No se pudo empezar", { description: "Comprueba tu conexión y vuelve a intentarlo." })
       })
       .finally(() => setIsLoading(false))
   }, [conversationId, topicTitle, topicId, persist])
@@ -218,7 +218,7 @@ export function useConversation(
         }
       } catch (err) {
         console.error("[useConversation]", err)
-        toast.error("Algo salió mal", { description: "Your message wasn't sent. Try again." })
+        toast.error("Algo salió mal", { description: "Tu mensaje no se envió. Prueba de nuevo." })
         setTurns((prev) => prev.filter((t) => t.id !== botId))
       } finally {
         setIsLoading(false)

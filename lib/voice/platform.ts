@@ -33,15 +33,17 @@ export function suspendsAudioOnBackground(): boolean {
 }
 
 /**
- * Default for the keep-screen-awake toggle.
+ * Can this browser hold the screen on? (Screen Wake Lock API: Chrome on
+ * Android, and Safari from iOS 16.4, including installed PWAs from 18.4.)
  *
- * On iOS the screen locking IS the session ending, so holding the screen on is
- * the only way to have a long conversation. On Android audio survives the
- * screen going off, and a screen held on for 15 minutes in a pocket is battery
- * burn plus stray taps — so default it off and let the parent opt in.
+ * The lock is held during every live or paused voice session (refresh Phase
+ * 6). On iOS it is what keeps the conversation alive at all, since a locked
+ * screen suspends the mic. On Android audio survives the screen going off,
+ * but the lock still keeps the pocket view up so the controls are there when
+ * you take the phone out. Where it is unsupported the thread says so plainly.
  */
-export function defaultKeepScreenAwake(): boolean {
-  return !isAndroid()
+export function wakeLockSupported(): boolean {
+  return typeof navigator !== "undefined" && "wakeLock" in navigator
 }
 
 /** Where the parent actually has to go to undo a denied mic permission. */
