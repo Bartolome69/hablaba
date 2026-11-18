@@ -204,9 +204,11 @@ enforced in code, not just in prompts, because prompts alone failed:
   The dialect setting changes vocabulary and accent only (*frutilla* or *fresa*,
   *cochecito*, *upa*), never grammar. A runtime guard blocks any correction that
   would put *vos* forms into the parent's mouth.
-- **The app's own interface speaks porteño.** Buttons say "Tocá", "Probá" and
-  "Repasá", because that's the local voice. That split is deliberate: the interface
-  can be Argentine, but the Spanish being *taught* is always *tú*.
+- **The interface uses tú too.** Buttons say "Toca", "Prueba" and "Repasa". Until
+  November 2026 the interface spoke porteño *vos*. That changed so a learner isn't
+  reading one grammar in the buttons and practising another; Argentine
+  *vocabulary* ("Dale", "mozo") can still appear, because that's dialect, not
+  grammar.
 - **Accents are never corrected in typing.** The parent types on a phone without
   easy accents. Elena reads "Que decimos?" as "¿Qué decimos?" and answers it.
   Spoken mistakes in tense and person are still caught, because *hablo* and *habló*

@@ -57,7 +57,7 @@ export function PackPage({ packId }: { packId: VocabSetId }) {
     if (!contents) return []
     const out: { id: string; label: string; words: VocabWord[] }[] = []
     if (contents.own.length > 0) {
-      out.push({ id: "own", label: pack ? "Agregadas por vos" : "", words: contents.own })
+      out.push({ id: "own", label: pack ? "Agregadas por ti" : "", words: contents.own })
     }
     if (pack) {
       const groupOf = new Map(pack.words.map((w) => [w.id, w.group]))

@@ -32,10 +32,10 @@ export function CaptureCard({ onCaptured }: { onCaptured?: () => void }) {
         setSaved(isInLibrary(result.text))
         setValue("")
       } else {
-        toast.info("No encontré cómo decirlo", { description: "Probá con otras palabras." })
+        toast.info("No encontré cómo decirlo", { description: "Prueba con otras palabras." })
       }
     } catch {
-      toast.error("No se pudo generar la frase", { description: "Probá de nuevo en un momento." })
+      toast.error("No se pudo generar la frase", { description: "Prueba de nuevo en un momento." })
     } finally {
       setBusy(false)
     }

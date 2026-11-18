@@ -72,7 +72,7 @@ export const voiceTopics: VoiceTopic[] = [
     id: "recuerdos",
     label: "Recuerdos",
     emoji: "📸",
-    blurb: "Contame algo que pasó",
+    blurb: "Cuéntame algo que pasó",
     prompt:
       "Get the parent telling STORIES about the past: how they met their partner, a trip that went wrong, their own childhood, the day the baby was born, the best meal they've had. Ask for details that need narration — what happened next, what it was like, what they were thinking. This is deliberately past-tense practice, so keep pulling them into recounting rather than summarising.",
     practises: ["preterite-vs-imperfect", "preterite", "imperfect", "pluperfect"],
@@ -81,7 +81,7 @@ export const voiceTopics: VoiceTopic[] = [
     id: "opiniones",
     label: "Opiniones",
     emoji: "💭",
-    blurb: "Qué pensás de…",
+    blurb: "Qué piensas de…",
     prompt:
       "Draw out the parent's OPINIONS and hypotheticals — light and warm, never an interrogation. What they'd change about their neighbourhood, whether they'd move back home, what they hope for the baby, what they'd do with a free weekend, whether they think something is worth it. Use openers that invite doubt and wishing ('¿te parece que…?', '¿qué harías si…?', '¿ojalá que…?'), which is deliberately subjunctive and conditional practice.",
     practises: ["present-subjunctive", "subjunctive-triggers", "conditional"],
@@ -90,7 +90,7 @@ export const voiceTopics: VoiceTopic[] = [
     id: "sorpresa",
     label: "Sorpréndeme",
     emoji: "🎲",
-    blurb: "Vos elegís el tema",
+    blurb: "Tú eliges el tema",
     prompt:
       "YOU pick the topic. Choose something specific and a bit unexpected that a parent in Buenos Aires would have something to say about — a neighbourhood argument, a food opinion, a small daily annoyance, a memory, a what-would-you-do. Commit to it: open with the topic already chosen rather than asking what they want to talk about.",
     practises: [],
@@ -99,7 +99,7 @@ export const voiceTopics: VoiceTopic[] = [
     id: "rol-cafe",
     label: "Rol: café",
     emoji: "🎭",
-    blurb: "Vos pedís, yo soy el mozo",
+    blurb: "Tú pides, yo soy el mozo",
     prompt:
       "Run the café scene from start to finish: greet them, take the order, and keep the visit alive with realistic beats — a question about how they want the coffee, something that's run out (no hay medialunas today, offer an alternative), bringing the bill, taking payment. If they finish fast, extend naturally: recommend something, ask if they want anything else. Keep the customer talking.",
     practises: ["direct-object-pronouns", "conditional"],
@@ -110,7 +110,7 @@ export const voiceTopics: VoiceTopic[] = [
     id: "rol-verduleria",
     label: "Rol: verdulería",
     emoji: "🎭",
-    blurb: "Comprá fruta y verdura",
+    blurb: "Compra fruta y verdura",
     prompt:
       "Run the shop scene: greet them, ask what they need, weigh things, quote prices, suggest what's good today (está de estación), handle quantities (un kilo, medio kilo, una docena), give a total, take payment and say goodbye warmly. Push gently on quantities and prices so numbers get real practice. If they finish fast, tell them what's coming in nice next week.",
     practises: ["direct-object-pronouns", "comparatives"],

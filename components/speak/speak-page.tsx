@@ -58,7 +58,7 @@ export function SpeakPage() {
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
-      <AppHeader title="Frases" subtitle="Tocá cualquier frase para escucharla" />
+      <AppHeader title="Frases" subtitle="Toca cualquier frase para escucharla" />
 
       {/* "¿Cómo se dice…?" leads: it's the job people open Frases for. */}
       <CaptureCard onCaptured={() => setPackKey((k) => k + 1)} />

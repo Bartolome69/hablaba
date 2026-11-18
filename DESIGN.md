@@ -230,7 +230,7 @@ hairline — never a competing block.
 - **Don't** use red, amber, or any status colour outside the palette.
 - **Don't** float anything: no blur, no glassmorphism, no ambient drop
   shadows except the sanctioned green-hero throw.
-- **Don't** add streak pressure, badges, or completion percentages; the
-  streak pill is quiet and hides at zero.
+- **Don't** add streaks, badges, or completion percentages. There is no
+  consecutive-day count anywhere; Tu semana counts days with Spanish, in any order.
 - **Don't** use bounce or elastic easing, and don't animate layout properties.
-- **Don't** put the settings/streak chrome on any screen but Hoy.
+- **Don't** put the settings chrome on any screen but Hoy. (There is no streak: removed in QW6.)

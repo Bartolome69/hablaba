@@ -107,7 +107,7 @@ export function VocabPage() {
             Estás al día
           </p>
           <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
-            Tus tarjetas están descansando. Abrí un pack para sumar palabras nuevas.
+            Tus tarjetas están descansando. Abre un pack para sumar palabras nuevas.
           </span>
           <button
             onClick={() => start(buildPracticeAnywayDeck())}
@@ -171,7 +171,7 @@ export function VocabPage() {
 
 function PackRow({ id, stats }: { id: VocabSetId; stats?: PackStats }) {
   const own = id === "propias"
-  const status = !stats ? "" : own && stats.total === 0 ? "Agregá las tuyas" : packStatusLine(stats)
+  const status = !stats ? "" : own && stats.total === 0 ? "Agrega las tuyas" : packStatusLine(stats)
   return (
     <Link
       href={`/app/palabras/${id}`}

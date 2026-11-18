@@ -23,7 +23,7 @@ interface AddWordCardProps {
 
 // What happens next, true to the Leitner ladder (lib/vocab/schedule.ts): a
 // new word starts in box 0, due now; "lo sabía" moves it to box 1, one day.
-const NEXT_REVIEW = "Te la pregunto hoy y, si la sabés, otra vez mañana."
+const NEXT_REVIEW = "Te la pregunto hoy y, si la sabes, otra vez mañana."
 
 export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }: AddWordCardProps) {
   const [value, setValue] = useState("")
@@ -53,7 +53,7 @@ export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }
       onAdded?.()
     } catch {
       toast.error("No se pudo traducir la palabra", {
-        description: "Probá de nuevo en un momento.",
+        description: "Prueba de nuevo en un momento.",
       })
     } finally {
       setBusy(false)
@@ -65,7 +65,7 @@ export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }
       <div className="flex items-center gap-2">
         <DuoIcon name="brote" size={17} />
         <p className="text-[14.5px] font-semibold text-ink">
-          {own ? "¿Qué palabra querés aprender?" : "¿Falta alguna?"}
+          {own ? "¿Qué palabra quieres aprender?" : "¿Falta alguna?"}
         </p>
       </div>
       <div className="mt-3 flex gap-[9px]">
@@ -103,7 +103,7 @@ export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }
         </p>
       ) : (
         <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted">
-          Escribila como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
+          Escríbela como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
           {packLabelInline(set)}.
         </p>
       )}

@@ -34,7 +34,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 const BAND_LABEL: Record<MasteryBand, string> = {
   untested: "Sin empezar",
-  mislearned: "Repasalo",
+  mislearned: "Repásalo",
   learning: "Ahí va",
   confident: "Confiado",
 }
@@ -188,7 +188,7 @@ export function ExercisesApp() {
 
   return (
     <div className="min-h-dvh bg-background px-[22px] pb-32 pt-6">
-      <AppHeader title="Práctica" subtitle="Poné a prueba la gramática de tus apuntes" />
+      <AppHeader title="Práctica" subtitle="Pon a prueba la gramática de tus apuntes" />
 
       {/* The one green block: mixed questions from the weakest topics. */}
       <button onClick={startMixed} className="clay-green-hero flex w-full items-center gap-3.5 rounded-[26px] p-[18px] text-left">
@@ -544,7 +544,7 @@ function Quiz({
                 autoCapitalize="off"
                 autoCorrect="off"
                 spellCheck={false}
-                placeholder="Escribí tu respuesta…"
+                placeholder="Escribe tu respuesta…"
                 className="clay-recessed h-14 w-full rounded-[18px] px-5 font-serif text-lg text-ink outline-none placeholder:font-sans placeholder:text-[15px] placeholder:text-ink-muted focus:ring-1 focus:ring-green disabled:opacity-100"
               />
             )}
@@ -661,7 +661,7 @@ function ResultsSummary({
     // The topic with the most misses is the one to come back to.
     const counts = missedTopics.map((id) => [id, missed.filter((m) => m.topicId === id).length] as const)
     const weakest = counts.sort((a, b) => b[1] - a[1])[0]?.[0]
-    next = weakest ? `Para la próxima: ${topicName(weakest)}.` : "Volvé en unos días para que se asiente."
+    next = weakest ? `Para la próxima: ${topicName(weakest)}.` : "Vuelve en unos días para que se asiente."
   } else {
     well =
       missed.length === 0
@@ -671,8 +671,8 @@ function ResultsSummary({
           : "Ya viste cómo funciona; la segunda vuelta es más fácil."
     next =
       missed.length === 0
-        ? "Volvé en unos días para que se asiente."
-        : `Para la próxima: mirá la pista antes de ${missed.length === 1 ? "la que se te escapó" : `las ${missed.length} que se te escaparon`}.`
+        ? "Vuelve en unos días para que se asiente."
+        : `Para la próxima: mira la pista antes de ${missed.length === 1 ? "la que se te escapó" : `las ${missed.length} que se te escaparon`}.`
   }
 
   return (
@@ -708,13 +708,13 @@ function PracticeBridge({ topicIds }: { topicIds: string[] }) {
 
   return (
     <div className="clay-static mt-3 w-full rounded-[22px] p-5 text-left">
-      <p className="smallcaps text-ink-muted">Llevalo a tu día</p>
+      <p className="smallcaps text-ink-muted">Llévalo a tu día</p>
 
       {phrases.length > 0 &&
         (phrasesAdded === null ? (
           <>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-              Guardá {phrases.length} frases en tu biblioteca. Elena las va a ir usando en tus
+              Guarda {phrases.length} frases en tu biblioteca. Elena las va a ir usando en tus
               próximas charlas hasta que te salgan solas.
             </p>
             <button

@@ -69,7 +69,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
         <h2 className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-ink">¡Listo!</h2>
         <p className="mt-2 max-w-xs text-[13.5px] leading-relaxed text-ink-muted">
           {words.length} {words.length === 1 ? "tarjeta" : "tarjetas"} · {firstTryKnown} a la primera.
-          Las que sabés vuelven más adelante; las otras, pronto.
+          Las que sabes vuelven más adelante; las otras, pronto.
         </p>
         <button
           onClick={onFinished}
@@ -113,7 +113,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
       <button
         key={index}
         onClick={() => setRevealed((r) => !r)}
-        aria-label={revealed ? `${back}. ${front}` : `${front}. Tocá para dar vuelta`}
+        aria-label={revealed ? `${back}. ${front}` : `${front}. Toca para girar`}
         className="block w-full [perspective:1200px]"
       >
         <div
@@ -132,7 +132,7 @@ export function VocabDeck({ words, onExit, onFinished }: VocabDeckProps) {
             <span className="mt-3 font-serif text-[30px] leading-[1.15] tracking-[-0.02em] text-ink text-balance">
               {front}
             </span>
-            <span className="mt-3 text-[12.5px] text-ink-muted">Tocá para dar vuelta</span>
+            <span className="mt-3 text-[12.5px] text-ink-muted">Toca para girar</span>
           </div>
           <div className="clay-static absolute inset-0 flex flex-col items-center overflow-hidden rounded-[26px] px-6 pt-[64px] text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <span className="h-5" aria-hidden />

@@ -99,7 +99,7 @@ export function MomentPack() {
     try {
       setPack(await fillPackForMoment(tab))
     } catch {
-      toast.error("No se pudieron generar frases", { description: "Probá de nuevo en un momento." })
+      toast.error("No se pudieron generar frases", { description: "Prueba de nuevo en un momento." })
     } finally {
       setFilling(false)
     }
@@ -139,8 +139,8 @@ export function MomentPack() {
       {pack.length === 0 ? (
         <p className="mt-4 px-1 text-sm text-ink-muted text-pretty">
           {tab === "recientes"
-            ? "Acá aparecen las frases que capturás, guardás o generás. Empezá capturando algo que no supiste decir."
-            : "Todavía no hay frases para este momento. Generá unas para empezar."}
+            ? "Acá aparecen las frases que capturas, guardas o generas. Empieza capturando algo que no supiste decir."
+            : "Todavía no hay frases para este momento. Genera unas para empezar."}
         </p>
       ) : (
         <ul className="stagger-children mt-4 space-y-[9px]">

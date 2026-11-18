@@ -57,20 +57,20 @@ export default function TodayPage() {
     <>
       <div className="flex items-center gap-[9px]">
         <DuoIcon name="micro" size={17} className="text-[#EAF3EB]" detail="#8FBE9C" />
-        <span className="smallcaps-lg text-green-on-dark">{resume ? "Seguí tu charla" : "Empezá una charla"}</span>
+        <span className="smallcaps-lg text-green-on-dark">{resume ? "Sigue tu charla" : "Empieza una charla"}</span>
       </div>
       <div className="mt-3.5 flex items-center gap-3">
         <div className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-[13px] bg-green-well">
           <DuoIcon name={topicIcon(resume?.starterId ?? DEFAULT_VOICE_TOPIC_ID)} size={22} className="text-[#EAF3EB]" />
         </div>
         <span className="font-serif text-[26px] leading-tight tracking-[-0.015em] text-cream">
-          {resume ? resume.title : "Contame cómo va tu día"}
+          {resume ? resume.title : "Cuéntame cómo va tu día"}
         </span>
       </div>
       <span className="mt-1.5 block text-[13.5px] text-green-on-dark">
         {resume
-          ? `${resumeTurns} turnos · escribí o seguí en voz alta`
-          : "Escribí, o hablá con las manos libres. 5 a 15 minutos."}
+          ? `${resumeTurns} turnos · escribe o sigue en voz alta`
+          : "Escribe, o habla con las manos libres. 5 a 15 minutos."}
       </span>
       <span className="clay-cream mt-[18px] flex h-[46px] items-center justify-center gap-2 rounded-full">
         <span className="text-[15px] font-semibold text-green">
@@ -148,7 +148,7 @@ export default function TodayPage() {
         >
           <DuoIcon name="palabras" size={18} />
           <span className="flex-1 text-sm font-medium">
-            Repasá tus palabras
+            Repasa tus palabras
             <span className="text-ink-muted">
               {" "}
               · {wordsDue} {wordsDue === 1 ? "lista" : "listas"}

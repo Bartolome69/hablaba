@@ -72,7 +72,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     if (typeof RTCPeerConnection === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       this.handlers.onError({
         kind: "unsupported",
-        message: "Tu navegador no puede hacer llamadas de voz. Probá con Safari o Chrome actualizado.",
+        message: "Tu navegador no puede hacer llamadas de voz. Prueba con Safari o Chrome actualizado.",
       })
       return
     }
@@ -94,7 +94,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
         kind: denied ? "mic-denied" : "mic-unavailable",
         message: denied
           ? "No tenemos permiso para usar el micrófono."
-          : "No pudimos abrir el micrófono. Fijate que no lo esté usando otra app.",
+          : "No pudimos abrir el micrófono. Comprueba que no lo esté usando otra app.",
         cause: err,
       })
       return
@@ -108,7 +108,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     } catch (err) {
       this.handlers.onError({
         kind: "token",
-        message: "No pudimos empezar la sesión. Probá de nuevo en un momento.",
+        message: "No pudimos empezar la sesión. Prueba de nuevo en un momento.",
         cause: err,
       })
       return this.teardown()
@@ -122,7 +122,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
       if (this.stopped) return
       this.handlers.onError({
         kind: "network",
-        message: "Se cortó la conexión. Fijate que tengas señal y volvé a intentar.",
+        message: "Se cortó la conexión. Comprueba que tengas señal y vuelve a intentarlo.",
         cause: err,
       })
       return this.teardown()
@@ -456,7 +456,7 @@ class OpenAIRealtimeEngine implements VoiceEngine {
     } catch (err) {
       this.handlers.onError({
         kind: "mic-unavailable",
-        message: "No pudimos volver a abrir el micrófono. Probá de nuevo.",
+        message: "No pudimos volver a abrir el micrófono. Prueba de nuevo.",
         cause: err,
       })
       return

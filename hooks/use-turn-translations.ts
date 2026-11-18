@@ -46,7 +46,7 @@ export function useTurnTranslations() {
         next.delete(id)
         return next
       })
-      toast.error("No se pudo traducir", { description: "Tocá de nuevo para reintentar." })
+      toast.error("No se pudo traducir", { description: "Toca de nuevo para reintentar." })
     } finally {
       setPendingId((prev) => (prev === id ? null : prev))
     }

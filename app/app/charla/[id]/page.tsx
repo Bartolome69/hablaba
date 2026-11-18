@@ -239,7 +239,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
             <p className="truncate text-xs text-ink-muted">
               {conversation.voiceSeconds > 0
                 ? `${voiceMinutes} min en voz alta`
-                : topic?.blurb ?? "Escribí o hablá"}
+                : topic?.blurb ?? "Escribe o habla"}
             </p>
           )}
         </div>
