@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import { usePostHog } from "posthog-js/react"
 import { DuoIcon } from "@/components/icons"
 import { addOwnWord } from "@/lib/vocab/add"
+import { packLabelInline } from "@/lib/vocab/catalog"
 import { withArticle, type VocabSetId } from "@/lib/vocab/types"
 
 interface AddWordCardProps {
@@ -97,13 +98,13 @@ export function AddWordCard({ set = "propias", label = "Tus palabras", onAdded }
       </div>
       {added ? (
         <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted" role="status">
-          <span className="font-serif text-[14px] text-ink">{added}</span> está en{" "}
-          {own ? "tus palabras" : label}. {NEXT_REVIEW}
+          <span className="font-serif text-[14px] text-ink">{added}</span> está en {packLabelInline(set)}.{" "}
+          {NEXT_REVIEW}
         </p>
       ) : (
         <p className="mt-2.5 px-1 text-[12.5px] leading-snug text-ink-muted">
           Escribila como te salga. Te doy la palabra con su artículo y una frase, y va directo a{" "}
-          {own ? "tus palabras" : label}.
+          {packLabelInline(set)}.
         </p>
       )}
     </div>
