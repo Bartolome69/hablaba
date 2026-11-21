@@ -155,6 +155,11 @@ Things to *say*.
 - **Frases por situación.** 15 routines of 12 phrases each: nappy change, feeding,
   bath, bedtime, the playground, plus adult situations (café, bakery, taxi,
   directions, small talk).
+- **Cuentos** (Nov 2026). Photograph a page of an English picture book you own and
+  read it aloud in Spanish: child-level, tú, the rhyme and the refrains kept, in a
+  calm large-type view with Elena saying any word you tap. Books live on a shelf on
+  the phone and open with no network. It's "¿cómo se dice?" applied to a whole page
+  at bedtime. Photos never leave the phone except for the one call that reads them.
 
 ### Palabras (Words)
 Things to *name*, studied as flashcards.

@@ -33,9 +33,14 @@ All commands run from `/Users/bart/hablaba/`:
 npm run dev      # Start dev server at localhost:3000
 npm run build    # Production build
 npm run lint     # ESLint (flat config in eslint.config.mjs; 0 errors expected)
+npm run validate:content   # content packs, vocab, moments, the tú rule (incl. Cuentos fixtures)
+npm test         # Vitest unit tests (tests/unit, jsdom + fake-indexeddb)
+npm run test:e2e # Playwright at 390x844 (tests/e2e); needs `npm run build` first, mocks all AI routes
 ```
 
-No test framework is configured.
+Test tooling arrived with Cuentos (Nov 2026): Vitest for logic and stores,
+Playwright Test for flows. Both are devDependencies only. `predev`/`prebuild`
+copy the self-hosted Tesseract files into `public/tesseract` (git-ignored).
 
 ## Architecture
 
@@ -59,6 +64,7 @@ nav is **Today / Charlar / Phrases / Palabras / Exercises**:
   - **Typed threads are analysed too**: leaving the thread or backgrounding the app runs `ensureConversationAnalysis` when there are typed turns the review hasn't seen (a new typed turn clears `analyzedAt`). A seeded phrase used naturally shows as a quiet note under that turn, never while voice is live, and in Tu semana under "Te salieron solas"
 - `/app/charla/historial` — Every conversation
 - `/app/speak` — Frases: the ask box, the phrase of the day, then **one set of moments** (refresh Phase 5): Recientes plus despertar, cambiar (Pañal), comida, juego, paseo, baño, calmar, dormir. Each moment is the learner's own phrases first, then the built-ins: `lib/phrases/content/moments.json` plus the matching baby routine from `lib/routines.ts` (merged in `lib/phrases/starter.ts`), so bath appears once. The adult situations (small talk, cafés, getting around) sit below in **"Para ti"**. `/frases/*` SEO pages still read `lib/routines.ts` and keep their URLs
+- `/app/speak/cuentos` — **Cuentos** (Nov 2026, `docs/cuentos-plan.md`): photograph a page of an English picture book the parent owns, read it aloud in child-level tú Spanish that keeps the rhyme. ONE static route; the view is in the query string (`?libro=…&leer=3`, `lib/cuentos/nav.ts`), moved with the history API, because book ids only exist on the device and a per-book URL can't be precached. See "Cuentos" below. Entry: a card on Frases after the moments; the Frases tab stays active (`startsWith`)
 - `/app/palabras` — Palabras: a shelf of word packs studied as flashcards. One green "Repaso de hoy" block (what's DUE across every pack, Leitner ladder in `lib/vocab/schedule.ts`; "Estás al día" when nothing is, never a nag), then "Tus palabras" and fourteen preloaded packs as tiles in three sections (`SHELF_SECTIONS` in `lib/vocab/catalog.ts`: Del bebé / Casa y calle / Para describir), so every library is one tap from the tab. Bebidas and Muebles used to be groups inside La comida and La casa; Adjetivos comunes is new. `/app/palabras/[pack]` lists a pack's words, studies them (a real card flip; due words first, then up to 8 new), and takes your own additions (English or Spanish in; Spanish kept as typed). Press and hold a word for "Ya la sé" / "Quitar". No chips, no body diagram. See `lib/vocab/README.md`
 - `/app/semana` — "Tu semana": the 7-day report over all conversations
 - `/app/exercises` — Grammar quizzes from `lib/exercises/` content packs; `?topic=<taxonomy id>` deep-links straight into that topic's quiz (used by session reviews)
@@ -84,6 +90,8 @@ API (all stateless LLM proxies; the client owns persistence):
 - `POST /api/tts` — Text-to-speech (optional `register=rioplatense`)
 - `POST /api/transcribe` — Speech-to-text (optional `language=auto`)
 - `POST /api/waitlist` — `{ email, source, audience?, placement? }`. Adds to Resend audience (if env vars set), captures `waitlist_signup` to PostHog server-side.
+- `POST /api/cuentos/ocr` — a downscaled page photo (multipart, ≤3 MB, jpeg/png/webp) → `{ text, blocks }` via gpt-4o vision; 422 `no_text`, 503 `no_key` (the device then reads it itself). The image exists only in memory for the call; nothing logs the image or the text
+- `POST /api/cuentos/translate` — `{ text, dialect }` → `{ spanish, notes? }`, gpt-4o, the brief's system prompt VERBATIM (`lib/cuentos/prompts.ts`). `containsVoseo` + a vosotros check run on the result: one retry, then 502 rather than teach it
 - `POST /api/feedback` — Stub, returns 501 (not implemented)
 
 ## Age-aware content (refresh Phase 5)
@@ -104,6 +112,36 @@ parent hears about naps and weaning, not the playground. Entries with
 no duplicate ids or spellings), the moments (shape, no duplicates with the
 routines) and **the tú rule** across all taught Spanish, using `lib/voseo.ts`'s
 own blocklist.
+
+## Cuentos
+
+Picture books the parent photographs, read aloud in Spanish by the PARENT
+(Elena only says a word you tap, or the page if you press "Leer"). `lib/cuentos/`
+and `components/cuentos/`.
+
+- **Storage.** Text in localStorage tables like everything else (`books`,
+  `book_pages`, `book_translations`; ISO timestamps). Photos and audio in
+  IndexedDB (`hablaba_media`, `lib/cuentos/blobs.ts`, the app's first use of
+  it), stored as ArrayBuffers for older iOS. Unlike the other stores, writes
+  THROW `StorageFullError` instead of swallowing quota errors: a page that
+  silently didn't save is a page that's gone.
+- **Translations are per page AND dialect**, keyed by a hash of the English
+  they were made from: change the English and they're stale. The parent's
+  edited Spanish is never replaced without asking ("Dejar el mío").
+- **Dialect is per book** (from Ajustes at creation), vocabulary only; tú always.
+- **Audio** is Elena's TTS (`manner: clear`), cached per word and per page in
+  IndexedDB, played only on a tap. Word clips are a shared cache capped at 400.
+- **OCR fallback**: Tesseract.js, lazy-imported, self-hosted under
+  `public/tesseract` (copied by `scripts/copy-tesseract.mjs`). Never point it
+  at a CDN. Typing the English is always the last way out.
+- **Offline**: `public/sw.js` (v2) precaches `/app/speak/cuentos` and matches
+  navigations ignoring the query string. A book opened once works with no network.
+- **Privacy**: photos never leave the phone except for the one OCR call; no
+  Cuentos analytics, and PostHog drops the query string on Cuentos URLs
+  (`before_send` in `components/posthog-provider.tsx`). The privacy and
+  personal-use note is on the shelf's first open and in Ajustes.
+- **Fixtures** (`tests/fixtures/cuentos/`) are ours: never a photo or text
+  from a real book.
 
 ## Conversations (main app)
 
@@ -247,7 +285,7 @@ inside conversations (`/app/charla/[id]`). The short version:
 - `lib/voice-topics.ts` — conversation starters. `voiceTopics` are the curated starters; `subjectVoiceTopics` gives the "Intereses"/"Vida diaria" subject cards (`lib/data.ts`) their spoken prompts. Both resolve through `getVoiceTopic`, which falls back to "dia" for an unknown id — so a topic WITHOUT an entry silently becomes the baby-day conversation. Every id offered anywhere in the picker must have one; `isKnownVoiceTopic` says whether it does
 - `lib/types.ts` — shared types: `Message`, `Correction`, `SavedPhrase`, `DailyPrompt`
 
-**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` (`lib/conversations/store.ts`), `phrases` (`lib/phrases/store.ts`), `vocab_words` (`lib/vocab/store.ts`), `profile` (`lib/profile/store.ts`). Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
+**Persistence**: No server database — everything is per-device, table-shaped localStorage designed to map 1:1 to future SQL: `conversations` / `conversation_turns` / `conversation_observations` (`lib/conversations/store.ts`), `phrases` (`lib/phrases/store.ts`), `vocab_words` (`lib/vocab/store.ts`), `profile` (`lib/profile/store.ts`), `books` / `book_pages` / `book_translations` (`lib/cuentos/store.ts`). Binary (Cuentos photos and audio) is in IndexedDB, `lib/cuentos/blobs.ts`. Exercises progress lives in `lib/exercises/store.ts`. The feedback API is a stub.
 
 ## Environment
 
