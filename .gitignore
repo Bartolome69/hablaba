@@ -23,3 +23,6 @@ tsconfig.tsbuildinfo
 # test output
 /test-results/
 /playwright-report/
+
+# self-hosted Tesseract (copied by scripts/copy-tesseract.mjs)
+/public/tesseract/
