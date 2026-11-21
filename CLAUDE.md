@@ -134,6 +134,13 @@ and `components/cuentos/`.
   with `touch-action: none`, auto-scroll at the edges, arrow keys on the grip.
   No library. `movePageTo` in the store keeps `lastPageIndex` on the same page.
   A missed page is added last and dragged into place.
+- **Turning pages** is a swipe (`components/cuentos/page-turn.tsx`): the old
+  page lifts off as a static snapshot rotated in 3D around the spine side,
+  revealing the live new page; it follows the finger, turns past a third or on
+  a flick, else falls back. Buttons and arrow keys use the same turn. The page
+  area is `touch-action: pan-y` (vertical scroll stays native) and the click
+  after a swipe is swallowed (so a swipe that starts on a word doesn't speak
+  it). Reduced motion: the page just changes.
 - **Audio** is Elena's TTS (`manner: clear`), cached per word and per page in
   IndexedDB, played only on a tap. Word clips are a shared cache capped at 400.
 - **OCR fallback**: Tesseract.js, lazy-imported, self-hosted under

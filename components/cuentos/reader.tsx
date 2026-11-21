@@ -4,6 +4,8 @@
 // - Tap a word to hear it (Elena's voice, cached on the phone).
 // - "Leer" plays the whole page, only when tapped; nothing plays unasked, and
 //   there is no auto-advance.
+// - Swipe left or right to turn the page like a book (./page-turn.tsx); the
+//   buttons and arrow keys turn it the same way.
 // - English is hidden by default; text size and "Luz baja" are right here.
 // - The screen stays on while it's open (a dimming screen mid-page is exactly
 //   the bedtime annoyance to avoid).
@@ -30,10 +32,13 @@ import { useImmersive } from "@/lib/ui/immersive"
 import { useWakeLock } from "@/lib/voice/use-wake-lock"
 import { toast } from "sonner"
 import { Missing } from "./add-page"
+import { TurningLeaf, usePageTurn, type TurnDir } from "./page-turn"
 import { Spinner, usePhotoUrl } from "./shared"
 
 const SIZES: CuentosPrefs["size"][] = ["m", "l", "xl", "xxl"]
 const SIZE_PX: Record<CuentosPrefs["size"], number> = { m: 26, l: 30, xl: 35, xxl: 41 }
+// The page's padding, shared with the turning leaf so its snapshot lines up.
+const PAGE_PAD = "px-7 pb-6 pt-4"
 
 type Spanish =
   | { state: "loading" }
@@ -54,6 +59,33 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
   const [peek, setPeek] = useState(false)
   const [confirmReplace, setConfirmReplace] = useState(false)
   const playing = useRef<PlayResult | null>(null)
+  const mainRef = useRef<HTMLElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const idxRef = useRef(idx)
+  const countRef = useRef(0)
+  useEffect(() => {
+    idxRef.current = idx
+    countRef.current = pages.length
+  }, [idx, pages.length])
+
+  const canTurn = useCallback(
+    (dir: TurnDir) => (dir === "next" ? idxRef.current < countRef.current - 1 : idxRef.current > 0),
+    [],
+  )
+  const show = useCallback((dir: TurnDir) => setIdx((i) => i + (dir === "next" ? 1 : -1)), [])
+  const unshow = useCallback((dir: TurnDir) => setIdx((i) => i - (dir === "next" ? 1 : -1)), [])
+  const pageTurn = usePageTurn({ mainRef, contentRef, canTurn, show, unshow })
+  const { turn } = pageTurn
+
+  // Arrow keys turn the page too.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") turn("next")
+      else if (e.key === "ArrowLeft") turn("prev")
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [turn])
 
   useEffect(() => {
     const b = getBook(bookId)
@@ -100,6 +132,7 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
     if (!book || !page) return
     stop()
     setConfirmReplace(false)
+    if (mainRef.current) mainRef.current.scrollTop = 0
     touchBook(bookId, idx)
     window.history.replaceState(null, "", `/app/speak/cuentos?libro=${bookId}&leer=${idx}`)
     const saved = getTranslation(page.id, book.dialect)
@@ -202,7 +235,15 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto px-7 pb-6 pt-4">
+      <div className="relative flex-1 overflow-hidden" style={{ perspective: "1600px" }}>
+      <main
+        ref={mainRef}
+        {...pageTurn.handlers}
+        className="h-full overflow-y-auto"
+        style={{ touchAction: "pan-y" }}
+        aria-label={`Página ${idx + 1} de ${pages.length}. Desliza para pasar de página.`}
+      >
+        <div ref={contentRef} className={PAGE_PAD}>
         {spanish.state === "ready" && spanish.stale && (
           <div className={`mb-4 flex items-center justify-between gap-3 rounded-[14px] px-3.5 py-1.5 ${dim ? "bg-green-well" : "bg-sunken"}`}>
             <p className={`text-[13px] ${fg}`}>El inglés cambió.</p>
@@ -294,7 +335,16 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
             ))}
           </div>
         )}
+        </div>
       </main>
+      <TurningLeaf
+        leaf={pageTurn.leaf}
+        leafRef={pageTurn.leafRef}
+        shadeRef={pageTurn.shadeRef}
+        background={dim ? "#123C1F" : "#F8F3EB"}
+        className={PAGE_PAD}
+      />
+      </div>
 
       <footer
         className={`border-t px-4 pt-3 ${dim ? "border-green-well" : "border-rule"}`}
@@ -302,7 +352,7 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
       >
         <div className="flex items-center justify-between gap-2">
           <button
-            onClick={() => setIdx((i) => Math.max(0, i - 1))}
+            onClick={() => turn("prev")}
             disabled={idx === 0}
             className={`flex h-14 min-w-[92px] items-center justify-center gap-1 rounded-full text-[14px] font-medium disabled:opacity-30 ${chip}`}
           >
@@ -317,7 +367,7 @@ export function Reader({ bookId, page: requested }: { bookId: string; page: numb
             {playingPage ? "Pausa" : "Leer"}
           </button>
           <button
-            onClick={() => (last ? go({ view: "book", bookId }) : setIdx((i) => i + 1))}
+            onClick={() => (last ? go({ view: "book", bookId }) : turn("next"))}
             className={`flex h-14 min-w-[92px] items-center justify-center gap-1 rounded-full text-[14px] font-medium ${chip}`}
           >
             {last ? "Fin" : "Siguiente"} {!last && <DuoIcon name="chevron" size={13} />}
