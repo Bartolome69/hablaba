@@ -157,21 +157,50 @@ export function updatePageSource(pageId: string, sourceText: string): BookPage |
   return updated
 }
 
-/** Move a page one place earlier (-1) or later (+1). */
-export function movePage(pageId: string, direction: -1 | 1) {
+/**
+ * Put a page at position `toIndex` (0-based) in its book, shifting the others
+ * to make room: what a drag and drop does. Out-of-range targets clamp.
+ */
+export function movePageTo(pageId: string, toIndex: number) {
   const all = read<BookPage>(PAGES)
   const page = all.find((p) => p.id === pageId)
   if (!page) return
   const ordered = all.filter((p) => p.bookId === page.bookId).sort((a, b) => a.index - b.index)
   const from = ordered.findIndex((p) => p.id === pageId)
-  const to = from + direction
-  if (to < 0 || to >= ordered.length) return
-  ;[ordered[from], ordered[to]] = [ordered[to], ordered[from]]
+  const to = Math.max(0, Math.min(ordered.length - 1, Math.round(toIndex)))
+  if (from === to) return
+  ordered.splice(to, 0, ...ordered.splice(from, 1))
   const reindexed = new Map(ordered.map((p, i) => [p.id, i]))
   write(
     PAGES,
-    all.map((p) => (reindexed.has(p.id) ? { ...p, index: reindexed.get(p.id)! } : p)),
+    all.map((p) => (reindexed.has(p.id) ? { ...p, index: reindexed.get(p.id)!, updatedAt: now() } : p)),
   )
+  keepReadingPlace(page.bookId, from, to)
+}
+
+/** Move a page one place earlier (-1) or later (+1). */
+export function movePage(pageId: string, direction: -1 | 1) {
+  const page = getPage(pageId)
+  if (page) movePageTo(pageId, page.index + direction)
+}
+
+/**
+ * "Where I left off" follows the page that was there, so reordering doesn't
+ * silently drop the parent on a different page next time.
+ */
+function keepReadingPlace(bookId: string, from: number, to: number) {
+  const book = getBook(bookId)
+  if (!book) return
+  const at = book.lastPageIndex
+  let next = at
+  if (at === from) next = to
+  else if (from < at && to >= at) next = at - 1
+  else if (from > at && to <= at) next = at + 1
+  if (next !== at)
+    write(
+      BOOKS,
+      read<Book>(BOOKS).map((b) => (b.id === bookId ? { ...b, lastPageIndex: next } : b)),
+    )
 }
 
 /**

@@ -17,6 +17,7 @@ import {
   listBooks,
   listPages,
   movePage,
+  movePageTo,
   saveEditedTranslation,
   saveModelTranslation,
   touchBook,
@@ -75,6 +76,27 @@ describe("pages", () => {
     expect(listPages(book.id).map((p) => p.sourceText)).toEqual(["Page 0", "Page 2", "Page 1"])
     movePage(pages[0].id, -1) // already first: no-op
     expect(listPages(book.id).map((p) => p.index)).toEqual([0, 1, 2])
+  })
+  it("drags a page to any position", async () => {
+    const { book, pages } = await bookWithPages(5)
+    const order = () => listPages(book.id).map((p) => p.sourceText.replace("Page ", ""))
+    movePageTo(pages[4].id, 1) // a missed page, added last, dropped into place
+    expect(order()).toEqual(["0", "4", "1", "2", "3"])
+    movePageTo(pages[0].id, 3)
+    expect(order()).toEqual(["4", "1", "2", "0", "3"])
+    movePageTo(pages[1].id, 99) // past the end clamps to last
+    expect(order()).toEqual(["4", "2", "0", "3", "1"])
+    expect(listPages(book.id).map((p) => p.index)).toEqual([0, 1, 2, 3, 4])
+  })
+  it("keeps the reading place on the same page when pages move", async () => {
+    const { book, pages } = await bookWithPages(4)
+    touchBook(book.id, 2) // reading "Page 2"
+    movePageTo(pages[3].id, 0) // a page lands before it
+    expect(listPages(book.id)[getBook(book.id)!.lastPageIndex].sourceText).toBe("Page 2")
+    movePageTo(pages[2].id, 0) // the page itself moves
+    expect(getBook(book.id)!.lastPageIndex).toBe(0)
+    movePageTo(pages[0].id, 3) // a page before it moves after it
+    expect(listPages(book.id)[getBook(book.id)!.lastPageIndex].sourceText).toBe("Page 2")
   })
   it("deleting a page closes the gap and moves the cover", async () => {
     const { book, pages } = await bookWithPages(3)
