@@ -304,3 +304,62 @@ test("drag a missed page into place, with a thumb or the keyboard", async ({ pag
   await page.reload()
   await expect.poll(order).toEqual(["Two", "One", "Three", "Four"])
 })
+
+test("swipe to turn pages like a book", async ({ page, context }) => {
+  const calls = await mockAi(context)
+  await page.goto("/app/speak/cuentos")
+  await page.evaluate(() => {
+    const at = new Date().toISOString()
+    const es = ["Primera página del osito.", "Segunda página, buenas noches.", "Tercera página, a dormir."]
+    const h = (s: string) => {
+      let x = 0x811c9dc5
+      for (const c of s.replace(/\s+/g, " ").trim()) {
+        x ^= c.charCodeAt(0)
+        x = Math.imul(x, 0x01000193)
+      }
+      return (x >>> 0).toString(16).padStart(8, "0")
+    }
+    localStorage.setItem("cuentos_note_seen", at)
+    localStorage.setItem("books", JSON.stringify([{ id: "b1", title: "El osito", dialect: "neutral", lastPageIndex: 0, createdAt: at, updatedAt: at, lastOpenedAt: at }]))
+    localStorage.setItem("book_pages", JSON.stringify(es.map((_, i) => ({ id: `p${i}`, bookId: "b1", index: i, photoId: `ph${i}`, thumbId: `th${i}`, sourceText: `Page ${i}`, ocrSource: "pasted", createdAt: at, updatedAt: at }))))
+    localStorage.setItem("book_translations", JSON.stringify(es.map((text, i) => ({ pageId: `p${i}`, dialect: "neutral", text, sourceHash: h(`Page ${i}`), edited: false, updatedAt: at }))))
+  })
+  await page.goto("/app/speak/cuentos?libro=b1&leer=0")
+  await expect(page.getByText("Primera página del osito.")).toBeVisible()
+
+  const cdp = await page.context().newCDPSession(page)
+  const swipe = async (x0: number, x1: number, steps = 12, stepMs = 16) => {
+    const y = 400
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: x0, y }] })
+    for (let i = 1; i <= steps; i++) {
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x0 + ((x1 - x0) * i) / steps, y }] })
+      await page.waitForTimeout(stepMs)
+    }
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+  }
+
+  await swipe(340, 120) // left: next page
+  await expect(page.getByText("Segunda página, buenas noches.")).toBeVisible()
+  await expect(page.getByText("2 / 3")).toBeVisible()
+  await swipe(300, 250, 10, 30) // a short, slow drag: falls back
+  await expect(page.getByText("2 / 3")).toBeVisible()
+  await swipe(340, 100) // to the last page…
+  await swipe(340, 100) // …and past it: a bounce, no turn
+  await expect(page.getByText("3 / 3")).toBeVisible()
+  await swipe(60, 300) // right: back a page
+  await expect(page.getByText("Segunda página, buenas noches.")).toBeVisible()
+  // The leaf is gone once a turn settles, and the place is remembered.
+  await expect(page.locator("[inert]")).toHaveCount(0)
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("books")!)[0].lastPageIndex)).toBe(1)
+  // A swipe that starts on a word turns the page without speaking the word.
+  const word = (await page.getByRole("button", { name: "buenas", exact: true }).boundingBox())!
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: word.x + 10, y: word.y + 10 }] })
+  for (let i = 1; i <= 12; i++) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: word.x + 10 - i * 22, y: word.y + 10 }] })
+    await page.waitForTimeout(16)
+  }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+  await expect(page.getByText("3 / 3")).toBeVisible()
+  await page.waitForTimeout(300)
+  expect(calls.tts).toHaveLength(0)
+})
