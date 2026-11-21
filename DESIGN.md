@@ -202,6 +202,13 @@ list at once.
 **Everything labelled.** No icon-only mystery buttons in the voice console:
 every control ≥ 56px with a text label under it.
 
+**Dark surfaces are scoped, and share one palette.** The app is light. Two
+screens go dark because the moment calls for it, and both use the same tokens:
+`green-press` (#123C1F) surface, `cream` text, `green-on-dark` for secondary
+text, `green-well` for a pressed control (a label on a pressed well goes cream:
+green-on-dark is 3.8:1 there). They are the voice pocket view and the Cuentos
+reading view's "Luz baja". An app-wide night mode would replace both.
+
 **Ends above the nav.** Screen content must finish above the 86px bottom nav.
 On Hoy that caps "Frases para usar hoy" at two cards.
 

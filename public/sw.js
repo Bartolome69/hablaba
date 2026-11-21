@@ -1,5 +1,8 @@
-const CACHE = "hablaba-shell-v1"
-const APP_SHELL = ["/", "/app/practice", "/manifest.webmanifest"]
+// v2 (Cuentos): precache the Cuentos page so the shelf opens offline, drop the
+// retired /app/practice, cache-first for the self-hosted Tesseract files, and
+// match navigations ignoring the query string (Cuentos keeps its view there).
+const CACHE = "hablaba-shell-v2"
+const APP_SHELL = ["/", "/app/today", "/app/speak/cuentos", "/manifest.webmanifest"]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -35,12 +38,18 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE).then((c) => c.put(request, copy)).catch(() => undefined)
           return res
         })
-        .catch(() => caches.match(request).then((r) => r || caches.match("/"))),
+        .catch(() =>
+          caches
+            .match(request)
+            .then((r) => r || caches.match(request, { ignoreSearch: true }))
+            .then((r) => r || caches.match("/")),
+        ),
     )
     return
   }
 
-  if (["style", "script", "image", "font"].includes(request.destination)) {
+  const tesseract = url.pathname.startsWith("/tesseract/")
+  if (tesseract || ["style", "script", "image", "font"].includes(request.destination)) {
     event.respondWith(
       caches.match(request).then(
         (cached) =>

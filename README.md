@@ -15,7 +15,7 @@ Five tabs, each a slice of one loop:
 | --- | --- |
 | **Hoy** (`/app/today`) | The five jobs in one screen: resume or start a conversation, Repasar (words due, else the grammar to work on), this week's pattern, and two phrases for this time of day. The "¿Cómo se dice?" bar sits above the tabs on every screen. The only screen with settings |
 | **Charlar** (`/app/charla`) | Conversations with Elena, typed or hands-free spoken in the same thread. Typed turns get inline corrections; spoken turns are reviewed after the session. **Tu semana** (`/app/semana`) is the weekly report across all conversations |
-| **Frases** (`/app/speak`) | Things to say: phrase of the day, a capture box for what you couldn't say, your phrases by daily moment, and 15 routines of ready-to-say phrases with audio |
+| **Frases** (`/app/speak`) | Things to say: phrase of the day, a capture box for what you couldn't say, your phrases by daily moment, and 15 routines of ready-to-say phrases with audio. **Cuentos** (`/app/speak/cuentos`): photograph a page of an English picture book you own and read it aloud in child-level Spanish that keeps the rhyme |
 | **Palabras** (`/app/palabras`) | Things to name: a shelf of 14 preloaded word packs in three sections (baby things, food, drinks, clothes, furniture, adjectives and more) studied as spaced-repetition flashcards. Add your own words to any pack in English or Spanish |
 | **Práctica** (`/app/exercises`) | Grammar quizzes: 27 topics from authored and teacher-handout content packs, sortable by area, weakness or staleness. `?topic=<id>` deep-links into one |
 
@@ -41,11 +41,15 @@ npm run dev               # localhost:3000
 npm run build             # production build
 npm run lint              # ESLint
 npx tsc --noEmit          # typecheck (the build ignores TS errors, see below)
-npm run validate:content  # check the Exercises content packs against their schema
+npm run validate:content  # content packs, vocab, moments, the tú rule
+npm test                  # unit tests (Vitest, tests/unit)
+npm run build && npm run test:e2e   # end-to-end at 390x844 (Playwright, tests/e2e)
 ```
 
-There is no test framework. Verification is typecheck, build, and testing on a
-phone.
+Unit tests run in jsdom with an in-memory IndexedDB. The e2e suite starts
+`next start` itself and mocks every AI route, so it needs no key; on a new
+machine run `npx playwright install chromium` once. Real phones are still the
+last word for the mic, the camera and voice (`docs/voice-device-checklist.md`).
 
 ### Environment
 
@@ -88,5 +92,6 @@ the mic instead and shows an explicit paused state.
 
 - `CLAUDE.md`: the working reference for anyone (human or agent) picking this up.
 - `docs/VISION.md`: what the app is, who it's for, and where it's going.
+- `docs/cuentos-plan.md`: the Cuentos plan, phases and decisions.
 - `PRODUCT.md`: users, brand personality, design principles.
 - `DESIGN.md`: the visual system, Clay + calm.

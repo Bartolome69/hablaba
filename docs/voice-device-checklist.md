@@ -77,3 +77,24 @@ see against each line (✓, ✗, or what happened instead) and send it back.
 
 For each phone: model, OS, ✓/✗ per line, and anything that surprised you. A
 screen recording of the 10-minute run (just the start and end) helps a lot.
+
+## Cuentos (both phones, installed app)
+
+Use a picture book you own. Note ✓, ✗ or what happened instead.
+
+- [ ] Frases → Cuentos opens the shelf; the privacy note shows once.
+- [ ] "Escanear un cuento" → the camera opens with the dashed frame. On Android,
+      "Luz" turns the torch on and off (no torch button on iPhone is expected).
+- [ ] Photograph a spread: "Leyendo la página…" then "Traduciendo…" then both
+      texts. Time from the shutter to reading the Spanish: under a minute?
+- [ ] Text over an illustration: how much did you have to fix?
+- [ ] "Elegir de las fotos" offers your photo library (not just the camera).
+- [ ] iPhone: a photo from the library that was taken as HEIC opens fine.
+- [ ] Reader: the Spanish is readable at arm's length on the default size.
+- [ ] Tap a word: Elena says it. Tap it again with flight mode on: still plays.
+- [ ] "Leer" reads the page and stops on "Pausa". Nothing ever plays by itself.
+- [ ] Luz baja at night: comfortable, nothing glaring.
+- [ ] The screen stays on while the reader is open.
+- [ ] Flight mode, close the app, reopen it, open the book: photo and Spanish
+      are there.
+- [ ] iPhone: leave the app unused for a week (installed): are the books still there?

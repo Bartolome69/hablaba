@@ -95,7 +95,7 @@ export function PocketView({
           className="flex h-[88px] w-full items-center justify-center gap-3 rounded-full bg-green-well text-[22px] font-semibold text-cream disabled:opacity-60"
           style={{ boxShadow: "0 4px 0 #0B2414" }}
         >
-          <DuoIcon name={live ? "pausa" : "reproducir"} size={28} className="text-cream" detail="#A8D0B4" />
+          <DuoIcon name={live ? "pausa" : "play"} size={28} className="text-cream" detail="#A8D0B4" />
           {live ? "Pausa" : "Seguir"}
         </button>
         <button

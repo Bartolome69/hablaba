@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { DuoIcon } from "@/components/icons"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { PrivacyPoints } from "@/components/cuentos/privacy-note"
 import { PARTNER_NAME } from "@/lib/voices"
 import { useReadAloud } from "@/hooks/use-read-aloud"
 import {
@@ -203,6 +204,11 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
             />
           </button>
         </div>
+
+        {/* Cuentos keeps photos of the family's books on the phone: say what
+            leaves it and what doesn't, where privacy is looked for. */}
+        <h3 className="smallcaps mb-3 mt-7 text-ink-muted">Cuentos y privacidad</h3>
+        <PrivacyPoints />
       </SheetContent>
     </Sheet>
   )

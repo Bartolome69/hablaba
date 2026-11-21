@@ -5,6 +5,7 @@ import { AppHeader } from "@/components/home/app-header"
 import { DuoIcon, type IconName } from "@/components/icons"
 import { CaptureCard } from "@/components/phrases/capture-card"
 import { MomentPack } from "@/components/phrases/moment-pack"
+import { CuentosRow } from "@/components/cuentos/cuentos-row"
 import { RoutineCard } from "@/components/speak/routine-card"
 import { categories, routines } from "@/lib/routines"
 import { useTTS } from "@/hooks/use-tts"
@@ -83,6 +84,11 @@ export function SpeakPage() {
       </div>
 
       <MomentPack key={packKey} />
+
+      {/* Cuentos: the family's picture books, read aloud in Spanish. After the
+          moments (bedtime is one of them), before the parent's own section.
+          Not green: the phrase of the day keeps this screen's green block. */}
+      <CuentosRow />
 
       {/* Para ti: the parent's own situations (refresh Phase 5). The baby
           routines live inside the moments above now, so bath appears once;

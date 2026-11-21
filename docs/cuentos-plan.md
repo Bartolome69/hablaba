@@ -1,6 +1,16 @@
 # Cuentos: plan
 
-*November 2026. Status: **draft for approval.** No app code has been written. Each phase stops for review.*
+*November 2026. Status: **Phase 1 shipped** (C1). All ten recommendations in §10 approved as written. Phase 2 (learning loop) waits for review.*
+
+**Phase 1 as shipped** (what differs from or adds to the plan below):
+- **Test tooling:** Vitest and Playwright Test are in, with 39 unit tests and 5 e2e tests. The e2e suite includes the real on-phone OCR reading a fixture image, and audits for one green block, 44 px targets, AA contrast and em dashes on every Cuentos screen.
+- **"Elegir de las fotos" has no `capture` attribute** (the brief had `capture="environment"`). With it, Android opens the camera directly and never shows the gallery. Without it, iPhone offers library, camera or files.
+- **Navigation within Cuentos uses `history.pushState`,** so an offline reload of a book URL is served by the service worker. The SW now matches navigations ignoring the query string.
+- **Tapping a cover opens the book where you left it,** not the details. The reader's top-right button goes to the pages.
+- **Analytics:** PostHog's own `$current_url` and `$referrer` would also have carried book ids, so `before_send` strips the query on Cuentos URLs for every event, not only the pageview.
+- **Reader controls on Luz baja:** a pressed label goes cream, because green-on-dark is 3.8:1 on the pressed well.
+- **Found along the way:** the Phase 6 pocket view's "Seguir" icon rendered as a blank disc. Fixed with a new `play` icon.
+- **Real phones still needed** for the camera, the torch, HEIC and iOS storage (see §9). Added to `docs/voice-device-checklist.md`.
 
 Cuentos lets the parent photograph a page or spread from an English picture book they own. The app reads the text, turns it into child-level Spanish that keeps the rhyme and the tone, and shows it in a calm, large-type view for **the parent** to read aloud. Books live on a shelf on the device and open with no network.
 
