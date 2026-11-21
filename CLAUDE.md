@@ -129,6 +129,11 @@ and `components/cuentos/`.
   they were made from: change the English and they're stale. The parent's
   edited Spanish is never replaced without asking ("Dejar el mío").
 - **Dialect is per book** (from Ajustes at creation), vocabulary only; tú always.
+- **Page order** is drag and drop in the book's page list
+  (`components/cuentos/sortable-pages.tsx`): a grip per row, pointer events
+  with `touch-action: none`, auto-scroll at the edges, arrow keys on the grip.
+  No library. `movePageTo` in the store keeps `lastPageIndex` on the same page.
+  A missed page is added last and dragged into place.
 - **Audio** is Elena's TTS (`manner: clear`), cached per word and per page in
   IndexedDB, played only on a tap. Word clips are a shared cache capped at 400.
 - **OCR fallback**: Tesseract.js, lazy-imported, self-hosted under

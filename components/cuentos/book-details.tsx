@@ -1,6 +1,7 @@
 "use client"
 
-// A book's pages: rename, change the vocabulary flavour, reorder, edit or
+// A book's pages: rename, change the vocabulary flavour, drag pages into
+// order (a missed page is added last, then dropped where it belongs), edit or
 // delete pages, delete the book. The one green block is "Sumar una página".
 
 import { useCallback, useEffect, useState } from "react"
@@ -9,22 +10,23 @@ import { DuoIcon } from "@/components/icons"
 import { StorageFullError, STORAGE_FULL_MESSAGE } from "@/lib/cuentos/errors"
 import { deleteBookEverywhere, deletePageEverywhere } from "@/lib/cuentos/library"
 import { go } from "@/lib/cuentos/nav"
-import { getBook, listPages, movePage, translationStatus, updateBook } from "@/lib/cuentos/store"
+import { getBook, listPages, movePageTo, translationStatus, updateBook } from "@/lib/cuentos/store"
 import type { Book, BookPage } from "@/lib/cuentos/types"
 import { Missing } from "./add-page"
 import { DialectPicker, ScreenHeader, usePhotoUrl } from "./shared"
+import { SortablePages } from "./sortable-pages"
 
 function PageRow({
   page,
   book,
-  first,
-  last,
+  grip,
+  dragging,
   onChange,
 }: {
   page: BookPage
   book: Book
-  first: boolean
-  last: boolean
+  grip: React.ReactNode
+  dragging: boolean
   onChange: () => void
 }) {
   const url = usePhotoUrl(page.thumbId)
@@ -33,7 +35,7 @@ function PageRow({
   const firstLine = page.sourceText.split("\n").find((l) => l.trim()) ?? ""
 
   return (
-    <li className="clay-static rounded-[18px] p-3">
+    <div className={`clay-static rounded-[18px] p-3 ${dragging ? "bg-surface" : ""}`}>
       <div className="flex items-center gap-3">
         <button
           onClick={() => go({ view: "read", bookId: book.id, page: page.index })}
@@ -52,14 +54,7 @@ function PageRow({
             )}
           </div>
         </button>
-        <div className="flex flex-none items-center">
-          <IconButton label="Subir" disabled={first} onClick={() => (movePage(page.id, -1), onChange())}>
-            <DuoIcon name="chevron" size={14} className="-rotate-90" />
-          </IconButton>
-          <IconButton label="Bajar" disabled={last} onClick={() => (movePage(page.id, 1), onChange())}>
-            <DuoIcon name="chevron" size={14} className="rotate-90" />
-          </IconButton>
-        </div>
+        {grip}
       </div>
       <div className="mt-2 flex gap-2 border-t border-rule pt-2">
         <button
@@ -84,20 +79,7 @@ function PageRow({
           </button>
         )}
       </div>
-    </li>
-  )
-}
-
-function IconButton({ label, disabled, onClick, children }: { label: string; disabled?: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      className="flex h-11 w-11 items-center justify-center rounded-full text-ink disabled:opacity-30"
-    >
-      {children}
-    </button>
+    </div>
   )
 }
 
@@ -161,11 +143,21 @@ export function BookDetails({ bookId }: { bookId: string }) {
       </button>
 
       {pages.length > 0 && (
-        <ul className="mt-6 space-y-2.5">
-          {pages.map((p, i) => (
-            <PageRow key={p.id} page={p} book={book} first={i === 0} last={i === pages.length - 1} onChange={load} />
-          ))}
-        </ul>
+        <>
+          <SortablePages
+            pages={pages}
+            onMove={(pageId, to) => safely(() => movePageTo(pageId, to))}
+            renderRow={(p, grip, dragging) => (
+              <PageRow page={p} book={book} grip={grip} dragging={dragging} onChange={load} />
+            )}
+          />
+          {pages.length > 1 ? (
+            <p className="mt-3 px-1 text-[12.5px] leading-snug text-ink-muted">
+              Mantén pulsados los puntitos de una página y arrástrala para cambiarla de lugar. ¿Te faltó una?
+              Súmala y arrástrala a su lugar.
+            </p>
+          ) : null}
+        </>
       )}
 
       <section className="mt-8 border-t border-rule pt-5">
