@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "validate:content": "node scripts/validate-content.mjs"
+    "validate:content": "node scripts/validate-content.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -64,15 +66,19 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^22",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.1.6",
+    "fake-indexeddb": "6.2.8",
+    "jsdom": "31.0.1",
     "postcss": "^8.5",
     "tailwindcss": "^4.2.0",
     "tw-animate-css": "1.3.3",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "vitest": "5.1.1"
   }
 }
