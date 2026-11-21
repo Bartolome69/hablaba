@@ -7,7 +7,7 @@ import { beforeEach } from "vitest"
 import { resetBlobConnectionForTests } from "@/lib/cuentos/blobs"
 
 beforeEach(() => {
-  localStorage.clear()
+  globalThis.localStorage?.clear()
   globalThis.indexedDB = new IDBFactory()
   resetBlobConnectionForTests()
 })

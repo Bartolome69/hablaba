@@ -11,7 +11,7 @@
 // load with it). This file mirrors the same invariants for a toolchain-free
 // gate — keep the two in sync when the schema changes.
 
-import { readFileSync, readdirSync } from "node:fs"
+import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import { z } from "zod"
@@ -143,6 +143,7 @@ const VOCAB_DIR = join(ROOT, "lib", "vocab", "content")
 const MOMENTS_FILE = join(ROOT, "lib", "phrases", "content", "moments.json")
 const ROUTINES_FILE = join(ROOT, "lib", "routines.ts")
 const VOSEO_FILE = join(ROOT, "lib", "voseo.ts")
+const CUENTOS_FIXTURES = join(ROOT, "tests", "fixtures", "cuentos")
 const MOMENT_IDS = ["despertar", "cambiar", "comida", "juego", "paseo", "baño", "calmar", "dormir"]
 
 const norm = (t) =>
@@ -254,6 +255,11 @@ function validateTu() {
   const moments = JSON.parse(readFileSync(MOMENTS_FILE, "utf8"))
   for (const [id, entries] of Object.entries(moments)) for (const e of entries) lines.push([`moments.json ${id}`, e.text])
   for (const text of routineSpanish()) lines.push(["routines.ts", text])
+  // Cuentos fixtures: the Spanish we expect a translated page to look like.
+  if (existsSync(CUENTOS_FIXTURES))
+    for (const file of readdirSync(CUENTOS_FIXTURES).filter((f) => f.endsWith(".es.txt")))
+      for (const line of readFileSync(join(CUENTOS_FIXTURES, file), "utf8").split("\n").filter((l) => l.trim()))
+        lines.push([`cuentos/${file}`, line])
   for (const file of readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".json") && !f.startsWith("_"))) {
     const pack = JSON.parse(readFileSync(join(CONTENT_DIR, file), "utf8"))
     for (const it of pack.items ?? []) for (const t of [it.prompt, ...(it.answers ?? []), it.sampleAnswer].filter(Boolean)) lines.push([file, t])
