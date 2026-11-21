@@ -169,3 +169,12 @@ describe("a full phone", () => {
     }
   })
 })
+
+describe("a translation saved against older English", () => {
+  it("is stale from the start", async () => {
+    const book = createBook({ dialect: "neutral" })
+    const page = await savePage(book.id, { photo: jpeg("p"), thumb: jpeg("t"), sourceText: "Goodnight room", ocrSource: "vision" })
+    saveModelTranslation(page, "neutral", { spanish: "Buenas noches, luna" }, { fromSource: "Goodnight moon" })
+    expect(translationStatus(page, "neutral")).toBe("stale")
+  })
+})

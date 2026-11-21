@@ -249,13 +249,14 @@ function upsertTranslation(row: BookTranslation) {
 /**
  * Store what the model returned. If the parent had edited this dialect's
  * Spanish, it is NOT replaced unless `overwriteEdited` is set: the caller asks
- * first. Returns what happened.
+ * first. `fromSource` is the English the model actually translated, when the
+ * parent has edited the English since. Returns what happened.
  */
 export function saveModelTranslation(
   page: BookPage,
   dialect: SpanishDialect,
   result: { spanish: string; notes?: string },
-  opts: { overwriteEdited?: boolean } = {},
+  opts: { overwriteEdited?: boolean; fromSource?: string } = {},
 ): "saved" | "kept-edited" {
   const existing = getTranslation(page.id, dialect)
   if (existing?.edited && !opts.overwriteEdited) return "kept-edited"
@@ -263,7 +264,8 @@ export function saveModelTranslation(
     pageId: page.id,
     dialect,
     text: result.spanish.trim(),
-    sourceHash: hashText(page.sourceText),
+    // The English it was MADE from: if that's not the English now, it's stale.
+    sourceHash: hashText(opts.fromSource ?? page.sourceText),
     notes: result.notes?.trim() || undefined,
     edited: false,
     updatedAt: now(),
