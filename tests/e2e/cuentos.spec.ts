@@ -252,3 +252,55 @@ test("screens pass the design audits", async ({ page, context }) => {
   await expect(page.getByRole("link", { name: /Lee sus libros en español/ })).toBeVisible()
   await audit(page, "Frases with the Cuentos row", { greens: 1, scope: "[data-cuentos-row]" })
 })
+
+test("drag a missed page into place, with a thumb or the keyboard", async ({ page }) => {
+  // Four pages already scanned; the third was missed and added last.
+  await page.goto("/app/speak/cuentos")
+  await page.evaluate(() => {
+    const at = new Date().toISOString()
+    const texts = ["One: the moon is up.", "Two: the bear yawns.", "Four: goodnight.", "Three: the missed page."]
+    localStorage.setItem("cuentos_note_seen", at)
+    localStorage.setItem("books", JSON.stringify([{ id: "b1", title: "Tres osos", dialect: "neutral", lastPageIndex: 2, createdAt: at, updatedAt: at, lastOpenedAt: at }]))
+    localStorage.setItem(
+      "book_pages",
+      JSON.stringify(texts.map((t, i) => ({ id: `p${i}`, bookId: "b1", index: i, photoId: `ph${i}`, thumbId: `th${i}`, sourceText: t, ocrSource: "pasted", createdAt: at, updatedAt: at }))),
+    )
+  })
+  await page.goto("/app/speak/cuentos?libro=b1")
+  const order = () => page.locator("ul li").evaluateAll((lis) => lis.map((li) => li.querySelector("p.truncate")?.textContent?.split(":")[0]))
+  await expect.poll(order).toEqual(["One", "Two", "Four", "Three"])
+
+  // A thumb: scroll the last page clear of the tab bar, as you would, then
+  // touch the grip on "Three" and drag it up above "Four".
+  await page.evaluate(() => window.scrollBy(0, 320))
+  const grip = page.getByRole("button", { name: "Mover la página 4" })
+  const startScroll = await page.evaluate(() => window.scrollY)
+  const from = (await grip.boundingBox())!
+  const target = (await page.locator("ul li").nth(2).boundingBox())!
+  const cdp = await page.context().newCDPSession(page)
+  const x = from.x + from.width / 2
+  const y = from.y + from.height / 2
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] })
+  const endY = target.y + 10
+  for (let i = 1; i <= 12; i++) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y: y + ((endY - y) * i) / 12 }] })
+    await page.waitForTimeout(16)
+  }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+  await expect.poll(order).toEqual(["One", "Two", "Three", "Four"])
+  // The page didn't scroll under the finger, and the reading place followed "Four".
+  expect(await page.evaluate(() => window.scrollY)).toBe(startScroll)
+  const book = await page.evaluate(() => JSON.parse(localStorage.getItem("books")!)[0])
+  expect(book.lastPageIndex).toBe(3)
+
+  // The keyboard: arrow down moves "One" one place, and focus stays on its grip.
+  await page.getByRole("button", { name: "Mover la página 1" }).focus()
+  await page.keyboard.press("ArrowDown")
+  await expect.poll(order).toEqual(["Two", "One", "Three", "Four"])
+  await expect(page.getByRole("button", { name: "Mover la página 2" })).toBeFocused()
+  await expect(page.getByText("Página movida al lugar 2")).toBeAttached()
+
+  // The order holds after a reload, and the reader follows it.
+  await page.reload()
+  await expect.poll(order).toEqual(["Two", "One", "Three", "Four"])
+})

@@ -125,6 +125,17 @@ const draw: Record<string, Drawer> = {
       <path d="M16.2 8.6a4.6 4.6 0 0 1 0 6.8" stroke={d} strokeWidth="2.2" strokeLinecap="round" />
     </>
   ),
+  // A grip: hold here and drag (reordering Cuentos pages).
+  arrastrar: (d) => (
+    <>
+      {[6, 12, 18].map((y) => (
+        <g key={y}>
+          <circle cx="9" cy={y} r="1.8" fill="currentColor" />
+          <circle cx="15" cy={y} r="1.8" fill={y === 12 ? d : "currentColor"} />
+        </g>
+      ))}
+    </>
+  ),
   pausa: (d) => (
     <>
       <rect x="6" y="5" width="4.6" height="14" rx="2.3" fill="currentColor" />
