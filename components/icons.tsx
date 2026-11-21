@@ -54,6 +54,19 @@ const draw: Record<string, Drawer> = {
       />
     </>
   ),
+  // An open picture book with a small moon: Cuentos (bedtime reading).
+  cuento: (d) => (
+    <>
+      <path d="M12 8C10 6.4 7.4 5.9 4.4 6.1v12.3c3-.2 5.6.3 7.6 2Z" fill="currentColor" />
+      <path
+        d="M12 8c2-1.6 4.6-2.1 7.6-1.9v12.3c-3-.2-5.6.3-7.6 2Z"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinejoin="round"
+      />
+      <path d="M17.2 1.8a2.7 2.7 0 1 0 3 3.6 2.2 2.2 0 0 1-3-3.6Z" fill={d} />
+    </>
+  ),
   practica: (d) => (
     <>
       <rect x="2.6" y="9.4" width="4" height="5.2" rx="1.6" fill="currentColor" />
@@ -262,6 +275,19 @@ const draw: Record<string, Drawer> = {
     </>
   ),
   // "⋯": the visible way into a row's press-and-hold actions.
+  // A bare play triangle in currentColor, for play/resume on a filled (green)
+  // button. `reproducir` is a disc with a cream triangle, made for light
+  // backgrounds; on green with cream text it renders as a blank disc.
+  play: (d) => (
+    <path d="M8 5.6 18.4 12 8 18.4Z" fill="currentColor" stroke={d} strokeWidth="1.6" strokeLinejoin="round" />
+  ),
+  // A plus, for adding (a book, a page). `mas` is the three-dot "more".
+  sumar: (d) => (
+    <>
+      <path d="M12 5v14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M5 12h14" stroke={d} strokeWidth="2.4" strokeLinecap="round" />
+    </>
+  ),
   mas: () => (
     <>
       <circle cx="5.5" cy="12" r="1.9" fill="currentColor" />

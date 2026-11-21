@@ -31,7 +31,7 @@ export function BottomNav() {
   const tabs: { id: string; label: string; href: string; icon: IconName; active: boolean }[] = [
     { id: "today", label: "Hoy", href: "/app/today", icon: "hoy", active: pathname === "/app/today" },
     { id: "charla", label: "Charlar", href: "/app/charla", icon: "charlar", active: pathname.startsWith("/app/charla") },
-    { id: "speak", label: "Frases", href: "/app/speak", icon: "libro", active: pathname === "/app/speak" },
+    { id: "speak", label: "Frases", href: "/app/speak", icon: "libro", active: pathname.startsWith("/app/speak") },
     { id: "palabras", label: "Palabras", href: "/app/palabras", icon: "palabras", active: pathname.startsWith("/app/palabras") },
     { id: "exercises", label: "Práctica", href: "/app/exercises", icon: "practica", active: pathname.startsWith("/app/exercises") },
   ]
