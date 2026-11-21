@@ -10,7 +10,10 @@ function PageView() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    const url = window.origin + pathname + (searchParams.toString() ? `?${searchParams}` : "")
+    // Cuentos URLs carry book ids in the query string; send the path only
+    // (docs/cuentos-plan.md, question 6: no Cuentos analytics beyond a pageview).
+    const keepQuery = searchParams.toString() && !pathname.startsWith("/app/speak/cuentos")
+    const url = window.origin + pathname + (keepQuery ? `?${searchParams}` : "")
     posthog.capture("$pageview", { $current_url: url })
   }, [pathname, searchParams])
 
@@ -24,6 +27,18 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       person_profiles: "always",
       capture_pageview: false,
       capture_pageleave: true,
+      // Every event carries the page URL; on Cuentos that would include book
+      // ids. Keep the path, drop the query, on every event (pageleave too).
+      before_send: (event) => {
+        const props = event?.properties
+        if (props) {
+          for (const key of ["$current_url", "$referrer"]) {
+            const value = props[key]
+            if (typeof value === "string" && value.includes("/app/speak/cuentos")) props[key] = value.split("?")[0]
+          }
+        }
+        return event
+      },
     })
   }, [])
 
